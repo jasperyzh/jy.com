@@ -15,15 +15,17 @@
   "dependencies": {
     "@astrojs/partytown": "^2.1.2",
     "@astrojs/rss": "^4.0.7",
-    "@astrojs/sitemap": "^3.1.6",
-    "astro": "^4.15.4",
+    "@astrojs/sitemap": "^3.2.0",
+    "astro": "^4.15.11",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
-    "marked": "^13.0.3",
-    "postcss": "^8.4.40",
-    "postcss-preset-env": "^9.6.0"
+    "decap-cms-app": "^3.3.3",
+    "marked": "^14.1.2",
+    "postcss": "^8.4.47",
+    "postcss-preset-env": "^10.0.5"
   },
   "devDependencies": {
-    "sass": "^1.77.8"
+    "prettier-plugin-astro": "^0.14.1",
+    "sass": "^1.79.4"
   }
 }

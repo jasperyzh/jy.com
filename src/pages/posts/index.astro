@@ -2,13 +2,15 @@
 import { getCollection } from "astro:content";
 
 import Layout from "../../layouts/Layout.astro";
-import EntriesOne from "../../components/template-parts/EntriesOne.astro";
+import EntriesOne from "../../components/EntriesOne.astro";
 
-import Pagination from "../../components/template-parts/Pagination.astro";
+import Pagination from "../../components/Pagination.astro";
 
 const allPosts = await getCollection("posts");
 const sortedPosts = allPosts.sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  
+  
   // add pagination
   
 );
@@ -21,7 +23,7 @@ const sortedPosts = allPosts.sort(
   pageTitle='Brutal Blog' -->
   <main>
     <section class="container">
-        <ul class="grid__posts">
+        <ul class="masonry__layout">
           {
             sortedPosts.map((post) => (
               <EntriesOne

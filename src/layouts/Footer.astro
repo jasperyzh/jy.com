@@ -1,76 +1,56 @@
 ---
 // source: https://getbootstrap.com/docs/5.3/examples/footers/
 
-import { SITE_TITLE, SITE_DESCRIPTION, SITE_YEAR } from "../consts";
+import EmojiGreeting from "../components/EmojiGreeting.astro";
+import { SITE_TITLE, SITE_FOOTER_ABOUT, SITE_YEAR } from "../consts";
 ---
 
-<footer class="pt-5">
-  <div class="container text-center">
-    <p class="hello_world">
-      {`(`}。・∀・{`)`}ﾉ*:･ﾟhello_world
-      <span class="stars">
-        <span class="star animate--moveUpDown" style="--animation-delay: 0">🌟</span>
-        <span class="star animate--moveUpDown" style="--animation-delay: .314s"
-          >🌟</span
-        >
-        <span class="star animate--moveUpDown" style="--animation-delay: .628s"
-          >🌟</span
-        >
-      </span>
-    </p>
-
-    <p>
-      A blog with collection of learnings and experiments.
-      <br />Hope you enjoy your visit!
-    </p>
-    <p>
-      <a
-        class="text-body-secondary"
-        target="_blank"
-        href="https://www.instagram.com/jasperyzh/"
-        ><i class="bi-instagram"></i></a
-      >
-    </p>
-
-    <p class="copy">
-      &copy;{SITE_YEAR}
-      {SITE_TITLE}
-    </p>
+<footer class="pt-5 text-center text-md-start">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-md-6 order-md-2 d-flex justify-content-md-end align-items-md-end">
+        <div class="--flip">
+          <EmojiGreeting />
+        </div>
+      </div>
+      <div class="col-12 col-md-6 order-md-1">
+        <p set:html={SITE_FOOTER_ABOUT} />
+        <p class="copy">
+          &copy;{SITE_YEAR}
+          {SITE_TITLE}
+        </p>
+      </div>
+    </div>
   </div>
 </footer>
 
 <style>
-  .copy,
-  .hello_world {
-    font-size: 0.8rem;
+  .copy {
+    font-size: var(--fs-small);
   }
-  .hello_world {
-    display: inline-block;
-    position: relative;
+
+  footer {
+    background-color: var(--bg-brand);
+    border-top-left-radius: var(--bs-border-radius);
+    border-top-right-radius: var(--bs-border-radius);
+    overflow: hidden;
   }
-  span.stars {
-    position: absolute;
-    right: -3rem;
-    top: 0;
-    span.star {
-      display: inline-block;
-      font-family: monospace;
-      filter: drop-shadow(3px 3px 12px rgba(252 213 63 / 1));
+  /* footer {
+    &:hover .--flip,
+    &:focus .--flip {
+      transform: scaleX(1);
     }
-  }
-  .animate--moveUpDown {
-    animation: moveUpDown 2s ease-in-out infinite;
-    animation-delay: var(--animation-delay, 0);
-  }
-  @keyframes moveUpDown {
-    0%,
-    100% {
-      transform: translateY(0);
+  } */
+  @media screen and (min-width: 768px) {
+    footer {
+      padding: 3rem;
+      padding-bottom: 1rem;
     }
-    50% {
-      transform: translateY(
-        -1.5rem
-      ); /* Adjust the value to control the height of the bounce */
+
+    .--flip {
+      /* transition: transform 0.3s ease; */
+      transform: scaleX(-1);
+      transform-origin: center;
     }
   }
 </style>

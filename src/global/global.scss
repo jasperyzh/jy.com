@@ -3,225 +3,10 @@
 
 // darkmode
 html {
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
-
-img {
-  max-width: 100%;
-  height: auto;
-}
-
-/* 
-// [use local fonts over loading via /public](https://www.youtube.com/watch?v=lksnr4e-npo)
-// [Switzer](https://www.fontshare.com/fonts/switzer
-@font-face {
-    font-family: "Switzer";
-    src:
-        local("Switzer Regular"),
-        url("/fonts/Switzer-Regular.woff2") format("woff2"),
-        url("/fonts/Switzer-Regular.woff") format("woff"),
-        url("/fonts/Switzer-Regular.ttf") format("ttf");
-    font-style: normal;
-    font-weight: 400;
-}
-
-@font-face {
-    font-family: "Switzer";
-    src:
-        local("Switzer Italic"),
-        url("/fonts/Switzer-Italic.woff2") format("woff2"),
-        url("/fonts/Switzer-Italic.woff") format("woff"),
-        url("/fonts/Switzer-Italic.ttf") format("ttf");
-    font-style: italic;
-    font-weight: 400;
-}
-
-@font-face {
-    font-family: "Switzer";
-    src:
-        local("Switzer Bold"),
-        url("/fonts/Switzer-Bold.woff2") format("woff2"),
-        url("/fonts/Switzer-Bold.woff") format("woff"),
-        url("/fonts/Switzer-Bold.ttf") format("ttf");
-    font-style: normal;
-    font-weight: 700;
-}
-
-@font-face {
-    font-family: "Switzer";
-    src:
-        local("Switzer Bold Italic"),
-        url("/fonts/Switzer-BoldItalic.woff2") format("woff2"),
-        url("/fonts/Switzer-BoldItalic.woff") format("woff"),
-        url("/fonts/Switzer-BoldItalic.ttf") format("ttf");
-    font-style: italic;
-    font-weight: 700;
-}
-
-// global_style
-:root {
-    --html-fontSize: 16px;
-    --html-fontFamily: Switzer, Verdana, Geneva, Tahoma, sans-serif;
-
-    --body-maxWidth: 72ch;
-    --body-color: #555;
-    --body-backgroundColor: #fefdfc;
-
-    --size: 1.608rem;
-    --size-sm: calc(0.608rem * 1.608);
-    --size-lg: calc(1.608rem * 2);
-
-    --dark: #222;
-    --light: #f2f2f2;
-    --grey: #999;
-
-    --h1: calc(var(--size) * 1.608);
-    --h2: calc(var(--size) * 1.11);
-    --h3: var(--size);
-    --h4: calc(var(--size) * 0.95);
-    --h5: calc(var(--size) * 0.9);
-    --h6: calc(var(--size) * 0.8);
-}
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-}
-
-html {
-    color-scheme: light dark;
-    font-family: var(--html-fontFamily);
-    font-size: var(--html-fontSize);
-}
-body {
-    max-width: var(--body-maxWidth);
-    background-color: var(--body-backgroundColor);
-    color: var(--body-color);
-    padding: var(--size) var(--size-sm);
-
-    line-height: 1.5;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-}
-hr {
-    width: 100%;
-    border-top: none;
-    border-color: var(--grey);
-    margin: var(--size-sm) auto;
-}
-h1 {
-    font-size: var(--h1);
-}
-h2 {
-    font-size: var(--h2);
-}
-h3 {
-    font-size: var(--h3);
-}
-h4 {
-    font-size: var(--h4);
-}
-h5 {
-    font-size: var(--h5);
-}
-h6 {
-    font-size: var(--h6);
-}
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    margin: 0 0 var(--size) 0;
-    line-height: 1.2;
-}
-pre {
-    padding: var(--size);
-    white-space: pre-wrap;
-    word-wrap: break-word;
-
-    :is(& > ol, & > ul) {
-        line-height: 1;
-    }
-
-    .task-list-item {
-        list-style-type: none;
-    }
-    ul ul,
-    ol ol {
-        padding-left: 1rem;
-    }
-}
-code {
-    padding: 0.2rem 0.4rem;
-    background-color: var(--light);
-}
-pre > code {
-    all: unset;
-}
-content {
-    line-height: 1.8;
-}
-blockquote {
-    border: 1px solid var(--grey);
-    color: var(--dark);
-    padding: var(--size-sm) 0px var(--size-sm) var(--size-lg);
-    margin: 0;
-    font-style: italic;
-}
-svg,
-img,
-video {
-    max-width: 100%;
-    height: auto;
-}
-table {
-    width: 100%;
-}
-small {
-    font-size: var(--size-sm);
-}
-textarea {
-    width: 100%;
-    font-size: 16px;
-}
-input {
-    font-size: 16px;
-}
-
-// utilities
-$sizes: (
-    "": var(--size),
-    "-sm": var(--size-sm),
-    "-lg": var(--size-lg)
-);
-
-$directions: (
-    "t": "top",
-    "b": "bottom",
-    "s": "left",
-    "e": "right"
-);
-.small {
-    font-size: var(--size-sm);
-}
-.muted {
-    color: var(--grey);
-}
-
-article.blog.single{
-    .blog-featured-image {
-        width: 100%;
-        object-fit: cover;
-        aspect-ratio: 3/1;
-        margin-bottom: 1rem;
-    }
-    iframe {
-        width: 100%;
-        aspect-ratio: 16/9;
-    }
-} */
 
 :root {
   --red: #f56565;
@@ -240,6 +25,16 @@ article.blog.single{
   --blue2: #739c9d;
   --blue3: #4b6c6f;
   --blue4: #344245;
+
+  
+// header       
+--nav-bg: #eee;
+--bg-brand: #eee;
+--drop-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+/* swap with brand color, shadow */
+
+// footer
+--fs-small: 0.8rem;
 }
 
 // tempoary restrict to 1024px
@@ -259,58 +54,29 @@ ul.grid__posts {
     padding: 1rem;
     grid-template-columns: 1fr 1fr;
   }
-
-  //   @media screen and (min-width: 992px) {
-  //     grid-template-columns: 1fr 1fr 1fr;
-  //   }
 }
 
-//   microblog
+/**
+ *
+ *
+ **/
 
-// /*
-// @tailwind base;
-// @tailwind components;
-// @tailwind utilities;
-// /* CSS */
-// :root {
-//     font-family: Inter, sans-serif;
-//     font-feature-settings:
-//     "liga" 1,
-//     "calt" 1, /* Contextual Alternates */
-//     "dlig" 1, /* Discretionary Ligatures */
-//     "ss07" 1, /* fSquare punctuation */
-//     "ss08" 1, /* Square quotes */
-//     "zero" 1, /* Slashed zero */
-//     "tnum" 1, /* Tabular numbers */
-//       "cv03" 1, /* Open six */
-//       "cv04" 1, /* Open nine */
-//       "cv01" 1, /* Alternate one */
-//       "cv09", /* Flat-top three */
-//       "cv02" 1; /* Open 4 */
-//   }
-//   @supports (font-variation-settings: normal) {
-//     /* Use variable font if supported */
-//     :root {
-//       font-family: InterVariable, sans-serif;
-//     }
-//   }
+.masonry__layout {
+  columns: 300px;
+  column-gap: 1rem;
+  margin: 3rem auto;
+}
 
-//   :root {
-//     --astro-code-color-text: #000000;
-//     --astro-code-color-background: #f5f5f5;
-//     --astro-code-token-constant: #00000080;
-//     --astro-code-token-string: #00000050;
-//     --astro-code-token-comment: #00000060;
-//     --astro-code-token-keyword: black;
-//     --astro-code-token-parameter: #ffffff;
-//     --astro-code-token-function: black;
-//     --astro-code-token-string-expression: #fe351b;
-//     --astro-code-token-punctuation: #ffffff;
-//     --astro-code-token-link: #ffffff;
 
-//   }
+img {
+  max-width: 100%;
+  height: auto;
+}
 
-//   .prose-styles {
-//     @apply text-sm prose text-neutral-600 dark:text-neutral-600 prose-a:font-normal prose-a:text-blue-400 hover:prose-a:text-black prose-h1:text-black prose-img:border-2  prose-img:bg-neutral-50 dark:prose-img:bg-neutral-800 prose-img:border-transparent dark:prose-img:invert prose-h2:text-black prose-h2:font-semibold prose-p:text-sm prose-pre:font-mono max-w-none prose-pre:rounded-none prose-headings:font-display;
-//   }
-// */
+body > .wrapper {
+  & > header,
+  & > nav,
+  & > footer {
+    filter: drop-shadow(var(--drop-shadow));
+  }
+}

@@ -1,11 +1,10 @@
 ---
 // source: https://getbootstrap.com/docs/5.3/examples/navbars/
-// import BsThemeButton from "../components/BsThemeButton.astro";
 
 import { SITE_TITLE } from "../consts";
 
 import { Image } from "astro:assets";
-import img_banner from '../assets/240830-blog-banner.jpg';
+import img_banner from "../assets/images/240830-blog-banner.jpg";
 
 export interface Props {
   large_banner?: boolean;
@@ -14,136 +13,92 @@ export interface Props {
 const { large_banner } = Astro.props as Props;
 ---
 
-<header class="my-3">
-  <nav class="navbar navbar-expand-sm">
-    <div class="container header_layout">
-      <!-- pagebanner -->
-      <div class={`page-banner${large_banner ? " page-banner--large" : ""}`}>
-        <!-- insert banner image -->
-        <Image src={img_banner} alt="#" width="3000" height="1000" />
-      </div>
+<header>
+  <!-- pagebanner -->
+  <div class={`pagebanner page-banner${large_banner ? " page-banner--large" : ""}`}>
+    <!-- insert banner image -->
+    <!-- <Image src={img_banner} alt="#" width="3000" height="1000" /> -->
 
-      <!-- logo -->
-      <a class="navbar-brand" href="/">
-        <div class="logo">{SITE_TITLE}</div>
-      </a>
-
-      <!-- menu_toggle -->
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbar_primary"
-        aria-controls="navbar_primary"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <!-- menu -->
-      <div class="collapse navbar-collapse" id="navbar_primary">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link active" href="/posts">blog</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" href="/portfolio">portfolio</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" href="/about">about</a>
-          </li>
-        </ul>
-      </div>
-
-      <!-- soc_med -->
-      <div class="nav-social">
-        <a href="https://www.instagram.com/"
-          ><img src="/images/instagram.png" /></a
-        >
-      </div>
-    </div>
-  </nav>
+  </div>
 </header>
 
+<nav class="navbar navbar-expand-sm">
+  <div class="container header_layout">
+    <!-- logo -->
+    <a class="navbar-brand" href="/">
+      <div class="logo">{SITE_TITLE}</div>
+    </a>
+
+    <!-- menu_toggle -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbar_primary"
+      aria-controls="navbar_primary"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- menu -->
+    <div class="collapse navbar-collapse" id="navbar_primary">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" href="/posts">blog</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/portfolio">portfolio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/about">about</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- soc_med -->
+    <div class="nav-social">
+      <a
+        class="text-body-secondary"
+        target="_blank"
+        href="https://www.instagram.com/jasperyzh/"
+        ><i class="mx-2 bi bi-instagram"></i></a
+      >
+      <a
+        class="text-body-secondary"
+        target="_blank"
+        href="https://www.instagram.com/jasperyzh/"
+        ><i class="mx-2 bi bi-github"></i></a
+      >
+    </div>
+  </div>
+</nav>
 <style>
-  .page-banner {
-    width: 100%;
-    background-color: #ddd; /* placeholder color */
-    background-size: cover;
-    background-position: center;
-    aspect-ratio: 3/1;
-
-    border-radius: var(--bs-border-radius); 
+  header {
+    margin-top: 1rem;
+    border-top-left-radius: var(--bs-border-radius);
+    border-top-right-radius: var(--bs-border-radius);
     overflow: hidden;
-
-    @media screen and (min-width: 768px) {
-      aspect-ratio: 5/1;
-    }
   }
-
-  .page-banner--large {
-    aspect-ratio: 3/1;
-  }
-
-  .header_layout {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr auto;
-    justify-content: space-between;
-    align-items: center;
-
-    @media screen and (min-width: 768px) {
-      grid-template-columns: auto 1fr;
-      grid-template-rows: 1fr auto;
-      .navbar-brand {
-        display: block;
-        height: 100%;
-        grid-column: 1/1;
-        grid-row: 1/-1;
-        z-index: 10;
-        align-self: self-start;
-      }
-      .page-banner {
-        grid-column: 1/-1;
-        grid-row: 1/2;
-      }
-      .navbar-toggler {
-        grid-column: 2/3;
-        grid-row: 1/2;
-      }
-      .navbar-collapse {
-        grid-column: 2/ -1;
-        grid-row: 2/-1;
-      }
-      .nav-social {
-        display: none;
-        /* grid-column: -1/ -1;
-        grid-row: 1/1; */
-      }
-    }
-  }
-
-  .navbar-brand {
-    margin: 1rem;
-    .logo {
-      position: sticky;
-      top: 1rem;
-      aspect-ratio: 1/1;
-      width: 120px;
-      background: #ccc;
-    }
-  }
-
-  /* header {
-    position:sticky;
-    top: -3rem;
-   
-    z-index: 9999;
-  }*/
-
-  .navbar-collapse {
+  nav {
     position: sticky;
-    top: -3rem;
+    top: 0;
+    background-color: var(
+      --nav-bg
+    ); /* Optional: adds a background to the nav */
+    z-index: 999;
+
+    border-bottom-left-radius: var(--bs-border-radius);
+    border-bottom-right-radius: var(--bs-border-radius);
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  .pagebanner {
+    aspect-ratio: 6.854/1.618;
+    background-image: url('../assets/images/240830-blog-banner.jpg');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    filter:brightness(1.4) contrast(1.1) opacity(.8);
   }
 </style>

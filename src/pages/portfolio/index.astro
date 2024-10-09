@@ -1,0 +1,74 @@
+---
+import { getCollection } from "astro:content";
+
+import Layout from "../../layouts/Layout.astro";
+// import EntriesOne from "../../components/EntriesOne.astro";
+// import ContactForm from "../../components/ContactForm.astro";
+
+const allPosts = await getCollection("posts");
+
+// Sort posts by date in descending order (newest first)
+const sortedPosts = allPosts
+  .sort((a, b) => new Date(b.data.pubDate) - new Date(a.data.pubDate))
+  .slice(0, 4);
+---
+
+<Layout large_banner={true}>
+  <main class="d-flex flex-column align-items-center justify-content-center">
+    <section class="container">
+      <h1>Portfolio</h1>
+
+      <div class="masonry__layout">
+        <div class="card mb-3">
+          <img src="https://via.placeholder.com/300x200" alt="Placeholder 1" />
+        </div>
+
+        <div class="card mb-3">
+          <img src="https://via.placeholder.com/300x400" alt="Placeholder 2" />
+        </div>
+
+        <div class="card mb-3">
+          <img src="https://via.placeholder.com/300x300" alt="Placeholder 3" />
+        </div>
+
+        <div class="card mb-3">
+          <img src="https://via.placeholder.com/300x250" alt="Placeholder 4" />
+        </div>
+
+        <div class="card mb-3">
+          <img src="https://via.placeholder.com/300x350" alt="Placeholder 5" />
+        </div>
+
+        <div class="card mb-3">
+          <img src="https://via.placeholder.com/300x200" alt="Placeholder 6" />
+        </div>
+      </div>
+
+      <!-- <ol role="list" class="flex flex-wrap gap-3">
+          {
+            tags.map((tag) => (
+              <li class="inline-flex items-center uppercase mx-auto hover:text-blue-500 text-xs font-medium text-black">
+                <a href={`/tags/${tag}`}>{tag}</a>
+              </li>
+            ))
+          }
+        </ol> -->
+      <!-- <ul class="grid__posts">
+        {
+          sortedPosts.map((post) => (
+            <EntriesOne
+              url={"/posts/" + post.slug}
+              title={post.data.title}
+              description={post.data.description}
+              alt={post.data.title}
+              pubDate={post.data.pubDate.toString().slice(0, 10)}
+              author={post.data.author}
+              image={post.data.image}
+              tags={post.data.tags}
+            />
+          ))
+        }
+      </ul> -->
+    </section>
+  </main>
+</Layout>

@@ -1,0 +1,46 @@
+<p class="hello_world">
+  {`(`}。・∀・{`)`}ﾉ*:･ﾟhello_world
+  <span class="stars">
+    <span class="star animate--moveUpDown" style="--animation-delay: 0">🌟</span
+    >
+    <span class="star animate--moveUpDown" style="--animation-delay: .314s"
+      >🌟</span
+    >
+    <span class="star animate--moveUpDown" style="--animation-delay: .628s"
+      >🌟</span
+    >
+  </span>
+</p>
+
+<style>
+  .hello_world {
+    font-size: var(--fs-small);
+    display: inline-block;
+    position: relative;
+  }
+  span.stars {
+    position: absolute;
+    right: -3rem;
+    top: 0;
+    span.star {
+      display: inline-block;
+      font-family: monospace;
+      filter: drop-shadow(3px 3px 12px rgba(252 213 63 / 1));
+    }
+  }
+  .animate--moveUpDown {
+    animation: moveUpDown 2s ease-in-out infinite;
+    animation-delay: var(--animation-delay, 0);
+  }
+  @keyframes moveUpDown {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(
+        -1.5rem
+      ); /* Adjust the value to control the height of the bounce */
+    }
+  }
+</style>

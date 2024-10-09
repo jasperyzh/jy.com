@@ -1,26 +1,30 @@
 ---
 const { title, url, description, pubDate, author, image, tags } = Astro.props;
 
-const image_url = image.url ? image.url : "http://via.placeholder.com/300x300";
+const image_url = image.url ? image.url : "";
 const image_alt = image.alt ? image.alt : `Image of ${title}`;
 ---
 
-  <article class="entry_one d-flex flex-column flex-1 flex flex-col">
-    <div class="block w-full lg:col-span-2">
-      <a href={url} title={title}>
-        <div class="image-container">
-          <div class="placeholder">
-            <div class="loading-spinner"></div>
+<article class="entry_one d-flex flex-column flex-1 flex flex-col mb-3">
+  {
+    image_url && (
+      <figure class="block w-full lg:col-span-2">
+        <a href={url} title={title}>
+          <div class="image-container">
+            <div class="placeholder">
+              <div class="loading-spinner" />
+            </div>
+            <img
+              class="lazy-image object-cover bg-center h-full w-full"
+              data-src={image_url}
+              alt={image_alt}
+            />
           </div>
-          <img
-            class="lazy-image object-cover bg-center h-full w-full"
-            data-src={image_url}
-            alt={image_alt}
-          />
-        </div>
-      </a>
-    </div>
-    <div
+        </a>
+      </figure>
+    )
+  }
+  <div
     class="card-content flex-fill d-flex flex-column justify-content-between h-100 p-3"
   >
     <header class="card-header">
@@ -37,7 +41,7 @@ const image_alt = image.alt ? image.alt : `Image of ${title}`;
       {tags.map((tag) => <span class="tag">{tag}</span>)}
     </div>
   </div>
-  </article>
+</article>
 
 <style>
   .image-container {
@@ -70,8 +74,12 @@ const image_alt = image.alt ? image.alt : `Image of ${title}`;
   }
 
   @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 
   .lazy-image {
@@ -154,19 +162,19 @@ const image_alt = image.alt ? image.alt : `Image of ${title}`;
 </style>
 
 <script>
-  document.addEventListener('astro:page-load', () => {
-    const lazyImages = document.querySelectorAll('.lazy-image');
-    
-    const lazyLoad = target => {
+  document.addEventListener("astro:page-load", () => {
+    const lazyImages = document.querySelectorAll(".lazy-image");
+
+    const lazyLoad = (target) => {
       const io = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const img = entry.target;
-            const src = img.getAttribute('data-src');
-            
-            img.setAttribute('src', src);
-            img.classList.add('loaded');
-            
+            const src = img.getAttribute("data-src");
+
+            img.setAttribute("src", src);
+            img.classList.add("loaded");
+
             observer.disconnect();
           }
         });

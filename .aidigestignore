@@ -1,0 +1,7 @@
+.astro/
+.github/
+.vscode/
+node_modules/
+
+codebase.md
+

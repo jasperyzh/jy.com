@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 
 import Layout from "../layouts/Layout.astro";
-import EntriesOne from "../components/template-parts/EntriesOne.astro";
+import EntriesOne from "../components/EntriesOne.astro";
 
 import ContactForm from "../components/ContactForm.astro";
 
@@ -18,16 +18,7 @@ const sortedPosts = allPosts
 <Layout large_banner={true}>
   <main class="d-flex flex-column align-items-center justify-content-center">
     <section class="container">
-      <!-- <ol role="list" class="flex flex-wrap gap-3">
-          {
-            tags.map((tag) => (
-              <li class="inline-flex items-center uppercase mx-auto hover:text-blue-500 text-xs font-medium text-black">
-                <a href={`/tags/${tag}`}>{tag}</a>
-              </li>
-            ))
-          }
-        </ol> -->
-      <ul class="grid__posts">
+      <div class="masonry__layout">
         {
           sortedPosts.map((post) => (
             <EntriesOne
@@ -42,7 +33,7 @@ const sortedPosts = allPosts
             />
           ))
         }
-      </ul>
+      </div>
     </section>
   </main>
 </Layout>
