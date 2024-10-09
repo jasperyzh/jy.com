@@ -6,8 +6,8 @@ author: jyzh
 image:
   url: ""
   alt: "#"
-tags: ["general", "webdev"]
-draft: true
+tags: ["general"]
+draft: false
 
 ---
 

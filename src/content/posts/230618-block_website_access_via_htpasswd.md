@@ -6,8 +6,8 @@ author: jyzh
 image:
   url: ""
   alt: "#"
-tags: ["general", "webdev"]
-draft: true
+tags: ["general"]
+draft: 0
 
 ---
 
@@ -22,6 +22,9 @@ Start by generating an encrypted password using an online tool such as <[htpassw
 ```
 username:encrypted_password
 ```
+
+
+![this is a placeholder](/postassets/placeholder.png)
 
 Replace 'username' with your desired username and 'encrypted_password' with the generated encrypted password.
 

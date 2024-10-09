@@ -5,3 +5,4 @@ export const SITE_YEAR = new Date().getFullYear();
 export const SITE_TITLE = '_jyzh';
 export const SITE_DESCRIPTION = 'Welcome to my website!';
 export const SITE_FOOTER_ABOUT = "[[add what the blog talks about]] A blog with collection of learnings and experiments. <br />Hope you enjoy your visit!"
+export const RESUME_LINK = "/241009-resume.pdf"

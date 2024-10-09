@@ -1,24 +1,43 @@
 ---
-import { getCollection } from "astro:content";
-
 import Layout from "../layouts/Layout.astro";
+
+import ContactForm from "../components/ContactForm.astro";
+
+import { RESUME_LINK } from "../consts";
 ---
 
 <Layout>
   <main class="d-flex flex-column align-items-center justify-content-center">
-    <section class="container">
-      <h2>
-        About Me
+    <section class="container py-3">
+      <div class="row">
+        <div class="col col-md-7">
+          <h2>About Me Welcome to My Portfolio!</h2>
+          <p>
+            [draft] Welcome to my digital portfolio! I'm Jasper, and I'm
+            thrilled to have you here. This space is not just a showcase of my
+            professional journey; it's a canvas where my passions, skills, and
+            dreams blend to create a vivid picture of who I am and what I do.
+          </p>
+          <a href={RESUME_LINK} class="btn btn-primary">Download My Resume</a>
+        </div>
+      </div>
+    </section>
+    
+    <section class="container py-3">
+      <div class="row">
+        <div class="col col-md-7">
+          <h2>Contact Me</h2>
 
-        <pre class="d-inline-flex">(b ﾟ vﾟ)ノ</pre> Welcome to My Portfolio!
-      </h2>
-      <p>
-        [draft] Welcome to my digital portfolio! I'm Jasper, and I'm thrilled to
-        have you here. This space is not just a showcase of my professional
-        journey; it's a canvas where my passions, skills, and dreams blend to
-        create a vivid picture of who I am and what I do.
-      </p>
-      <a href="#" class="btn btn-primary">Download My Resume</a>
+          <ul>
+            <li>email: jasper.yzh@gmail.com</li>
+            <li>phone: +6013 391 2105 [hide with unicode?]</li>
+          </ul>
+
+          <h4>or drop me a message via email</h4>
+
+          <ContactForm />
+        </div>
+      </div>
     </section>
   </main>
 </Layout>

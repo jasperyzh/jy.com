@@ -23,17 +23,17 @@ export default defineConfig({
     // mdx(),
   ],
 
-  // markdown: {
-  //   drafts: true,
-  //   shikiConfig: {
-  //     theme: "css-variables"
-  //   }
-  // },
+  markdown: {
+    drafts: true,
+    shikiConfig: {
+      theme: "css-variables"
+    }
+  },
 
-  // shikiConfig: {
-  //   wrap: true,
-  //   skipInline: false,
-  //   drafts: true
-  // },
+  shikiConfig: {
+    wrap: true,
+    skipInline: false,
+    drafts: true
+  },
 });
 

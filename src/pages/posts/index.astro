@@ -1,47 +1,35 @@
 ---
-import { getCollection } from "astro:content";
-
 import Layout from "../../layouts/Layout.astro";
-import EntriesOne from "../../components/EntriesOne.astro";
 
-import Pagination from "../../components/Pagination.astro";
-
-const allPosts = await getCollection("posts");
-const sortedPosts = allPosts.sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-  
-  
-  // add pagination
-  
-);
+import EntriesList from "../../components/EntriesList.astro";
 ---
 
 <Layout>
-  <!-- 
-  title='Blog'
-  description='Brutal Blog | On this page you can find a collection of blogposts'
-  pageTitle='Brutal Blog' -->
   <main>
     <section class="container">
-        <ul class="masonry__layout">
-          {
-            sortedPosts.map((post) => (
-              <EntriesOne
-                url={"/posts/" + post.slug}
-                title={post.data.title}
-                description={post.data.description}
-                alt={post.data.title}
-                pubDate={post.data.pubDate.toString().slice(0, 10)}
-                author={post.data.author}
-                image={post.data.image}
-                tags={post.data.tags}
-              />
-            ))
-          }
-        </ul>
+      <!-- tags -->
+      <!-- <ol role="list" class="flex flex-wrap gap-3">
+        {
+          tags.map((tag) => (
+            <li class="inline-flex items-center uppercase mx-auto hover:text-blue-500 text-xs font-medium text-black">
+              <a href={`/tags/${tag}`}>{tag}</a>
+            </li>
+          ))
+        }
+      </ol> -->
 
-        <!-- <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} /> -->
+      <!-- posts -->
+      <h2>All Blog Posts</h2>
+      <div class="masonry__layout">
+        <EntriesList sort="asc" />
+        <!-- Sorting in ascending order for example -->
       </div>
+
+      <!-- <hr>
+  <EntriesList sort="desc" tags={['webdev']} /> -->
+
+
+      <!-- <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} /> -->
     </section>
   </main>
 </Layout>

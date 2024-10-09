@@ -3,6 +3,97 @@
 - [ ] dark mode (BsThemeButton.astro - issue with cross-page)
 
 
+- [ ] define target audience, primary goals
+
+## 241009
+- [ ] tech stack
+	- astro.js
+	- bootstrap css
+	- github-pages
+	- github-action
+- [ ] features & integration
+	- cms: decap cms?
+	- analytics tools: google analytics?
+	- content management with markdown
+	- tag system for the posts
+	- assets setup & structure
+- [ ] UI/UX Consideration
+	- responsive design
+	- extra: accessibility?
+- [x] link to source code
+
+
+---
+---
+---
+
+## Reframing the Project - log into readme.md
+
+### **1. Project Structure with Astro.js**
+
+You will be using a **single repository** and organizing the pages in the `src/pages` directory for `home`, `blog`, `portfolio`, and `playground`. The overall project structure will look like this:
+
+```bash
+root/
+├── src/
+│   ├── pages/
+│   │   ├── home/
+│   │   │   └── index.astro  # Homepage for jy.com
+│   │   ├── blog/
+│   │   │   └── index.astro  # Blog page
+│   │   ├── portfolio/
+│   │   │   └── index.astro  # Portfolio page
+│   │   ├── playground/
+│   │   │   └── index.astro  # Playground page
+│   └── components/
+├── public/
+├── package.json
+└── astro.config.mjs
+```
+
+### **2. GitHub Repository and Deployment**
+
+You will use **one GitHub repository** for the entire project. There will be no subdomains, and only **one deployment** to GitHub Pages will be used for the entire website.
+
+**Key steps**:
+1. **Single Repository**: Your code for `home`, `blog`, `portfolio`, and `playground` will all live in this one repository.
+2. **GitHub Pages Setup**: You will configure the deployment for the main domain (e.g., `jy.com`), and there will be no need to configure subdomains.
+
+### **3. Astro.js Configuration**
+
+In `astro.config.mjs`, no need to configure multiple build outputs. You will set up one build output for the entire site.
+
+Example configuration:
+
+```javascript
+import { defineConfig } from 'astro/config';
+
+export default defineConfig({
+  site: 'https://jy.com',
+  build: {
+    outDir: './dist',
+  },
+  // Additional settings
+});
+```
+
+### **Next Steps:**
+
+1. **Set Up Pages**:
+   - Create pages for `home`, `blog`, `portfolio`, and `playground` inside the `src/pages` directory.
+   
+2. **Single Deployment**:
+   - Use **GitHub Actions** to automate the deployment to **one GitHub Pages site** for the entire project.
+   
+3. **DNS Configuration**:
+   - Set up your DNS for the single domain `jy.com` (without subdomains).
+
+This setup will streamline the development process and simplify deployment and DNS management.
+
+---
+---
+---
+
 ## content_setup
 
 1. homepage2024

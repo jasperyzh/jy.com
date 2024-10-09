@@ -1,23 +1,18 @@
 ---
-import { getCollection, getEntry } from "astro:content";
-import type { CollectionEntry } from 'astro:content';
-
+import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 
+// Fetch all posts and generate paths for each post
 export async function getStaticPaths() {
   const allPosts = await getCollection("posts");
 
-  // filter out draft posts
+  // Filter out draft posts
   const publishedPosts = allPosts.filter((post) => !post.data.draft);
 
   return publishedPosts.map((entry) => ({
     params: { slug: entry.slug },
     props: { entry },
   }));
-}
-
-interface Props {
-  entry: CollectionEntry<"posts">;
 }
 
 const { entry } = Astro.props;
@@ -28,8 +23,64 @@ const { Content } = await entry.render();
   <main>
     <div class="container">
       <article id="blog-single">
-        {entry ? <Content /> : <p>Post not found.</p>}
+        <header>
+          {
+            entry ? (
+              <>
+                <h1>{entry.data.title}</h1>
+
+                {entry.data.tags && entry.data.tags.length > 0 && (
+                  <div class="tags">
+                    {entry.data.tags.map((tag) => (
+                      <a
+                        href={`/tags/${tag}`}
+                        class="badge rounded-pill text-bg-primary"
+                      >
+                        {tag}
+                      </a>
+                    ))}
+                  </div>
+                )}
+
+                {/* <p>
+            <strong>Published:</strong>{" "}
+            {entry.data.pubDate.toString().slice(0, 10)}
+          </p> */}
+              </>
+            ) : (
+              <p>Post not found.</p>
+            )
+          }
+        </header>
+
+        <Content />
       </article>
     </div>
   </main>
 </Layout>
+
+<style>
+  article {
+    max-width: 760px;
+    margin: 1.618rem auto;
+    margin-bottom: 3rem;
+
+  }
+
+  header {
+    margin: 1.618rem auto;
+  }
+  /* 
+  h1 {
+    font-size: 2.2em;
+    margin-bottom: 0.5em;
+    text-align: center;
+  }
+
+  p {
+    color: #666;
+    font-size: 0.9em;
+    text-align: center;
+    margin-bottom: 1.5em;
+  } */
+</style>

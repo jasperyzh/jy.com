@@ -1,14 +1,13 @@
 ---
-title: "Premature Optimization: A Developer's Guide"
-description: Based on the insightful video by CodeAesthetic, discusses the balance between performance, velocity, and adaptability in code optimization.
 pubDate: 230723 
 author: jyzh 
+title: "Premature Optimization: A Developer's Guide"
+description: Based on the insightful video by CodeAesthetic, discusses the balance between performance, velocity, and adaptability in code optimization.
 image:
   url: ""
   alt: "#"
 tags: ["general", "webdev"]
-draft: true
-
+draft: false
 ---
 
 Premature optimization is often considered the root of all evil in programming. But when should you actually optimize your code? This blog post, based on the insightful video by CodeAesthetic, discusses the balance between performance, velocity, and adaptability in code optimization.

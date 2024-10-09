@@ -1,39 +1,23 @@
 ---
-import { getCollection } from "astro:content";
-
 import Layout from "../layouts/Layout.astro";
-import EntriesOne from "../components/EntriesOne.astro";
 
-import ContactForm from "../components/ContactForm.astro";
-
-const allPosts = await getCollection("posts");
-const tags = [...new Set(allPosts.map((post) => post.data.tags).flat())];
-
-// Sort posts by date in descending order (newest first)
-const sortedPosts = allPosts
-  .sort((a, b) => new Date(b.data.pubDate) - new Date(a.data.pubDate))
-  .slice(0, 4);
+import EntriesList from "../components/EntriesList.astro";
+import SectionCta from "../components/SectionCta.astro";
+// import ContactForm from "../components/ContactForm.astro";
 ---
 
 <Layout large_banner={true}>
   <main class="d-flex flex-column align-items-center justify-content-center">
     <section class="container">
+      <h2>Latest Posts</h2>
       <div class="masonry__layout">
-        {
-          sortedPosts.map((post) => (
-            <EntriesOne
-              url={"/posts/" + post.slug}
-              title={post.data.title}
-              description={post.data.description}
-              alt={post.data.title}
-              pubDate={post.data.pubDate.toString().slice(0, 10)}
-              author={post.data.author}
-              image={post.data.image}
-              tags={post.data.tags}
-            />
-          ))
-        }
+        <EntriesList sort="desc" limit={6} />
       </div>
+    </section>
+
+    <section id="cta" class="my-5">
+      <!-- [] restyle -->
+      <SectionCta />
     </section>
   </main>
 </Layout>
