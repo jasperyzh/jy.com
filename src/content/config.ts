@@ -20,7 +20,8 @@
         url: z.string(),
         alt: z.string(),
       }),
-      tags: z.array(z.string()),
+      tags: z.union([z.array(z.string()), z.string()]).default(false),
+      // tags: z.array(z.string()),
     }),
   });
 

@@ -7,7 +7,7 @@ image:
   url: ""
   alt: "#"
 tags: ["general", "webdev"]
-draft: false
+draft: 0
 ---
 
 Premature optimization is often considered the root of all evil in programming. But when should you actually optimize your code? This blog post, based on the insightful video by CodeAesthetic, discusses the balance between performance, velocity, and adaptability in code optimization.

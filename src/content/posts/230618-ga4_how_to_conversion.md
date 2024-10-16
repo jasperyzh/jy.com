@@ -7,7 +7,7 @@ image:
   url: ""
   alt: "#"
 tags: ["general"]
-draft: false
+draft: 0
 
 ---
 
