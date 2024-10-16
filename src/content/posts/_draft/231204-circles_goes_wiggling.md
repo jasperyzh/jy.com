@@ -7,7 +7,7 @@ image:
   url: ""
   alt: "#"
 tags: ["general", "webdev"]
-draft: false
+draft: true
 ---
 
 <video width="512" height="512" controls autoplay loop muted>
