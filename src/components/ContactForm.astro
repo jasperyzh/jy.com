@@ -1,122 +1,60 @@
-<form
-  class="row"
-  id="contact_me"
-  action="https://formspree.io/f/xdoqowbb"
-  method="POST"
->
-  <div class="container">
-
-    <div class="mb-3">
-      <label for="visitor_name" class="form-label">Name</label>
-      <input
-        id="visitor_name"
-        type="text"
-        class="form-control"
-        name="visitor_name"
-      />
-    </div>
-    <div class="mb-3">
-      <label for="email" class="form-label">Email</label>
-      <input id="email" type="email" class="form-control" name="email" />
-    </div>
-
-    <div class="mb-3">
-      <label for="subject" class="form-label">Subject</label>
-      <input id="subject" type="text" class="form-control" name="subject" />
-    </div>
-
-    <div class="mb-3">
-      <label for="message" class="form-label">Message</label>
-      <textarea id="message" class="form-control" name="message" rows="3"
-      ></textarea>
-    </div>
-
-    <button type="submit" id="my-form-button" class="btn btn-primary"
-      >Submit</button
-    >
-
-    <p id="my-form-status"></p>
+<form id="myForm" class="p-4 bg-white border rounded shadow">
+  <div class="mb-3">
+    <label for="email" class="form-label">Email:</label>
+    <input type="email" id="email" name="email" class="form-control" required />
   </div>
+  <div class="mb-3">
+    <label for="message" class="form-label">Message:</label>
+    <textarea id="message" name="message" class="form-control" rows="4" required
+    ></textarea>
+  </div>
+  <button type="button" class="btn btn-primary w-100" onclick="captcha()"
+    >Submit</button
+  >
 </form>
-<!-- Place this script at the end of the body tag -->
+
+<script
+  is:inline
+  src="https://www.google.com/recaptcha/api.js?render=6Leh5mIqAAAAAIXhOnRVDr-lYlNJ_x-Ce831E1sZ"
+></script>
 <script is:inline>
-  var form = document.getElementById("my-form");
-  async function handleSubmit(event) {
-    event.preventDefault();
-    var status = document.getElementById("my-form-status");
-    var data = new FormData(event.target);
-    fetch(event.target.action, {
-      method: form.method,
-      body: data,
-      headers: {
-        Accept: "application/json",
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          status.innerHTML = "Thanks for your submission!";
-          form.reset();
-        } else {
-          response.json().then((data) => {
-            if (Object.hasOwn(data, "errors")) {
-              status.innerHTML = data["errors"]
-                .map((error) => error["message"])
-                .join(", ");
-            } else {
-              status.innerHTML =
-                "Oops! There was a problem submitting your form";
-            }
-          });
-        }
-      })
-      .catch((error) => {
-        status.innerHTML = "Oops! There was a problem submitting your form";
-      });
-  }
-  form.addEventListener("submit", handleSubmit);
-</script>
-<!-- 
-
-<pre>>modify this form HTML and place wherever you want your form </pre>
-<form id="my-form" action="https://formspree.io/f/xdoqowbb" method="POST">
-  <label>Email:</label>
-  <input type="email" name="email" />
-  <label>Message:</label>
-  <input type="text" name="message" />
-  <button id="my-form-button">Submit</button>
-  <p id="my-form-status"></p>
-</form>
-
-<pre>>Place this script at the end of the body tag </pre>
-<script>
-  var form = document.getElementById("my-form");
-  
-  async function handleSubmit(event) {
-    event.preventDefault();
-    var status = document.getElementById("my-form-status");
-    var data = new FormData(event.target);
-    fetch(event.target.action, {
-      method: form.method,
-      body: data,
-      headers: {
-          'Accept': 'application/json'
-      }
-    }).then(response => {
-      if (response.ok) {
-        status.innerHTML = "Thanks for your submission!";
-        form.reset()
-      } else {
-        response.json().then(data => {
-          if (Object.hasOwn(data, 'errors')) {
-            status.innerHTML = data["errors"].map(error => error["message"]).join(", ")
-          } else {
-            status.innerHTML = "Oops! There was a problem submitting your form"
-          }
+  function captcha() {
+    grecaptcha.ready(function () {
+      grecaptcha
+        .execute("6Leh5mIqAAAAAIXhOnRVDr-lYlNJ_x-Ce831E1sZ", {
+          action: "submit",
         })
-      }
-    }).catch(error => {
-      status.innerHTML = "Oops! There was a problem submitting your form"
+        .then(function (token) {
+          // Get form data
+          const email = document.getElementById("email").value;
+          const message = document.getElementById("message").value;
+
+          // Send data to Formspree
+          fetch("https://formspree.io/f/xdoqowbb", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify({
+              email: email,
+              message: message,
+              "g-recaptcha-response": token,
+            }),
+          })
+            .then((response) => {
+              if (response.ok) {
+                alert("Form submitted successfully!");
+                document.getElementById("myForm").reset();
+              } else {
+                alert("Something went wrong!");
+              }
+            })
+            .catch((error) => {
+              alert("Something went wrong!");
+              console.error("Error:", error);
+            });
+        });
     });
   }
-  form.addEventListener("submit", handleSubmit)
-</script> -->
+</script>

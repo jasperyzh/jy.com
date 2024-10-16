@@ -1,8 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
-import ContactForm from "../components/ContactForm.astro";
-
 import { RESUME_LINK } from "../consts";
 ---
 
@@ -23,21 +21,5 @@ import { RESUME_LINK } from "../consts";
       </div>
     </section>
     
-    <section class="container py-3">
-      <div class="row">
-        <div class="col col-md-7">
-          <h2>Contact Me</h2>
-
-          <ul>
-            <li>email: jasper.yzh@gmail.com</li>
-            <li>phone: +6013 391 2105 [hide with unicode?]</li>
-          </ul>
-
-          <h4>or drop me a message via email</h4>
-
-          <ContactForm />
-        </div>
-      </div>
-    </section>
   </main>
 </Layout>
