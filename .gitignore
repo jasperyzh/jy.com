@@ -12,6 +12,8 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Example for Deno
+*.log
 
 # environment variables
 .env
