@@ -1,0 +1,92 @@
+---
+import "../global/global.scss";
+
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
+
+import Head from "./Head.astro";
+// import Link from "./Link.astro";
+// import EffectGrain from "./_EffectGrain.astro";
+
+import Header from "./Header.astro";
+import Footer from "./Footer.astro";
+
+export interface Props {
+  empty_canvas?: boolean;
+  title?: string;
+  description?: string;
+  image?: string;
+  default_footer?: boolean;
+}
+
+const {
+  empty_canvas = false,
+  title = SITE_TITLE,
+  description = SITE_DESCRIPTION,
+  image,
+  default_footer = true,
+} = Astro.props as Props;
+---
+
+<!doctype html>
+<html lang="en">
+  <Head {title} {description} {image} />
+
+  <body class="sticky-footer">
+    <div class="wrapper">
+      {!empty_canvas && <Header />}
+
+      <slot />
+
+      {!empty_canvas && default_footer && <Footer />}
+    </div>
+    <style is:global>
+      /* sticky_footer */
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      body.sticky-footer {
+        & .wrapper {
+          min-height: 100%;
+          display: flex;
+          flex-direction: column;
+        }
+        & .wrapper > header,
+        & .wrapper > footer {
+          flex-grow: 0;
+          flex-shrink: 0;
+        }
+        & .wrapper > main {
+          flex-grow: 1;
+        }
+      }
+    </style>
+    <script>
+      import "bootstrap";
+    </script>
+  </body>
+</html>
+
+<!-- 
+microblog/src/layouts/BaseLayout.astro
+
+---
+import BaseHead from "@/components/BaseHead.astro";
+import Navigation from "@/components/global/Navigation.astro";
+import Footer from "@/components/global/Footer.astro";
+---
+
+<html lang="en">
+  <head>
+    <BaseHead />
+  </head>
+  <body class="bg-white flex flex-col min-h-screen">
+    <Navigation />
+    <main class="flex-grow"><slot /></main>
+    <Footer />
+  </body>
+</html>
+
+-->

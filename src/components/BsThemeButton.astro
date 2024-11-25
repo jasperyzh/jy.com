@@ -1,0 +1,38 @@
+---
+// https://getbootstrap.com/docs/5.3/customize/color-modes/#javascript
+---
+
+<button
+  id="darkModeToggle"
+  class="btn"
+  style="filter: drop-shadow(3px 3px 12px rgba(252 213 63 / 1));">🌕</button
+>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const btn = document.getElementById("darkModeToggle");
+    btn.addEventListener("click", function () {
+      const theme = document.documentElement.getAttribute("data-bs-theme");
+      if (theme === "dark") {
+        document.documentElement.setAttribute("data-bs-theme", "light");
+        btn.textContent = "🌑";
+      } else {
+        document.documentElement.setAttribute("data-bs-theme", "dark");
+        btn.textContent = "🌕";
+      }
+    });
+
+    // Initialize button state
+    const currentTheme = document.documentElement.getAttribute("data-bs-theme");
+    if (currentTheme === "dark") {
+      btn.textContent = "🌕";
+    } else {
+      btn.textContent = "🌑";
+    }
+  });
+</script>
+<style is:global>
+  * {
+    transition: background-color 0.3s ease;
+  }
+</style>

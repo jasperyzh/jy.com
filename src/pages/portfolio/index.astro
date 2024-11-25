@@ -1,0 +1,206 @@
+---
+import { getCollection } from "astro:content";
+
+import Layout from "../../layouts/Layout.astro";
+// import EntriesOne from "../../components/EntriesOne.astro";
+// import ContactForm from "../../components/ContactForm.astro";
+
+const allPosts = await getCollection("posts");
+
+// Sort posts by date in descending order (newest first)
+const sortedPosts = allPosts
+  .sort((a, b) => new Date(b.data.pubDate) - new Date(a.data.pubDate))
+  .slice(0, 4);
+
+import { RESUME_LINK } from "../../consts";
+
+---
+
+<Layout large_banner={true}>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/photoswipe@5/dist/photoswipe.css"
+  />
+  <link rel="stylesheet" href="https://unpkg.com/photoswipe-dynamic-caption-plugin/photoswipe-dynamic-caption-plugin.css">
+
+  <main class="d-flex flex-column align-items-center justify-content-center">
+    <section class="container">
+      <h1>Portfolio</h1>
+
+      <a target="_blank" href={RESUME_LINK} class="btn btn-primary">
+        Download Resume
+      </a>
+      
+      <hr />
+
+      <div class="masonry__layout">
+        <div class="card mb-3">
+          <img src="https://via.placeholder.com/300x200" alt="Placeholder 1" />
+        </div>
+
+        <div class="card mb-3">
+          <img src="https://via.placeholder.com/300x400" alt="Placeholder 2" />
+        </div>
+
+        <div class="card mb-3">
+          <img src="https://via.placeholder.com/300x300" alt="Placeholder 3" />
+        </div>
+
+        <div class="card mb-3">
+          <img src="https://via.placeholder.com/300x250" alt="Placeholder 4" />
+        </div>
+
+        <div class="card mb-3">
+          <img src="https://via.placeholder.com/300x350" alt="Placeholder 5" />
+        </div>
+
+        <div class="card mb-3">
+          <img src="https://via.placeholder.com/300x200" alt="Placeholder 6" />
+        </div>
+
+        <div class="pswp-gallery pswp-gallery--single-column" id="my-gallery">
+          <a
+            href="https://cdn.photoswipe.com/photoswipe-demo-images/photos/2/img-2500.jpg"
+            data-pswp-width="1669"
+            data-pswp-height="2500"
+            target="_blank"
+          >
+            <img
+              src="https://cdn.photoswipe.com/photoswipe-demo-images/photos/2/img-200.jpg"
+              alt=""
+            />
+            <span class="pswp-caption-content">Description of Project 2</span>
+          </a>
+          <!-- cropped thumbnail: -->
+          <a
+            href="https://cdn.photoswipe.com/photoswipe-demo-images/photos/7/img-2500.jpg"
+            data-pswp-width="1875"
+            data-pswp-height="2500"
+            data-cropped="true"
+            target="_blank"
+          >
+            <img
+              src="https://cdn.photoswipe.com/photoswipe-demo-images/photos/7/img-200.jpg"
+              alt=""
+            />
+            Cropped
+            <span class="pswp-caption-content">Description of Project 7 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Temporibus expedita sequi accusantium inventore voluptas id dolor eos quis velit vel sint nihil tempora, assumenda corporis quo! Cupiditate explicabo sit expedita.</span>
+          </a>
+          <!-- data-pswp-src with custom URL in href -->
+          <a
+            href="https://unsplash.com"
+            data-pswp-src="https://cdn.photoswipe.com/photoswipe-demo-images/photos/3/img-2500.jpg"
+            data-pswp-width="2500"
+            data-pswp-height="1666"
+            target="_blank"
+          >
+            <img
+              src="https://cdn.photoswipe.com/photoswipe-demo-images/photos/3/img-200.jpg"
+              alt=""
+            />
+          </a>
+          <!-- Without thumbnail: -->
+          <a
+            href="http://example.com"
+            data-pswp-src="https://cdn.photoswipe.com/photoswipe-demo-images/photos/5/img-2500.jpg"
+            data-pswp-width="2500"
+            data-pswp-height="1668"
+            target="_blank"
+          >
+            No thumbnail
+          </a>
+          <!-- wrapped with any element: -->
+          <div>
+            <a
+              href="https://cdn.photoswipe.com/photoswipe-demo-images/photos/6/img-2500.jpg"
+              data-pswp-width="2500"
+              data-pswp-height="1667"
+              target="_blank"
+            >
+              <img
+                src="https://cdn.photoswipe.com/photoswipe-demo-images/photos/6/img-200.jpg"
+                alt=""
+              />
+            </a>
+          </div>
+        </div>
+        <!-- Add more items as needed -->
+      </div>
+
+      <!-- <ol role="list" class="flex flex-wrap gap-3">
+          {
+            tags.map((tag) => (
+              <li class="inline-flex items-center uppercase mx-auto hover:text-blue-500 text-xs font-medium text-black">
+                <a href={`/tags/${tag}`}>{tag}</a>
+              </li>
+            ))
+          }
+        </ol> -->
+      <!-- <ul class="grid__posts">
+        {
+          sortedPosts.map((post) => (
+            <EntriesOne
+              url={"/posts/" + post.slug}
+              title={post.data.title}
+              description={post.data.description}
+              alt={post.data.title}
+              pubDate={post.data.pubDate.toString().slice(0, 10)}
+              author={post.data.author}
+              image={post.data.image}
+              tags={post.data.tags}
+            />
+          ))
+        }
+      </ul> -->
+    </section>
+  </main>
+</Layout>
+<script>
+  import PhotoSwipeLightbox from "photoswipe/lightbox";
+
+  import PhotoSwipeDynamicCaption from "photoswipe-dynamic-caption-plugin";
+  
+  // import PhotoSwipeDynamicCaption from "photoswipe-dynamic-caption-plugin/photoswipe-dynamic-caption-plugin.esm.js";
+
+  const lightbox = new PhotoSwipeLightbox({
+    gallery: "#my-gallery",
+    children: "a",
+    pswpModule: () => import("photoswipe"),
+    keyboardNavigation: true, // Allows for left/right arrow navigation
+  });
+
+  // Initialize the caption plugin with the lightbox
+  const captionPlugin = new PhotoSwipeDynamicCaption(lightbox, {
+    type: 'auto', // Automatically adjust position of caption
+    captionContent: '.pswp-caption-content' // Selector for caption content
+  });
+
+
+  lightbox.init();
+
+</script>
+
+<!-- <script is:inline>
+  import PhotoSwipeLightbox from "photoswipe/lightbox";
+  import "photoswipe/style.css";
+
+  const lightbox = new PhotoSwipeLightbox({
+    gallery: "#my-gallery",
+    children: "a",
+    pswpModule: () => import("photoswipe"),
+  });
+  lightbox.init();
+</script> -->
+<style>
+  .pswp-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+
+  .pswp-gallery a img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+</style>

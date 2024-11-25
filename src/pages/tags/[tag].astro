@@ -1,0 +1,73 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import EntriesList from "../../components/EntriesList.astro";
+
+// Get current tag from URL parameters
+const { tag } = Astro.params;
+
+// Fetch posts and unique tags inside `getStaticPaths`
+export async function getStaticPaths() {
+  const allPosts = await getCollection("posts");
+  const tags = [...new Set(allPosts.flatMap((post) => post.data.tags))];
+  // console.log("Generated paths for tags:", tags); // Debugging output
+
+  return tags.map((tag) => ({
+    params: { tag },
+  }));
+}
+
+// Fetch all posts and filter by the tag within the main logic
+const allPosts = await getCollection("posts");
+const tags = [...new Set(allPosts.flatMap((post) => post.data.tags))]; // Extract all unique tags
+const taggedPosts = allPosts.filter((post) => {
+  const tags = Array.isArray(post.data.tags)
+    ? post.data.tags.map((tag) => tag.toLowerCase())
+    : [];
+  const hasTag = tags.includes(tag.toLowerCase());
+  console.log(
+    `Post tags: ${tags}, Searching for tag: "${tag.toLowerCase()}" - Result: ${hasTag}`
+  );
+  return hasTag;
+});
+
+console.log(
+  `Filtered post titles for tag "${tag}":`,
+  taggedPosts.map((post) => post.data.title)
+);
+---
+
+<Layout title={`Posts tagged with "${tag}"`}>
+  <main>
+    <section class="container">
+      <h2>Posts Tagged with "{tag}"</h2>
+
+      <!-- Add All Tags Section -->
+      <div class="all-tags">
+        <h3>All Tags</h3>
+        <ul class="tags-list">
+          {
+            tags.map((currentTag) => (
+              <li>
+                <a href={`/tags/${currentTag}`} class="tag-link">
+                  {currentTag}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <!-- Tagged Posts Section -->
+      {
+        taggedPosts.length > 0 ? (
+          <div class="masonry__layout">
+            <EntriesList posts={taggedPosts} />
+          </div>
+        ) : (
+          <p>No posts found for this tag.</p>
+        )
+      }
+    </section>
+  </main>
+</Layout>

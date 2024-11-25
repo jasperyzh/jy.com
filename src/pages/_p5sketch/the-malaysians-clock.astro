@@ -1,0 +1,132 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout empty_canvas={true}>
+  <script
+    is:inline
+    src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.8.0/p5.js"></script>
+  <main>
+    <div id="canvas"></div>
+  </main>
+  <style>
+    main {
+        background: #0d0d0d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    #canvas {
+        display: inline-block;
+    }
+  </style>
+  <script is:inline>
+    function setup_canvas() {
+      let _canvas = createCanvas(512, 512);
+      _canvas.parent("canvas");
+      frameRate(60);
+      background(13);
+    }
+
+    // sketch
+    let yellow = [255, 224, 26];
+    let blue = [8, 9, 146];
+
+    function setup() {
+      setup_canvas();
+      describe("A sketch of THE Malaysian Favourite Clock.");
+      // sketch
+
+      angleMode(DEGREES);
+    }
+
+    function draw() {
+      background(13);
+
+      // sketch
+      push();
+      draw_clock();
+      pop();
+    }
+
+    function draw_clock() {
+      // Translate the origin to the center of the canvas
+      translate(width / 2, height / 2);
+      strokeCap(SQUARE);
+
+      // Draw clock face
+      stroke(255, 0, 0);
+      strokeWeight(38);
+      ellipse(0, 0, 350, 350);
+
+      fill(blue);
+      stroke(255);
+      strokeWeight(12);
+      ellipse(0, 0, 350, 350);
+
+      // Draw the ticks
+      for (let i = 0; i < 60; i++) {
+        let len = i % 5 === 0 ? 15 : 8;
+        if (i % 5 === 0) {
+          strokeWeight(6);
+        } else {
+          strokeWeight(4);
+        }
+        let angle = map(i, 0, 60, 0, 360);
+        let x1 = cos(angle) * 165;
+        let y1 = sin(angle) * 165;
+        let x2 = cos(angle) * (165 - len);
+        let y2 = sin(angle) * (165 - len);
+        line(x1, y1, x2, y2);
+      }
+
+      // Get the current UTC time
+      let now = new Date();
+      let hours = now.getUTCHours() + 8; // Convert to Malaysia time (GMT+8)
+      let minutes = now.getUTCMinutes();
+      let seconds = now.getUTCSeconds();
+
+      // Correct for number over 24
+      hours = hours >= 24 ? hours - 24 : hours;
+
+      let adjustAngleAsHandPointToRight = 90;
+
+      // Calculate angles for hands
+      let hourAngle =
+        map(hours % 12, 0, 12, 0, 360) +
+        minutes * 0.5 -
+        adjustAngleAsHandPointToRight;
+      let minuteAngle =
+        map(minutes, 0, 60, 0, 360) +
+        map(seconds, 0, 60, 0, 6) -
+        adjustAngleAsHandPointToRight;
+      let secondAngle =
+        map(seconds, 0, 60, 0, 360) - adjustAngleAsHandPointToRight;
+
+      // Draw the second hand
+      push();
+      // translate(10, 0);
+      stroke(yellow);
+      strokeWeight(5);
+      rotate(secondAngle);
+      line(-22, 0, 164, 0);
+      pop();
+
+      // Draw the minute hand
+      push();
+      stroke(yellow);
+      strokeWeight(6);
+      rotate(minuteAngle);
+      line(-20, 0, 148, 0);
+      pop();
+
+      // Draw the hour hand
+      push();
+      stroke(yellow);
+      strokeWeight(12);
+      rotate(hourAngle);
+      line(-20, 0, 140, 0);
+      pop();
+    }
+  </script>
+</Layout>

@@ -1,0 +1,35 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+import EntriesList from "../../components/EntriesList.astro";
+---
+
+<Layout>
+  <main>
+    <section class="container">
+      <!-- tags -->
+      <!-- <ol role="list" class="flex flex-wrap gap-3">
+        {
+          tags.map((tag) => (
+            <li class="inline-flex items-center uppercase mx-auto hover:text-blue-500 text-xs font-medium text-black">
+              <a href={`/tags/${tag}`}>{tag}</a>
+            </li>
+          ))
+        }
+      </ol> -->
+
+      <!-- posts -->
+      <h1>All Blog Posts</h1>
+      <div class="masonry__layout">
+        <EntriesList sort="asc" />
+        <!-- Sorting in ascending order for example -->
+      </div>
+
+      <!-- <hr>
+  <EntriesList sort="desc" tags={['webdev']} /> -->
+
+
+      <!-- <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} /> -->
+    </section>
+  </main>
+</Layout>

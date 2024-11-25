@@ -1,0 +1,191 @@
+---
+const { title, url, description, pubDate, author, image, tags } = Astro.props;
+
+const image_url = image.url ? image.url : "";
+const image_alt = image.alt ? image.alt : `Image of ${title}`;
+---
+
+<article class="entry_one d-flex flex-column flex-1 flex flex-col mb-3">
+  {
+    image_url && (
+      <figure class="block w-full lg:col-span-2">
+        <a href={url} title={title}>
+          <div class="image-container">
+            <div class="placeholder">
+              <div class="loading-spinner" />
+            </div>
+            <img
+              class="lazy-image object-cover bg-center h-full w-full"
+              data-src={image_url}
+              alt={image_alt}
+            />
+          </div>
+        </a>
+      </figure>
+    )
+  }
+  <div
+    class="card-content flex-fill d-flex flex-column justify-content-between h-100 p-3"
+  >
+    <header class="card-header">
+      <time datetime={pubDate}>{pubDate}</time>
+      <a href={url} title={title}>
+        <h3>
+          {title}
+        </h3>
+      </a>
+    </header>
+
+    <p class="description">{description}</p>
+    <div class="tags mt-2">
+      {
+        tags.map((tag) => (
+          <a href={`/tags/${tag}`} class="tag-badge">
+            <span class="badge rounded-pill text-bg-secondary">{tag}</span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</article>
+
+<style>
+  .image-container {
+    position: relative;
+    aspect-ratio: 4/3;
+  }
+
+  .placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid #333;
+    border-top: 3px solid #999;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .lazy-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .lazy-image.loaded {
+    opacity: 1;
+  }
+
+  /* old */
+
+  .entry_one {
+    height: 100%;
+    background: #fff;
+    transition: filter 0.168s ease-in-out;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0));
+    &:hover {
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    }
+  }
+  img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+  time {
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    color: var(--gray3);
+  }
+  h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+  p {
+    font-size: 0.85rem;
+    color: var(--gray5);
+  }
+  a {
+    color: var(--gray5);
+    text-decoration: none;
+    &:hover {
+      text-decoration: dashed underline;
+    }
+  }
+  .card-header {
+    margin-bottom: 8px;
+  }
+
+  h3 {
+    margin: 4px 0;
+  }
+  .description {
+    flex-grow: 1;
+    margin-bottom: 8px;
+  }
+  .tags {
+    text-transform: lowercase;
+    font-size: 0.8rem;
+    color: var(--gray3);
+  }
+  .tag {
+    margin-right: 8px;
+  }
+  /* add card inner shadow */
+  .entry_one {
+    box-shadow:
+      0 1px 2px 0 rgba(0, 0, 0, 0.05),
+      0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    border-radius: 0.25rem;
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const lazyImages = document.querySelectorAll(".lazy-image");
+
+    const lazyLoad = (target) => {
+      const io = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const img = entry.target;
+            const src = img.getAttribute("data-src");
+
+            img.setAttribute("src", src);
+            img.classList.add("loaded");
+
+            observer.disconnect();
+          }
+        });
+      });
+
+      io.observe(target);
+    };
+
+    lazyImages.forEach(lazyLoad);
+  });
+</script>

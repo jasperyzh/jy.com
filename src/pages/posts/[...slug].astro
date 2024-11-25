@@ -1,0 +1,100 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+
+// Fetch all posts and generate paths for each post
+export async function getStaticPaths() {
+  const allPosts = await getCollection("posts");
+
+  // Filter out draft posts
+  const publishedPosts = allPosts.filter((post) => !post.data.draft);
+
+  return publishedPosts.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<Layout title={entry?.data.title} description={entry?.data.description}>
+  <main>
+    <div class="container">
+      <!-- Back Button -->
+      <button onClick="history.back()" class="back-button"> ← Back </button>
+
+      <article id="blog-single">
+        <header class="mb-1">
+          {
+            entry ? (
+              <>
+                {entry.data.tags && entry.data.tags.length > 0 && (
+                  <div class="tags">
+                    {entry.data.tags.map((tag) => (
+                      <a
+                        href={`/tags/${tag}`}
+                        class="badge rounded-pill text-bg-primary"
+                      >
+                        {tag}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </>
+            ) : (
+              <p>Post not found.</p>
+            )
+          }
+        </header>
+
+        <Content />
+      </article>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  article {
+    max-width: 760px;
+    margin: 1.618rem auto;
+    margin-bottom: 3rem;
+  }
+
+  header {
+    margin: 1.618rem auto;
+  }
+  /* 
+  h1 {
+    font-size: 2.2em;
+    margin-bottom: 0.5em;
+    text-align: center;
+  }
+
+  p {
+    color: #666;
+    font-size: 0.9em;
+    text-align: center;
+    margin-bottom: 1.5em;
+  } */
+</style>
+<style is:global>
+  article > p {
+    line-height: 1.725;
+  }
+  article li {
+    padding-left: 0.5rem;
+    margin-bottom: 0.25rem;
+  }
+  article > blockquote {
+    margin: 3rem;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    background-color: #f8f9fa;
+    filter: drop-shadow(var(--drop-shadow));
+    & > p {
+      margin: 0;
+    }
+  }
+</style>

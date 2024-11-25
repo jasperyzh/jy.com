@@ -1,0 +1,59 @@
+---
+import { getCollection } from "astro:content";
+import EntriesOne from "./EntriesOne.astro";
+
+// Define props with flexibility for homepage, blog, or tag filtering
+const { posts = null, tags = [], sort = "desc", limit = null } = Astro.props;
+
+// Fetch all posts only if `posts` isn’t provided
+const allPosts = posts ?? (await getCollection("posts"));
+
+// Filter posts if specific tags are provided and no pre-filtered posts are passed
+let filteredPosts = allPosts;
+if (tags.length > 0 && posts === null) {
+  filteredPosts = allPosts.filter((post) => {
+    // Ensure `post.data.tags` is an array and filter by provided tags
+    const postTags = Array.isArray(post.data.tags) ? post.data.tags : [];
+    return tags.some((tag) => postTags.includes(tag));
+  });
+}
+
+// Sort posts based on the `sort` prop
+let sortedPosts = filteredPosts.sort((a, b) => {
+  const dateA = new Date(a.data.pubDate);
+  const dateB = new Date(b.data.pubDate);
+  return sort === "asc" ? dateA - dateB : dateB - dateA;
+});
+
+// Filter out draft posts
+
+sortedPosts = sortedPosts.filter((post) => {
+// console.log(post.data.draft)
+
+  if (!post.data.draft) {
+    return true;
+  }
+});
+
+// Apply the limit if it’s set
+if (limit) {
+  sortedPosts = sortedPosts.slice(0, limit);
+}
+---
+
+<div class="entries-list">
+  {
+    sortedPosts.map((post) => (
+      <EntriesOne
+        url={`/posts/${post.slug}`}
+        title={post.data.title}
+        description={post.data.description}
+        alt={post.data.title}
+        pubDate={post.data.pubDate.toString().slice(0, 10)}
+        author={post.data.author}
+        image={post.data.image}
+        tags={post.data.tags}
+      />
+    ))
+  }
+</div>

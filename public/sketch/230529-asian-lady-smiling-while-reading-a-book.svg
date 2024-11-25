@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+  <!-- Person's head -->
+  <circle cx="25" cy="15" r="10" stroke="black" stroke-width="1" fill="none" />
+  <!-- Smile (just a simple curve) -->
+  <path d="M20 18 Q25 23, 30 18" stroke="black" fill="transparent"/>
+  <!-- Eyes -->
+  <circle cx="21" cy="13" r="1" stroke="black" stroke-width="1" fill="black" />
+  <circle cx="29" cy="13" r="1" stroke="black" stroke-width="1" fill="black" />
+  <!-- Book -->
+  <rect x="10" y="25" width="30" height="15" style="fill:rgb(0,0,255);stroke-width:1;stroke:rgb(0,0,0)" />
+  <!-- Lines representing text in the book -->
+  <line x1="12" y1="30" x2="38" y2="30" style="stroke:rgb(255,255,255);stroke-width:2" />
+  <line x1="12" y1="35" x2="38" y2="35" style="stroke:rgb(255,255,255);stroke-width:2" />
+</svg>

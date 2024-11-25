@@ -1,0 +1,61 @@
+---
+// source: https://getbootstrap.com/docs/5.3/examples/navbars/
+
+import { SITE_TITLE } from "../consts";
+---
+
+<header class="container">
+  <nav class="navbar navbar-expand-sm">
+    <div class="container">
+      <!-- logo -->
+      <a class="navbar-brand" href="/">
+        <div class="logo">{SITE_TITLE}</div>
+      </a>
+
+      <!-- menu_toggle -->
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbar_primary"
+        aria-controls="navbar_primary"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu -->
+      <div class="collapse navbar-collapse" id="navbar_primary">
+        <ul class="navbar-nav ms-auto">
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/#about">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/#work">Work</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/#contact">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/posts">Blog</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<style>
+  nav {
+    position: sticky;
+    top: 0;
+    background-color: var(
+      --nav-bg
+    ); /* Optional: adds a background to the nav */
+  }
+</style>
