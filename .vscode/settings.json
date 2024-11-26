@@ -1,0 +1,10 @@
+{
+    "deno.enable": true,
+    "editor.defaultFormatter": "denoland.vscode-deno",
+    "[astro]": {
+        "editor.defaultFormatter": "astro-build.astro-vscode"
+    },
+    "[scss]": {
+        "editor.defaultFormatter": "vscode.css-language-features"
+    }
+}

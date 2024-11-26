@@ -1,0 +1,66 @@
+<canvas id="myCanvas">helloworld</canvas>
+
+<script
+    is:inline
+    src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/p5.js"></script>
+
+<script is:inline>
+    let cols, rows;
+let spacing = 23; // Reduce spacing to add more resolution to the lines
+let canvas; // Declare a variable for the canvas
+
+let settings = {
+  xOffsetMax: 10,
+  xScale: 50,
+  yOffsetMax: 33,
+  yScale: 50,
+  noiseScale: 0.018, // Slightly finer control for smoother transitions
+};
+
+function setup() {
+  // Create a canvas and assign it to the canvas variable
+  canvas = createCanvas(800, 400);
+  
+  // Ensure the canvas element is properly assigned before trying to set an ID
+  if (canvas) {
+    canvas.id('myCanvas'); // Set an ID for the canvas element
+  }
+  
+  cols = floor(width / spacing);
+  rows = floor(height / spacing);
+}
+
+function draw() {
+  background(255); // White background
+  stroke(13); // Dark lines
+  noFill();
+
+  drawFlowLines();
+}
+
+function mousePressed() {
+  redraw();
+}
+
+function drawFlowLines() {
+  let xMapped = map(mouseX, 0, width, -10, 10);
+  let yMapped = map(mouseY, 0, height, -10, 10);
+
+  // Draw the flow lines with added smoothness
+  for (let y = rows / 2; y < rows; y++) {
+    beginShape();
+    for (let x = 0; x < cols; x++) {
+      let noiseVal = noise(x * settings.noiseScale, y * settings.noiseScale);
+
+      const test = 58;
+      let xOffset = map(noiseVal, 0, 1, -test * xMapped, test * xMapped);
+      let yOffset = map(noiseVal, 0, 1, -test * yMapped, test * yMapped);
+      let xPosition = x * spacing + xOffset;
+      let yPosition = y * spacing + yOffset;
+      curveVertex(xPosition, yPosition);
+    }
+    endShape();
+  }
+}
+
+</script>

@@ -1,0 +1,81 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+import { LANDING_TITLE, LANDING_DESC } from "../../consts";
+import Carousel from "../../components/Carousel.astro";
+
+const CLIENT_NAME = "Paramount Property";
+
+const PROJECT_INFO = {
+    url: "ParamountProperty.my",
+    role: "WordPress Development",
+    aspect: "UX - Visual - Design - System",
+};
+---
+
+<Layout>
+    <main class="d-flex flex-column align-items-center justify-content-center">
+        <section id="landing">
+            <div class="container">
+                <div class="landing_layout">
+                    <div
+                        class="landing_title bg-secondary text-start p-4"
+                        style="aspect-ratio: 4/3"
+                    >
+                        <h1 class="display-1">{CLIENT_NAME}</h1>
+
+                        <p class="h3 col-md-6"></p>
+                        <ul>
+                            <li>{PROJECT_INFO.url}</li>
+                            <li>{PROJECT_INFO.role}</li>
+                            <li>{PROJECT_INFO.aspect}</li>
+                        </ul>
+                    </div>
+
+                    <div class="landing_image">
+                         <Carousel />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <h2>Project Overview</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 overview">
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Sapiente labore repellat itaque iusto.
+                        </p>
+                    </div>
+                    <div class="col-md-6 overview_2">
+                        <p>
+                            With 8 years of experience in web development, I
+                            have had the opportunity to work with Top Marketing
+                            Agency in Malaysia, Fishermen, and diverses clients
+                            around the industries. I have been fortunate to
+                            have... Also an found my calling...?
+                        </p>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-6 offset-md-6">
+                        <div class="card text-bg-secondary text-end">
+                            <div class="card-body">
+                                <h2>year / 2020</h2>
+                                <h2>client / Paramount Property</h2>
+                                <h2>agency / Fishermen</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</Layout>

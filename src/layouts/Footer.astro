@@ -12,24 +12,15 @@ import { SITE_TITLE, SITE_FOOTER_ABOUT, SITE_YEAR } from "../consts";
         <!-- <p set:html={SITE_FOOTER_ABOUT} /> -->
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link" href="#insta">Instagram</a>
+            <a class="nav-link" href="/blog">Blog</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="posts">Blog</a>
+            <a class="nav-link" href="https://www.instagram.com/jasperyzh/" target="_blank">Instagram <sup><i class="bi bi-box-arrow-up-right"></i></sup></a>
           </li>
-          <!-- <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-          </li> -->
         </ul>
       </div>
       <div class="footer_2">
-        <a href="/">Back to Home</a>
+        <a class="footer_back2home" href="/">Back to Home</a>
       </div>
       <div class="footer_3">
         <p class="copy">
@@ -42,6 +33,21 @@ import { SITE_TITLE, SITE_FOOTER_ABOUT, SITE_YEAR } from "../consts";
 </footer>
 
 <style is:global>
+
+ footer {
+  padding-block: 1rem;
+ }
+  .footer_back2home {
+    aspect-ratio: 4/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 3rem;
+    &:hover {
+      background-color: aquamarine;
+    }
+  }
   .footer_layout {
     display: grid;
 
