@@ -1,0 +1,123 @@
+/* Theme Customization CSS File */
+
+/*
+  This file centralizes theme customizations using CSS variables.
+  Modify the variables below to adapt the Bootstrap design to your branding.
+  Global changes should go in the :root block, while component-specific changes
+  can be handled in their respective sections.
+*/
+
+/* GLOBAL VARIABLES */
+:root {
+    /* Primary Colors */
+    --bs-primary: #4caf50; /* Main branding color */
+    --bs-secondary: #6c757d; /* Secondary accents */
+    --bs-success: #28a745; /* For success alerts, badges, etc. */
+    --bs-info: #17a2b8; /* For informational alerts and badges */
+    --bs-warning: #ffc107; /* For warnings */
+    --bs-danger: #dc3545; /* For errors or destructive actions */
+    --bs-light: #f8f9fa; /* Light backgrounds */
+    --bs-dark: #343a40; /* Dark backgrounds */
+
+    /* Typography */
+    --bs-font-sans-serif: "Arial, sans-serif"; /* Default sans-serif font */
+    --bs-body-font-size: 2rem; /* Base font size */
+    --bs-body-line-height: 1.5; /* Line height for better readability */
+    --bs-body-color: #212529; /* Default text color */
+    --bs-body-bg: #ffffff; /* Default background color */
+
+    /* Spacing */
+    --bs-spacer: 1rem; /* Base spacing unit */
+    --bs-gutter-x: 1.5rem; /* Horizontal gutters */
+    --bs-gutter-y: 1.5rem; /* Vertical gutters */
+
+    /* Borders */
+    --bs-border-radius: 0.25rem; /* Global border radius */
+    --bs-border-width: 1px; /* Default border width */
+    --bs-border-color: #f20fdb; /* Default border color */
+}
+
+/* COMPONENT-SPECIFIC VARIABLES */
+
+/* Buttons */
+.btn {
+    --bs-btn-font-weight: 600; /* Bolder text for buttons */
+    --bs-btn-padding-y: 0.5rem; /* Vertical padding */
+    --bs-btn-padding-x: 31rem; /* Horizontal padding */
+    --bs-btn-border-radius: 0.5rem; /* Rounded corners */
+    --bs-btn-color: #ffffff; /* Button text color */
+    --bs-btn-bg: var(--bs-primary); /* Button background color */
+    --bs-btn-border-color: var(--bs-primary); /* Button border color */
+}
+
+/* Navbars */
+.navbar {
+    --bs-navbar-color: var(--bs-light); /* Navbar text color */
+    --bs-navbar-bg: var(--bs-dark); /* Navbar background color */
+}
+
+/* Alerts */
+.alert {
+    --bs-alert-bg: var(--bs-info); /* Background color for alerts */
+    --bs-alert-border: var(--bs-info); /* Border color for alerts */
+    --bs-alert-color: #ffffff; /* Text color for alerts */
+}
+
+/* Cards */
+.card {
+    --bs-card-bg: var(--bs-light); /* Card background color */
+    --bs-card-border-color: var(--bs-border-color); /* Card border color */
+    --bs-card-color: var(--bs-body-color); /* Card text color */
+}
+
+/* Tables */
+.table {
+    --bs-table-bg: var(--bs-body-bg); /* Default table background */
+    --bs-table-striped-bg: #f2f2f2; /* Background for striped rows */
+    --bs-table-hover-bg: #e9ecef; /* Background for hover rows */
+    --bs-table-border-color: var(--bs-border-color); /* Table border color */
+}
+
+/* FORMS */
+.form-control {
+    --bs-form-control-color: var(--bs-body-color); /* Text color */
+    --bs-form-control-bg: var(--bs-light); /* Input background color */
+    --bs-form-control-border-color: var(
+        --bs-border-color
+    ); /* Input border color */
+    --bs-form-control-focus-ring-color: rgba(
+        72,
+        123,
+        237,
+        0.25
+    ); /* Focus outline color */
+}
+
+/* Modals */
+.modal {
+    --bs-modal-bg: var(--bs-light); /* Modal background */
+    --bs-modal-header-border-color: var(
+        --bs-border-color
+    ); /* Modal header border color */
+    --bs-modal-footer-border-color: var(
+        --bs-border-color
+    ); /* Modal footer border color */
+}
+
+/* Pagination */
+.pagination {
+    --bs-pagination-bg: var(--bs-light); /* Background for pagination items */
+    --bs-pagination-border-color: var(
+        --bs-border-color
+    ); /* Border color for pagination items */
+    --bs-pagination-hover-bg: var(--bs-primary); /* Background on hover */
+    --bs-pagination-hover-color: #ffffff; /* Text color on hover */
+}
+
+/* Additional Customizations Can Go Here */
+
+/*
+  NOTE:
+  - Add more component-specific customizations as needed.
+  - Use semantic names for reusability (e.g., --brand-accent).
+*/

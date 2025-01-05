@@ -1,0 +1,116 @@
+---
+// Custom Events in Vanilla JS - Lightweight UI Updates
+
+// source: https://www.youtube.com/watch?v=5wQLRGCKTpc
+
+// The CustomEvent constructor allows creating and dispatching custom events with event bubbling (bubbles: true) and additional data (detail).
+// Avoid heavy frameworks like React for minor UI updates on static sites.
+// Efficiently handle click events at a higher DOM level to reduce redundant listeners.
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Custom Events</title>
+    <link rel="stylesheet" href="index.css" />
+    <script src="index.js" type="module"></script>
+  </head>
+  <body>
+    <nav>
+      <p>Cart Items: <span data-cart-total>0</span></p>
+    </nav>
+    <main>
+      <ul id="products">
+        <li>
+          <button data-cart-action="-1" aria-label="Remove item">–</button>
+          <button data-cart-action="1" aria-label="Add item">+</button>
+        </li>
+        <li>
+          <button data-cart-action="-1" aria-label="Remove item">–</button>
+          <button data-cart-action="1" aria-label="Add item">+</button>
+        </li>
+        <li>
+          <button data-cart-action="-1" aria-label="Remove item">–</button>
+          <button data-cart-action="1" aria-label="Add item">+</button>
+        </li>
+        <li>
+          <button data-cart-action="-1" aria-label="Remove item">–</button>
+          <button data-cart-action="1" aria-label="Add item">+</button>
+        </li>
+        <li>
+          <button data-cart-action="-1" aria-label="Remove item">–</button>
+          <button data-cart-action="1" aria-label="Add item">+</button>
+        </li>
+        <p>Cart Items: <span data-cart-total>0</span></p>
+        <p>Cart Items: <span data-cart-total>0</span></p>
+      </ul>
+    </main>
+  </body>
+</html>
+
+<script>
+// query selectors
+const cartTotals = document.querySelectorAll("[data-cart-total]");
+const products = document.querySelector("#products");
+
+// event listeners
+document.addEventListener("cart:update", (event) => {
+  for (const cartTotal of cartTotals) {
+    const newTotal = parseInt(cartTotal.textContent) + parseInt(event.detail);
+
+    cartTotal.textContent = newTotal < 0 ? 0 : newTotal.toString();
+  }
+});
+
+products.addEventListener("click", (event) => {
+  if (!event.target.dataset.cartAction) {
+    return;
+  }
+
+  // fire a custom event
+  event.target.dispatchEvent(updateCartEvent(event.target.dataset.cartAction));
+});
+
+// Custom event constructor
+const updateCartEvent = (cartAction) =>
+  new CustomEvent("cart:update", {
+    bubbles: true,
+    detail: cartAction,
+  });
+
+</script>
+
+<style>
+@import "https://unpkg.com/open-props";
+@import "https://unpkg.com/open-props/normalize.min.css";
+@import "https://unpkg.com/open-props/buttons.min.css";
+
+body {
+  min-height: 100vh;
+}
+
+nav {
+  display: grd;
+  place-items: center;
+  padding: var(--size-3);
+  background-color: var(--surface-2);
+}
+
+[data-cart-total] {
+  font-weight: bold;
+  color: var(--blue-5);
+}
+
+ul {
+  display: grid;
+  padding: var(--size-3);
+  gap: var(--size-3);
+  place-content: center;
+  place-items: center;
+  height: 100%;
+  list-style: none;
+  min-height: 60vh;
+}
+</style>

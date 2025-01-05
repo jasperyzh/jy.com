@@ -1,0 +1,139 @@
+---
+/**
+ * @title Bootstrap Examples: Rebuild
+ * @description Goal of this page is to rebuild Bootstrap Examples from scratch, slowly introduce new layouts and components for easy understanding and theme customization
+ */
+import Boot2 from "../../components/bootstrap/Boot2.astro";
+
+import ThemeSwitcher from "../../components/bootstrap/ThemeSwitcher.astro";
+import Cheatsheet from "../../components/bootstrap/Cheatsheet.astro";
+
+// reworked
+import Album from "../../components/bootstrap/Album.astro";
+import Badges from "../../components/bootstrap/Badges.astro";
+import Blog from "../../components/bootstrap/Blog.astro";
+import Breadcrumbs from "../../components/bootstrap/Breadcrumbs.astro";
+import Buttons from "../../components/bootstrap/Buttons.astro";
+import Carousel from "../../components/bootstrap/Carousel.astro";
+import Checkout from "../../components/bootstrap/Checkout.astro";
+// import Cover from "../../components/bootstrap/Cover.astro";
+// import Dashboard from "../../components/bootstrap/Dashboard.astro";
+import Dropdowns from "../../components/bootstrap/Dropdowns.astro";
+import Features from "../../components/bootstrap/Features.astro";
+import Footers from "../../components/bootstrap/Footers.astro";
+import Grid from "../../components/bootstrap/Grid.astro";
+import Headers from "../../components/bootstrap/Headers.astro";
+import Heroes from "../../components/bootstrap/Heroes.astro";
+// import Jumbotron from "../../components/bootstrap/Jumbotron.astro";
+import Jumbotrons from "../../components/bootstrap/Jumbotrons.astro";
+import ListGroups from "../../components/bootstrap/ListGroups.astro";
+// import Masonry from "../../components/bootstrap/Masonry.astro";
+import Modals from "../../components/bootstrap/Modals.astro";
+// import NavbarBottom from "../../components/bootstrap/NavbarBottom.astro";
+// import NavbarFixed from "../../components/bootstrap/NavbarFixed.astro";
+// import NavbarStatic from "../../components/bootstrap/NavbarStatic.astro";
+import Navbars from "../../components/bootstrap/Navbars.astro";
+import NavbarsOffcanvas from "../../components/bootstrap/NavbarsOffcanvas.astro";
+// import Offcanvas from "../../components/bootstrap/Offcanvas.astro";
+import OffcanvasNavbar from "../../components/bootstrap/OffcanvasNavbar.astro";
+import Pricing from "../../components/bootstrap/Pricing.astro";
+// import Product from "../../components/bootstrap/Product.astro";
+import Sidebars from "../../components/bootstrap/Sidebars.astro";
+// import SignIn from "../../components/bootstrap/SignIn.astro";
+// import StarterTemplate from "../../components/bootstrap/StarterTemplate.astro";
+// import StickyFooter from "../../components/bootstrap/StickyFooter.astro";
+// import StickyFooterNavbar from "../../components/bootstrap/StickyFooterNavbar.astro";
+---
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Bootstrap Templates</title>
+
+        <!-- style -->
+        <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link
+            href="/bootstrap-icons-1.11.3/font/bootstrap-icons.min.css"
+            rel="stylesheet"
+        />
+
+        <!-- how to customize bootstrap? -->
+        <style is:global>
+            /* dividers */
+            main > hr {
+                height: 80px;
+                background-color: magenta;
+                display: block;
+                border: 0;
+                /* opacity: 1; */
+            }
+
+            div.b-example-divider {
+                height: 3rem;
+                background-color: rgba(0, 0, 0, 0.1);
+                border: solid rgba(0, 0, 0, 0.15);
+                border-width: 1px 0;
+                box-shadow: inset 0 0.5em 1.5em rgba(0, 0, 0, 0.1);
+            }
+            div.b-example-vr {
+                flex-shrink: 0;
+                width: 1.5rem;
+                height: 100vh;
+            }
+
+            /* yet to do: */
+            /* feature-icons make it a square 
+            i.bi.bi--square--rounded {
+            }
+            */
+        </style>
+        <!-- <link href="../../css/bootstrap-theme.css" rel="stylesheet" /> -->
+    </head>
+    <body>
+        <ThemeSwitcher />
+        <main>
+            <!-- 
+            <Cheatsheet />
+            -->
+
+            <Album />
+            <Badges />
+            <Buttons />
+            <Blog />
+            <Breadcrumbs />
+            <Carousel />
+            <Checkout />
+            <Dropdowns />
+            <Features />
+            <Footers /> 
+            <Jumbotrons />
+            <Grid />
+            <Headers />
+            <Heroes />
+            <ListGroups />
+            <Modals />
+            <Navbars />
+            <NavbarsOffcanvas />
+            <OffcanvasNavbar />
+            <Pricing />
+            <Sidebars />
+            <!-- 
+            yet to do:
+            <Cover />
+            <Dashboard />
+            <Jumbotron />
+            <Masonry />
+            <NavbarBottom />
+            <NavbarFixed />
+            <NavbarStatic />
+            <Offcanvas />
+            <Product />
+            <SignIn />
+            <StarterTemplate />
+            <StickyFooter />
+            <StickyFooterNavbar /> -->
+        </main>
+        <script is:inline src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>

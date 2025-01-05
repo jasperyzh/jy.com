@@ -1,23 +1,31 @@
 ---
-const { title, url, description, pubDate, author, image, tags } = Astro.props;
+// const { title, post.data. = "test", description, pubDate, author, image, tags } = Astro.props;
 
-const image_url = image.url ? image.url : "";
-const image_alt = image.alt ? image.alt : `Image of ${title}`;
+import { Debug } from "astro:components";
+const { post } = Astro.props;
+// const post.data.image_url = image.url ? image.url : "";
+// const post.data.image_alt = image.alt ? image.alt : `Image of ${title}`;
 ---
 
 <article class="entry_one d-flex flex-column flex-1 flex flex-col mb-3">
+  <p>Post ID: {post.id}</p>
+
+  <!-- Access data properties -->
+  <h2>{post.data.title}</h2>
+  <p>{post.data.description}</p>
+  <p>Published on: {new Date(post.data.pubDate).toLocaleDateString()}</p>
   {
-    image_url && (
+    post.data.image_url && (
       <figure class="block w-full lg:col-span-2">
-        <a href={url} title={title}>
+        <a href={`/blog/${post.data.id}`} title={post.data.title}>
           <div class="image-container">
             <div class="placeholder">
               <div class="loading-spinner" />
             </div>
             <img
               class="lazy-image object-cover bg-center h-full w-full"
-              data-src={image_url}
-              alt={image_alt}
+              data-src={post.data.image_url}
+              alt={post.data.image_alt}
             />
           </div>
         </a>
@@ -28,18 +36,18 @@ const image_alt = image.alt ? image.alt : `Image of ${title}`;
     class="card-content flex-fill d-flex flex-column justify-content-between h-100 p-3"
   >
     <header class="card-header">
-      <time datetime={pubDate}>{pubDate}</time>
-      <a href={url} title={title}>
+      <time datetime={post.data.pubDate}>{post.data.pubDate}</time>
+      <a href={`/blog/${post.id}`} title={post.data.title}>
         <h3>
-          {title}
+          {post.data.title}
         </h3>
       </a>
     </header>
 
-    <p class="description">{description}</p>
+    <p class="description">{post.data.description}</p>
     <div class="tags mt-2">
       {
-        tags.map((tag) => (
+        post.data.tags.map((tag) => (
           <a href={`/tags/${tag}`} class="tag-badge">
             <span class="badge rounded-pill text-bg-secondary">{tag}</span>
           </a>
@@ -163,7 +171,7 @@ const image_alt = image.alt ? image.alt : `Image of ${title}`;
     overflow: hidden;
   }
 </style>
-
+<!-- 
 <script>
   document.addEventListener("astro:page-load", () => {
     const lazyImages = document.querySelectorAll(".lazy-image");
@@ -188,4 +196,4 @@ const image_alt = image.alt ? image.alt : `Image of ${title}`;
 
     lazyImages.forEach(lazyLoad);
   });
-</script>
+</script> -->

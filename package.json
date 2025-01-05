@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "astro dev --allow-read",
     "start": "astro dev",
     "build": "astro build",
     "check": "astro check",
@@ -14,11 +14,13 @@
     "@astrojs/mdx": "^3.1.9",
     "@astrojs/rss": "^4.0.9",
     "@astrojs/sitemap": "^3.2.1",
+    "@astrojs/vue": "^5.0.1",
     "astro": "^4.16.13",
     "@astrojs/check": "^0.9.4",
-    "bootstrap": "^5.3.3",
+    "bootstrap": "5.3.3",
     "bootstrap-icons": "^1.11.3",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.2",
+    "vue": "^3.5.13"
   },
   "devDependencies": {
     "prettier-plugin-astro": "^0.14.1",

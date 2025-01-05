@@ -1,0 +1,104 @@
+---
+// Import Deno's specific imports
+// const examplesDir = "./src/pages/sketches"; // Define the folder path
+
+// let exampleLinks = [];
+
+// try {
+//     // Read all file names inside `examplesDir` using Deno.
+//     for await (const dirEntry of Deno.readDir(examplesDir)) {
+//         console.log(
+//                 dirEntry.name,
+//                 dirEntry.isFile,
+//                 /\.astro$/.test(dirEntry.name),
+//                 /^\d{6}-.*\.astro$/.test(dirEntry.name),
+//             );
+
+//         // Check if it's a file and if it matches the pattern for quiz files
+//         if (
+//             dirEntry.isFile &&
+//             /\.astro$/.test(dirEntry.name) &&
+//             /^\d{6}-.*\.astro$/.test(dirEntry.name)
+//         ) {
+
+//             // console.log('hello?')
+
+//             exampleLinks.push({
+//                 name: dirEntry.name.replace(/\.astro$/, ""), // Remove file extension for display
+//                 url: `/sketches/${dirEntry.name.replace(/\.astro$/, "")}`, // Link without .astro extension
+//             });
+//         }
+//     }
+
+//     // Sort the example links alphabetically by the file name.
+//     exampleLinks = exampleLinks.sort((a, b) => a.name.localeCompare(b.name));
+
+//     console.log(exampleLinks);
+// } catch (error) {
+//     console.error("Error reading directory:", error);
+// }
+// Define the folder path for the main sketches directory
+const mainDir = "./src/pages/sketches";
+
+// let sketchesLinks = [];
+let sketchesLinks: {
+    name: string;
+    url: string;
+}[] = [];
+
+try {
+    // Loop through foreseeable years (e.g., 2024, 2025, 2026)
+    const years = ["2024", "2025" /* , , "2026" */];
+
+    for (const year of years) {
+        // Construct the path to the year directory
+        const yearPath = `${mainDir}/${year}`;
+
+        // Read all file names inside the year directory
+        for await (const dirEntry of Deno.readDir(yearPath)) {
+            /* console.log(
+                dirEntry.name,
+                dirEntry.isFile,
+                /\.astro$/.test(dirEntry.name),
+                /^\d{6}-.*\.astro$/.test(dirEntry.name),
+            ); */
+
+            // Check if it's a file and if it matches the pattern for `.astro` sketches
+            if (
+                dirEntry.isFile &&
+                /\.astro$/.test(dirEntry.name) &&
+                /^\d{6}-.*\.astro$/.test(dirEntry.name)
+            ) {
+                sketchesLinks.push({
+                    name: dirEntry.name.replace(/\.astro$/, ""), // Remove file extension for display
+                    url: `/sketches/${year}/${dirEntry.name.replace(/\.astro$/, "")}`, // Construct the URL without the .astro extension
+                });
+            }
+        }
+    }
+
+    // Sort the sketches links alphabetically by the file name
+    sketchesLinks = sketchesLinks.sort((a, b) => a.name.localeCompare(b.name));
+
+    console.log(sketchesLinks);
+} catch (error) {
+    console.error("Error reading directory:", error);
+}
+---
+
+<div>
+    <h2>My Past sketches</h2>
+    <p>
+        This page lists all the sketches I have done in the past. It's superraw,
+        so don't expect pretty UI.
+    </p>
+    <ul>
+        {
+            sketchesLinks.map((link) => (
+                <li>
+                    <a href={link.url}>{link.name}</a>
+                </li>
+            ))
+        }
+    </ul>
+</div>

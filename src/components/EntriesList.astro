@@ -1,12 +1,14 @@
 ---
+import { Debug } from 'astro:components';
 import { getCollection } from "astro:content";
+
 import EntriesOne from "./EntriesOne.astro";
 
 // Define props with flexibility for homepage, blog, or tag filtering
 const { posts = null, tags = [], sort = "desc", limit = null } = Astro.props;
 
 // Fetch all posts only if `posts` isn’t provided
-const allPosts = posts ?? (await getCollection("posts"));
+const allPosts = posts ?? (await getCollection("blog"));
 
 // Filter posts if specific tags are provided and no pre-filtered posts are passed
 let filteredPosts = allPosts;
@@ -24,11 +26,10 @@ let sortedPosts = filteredPosts.sort((a, b) => {
   const dateB = new Date(b.data.pubDate);
   return sort === "asc" ? dateA - dateB : dateB - dateA;
 });
-
+ 
 // Filter out draft posts
 
 sortedPosts = sortedPosts.filter((post) => {
-// console.log(post.data.draft)
 
   if (!post.data.draft) {
     return true;
@@ -42,18 +43,10 @@ if (limit) {
 ---
 
 <div class="entries-list">
+<!-- <Debug {sortedPosts} /> -->
   {
     sortedPosts.map((post) => (
-      <EntriesOne
-        url={`/blog/${post.slug}`}
-        title={post.data.title}
-        description={post.data.description}
-        alt={post.data.title}
-        pubDate={post.data.pubDate.toString().slice(0, 10)}
-        author={post.data.author}
-        image={post.data.image}
-        tags={post.data.tags}
-      />
+      <EntriesOne {post} />
     ))
   }
 </div>

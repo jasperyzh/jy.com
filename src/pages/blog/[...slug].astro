@@ -1,100 +1,41 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
+
 import Layout from "../../layouts/Layout.astro";
+import SingleSidebar from "../../components/SingleSidebar.astro";
 
 // Fetch all posts and generate paths for each post
 export async function getStaticPaths() {
-  const allPosts = await getCollection("posts");
+  const allPosts = await getCollection("ob_blog");
 
   // Filter out draft posts
   const publishedPosts = allPosts.filter((post) => !post.data.draft);
 
   return publishedPosts.map((entry) => ({
-    params: { slug: entry.slug },
+    params: { slug: entry.id },
     props: { entry },
   }));
 }
 
 const { entry } = Astro.props;
-const { Content } = await entry.render();
+const { Content } = await render(entry);
 ---
 
 <Layout title={entry?.data.title} description={entry?.data.description}>
   <main>
     <div class="container">
-      <!-- Back Button -->
-      <button onClick="history.back()" class="back-button"> ← Back </button>
+      <article>
+        <div class="row">
+          <div class="col-lg-6 mx-auto">
+            <!-- Back Button -->
+            <button class="btn btn-light btn-sm my-3" onClick="history.back()">
+              <i class="bi bi-arrow-left"></i> back
+            </button>
 
-      <article id="blog-single">
-        <header class="mb-1">
-          {
-            entry ? (
-              <>
-                {entry.data.tags && entry.data.tags.length > 0 && (
-                  <div class="tags">
-                    {entry.data.tags.map((tag) => (
-                      <a
-                        href={`/tags/${tag}`}
-                        class="badge rounded-pill text-bg-primary"
-                      >
-                        {tag}
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </>
-            ) : (
-              <p>Post not found.</p>
-            )
-          }
-        </header>
-
-        <Content />
+            <Content />
+          </div>
+        </div>
       </article>
     </div>
   </main>
 </Layout>
-
-<style>
-  article {
-    max-width: 760px;
-    margin: 1.618rem auto;
-    margin-bottom: 3rem;
-  }
-
-  header {
-    margin: 1.618rem auto;
-  }
-  /* 
-  h1 {
-    font-size: 2.2em;
-    margin-bottom: 0.5em;
-    text-align: center;
-  }
-
-  p {
-    color: #666;
-    font-size: 0.9em;
-    text-align: center;
-    margin-bottom: 1.5em;
-  } */
-</style>
-<style is:global>
-  article > p {
-    line-height: 1.725;
-  }
-  article li {
-    padding-left: 0.5rem;
-    margin-bottom: 0.25rem;
-  }
-  article > blockquote {
-    margin: 3rem;
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    background-color: #f8f9fa;
-    filter: drop-shadow(var(--drop-shadow));
-    & > p {
-      margin: 0;
-    }
-  }
-</style>

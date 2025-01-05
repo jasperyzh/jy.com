@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Dark Mode Toggle</title>
+        <style>
+            :root {
+                --background-light: #ffffff;
+                --text-light: #000000;
+                --background-dark: #121212;
+                --text-dark: #ffffff;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                background-color: var(--background-light);
+                color: var(--text-light);
+                transition:
+                    background-color 0.3s,
+                    color 0.3s;
+            }
+
+            body.dark-mode {
+                background-color: var(--background-dark);
+                color: var(--text-dark);
+            }
+
+            .toggle-button {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                padding: 10px 20px;
+                background-color: var(--background-dark);
+                color: var(--text-dark);
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 16px;
+                transition:
+                    background-color 0.3s,
+                    color 0.3s;
+            }
+
+            .toggle-button:hover {
+                background-color: var(--background-light);
+                color: var(--text-light);
+            }
+        </style>
+    </head>
+    <body>
+        <button class="toggle-button" id="toggle-button"
+            >Toggle Dark Mode</button
+        >
+
+        <script>
+            const toggleButton = document.getElementById("toggle-button");
+            const body = document.body;
+
+            toggleButton.addEventListener("click", () => {
+                body.classList.toggle("dark-mode");
+            });
+        </script>
+    </body>
+</html>

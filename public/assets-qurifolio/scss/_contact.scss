@@ -1,0 +1,269 @@
+//contact-section
+.contact-section {
+    position: relative;
+    z-index: 1;
+    .shape-01 {
+        position: absolute;
+        z-index: 1;
+        right: 4.5%;
+        top: 100px;
+        max-width: 250px;
+        opacity: 0.5;
+    }
+    .left-img {
+        position: absolute;
+        z-index: 1;
+        left: 0;
+        bottom: 0;
+        width: 49%;
+        img {
+            border-radius: 24px;
+        }
+        @media #{$max-laptop} {
+            top: 32%;
+        }
+        @media #{$max-lg} {
+            top: 35%;
+        }
+        @media #{$max-md} {
+            position: relative;
+            width: 100%;
+            margin-bottom: 50px;
+        }
+    }
+}
+
+.main-form {
+    label {
+        color: $white;
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+    input,
+    textarea {
+        display: block;
+        width: 100%;
+        background: transparent;
+        border: 0;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 16px;
+        height: 55px;
+        margin-bottom: 40px;
+        &::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        &::-webkit-placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        &::-ms-placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        &::-o-placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        &::-moz-placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+    }
+}
+
+.button-2 {
+    text-align: center;
+    .bg-round {
+        animation: rotation infinite 55s linear;
+    }
+    .scroll-btn {
+        position: relative;
+        z-index: 1;
+        display: block;
+    }
+    .icon {
+        position: absolute;
+        z-index: 1;
+        width: 122px;
+        height: 122px;
+        border-radius: 50%;
+        background: $theme-color;
+        text-align: center;
+        font-size: 30px;
+        line-height: 122px;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        top: 20%;
+        i {
+            color: $white;
+            position: relative;
+            z-index: 1;
+            top: -2px;
+            right: -4px;
+            &::after {
+                content: " ";
+                position: absolute;
+                left: -33%;
+                top: 71%;
+                width: 16px;
+                height: 16px;
+                background: $white;
+                border-radius: 50%;
+                z-index: 1;
+                -webkit-transition: all 0.4s ease 0s;
+                -moz-transition: all 0.4s ease 0s;
+                -ms-transition: all 0.4s ease 0s;
+                -o-transition: all 0.4s ease 0s;
+                transition: all 0.4s ease 0s;
+            }
+        }
+    }
+    button {
+        color: #fff;
+        border: 0;
+        background: transparent;
+    }
+}
+
+//conatct-section
+.contact-section {
+    .cta-shape {
+        position: absolute;
+        z-index: -1;
+        right: 5.5%;
+        top: 238px;
+        opacity: 0.03;
+        max-width: 250px;
+    }
+}
+
+.border-cta {
+    border-top: 5px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 5px solid rgba(255, 255, 255, 0.1);
+}
+.contact-2 {
+    .main-form {
+        background: transparent;
+        border-radius: 20px;
+        padding: 40px 30px;
+        margin-top: 40px;
+        box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
+        input,
+        select,
+        textarea {
+            background: transparent;
+            width: 100%;
+            height: 60px;
+            border: 1px solid transparent;
+            border-radius: 0px;
+            box-shadow: none !important;
+            padding-left: 25px;
+            border-radius: 10px;
+            border: 1px solid rgba(218, 218, 218, 0.8549019608);
+            color: #000;
+            font-size: 20px;
+            font-weight: 400;
+            &::placeholder {
+                color: $heding;
+            }
+            &::-webkit-placeholder {
+                color: $heding;
+            }
+            &::-ms-placeholder {
+                color: $heding;
+            }
+            &::-o-placeholder {
+                color: $heding;
+            }
+            &::-moz-placeholder {
+                color: $heding;
+            }
+        }
+        .nice-select {
+            width: 100%;
+            background: transparent;
+            border: 1px solid rgba(218, 218, 218, 0.8549019608);
+            height: 60px;
+            &.open .list {
+                width: 100%;
+            }
+        }
+        textarea {
+            height: 150px;
+            padding-top: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(218, 218, 218, 0.8549019608);
+        }
+        button.ht_btn {
+            border: 0;
+            border-radius: 40px;
+        }
+        @media #{$xs} {
+            padding: 40px 15px;
+        }
+    }
+}
+
+.info-box {
+    h3 {
+        text-transform: uppercase;
+        margin-bottom: 25px;
+    }
+    p {
+        font-size: 20px;
+        margin-bottom: 0;
+    }
+}
+
+.contact-wrapper {
+    .contact-map {
+        iframe {
+            width: 100%;
+            min-height: 550px;
+            border-radius: 12px;
+            @media #{$xs} {
+                min-height: 300px;
+            }
+        }
+    }
+}
+
+.single-info-box {
+    background: $white;
+    text-align: center;
+    padding: 40px 0 48px 0;
+    border-radius: 12px;
+    @include transition(0.4s);
+    .icon {
+        color: $white;
+        font-size: 35px;
+        background: $theme-color;
+        width: 80px;
+        height: 80px;
+        display: inline-block;
+        border-radius: 50%;
+        margin: 0 auto;
+        text-align: center;
+        line-height: 84px;
+        margin-bottom: 25px;
+        -webkit-transition: all 0.3s ease 0s;
+        -moz-transition: all 0.3s ease 0s;
+        -ms-transition: all 0.3s ease 0s;
+        -o-transition: all 0.3s ease 0s;
+        transition: all 0.3s ease 0s;
+    }
+    span {
+        color: $heding;
+        font-size: 24px;
+        font-weight: 500;
+        display: block;
+        line-height: 30px;
+        @media #{$max-md} {
+            font-size: 18px;
+        }
+    }
+    &:hover {
+        .icon {
+            color: $white;
+            background: $heding;
+        }
+    }
+}

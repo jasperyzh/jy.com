@@ -1,36 +1,27 @@
 ---
-// source: https://getbootstrap.com/docs/5.3/examples/navbars/
-
-import { SITE_TITLE } from "../consts";
+import { SITE_TITLE } from "@/consts";
 ---
 
-<header class="container">
-  <nav class="navbar navbar-expand-sm">
+<header class="mb-5">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary rounded">
     <div class="container">
-      <!-- logo -->
-      <a class="navbar-brand" href="/">
-        <div class="logo">{SITE_TITLE}</div>
-      </a>
-
-      <!-- menu_toggle -->
       <button
         class="navbar-toggler"
         type="button"
         data-bs-toggle="collapse"
-        data-bs-target="#navbar_primary"
-        aria-controls="navbar_primary"
+        data-bs-target="#navbars-primary"
+        aria-controls="navbars-primary"
         aria-expanded="false"
         aria-label="Toggle navigation"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <!-- menu -->
-      <div class="collapse navbar-collapse" id="navbar_primary">
-        <ul class="navbar-nav ms-auto">
-          <!-- <li class="nav-item">
-            <a class="nav-link" href="/">Home</a>
-          </li> -->
+      <div class="collapse navbar-collapse d-lg-flex" id="navbars-primary">
+        <a class="navbar-brand" href="/">
+          <div class="logo">{SITE_TITLE}</div>
+        </a>
+        <ul class="navbar-nav col justify-content-lg-end">
           <li class="nav-item">
             <a class="nav-link" href="/#about">About</a>
           </li>
@@ -40,22 +31,11 @@ import { SITE_TITLE } from "../consts";
           <li class="nav-item">
             <a class="nav-link" href="/#contact">Contact</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/blog">Blog</a>
+          </li>
         </ul>
       </div>
     </div>
   </nav>
 </header>
-
-<style>
-  header {
-    margin-top: 2rem;
-    position: sticky;
-    top: 0;
-    border-bottom: 4px double #fff;
-    z-index: 999;
-  }
-
-  .navbar {
-    background-color: var(--bs-secondary);
-  }
-</style>

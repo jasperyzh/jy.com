@@ -1,5 +1,5 @@
 ---
-import "../global/global.scss";
+import "../css/global.scss";
 
 import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
 
@@ -24,23 +24,37 @@ const {
   description = SITE_DESCRIPTION,
   image,
   default_footer = true,
+  head,
 } = Astro.props as Props;
 ---
 
 <!doctype html>
 <html lang="en">
-  <Head {title} {description} {image} />
+  <Head {head} />
 
-  <body class="sticky-footer">
+  <body>
     <div class="wrapper">
-      {!empty_canvas && <Header />}
+      <Header />
 
       <slot />
 
-      {!empty_canvas && default_footer && <Footer />}
+      <Footer />
     </div>
-    <script>
-      import "bootstrap";
-    </script>
+
+    <script is:inline src="/bootstrap/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
+
+<style>
+  html,
+  body {
+    min-height: 100%;
+    margin: 0;
+  }
+
+  .wrapper {
+    display: grid;
+    grid-template-rows: auto 1fr auto; /* Header, main, and footer rows */
+    min-height: 100vh;
+  }
+</style>

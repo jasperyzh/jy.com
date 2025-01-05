@@ -1,0 +1,255 @@
+body.dark-theme {
+    background: $heding;
+
+    p {
+        color: $white;
+    }
+
+    .black-logo {
+        display: none;
+        visibility: hidden;
+        transform: scale(0);
+    }
+    .white-logo {
+        display: inline-block;
+        visibility: visible;
+        transform: scale(1);
+    }
+    .main-menu ul li a {
+        color: $white;
+    }
+    .ht_btn {
+        background: $white;
+        color: $theme-color;
+        &:hover {
+            color: $white;
+        }
+    }
+    .sticky-menu {
+        background: $heding;
+    }
+    .round-menu {
+        border-color: $white;
+        i {
+            color: $white;
+        }
+    }
+    .inner-content .title-one {
+        color: $white;
+    }
+    .theme-main-banner .title-two {
+        color: $white;
+    }
+    .theme-main-banner .title-two .clipping-text {
+        color: $white;
+        -webkit-text-stroke-color: $white;
+    }
+    .wrapper-title,
+    .section-title {
+        color: $white;
+    }
+    .text-wrapper,
+    .brand-wrapper,
+    .black-soft-bg {
+        background: #202020;
+    }
+    .text-wrapper-one p {
+        color: $white;
+    }
+    .feedback-wrapper p,
+    .feedback-wrapper h3 {
+        color: $white;
+    }
+
+    .theme-main-banner-two .title-three {
+        color: $white;
+    }
+    .portfolio-name {
+        color: $white;
+    }
+    .portfolio-wrapper .skills-desc p {
+        color: rgba(255, 255, 255, 0.7);
+    }
+    .portfolio-wrapper .skills-desc .ht-btn-two {
+        color: $white;
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+    .portfolio-wrapper:hover .portfolio-name {
+        color: $heding;
+    }
+    .portfolio-wrapper:hover .skills-desc p {
+        color: $heding;
+    }
+    .portfolio-wrapper:hover .skills-desc .ht-btn-two {
+        color: $heding;
+        border-color: $heding;
+    }
+    .box-style-one {
+        background: #202020;
+        .icon {
+            img {
+                filter: invert(100%);
+            }
+        }
+        h3 {
+            color: $white;
+        }
+        p {
+            color: $white;
+        }
+    }
+    .plan {
+        background: #202020;
+        .plan-header {
+            background: rgba(#ff8a00, 0.05);
+            h4,
+            .price,
+            .desc {
+                color: $white;
+            }
+            .black-icon {
+                display: none;
+                visibility: hidden;
+                transform: scale(0);
+            }
+            .white-icon {
+                display: inline-block;
+                visibility: visible;
+                transform: scale(1);
+            }
+        }
+        .plan-body ul li {
+            color: $white;
+        }
+    }
+
+    .theme-main-banner-three .title-four {
+        color: $white;
+    }
+    .counter-wrapper-2 {
+        h4 {
+            color: $white;
+        }
+        .counter-number {
+            color: $white;
+        }
+    }
+    .upper-title-2 {
+        color: $white;
+    }
+    .about-text-wrapper-3 .about-title {
+        color: $white;
+    }
+    .about-text-wrapper-3 .inner-card .bottom-title {
+        color: $white;
+    }
+    .about-text-wrapper-3 .inner-card p {
+        color: $white;
+    }
+
+    .progressbar-content .chart .icon {
+        visibility: hidden;
+    }
+    .progressbar-content .chart .icon-w {
+        visibility: visible;
+    }
+
+    .service-wrapper span,
+    .service-wrapper h2 {
+        color: $white;
+    }
+    .service-wrapper .icon-link {
+        color: $theme-color;
+    }
+    .pt-sect-3 {
+        background: #202020;
+    }
+    .header-sec h3 {
+        color: $white;
+    }
+    .qualifications-wrapper-two {
+        background: #202020;
+    }
+    .qualifications-wrapper-two h6,
+    .qualifications-wrapper-two h4 {
+        color: $white;
+    }
+    .text-wrapper-two .portfolio-content h3 {
+        color: $white;
+    }
+    .text-wrapper-two .portfolio-content .ht-btn-five {
+        background: #202020;
+    }
+    .faq-que-list .accordion-item .accordion-button,
+    .faq-que-list .accordion-item .accordion-body {
+        color: $white;
+        background: #202020;
+    }
+    .blog-style-one,
+    .blog-wrapper .blog-style-two {
+        background: #202020;
+    }
+    .blog-style-one .blog-title a,
+    .blog-style-one .blog-meta-2 a b,
+    .blog-wrapper .blog-style-two .blog-title a,
+    .blog-wrapper .blog-style-two .blog-meta-2 a b {
+        color: $white;
+    }
+    .info-box h3 {
+        color: $white;
+    }
+    .main-form input,
+    .main-form textarea {
+        color: $white;
+        &::placeholder {
+            color: $white;
+        }
+        &::-moz-placeholder {
+            color: $white;
+        }
+        &::-ms-placeholder {
+            color: $white;
+        }
+        &::-o-placeholder {
+            color: $white;
+        }
+        &::-webkit-placeholder {
+            color: $white;
+        }
+    }
+    .contact-2 .main-form {
+        background: #202020;
+    }
+    .header-section .side-menu {
+        background: #202020;
+    }
+    .header-section .auhtor-info h2 {
+        color: $white;
+    }
+    .left-menu ul li a {
+        color: $white;
+    }
+    .footer-area-one,
+    .contact-bg-1 {
+        background: $black2;
+    }
+
+    .footer-area-three .copyright-area {
+        background: #202020;
+    }
+    .footer-area-three .copyright-text p,
+    .footer-area-three .footer-social ul li a {
+        color: $white;
+    }
+    .footer-area-three .footer-social ul li:nth-child(2)::before,
+    .footer-area-three .footer-social ul li:nth-child(2)::after {
+        background: $white;
+    }
+
+    .logos-slide .items:nth-child(odd) img {
+        filter: invert(2);
+    }
+    .brand-padding .logos-slide .items:nth-child(odd) img {
+        filter: invert(0);
+    }
+}

@@ -1,0 +1,312 @@
+<div>
+    <h1>calculator</h1>
+    <div class="calc">
+        <section class="screen">0</section>
+
+        <section class="calc-buttons">
+            <div class="calc-button-row">
+                <button class="calc-button double">C</button>
+                <button class="calc-button"><</button>
+                <button class="calc-button">/</button>
+            </div>
+            <div class="calc-button-row">
+                <button class="calc-button">7</button>
+                <button class="calc-button">8</button>
+                <button class="calc-button">9</button>
+                <button class="calc-button">*</button>
+            </div>
+            <div class="calc-button-row">
+                <button class="calc-button">4</button>
+                <button class="calc-button">5</button>
+                <button class="calc-button">6</button>
+                <button class="calc-button">-</button>
+            </div>
+            <div class="calc-button-row">
+                <button class="calc-button">1</button>
+                <button class="calc-button">2</button>
+                <button class="calc-button">3</button>
+                <button class="calc-button">+</button>
+            </div>
+            <div class="calc-button-row">
+                <button class="calc-button triple">0</button>
+                <button class="calc-button">=</button>
+            </div>
+        </section>
+    </div>
+</div>
+
+<pre>
+<a href="https://frontendmasters.com/courses/web-development-v3/javascript-project-math-operators/" target="_blank">https://frontendmasters.com/courses/web-development-v3/javascript-project-math-operators/</a>
+<a href="https://btholt.github.io/complete-intro-to-web-dev-v3/lessons/putting-it-all-together/project" target="_blank">https://btholt.github.io/complete-intro-to-web-dev-v3/lessons/putting-it-all-together/project</a>
+</pre>
+
+<script>
+    const screen = document.querySelector(".screen");
+    let buffer: String = "0";
+
+    let runningTotal: Number = 0;
+    let previousOperator: String = null;
+
+    function buttonClick(val) {
+        if (isNaN(parseInt(val))) {
+            handleSymbol(val);
+        } else {
+            handleNumber(val);
+        }
+        rerender();
+        // console.log(buffer)
+    }
+
+    function handleNumber(num: String) {
+        if (buffer === "0") {
+            buffer = num;
+        } else {
+            buffer += num;
+        }
+    }
+
+    function handleMath(val: String) {
+        if (buffer === "0") {
+            // do nothing
+            return;
+        }
+        const intBuffer = parseInt(buffer);
+        if (runningTotal === 0) {
+            runningTotal = intBuffer;
+        } else {
+            flushOperation(intBuffer);
+        }
+        previousOperator = val;
+        buffer = "0";
+    }
+    function flushOperation(intBuffer: Number) {
+        if (previousOperator === "+") {
+            runningTotal += intBuffer;
+        } else if (previousOperator === "-") {
+            runningTotal -= intBuffer;
+        } else if (previousOperator === "*") {
+            runningTotal *= intBuffer;
+        } else if (previousOperator === "/") {
+            runningTotal /= intBuffer;
+        }
+    }
+    function handleSymbol(symbol: String) {
+        switch (symbol) {
+            case "C":
+                buffer = "0";
+                break;
+            case "<":
+                if (buffer.length === 1) {
+                    buffer = "0";
+                } else {
+                    buffer = buffer.substring(0, buffer.length - 1);
+                }
+                break;
+            case "=":
+                if (previousOperator === null) {
+                    return;
+                }
+                flushOperation(parseInt(buffer));
+                previousOperator = null;
+                buffer = +runningTotal;
+                runningTotal = 0;
+                break;
+            case "-":
+            case "+":
+            case "/":
+            case "*":
+                handleMath(symbol);
+                break;
+        }
+    }
+    function init() {
+        console.log("init helloworld");
+        document.querySelectorAll(".calc-button").forEach((button) => {
+            button.addEventListener("click", (event) => {
+                buttonClick((event.target as HTMLElement).innerText);
+            });
+        });
+    }
+
+    function rerender() {
+        screen.innerText = buffer;
+    }
+    init();
+    /* let runningTotal = 0;
+    let buffer = "0";
+    let previousOperator;
+    const screen = document.querySelector(".screen");
+
+    function buttonClick(value) {
+        if (isNaN(parseInt(value))) {
+            handleSymbol(value);
+        } else {
+            handleNumber(value);
+        }
+        rerender();
+    }
+
+    function handleNumber(value) {
+        if (buffer === "0") {
+            buffer = value;
+        } else {
+            buffer += value;
+        }
+    }
+
+    function handleMath(value) {
+        if (buffer === "0") {
+            // do nothing
+            return;
+        }
+
+        const intBuffer = parseInt(buffer);
+        if (runningTotal === 0) {
+            runningTotal = intBuffer;
+        } else {
+            flushOperation(intBuffer);
+        }
+
+        previousOperator = value;
+
+        buffer = "0";
+    }
+
+    function flushOperation(intBuffer) {
+        if (previousOperator === "+") {
+            runningTotal += intBuffer;
+        } else if (previousOperator === "-") {
+            runningTotal -= intBuffer;
+        } else if (previousOperator === "×") {
+            runningTotal *= intBuffer;
+        } else {
+            runningTotal /= intBuffer;
+        }
+    }
+
+    function handleSymbol(value) {
+        switch (value) {
+            case "C":
+                buffer = "0";
+                runningTotal = 0;
+                break;
+            case "=":
+                if (previousOperator === null) {
+                    // need two numbers to do math
+                    return;
+                }
+                flushOperation(parseInt(buffer));
+                previousOperator = null;
+                buffer = +runningTotal;
+                runningTotal = 0;
+                break;
+            case "←":
+                if (buffer.length === 1) {
+                    buffer = "0";
+                } else {
+                    buffer = buffer.substring(0, buffer.length - 1);
+                }
+                break;
+            case "+":
+            case "-":
+            case "×":
+            case "÷":
+                handleMath(value);
+                break;
+        }
+    }
+
+    function rerender() {
+        screen.innerText = buffer;
+    }
+
+    function init() {
+        document
+            .querySelector(".calc-buttons")
+            .addEventListener("click", function (event) {
+                buttonClick(event.target.innerText);
+            });
+    }
+
+    init(); */
+</script>
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        padding: 0;
+        margin: 0;
+        display: grid;
+        justify-self: center;
+        place-items: center;
+        min-height: 100vh;
+    }
+
+    .calc {
+        width: 400px;
+        background-color: black;
+        color: white;
+        filter: drop-shadow(0.5rem 0.5rem 1rem rgba(13, 13, 13, 0.3));
+    }
+
+    .screen {
+        color: white;
+        font-size: 40px;
+        font-family: "Courier New", Courier, monospace;
+        text-align: right;
+        padding: 20px 5px;
+    }
+
+    .calc-button {
+        background-color: #d8d9db;
+        color: black;
+        height: 100px;
+        width: 24.5%;
+        border: none;
+        border-radius: 0;
+        font-size: 40px;
+        cursor: pointer;
+    }
+
+    .calc-button:hover {
+        background-color: #ebebeb;
+    }
+
+    .calc-button:active {
+        background-color: #bbbcbe;
+    }
+
+    .double {
+        width: 49.7%;
+    }
+
+    .triple {
+        width: 74.8%;
+    }
+
+    .calc-button:last-child {
+        background-color: #df974c;
+        color: white;
+    }
+
+    .calc-button:last-child:hover {
+        background-color: #dfb07e;
+    }
+
+    .calc-button:last-child:active {
+        background-color: #dd8d37;
+    }
+
+    .calc-button-row {
+        display: flex;
+        align-content: stretch;
+        justify-content: space-between;
+        margin-bottom: 0.5%;
+    }
+
+    .calc-button-row:last-child {
+        padding-bottom: 0;
+    }
+</style>

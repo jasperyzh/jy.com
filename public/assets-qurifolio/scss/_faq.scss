@@ -1,0 +1,112 @@
+//faq-que-list
+.faq-que-list {
+    .accordion-item {
+        border: 0;
+        background: transparent;
+        margin-bottom: 40px;
+        // padding: 10px 30px 17px 30px;
+        border-radius: 8px;
+        border: 2px solid rgba(#ff8a00, 0.2);
+        button:focus,
+        input:focus,
+        input:focus,
+        textarea,
+        textarea:focus {
+            outline: 0;
+        }
+        .accordion-button {
+            transition: unset;
+            color: $heding;
+            font-size: 24px;
+            font-family: $publicsans;
+            font-weight: 700;
+            line-height: 1.875rem;
+            border: 0;
+            box-shadow: none;
+            text-decoration: 1px solid $white;
+            background: $white;
+            border-radius: 6px;
+            padding: 0;
+            padding: 15px 30px 15px 30px;
+            position: relative;
+            box-shadow: 0;
+            -webkit-transition: unset;
+            -moz-transition: unset;
+            -ms-transition: unset;
+            -o-transition: unset;
+            word-wrap: normal;
+            display: inline-block;
+            &.collapsed {
+                background: rgba($white, 0.05);
+            }
+
+            // &:not(.collapsed) {
+            //     color: $white;
+            //     background-color: unset;
+            //     box-shadow: unset;
+            // }
+            &:focus {
+                box-shadow: none;
+                outline: 0;
+            }
+
+            &::before {
+                content: "\F282";
+                position: absolute;
+                font-family: "bootstrap-icons";
+                font-size: 20px;
+                font-weight: 300;
+                color: $theme-color;
+                right: 30px;
+                top: 50%;
+                transform: translateY(-50%) rotate(180deg);
+                transition: 0.3s linear;
+                z-index: 1;
+                @media #{$md} {
+                    right: 10px;
+                    font-size: 16px;
+                }
+                @media #{$xs} {
+                    right: 10px;
+                    font-size: 16px;
+                }
+            }
+            &::after {
+                display: none;
+            }
+            @media #{$xs} {
+                font-size: 18px;
+                padding: 15px 15px 15px 15px;
+            }
+        }
+        .collapsed {
+            border: 0;
+            &::before {
+                content: "\F282";
+                color: $heding;
+                transform: translateY(-50%) rotate(0deg);
+            }
+        }
+        .accordion-body {
+            background: $white;
+            padding: 0;
+            padding: 5px 30px 20px 30px;
+            border-radius: 0 0 8px 8px;
+            p {
+                font-size: 20px;
+                line-height: 34px;
+                margin-bottom: 0;
+                border-top: 2px solid rgba(#ff8a00, 0.3);
+                padding-top: 20px;
+            }
+        }
+        @media #{$xs} {
+            .accordion-body {
+                padding: 5px 15px 20px 15px;
+                p {
+                    font-size: 18px;
+                }
+            }
+        }
+    }
+}

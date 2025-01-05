@@ -2,34 +2,33 @@
 import Layout from "../../layouts/Layout.astro";
 
 import EntriesList from "../../components/EntriesList.astro";
+import { getCollection } from "astro:content";
+
+const getObPosts = await getCollection("ob_blog");
 ---
 
 <Layout>
   <main>
     <section class="container">
-      <!-- tags -->
-      <!-- <ol role="list" class="flex flex-wrap gap-3">
+      <h1>All Blog Posts</h1>
+
+      <ul>
         {
-          tags.map((tag) => (
-            <li class="inline-flex items-center uppercase mx-auto hover:text-blue-500 text-xs font-medium text-black">
-              <a href={`/tags/${tag}`}>{tag}</a>
-            </li>
+          getObPosts.map((post) => (
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">{post.data.title}</h5>
+                <p class="card-text">
+                  Some quick example text to build on the card title and make up
+                  the bulk of the card's content.
+                </p>
+
+                <a class="stretched-link" href={`/blog/${post.id}`} />
+              </div>
+            </div>
           ))
         }
-      </ol> -->
-
-      <!-- posts -->
-      <h1>All Blog Posts</h1>
-      <div class="masonry__layout">
-        <EntriesList sort="asc" />
-        <!-- Sorting in ascending order for example -->
-      </div>
-
-      <!-- <hr>
-  <EntriesList sort="desc" tags={['webdev']} /> -->
-
-
-      <!-- <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} /> -->
+      </ul>
     </section>
   </main>
 </Layout>
