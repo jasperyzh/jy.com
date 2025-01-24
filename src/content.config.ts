@@ -6,6 +6,19 @@ import { file, glob } from "astro/loaders"; // Not available with legacy API
 // import { parse as parseToml } from "toml";
 // import { parse as parseCsv } from "csv-parse/sync";
 
+const work = defineCollection({
+  // Load Markdown files in the src/content/work directory.
+  loader: glob({ base: "./src/content/work", pattern: "**/*.md" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    publishDate: z.coerce.date(),
+    tags: z.array(z.string()),
+    img: z.string(),
+    img_alt: z.string().optional(),
+  }),
+});
+
 // 3. Define your collection(s)
 const ob_blog = defineCollection({
   loader: glob({
@@ -159,4 +172,4 @@ loader: file("src/data/pets.json", { parser: (text) => JSON.parse(text).cats })
 
 // 4. Export a single `collections` object to register your collection(s)
 // export const collections = { blog/* , dogs, probes */ };
-export const collections = { /* blog, */ ob_blog };
+export const collections = { /* blog, */ ob_blog, work };

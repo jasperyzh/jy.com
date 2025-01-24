@@ -1,134 +1,99 @@
 ---
-export interface Props {
-  title?: string;
-  description?: string;
+import "@/styles/global.scss";
+
+interface Props {
+  title?: string | undefined;
+  description?: string | undefined;
   image?: string;
 }
 
-import { ViewTransitions } from "astro:transitions";
-import { SITE_TITLE } from "../consts";
-
-// const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+// import { ViewTransitions } from "astro:transitions";
+// import { SITE_TITLE } from "../consts";
+// const seo_title = head.page_title
+//   ? `${SITE_TITLE} - ${head.page_title}`
+//   : `${SITE_TITLE} - hello_world`;
 
 const {
-  title,
-  description,
+  title = "Jeanine White: Personal Site",
+  description = "The personal site of Jeanine White",
   image = "/placeholder-post.jpg",
-  head = {
-    page_title: "",
-  },
 } = Astro.props as Props;
-
-// const seo_title = title !== SITE_TITLE ? `${title} | ${SITE_TITLE}` : title;
-const seo_title = head.page_title
-  ? `${SITE_TITLE} - ${head.page_title}`
-  : `${SITE_TITLE} - hello_world`;
-
-// <!-- <BaseHead.astro> -->
-// // Import the global.css file here so that it is included on
-// // all pages through the use of the <BaseHead /> component.
-// import '../styles/global.scss';
-
-// interface Props {
-// 	title: string;
-// 	description: string;
-// 	image?: string;
-// }
-
-// const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-
-// const { title, description, image = '/blog-placeholder-1.jpg' } = Astro.props;
-
-// <!-- Global Metadata -->
-// <meta charset="utf-8" />
-// <meta name="viewport" content="width=device-width,initial-scale=1" />
-// <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-// <meta name="generator" content={Astro.generator} />
-
-// <!-- Font preloads -->
-// <link rel="preload" href="/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin />
-// <link rel="preload" href="/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin />
-
-// <!-- Canonical URL -->
-// <link rel="canonical" href={canonicalURL} />
-
-// <!-- Primary Meta Tags -->
-// <title>{title}</title>
-// <meta name="title" content={title} />
-// <meta name="description" content={description} />
-
-// <!-- Open Graph / Facebook -->
-// <meta property="og:type" content="website" />
-// <meta property="og:url" content={Astro.url} />
-// <meta property="og:title" content={title} />
-// <meta property="og:description" content={description} />
-// <meta property="og:image" content={new URL(image, Astro.url)} />
-
-// <!-- Twitter -->
-// <meta property="twitter:card" content="summary_large_image" />
-// <meta property="twitter:url" content={Astro.url} />
-// <meta property="twitter:title" content={title} />
-// <meta property="twitter:description" content={description} />
-// <meta property="twitter:image" content={new URL(image, Astro.url)} />
 ---
 
-<head>
-  <!-- Global Metadata -->
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <meta name="generator" content={Astro.generator} />
+<!-- Global Metadata -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta name="generator" content={Astro.generator} />
 
-  <!-- Canonical URL -->
-  <!-- <link rel="canonical" href={canonicalURL} /> -->
+<title>{title}</title>
+<meta name="description" property="og:description" content={description} />
 
-  <title>{seo_title}</title>
-  <!-- <meta name="title" content={title} /> -->
-  <meta name="description" content={description} />
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={Astro.url} />
+<meta property="og:title" content={title} />
+<meta property="og:image" content={new URL(image, Astro.url)} />
 
-  <!-- tracking -->
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content={Astro.url} />
+<meta property="twitter:title" content={title} />
+<meta property="twitter:description" content={description} />
+<meta property="twitter:image" content={new URL(image, Astro.url)} />
 
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content={Astro.url} />
-  <meta property="og:title" content={title} />
-  <meta property="og:description" content={description} />
-  <meta property="og:image" content={new URL(image, Astro.url)} />
+<!-- Google tag (gtag.js) -->
+<script
+  is:inline
+  async
+  src="https://www.googletagmanager.com/gtag/js?id=G-LQ2S4M9E6S"></script>
+<script is:inline>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag("js", new Date());
 
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content={Astro.url} />
-  <meta property="twitter:title" content={title} />
-  <meta property="twitter:description" content={description} />
-  <meta property="twitter:image" content={new URL(image, Astro.url)} />
+  gtag("config", "G-LQ2S4M9E6S");
+</script>
 
-  <!-- Google tag (gtag.js) -->
-  <script
-    is:inline
-    async
-    src="https://www.googletagmanager.com/gtag/js?id=G-LQ2S4M9E6S"></script>
-  <script is:inline>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
+<!-- Google fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+  rel="stylesheet"
+/>
+
+<!-- style -->
+<link
+  rel="stylesheet"
+  href="/bootstrap-icons-1.11.3/font/bootstrap-icons.min.css"
+/>
+<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+
+<script is:inline>
+  // This code is inlined in the head to make dark mode instant & blocking.
+  const getThemePreference = () => {
+    if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
+      return localStorage.getItem("theme");
     }
-    gtag("js", new Date());
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  };
+  const isDark = getThemePreference() === "dark";
+  document.documentElement.classList[isDark ? "add" : "remove"]("theme-dark");
 
-    gtag("config", "G-LQ2S4M9E6S");
-  </script>
-
-  <!-- Google fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
-    rel="stylesheet"
-  />
-
-  <!-- style -->
-  <link
-    rel="stylesheet"
-    href="/bootstrap-icons-1.11.3/font/bootstrap-icons.min.css"
-  />
-  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
-</head>
+  if (typeof localStorage !== "undefined") {
+    // Watch the document element and persist user preference when it changes.
+    const observer = new MutationObserver(() => {
+      const isDark = document.documentElement.classList.contains("theme-dark");
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+  }
+</script>
