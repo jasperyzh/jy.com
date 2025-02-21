@@ -4,6 +4,10 @@ import Layout from "@/layouts/BaseLayout.astro";
 import EntriesList from "../../components/EntriesList.astro";
 import { getCollection } from "astro:content";
 
+import TagCloud from "../../components/TagCloud.astro";
+
+import { Debug } from "astro/components";
+
 const getObPosts = await getCollection("ob_blog");
 ---
 
@@ -11,6 +15,39 @@ const getObPosts = await getCollection("ob_blog");
   <main>
     <section class="container">
       <h1>All Blog Posts</h1>
+
+      <!-- <div class="tag-cloud">
+        <h2>Tags</h2>
+        <ul>
+          {
+            Array.from(new Set(getObPosts.flatMap((post) => post.tags))).map(
+              (tag) => (
+                <li key={tag}>
+                  <a href={`/blog/tags/${tag}`}>{tag}</a>
+                </li>
+              )
+            )
+          }
+        </ul>
+      </div> -->
+
+      <!-- <div class="all-tags">
+        <h2>All Tags</h2>
+        <ul>
+          {
+            getObPosts.map((post) => (
+              <li key={post.id}>
+                {post.tags.map((tag) => (
+                  <span key={tag}>{tag}</span>
+                ))}
+              </li>
+            ))
+          }
+        </ul>
+      </div> -->
+
+
+      <TagCloud />
 
       <ul>
         {
@@ -22,7 +59,15 @@ const getObPosts = await getCollection("ob_blog");
                   Some quick example text to build on the card title and make up
                   the bulk of the card's content.
                 </p>
-
+                {/* Render the blog tags */}
+                <div class="card-tags">
+                  {post.data.tags &&
+                    post.data.tags.map((tag) => (
+                      <span class="tag badge bg-primary me-2" key={tag}>
+                        {tag}
+                      </span>
+                    ))}
+                </div>
                 <a class="stretched-link" href={`/blog/${post.id}`} />
               </div>
             </div>

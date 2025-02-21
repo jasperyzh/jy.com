@@ -2,13 +2,18 @@
 @use 'bootstrap/scss/bootstrap' as *;
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 
+img {
+  max-width: 100%;
+  height: auto;
+}
+/* 
 // Theme Configuration
 :root {
   // Brand Colors
   --brand-primary: #4caf50;
   --brand-secondary: #6c757d;
   --brand-accent: #17a2b8;
-  
+
   // Override Bootstrap Default Variables
   --bs-primary: var(--brand-primary);
   --bs-secondary: var(--brand-secondary);
@@ -19,12 +24,13 @@
   --bs-light: #f8f9fa;
   --bs-dark: #343a40;
 
+  // causing issue for dark mode
   // Typography
-  --bs-font-sans-serif: 'Arial', system-ui, -apple-system, sans-serif;
-  --bs-body-font-size: 1rem;
-  --bs-body-line-height: 1.5;
-  --bs-body-color: #212529;
-  --bs-body-bg: #ffffff;
+  // --bs-font-sans-serif: 'Arial', system-ui, -apple-system, sans-serif;
+  // --bs-body-font-size: 1rem;
+  // --bs-body-line-height: 1.5;
+  // --bs-body-color: #212529;
+  // --bs-body-bg: #ffffff;
 
   // Spacing
   --bs-spacer: 1rem;
@@ -66,14 +72,24 @@
   box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
 }
 
-// Dark Mode Support (Optional)
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bs-body-color: #f8f9fa;
-    --bs-body-bg: #212529;
-    --bs-border-color: #495057;
-  }
+// Dark Mode Support
+:root {
+  --body-bg: #ffffff;
+  --body-color: #212529;
+  --border-color: #dee2e6;
 }
+
+:root.theme-dark {
+  --body-bg: #212529;
+  --body-color: #f8f9fa;
+  --border-color: #495057;
+}
+
+// body {
+//   background-color: var(--body-bg);
+//   color: var(--body-color);
+//   transition: background-color 0.3s ease, color 0.3s ease;
+// }
 
 // Additional Global Styles
 img {
@@ -94,3 +110,4 @@ img {
     --bs-body-font-size: 1.1rem;
   }
 }
+ */

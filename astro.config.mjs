@@ -6,9 +6,29 @@ import sitemap from "@astrojs/sitemap";
 import vue from "@astrojs/vue";
 import { resolve } from "path";
 
+/* 
+7. Add Markdown Support (Optional) -- prismjs
+If you're using Markdown files in Astro, ensure your Markdown parser adds the necessary language classes:
+
+js
+Copy
+Edit
+const markdownOptions = {
+  remarkPlugins: [],
+  rehypePlugins: [],
+  syntaxHighlight: "prism",
+};
+In your astro.config.mjs, add this to enable syntax highlighting for code blocks. */
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://jasperyong.com",
+  markdown: {
+    syntaxHighlight: 'prism',
+    prism: {
+      theme: 'twilight'
+    }
+  },
   // base: '/',
 
   integrations: [
@@ -20,21 +40,14 @@ export default defineConfig({
     css: {
       preprocessorOptions: {
         scss: {
-          quietDeps: true
-        }
-      }
+          quietDeps: true,
+        },
+      },
     },
     resolve: {
       alias: {
-        "@": resolve("./src"), // Define @ as the alias for the src directory
+        "@": resolve("./src"),
       },
     },
   },
-  // content: {
-  //   collections: {
-  //     blog: {
-  //       directory: "/home/gita/Documents/_note/blog", // Absolute path to your blog directory
-  //     },
-  //   },
-  // },
 });
