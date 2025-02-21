@@ -1,303 +1,107 @@
 ---
-const sketch_title = "mesh gradient";
-const slug = Astro.url.pathname.split("/").pop().replace(".astro", ""); // Extract slug
-const display_title = sketch_title ? sketch_title : slug;
+import Layout from "@/layouts/BaseLayout.astro";
+
+import { SITE_DESCRIPTION } from "../consts";
+
+import WorkList from "../components/WorkList.astro";
 ---
 
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Mesh Gradient</title>
-    </head>
+<Layout title="Homepage" description={SITE_DESCRIPTION}>
+  <main class="d-flex flex-column align-items-center justify-content-center">
+    <div class="container col-xxl-8 px-4 py-5">
+      <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+        <div class="col-10 col-sm-8 col-lg-6">
+          <img
+            src="/bootstrap/examples/heroes/bootstrap-themes.png"
+            class="d-block mx-lg-auto img-fluid"
+            alt="Bootstrap Themes"
+            width="700"
+            height="500"
+            loading="lazy"
+          />
+        </div>
+        <div class="col-lg-6">
+          <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
+            WebDeveloper; DIYer; Learner; for growth
 
-    <body>
-        <main>
-            <div id="sketch-container">
-                <!-- This is where the canvas will be inserted -->
+            <i class="bi bi-1-circle"></i> hello world
+          </h1>
+          <p class="lead">
+            Quickly design and customize responsive mobile-first sites with
+            Bootstrap, the world’s most popular front-end open source toolkit,
+            featuring Sass variables and mixins, responsive grid system...
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <section id="about">
+      <div class="container">
+        <div class="landing_layout" style="gap: 0">
+          <div class="about_image bg-secondary p-4">
+            <img src="/placeholder.png" width="260" alt="" />
+          </div>
+          <div class="about_content bg-secondary p-4">
+            <p>
+              With 8 years of experience in web development, I have had the
+              opportunity to work with Top Marketing Agency in Malaysia,
+              Fishermen, and diverses clients around the industries. I have been
+              fortunate to have... Also an found my calling...?
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="work" class="w-100">
+      <div class="container">
+        <div class="text-bg-secondary p-4">
+          <WorkList />
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container my-5">
+        <div class="bg-dark text-secondary px-5 pb-5 rounded-5">
+          <div class="py-5">
+            <h2 class="display-4 fw-bold text-white">
+              Wanna reach out for a chat?
+            </h2>
+            <div class="col-6">
+              <p class="fs-5 mb-4">
+                Quickly design and customize responsive mobile-first sites with
+                Bootstrap, the world’s most popular front-end open source
+                toolkit, featuring Sass variables and mixins, responsive grid
+                system, extensive prebuilt components, and powerful JavaScript
+                plugins.
+              </p>
+
+              <!-- <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <button
+                  type="button"
+                  class="btn btn-outline-info btn-lg px-4 me-sm-3 fw-bold"
+                  >Custom button</button
+                >
+                <button type="button" class="btn btn-outline-light btn-lg px-4"
+                  >Secondary</button
+                >
+              </div> -->
             </div>
-        </main>
-        <aside>
-            {display_title}
-        </aside>
-
-        <style>
-            html,
-            body,
-            main {
-                margin: 0;
-                padding: 0;
-                min-height: 100vh;
-                display: grid;
-                align-items: center;
-                place-items: center;
-            }
-            #sketch-container {
-                display: inline-flex;
-                filter: drop-shadow(0.5rem 0.5rem 1rem rgba(13, 13, 13, 0.3));
-            }
-            aside {
-                position: absolute;
-                bottom: 1rem;
-                right: 1rem;
-                font-family: monospace;
-                font-size: 0.8rem;
-                background: #000;
-                color: #fff;
-                padding: 0.2rem 0.4rem;
-                box-shadow: 0.5rem 0.5rem 1rem rgba(13, 13, 13, 0.3);
-            }
-        </style>
-
-        <script>
-            /**
-             * Example: Mesh Gradient in canvas-sketch
-             * ---------------------------------------
-             * This script subdivides between control points to create a smooth color mesh.
-             */
-
-            import canvasSketch from "canvas-sketch";
-            import { lerp } from "canvas-sketch-util/math";
-
-            // ----- Settings -----
-            const settings = {
-                dimensions: [800, 800],
-                // Optionally animate
-                animate: true,
-                duration: 4, // 4-second loop
-                fps: 60,
-                loop: true, // Optionally loop the animation
-            };
-
-            // Example: 2x2 control-point grid
-            // Each row is an array of { x, y, color: [r,g,b] }
-            /* const baseControlPoints = [
-    [
-        { x: 0.0, y: 0.0, color: [255, 0, 0] },
-        { x: 1.0, y: 0.0, color: [0, 255, 0] }
-    ],
-    [
-        { x: 0.0, y: 1.0, color: [0, 0, 255] },
-        { x: 1.0, y: 1.0, color: [255, 255, 0] }
-    ]
-    ]; */
-
-            const baseControlPoints = [
-                [
-                    { x: 0, y: 0, color: [255, 0, 0] },
-                    { x: 0.5, y: 0, color: [0, 255, 0] },
-                    { x: 1, y: 0, color: [0, 0, 255] },
-                ],
-                [
-                    { x: 0, y: 0.5, color: [255, 255, 0] },
-                    { x: 0.5, y: 0.5, color: [100, 0, 255] },
-                    { x: 1, y: 0.5, color: [0, 255, 255] },
-                ],
-                [
-                    { x: 0, y: 1, color: [255, 128, 0] },
-                    { x: 0.5, y: 1, color: [68, 0, 68] },
-                    { x: 1, y: 1, color: [0, 128, 128] },
-                ],
-            ];
-
-            // Subdivision steps along X and Y for interpolation
-            const stepsX = 5;
-            const stepsY = 5;
-
-            export const runSketch = (container) => {
-                const sketch = () => {
-                    return ({ context, width, height, playhead, time }) => {
-                        // Create a *fresh* copy of your control points each frame
-                        // and apply some animated offset in y using Math.sin()
-                        const animatedPoints = animatePoints(
-                            baseControlPoints,
-                            playhead,
-                        );
-
-                        // Interpolate the updated grid
-                        const mesh = interpolateGrid(
-                            animatedPoints,
-                            stepsX,
-                            stepsY,
-                        );
-
-                        // Clear the canvas
-                        context.clearRect(0, 0, width, height);
-
-                        // Determine cell size for drawing
-                        const cellW = width / (mesh[0].length - 1);
-                        const cellH = height / (mesh.length - 1);
-
-                        // Render each cell
-                        for (let row = 0; row < mesh.length - 1; row++) {
-                            for (
-                                let col = 0;
-                                col < mesh[row].length - 1;
-                                col++
-                            ) {
-                                const { color: c } = mesh[row][col];
-                                context.fillStyle = `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
-                                context.fillRect(
-                                    col * cellW,
-                                    row * cellH,
-                                    cellW + 1,
-                                    cellH + 1,
-                                );
-                            }
-                        }
-                    };
-                };
-
-                /**
-                 * Animate control points with a sine wave in the y direction.
-                 * You could also modulate colors here for more effects.
-                 */
-                function animatePoints(basePoints, playhead) {
-                    const amplitude = 0.03;
-                    const frequency = 2;
-                    const animated = JSON.parse(JSON.stringify(basePoints));
-
-                    animated.forEach((row, r) => {
-                        row.forEach((pt, c) => {
-                            const bx = basePoints[r][c].x;
-                            const by = basePoints[r][c].y;
-                            const baseColor = basePoints[r][c].color;
-
-                            // Map playhead (0..1) to 0..2π for smooth loops
-                            // Offsetting with r + c can add variety if you want
-                            const phase = 2 * Math.PI * playhead + (r + c);
-
-                            // Vertical sine wave offset
-                            const offsetY = amplitude * Math.sin(phase);
-                            pt.x = bx;
-                            pt.y = by + offsetY;
-
-                            // If you want to animate color, e.g. shift red channel
-                            const colorShift = 50 * Math.sin(phase);
-                            const shiftedR = baseColor[0] + colorShift;
-                            pt.color = [shiftedR, baseColor[1], baseColor[2]];
-                        });
-                    });
-
-                    return animated;
-                }
-
-                /**
-                 * Interpolates a grid of control points into smaller subdivided cells.
-                 * Each point is { x, y, color }, with x,y in [0..1].
-                 */
-                function interpolateGrid(controlPoints, stepsX, stepsY) {
-                    const rowCount = controlPoints.length;
-                    const colCount = controlPoints[0].length;
-
-                    const subdivided = [];
-
-                    for (
-                        let row = 0;
-                        row < (rowCount - 1) * stepsY + 1;
-                        row++
-                    ) {
-                        const tRow = row / (stepsY * (rowCount - 1));
-                        const rowIndex = Math.floor(tRow * (rowCount - 1));
-                        const rowFrac = tRow * (rowCount - 1) - rowIndex;
-                        subdivided[row] = [];
-
-                        for (
-                            let col = 0;
-                            col < (colCount - 1) * stepsX + 1;
-                            col++
-                        ) {
-                            const tCol = col / (stepsX * (colCount - 1));
-                            const colIndex = Math.floor(tCol * (colCount - 1));
-                            const colFrac = tCol * (colCount - 1) - colIndex;
-
-                            // Guard for final boundary (avoid out-of-bounds)
-                            if (
-                                rowIndex >= rowCount - 1 ||
-                                colIndex >= colCount - 1
-                            ) {
-                                continue; // skip
-                            }
-
-                            const topLeft = controlPoints[rowIndex][colIndex];
-                            const topRight =
-                                controlPoints[rowIndex][colIndex + 1];
-                            const botLeft =
-                                controlPoints[rowIndex + 1][colIndex];
-                            const botRight =
-                                controlPoints[rowIndex + 1][colIndex + 1];
-                            if (
-                                !topLeft ||
-                                !topRight ||
-                                !botLeft ||
-                                !botRight
-                            ) {
-                                continue;
-                            }
-
-                            // Interpolate top edge
-                            const topX = lerp(topLeft.x, topRight.x, colFrac);
-                            const topY = lerp(topLeft.y, topRight.y, colFrac);
-                            const topColor = lerpColor(
-                                topLeft.color,
-                                topRight.color,
-                                colFrac,
-                            );
-
-                            // Interpolate bottom edge
-                            const botX = lerp(botLeft.x, botRight.x, colFrac);
-                            const botY = lerp(botLeft.y, botRight.y, colFrac);
-                            const botColor = lerpColor(
-                                botLeft.color,
-                                botRight.color,
-                                colFrac,
-                            );
-
-                            // Interpolate between top and bottom edge
-                            const finalX = lerp(topX, botX, rowFrac);
-                            const finalY = lerp(topY, botY, rowFrac);
-                            const finalColor = lerpColor(
-                                topColor,
-                                botColor,
-                                rowFrac,
-                            );
-
-                            subdivided[row][col] = {
-                                x: finalX,
-                                y: finalY,
-                                color: finalColor,
-                            };
-                        }
-                    }
-                    return subdivided;
-                }
-
-                function lerpColor(c1, c2, t) {
-                    return [
-                        lerp(c1[0], c2[0], t),
-                        lerp(c1[1], c2[1], t),
-                        lerp(c1[2], c2[2], t),
-                    ];
-                }
-
-                // Create a new canvas and insert it into the specified container
-                settings.canvas = document.createElement("canvas");
-                // settings.canvas.width = container.clientWidth;
-                // settings.canvas.height = container.clientHeight;
-
-                container.appendChild(settings.canvas);
-
-                canvasSketch(sketch, settings);
-            };
-
-            // Ensure the script runs after the DOM has loaded
-            document.addEventListener("DOMContentLoaded", () => {
-                const container = document.getElementById("sketch-container");
-                if (container) {
-                    runSketch(container); // Pass the container to the sketch
-                }
-            });
-        </script>
-    </body>
-</html>
+            <div class="col">
+              <div class="ms-auto me-0">
+                <ul>
+                  <a href="mailto:jasper.yzh@gmail.com"
+                    >-> jasper.yzh@gmail.com</a
+                  >
+                  <li>email: jаѕреr.уzh@ɢmаіl.сom</li>
+                  <li>phone: +６０１３ ３９１ ２１０５</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>

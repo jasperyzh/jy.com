@@ -17,6 +17,13 @@ export default defineConfig({
     sitemap(),
   ],
   vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          quietDeps: true
+        }
+      }
+    },
     resolve: {
       alias: {
         "@": resolve("./src"), // Define @ as the alias for the src directory

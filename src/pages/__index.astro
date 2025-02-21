@@ -1,5 +1,5 @@
 ---
-const sketch_title = "";
+const sketch_title = "mesh gradient";
 const slug = Astro.url.pathname.split("/").pop().replace(".astro", ""); // Extract slug
 const display_title = sketch_title ? sketch_title : slug;
 ---
@@ -9,7 +9,7 @@ const display_title = sketch_title ? sketch_title : slug;
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Canvas Sketch Setup</title>
+        <title>Mesh Gradient</title>
     </head>
 
     <body>
@@ -55,9 +55,6 @@ const display_title = sketch_title ? sketch_title : slug;
              * Example: Mesh Gradient in canvas-sketch
              * ---------------------------------------
              * This script subdivides between control points to create a smooth color mesh.
-             * 
-               https://www.youtube.com/watch?v=C7iq8m2dQOo
-             * 
              */
 
             import canvasSketch from "canvas-sketch";
