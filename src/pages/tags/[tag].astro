@@ -1,73 +1,64 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "@/layouts/BaseLayout.astro";
-import EntriesList from "../../components/EntriesList.astro";
+import { slugifyTag, unslugifyTag, getAllUniqueTags } from "@/utils/tags";
+import ReturnButton from '@/components/ReturnButton.astro';
 
-// Get current tag from URL parameters
-const { tag } = Astro.params;
-
-// Fetch posts and unique tags inside `getStaticPaths`
+// Generate static paths for all tags
 export async function getStaticPaths() {
-  const allPosts = await getCollection("posts");
-  const tags = [...new Set(allPosts.flatMap((post) => post.data.tags))];
-  // console.log("Generated paths for tags:", tags); // Debugging output
+  const allPosts = await getCollection("ob_blog");
+  const tags = getAllUniqueTags(allPosts);
 
-  return tags.map((tag) => ({
-    params: { tag },
+  
+  return tags.map(tag => ({
+    params: { tag: slugifyTag(tag) },
+    props: { tag, posts: allPosts.filter(post => post.data.tags?.includes(tag)) }
   }));
 }
 
-// Fetch all posts and filter by the tag within the main logic
-const allPosts = await getCollection("posts");
-const tags = [...new Set(allPosts.flatMap((post) => post.data.tags))]; // Extract all unique tags
-const taggedPosts = allPosts.filter((post) => {
-  const tags = Array.isArray(post.data.tags)
-    ? post.data.tags.map((tag) => tag.toLowerCase())
-    : [];
-  const hasTag = tags.includes(tag.toLowerCase());
-  console.log(
-    `Post tags: ${tags}, Searching for tag: "${tag.toLowerCase()}" - Result: ${hasTag}`
-  );
-  return hasTag;
-});
+// Get the tag and posts from props
+const { tag, posts } = Astro.props;
+const title = `Posts tagged with "${tag}"`;
 
-console.log(
-  `Filtered post titles for tag "${tag}":`,
-  taggedPosts.map((post) => post.data.title)
-);
 ---
 
-<Layout title={`Posts tagged with "${tag}"`}>
-  <main>
-    <section class="container">
-      <h2>Posts Tagged with "{tag}"</h2>
-
-      <!-- Add All Tags Section -->
-      <div class="all-tags">
-        <h3>All Tags</h3>
-        <ul class="tags-list">
-          {
-            tags.map((currentTag) => (
-              <li>
-                <a href={`/tags/${currentTag}`} class="tag-link">
-                  {currentTag}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-
-      <!-- Tagged Posts Section -->
-      {
-        taggedPosts.length > 0 ? (
-          <div class="masonry__layout">
-            <EntriesList posts={taggedPosts} />
+<Layout title={title}>
+  <main class="container py-4">
+    <!-- button return to all blog posts -->
+    <ReturnButton href="/blog" label="Return to all blog posts" />
+    
+    <!--  -->
+    <h1 class="mb-4">Posts tagged with "{tag}"</h1>
+    {posts.length > 0 ? (
+      <div class="row row-cols-1 row-cols-md-2 g-4">
+        {posts.map(post => (
+          <div class="col" key={post.slug}>
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">
+                  <a href={`/blog/${post.id}`} class="text-decoration-none">
+                    {post.data.title}
+                  </a>
+                </h5>
+                <p class="card-text">{post.data.description}</p>
+                <div class="d-flex gap-2">
+                  {post.data.tags?.map(postTag => (
+                    <a 
+                      href={`/tags/${slugifyTag(postTag)}`} 
+                      class="badge text-bg-secondary text-decoration-none"
+                      key={postTag}
+                    >
+                      {postTag}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
-        ) : (
-          <p>No posts found for this tag.</p>
-        )
-      }
-    </section>
+        ))}
+      </div>
+    ) : (
+      <p>No posts found for this tag.</p>
+    )}
   </main>
 </Layout>

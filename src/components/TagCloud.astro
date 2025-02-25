@@ -1,11 +1,12 @@
 ---
 import { getCollection } from "astro:content";
+import { slugifyTag } from "@/utils/tags";
 
 // Fetch all posts from the "ob_blog" collection
-const getObPosts = await getCollection("ob_blog");
+const obPosts = await getCollection("ob_blog");
 
 // Count occurrences of each tag
-const tagCounts = getObPosts
+const tagCounts = obPosts
   .flatMap((post) => post.data.tags || [])
   .reduce((acc, tag) => {
     acc[tag] = (acc[tag] || 0) + 1;
@@ -14,6 +15,7 @@ const tagCounts = getObPosts
 
 // Get all unique tags
 const uniqueTags = Object.keys(tagCounts);
+console.log(uniqueTags);
 
 // Get the minimum and maximum counts for normalization
 const minCount = Math.min(...Object.values(tagCounts));
@@ -37,28 +39,28 @@ const getFontSize = (count) => {
 <div class="tag-cloud">
   <h2>Tags</h2>
   <ul>
-    {
-      uniqueTags.map((tag) => (
-        <li key={tag}>
-          <a
-            class="position-relative"
-            href={`/blog/tags/${tag}`}
-            style={`font-size: ${getFontSize(tagCounts[tag])};`}
+    {uniqueTags.map((tag) => (
+      <li key={tag}>
+        <a
+          class="position-relative"
+          href={`/tags/${slugifyTag(tag)}`}
+          style={`font-size: ${getFontSize(tagCounts[tag])};`}
+        >
+          {tag}
+          {/* Uncomment the span below to show the tag count badge
+          <span
+            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary ms-3"
+            style="font-size: 10px;"
           >
-            {tag}{" "}
-            {/* <span
-              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary ms-3"
-              style="font-size: 10px"
-            >
-              {tagCounts[tag]}
-            </span> */}
-          </a>
-        </li>
-      ))
-    }
+            {tagCounts[tag]}
+          </span>
+          */}
+        </a>
+      </li>
+    ))}
   </ul>
 </div>
-<!-- 
+
 <style>
   .tag-cloud {
     padding: 1em;
@@ -91,4 +93,3 @@ const getFontSize = (count) => {
     margin-left: 0.2em;
   }
 </style>
- -->

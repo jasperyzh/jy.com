@@ -16,10 +16,11 @@ interface Props {
   image?: string;
 }
 
-const {
-  title,
-  description,
-} = Astro.props as Props;
+const { title, description } = Astro.props as Props;
+
+import { Debug } from "astro:components";
+
+console.log(Astro);
 ---
 
 <html lang="en">
@@ -30,32 +31,33 @@ const {
   </head>
   <body>
     <div class="wrapper">
-      <header class="mb-5">
-        <nav class="navbar navbar-expand-lg bg-body-tertiary rounded">
-          <div class="container">
-            <button
-              class="navbar-toggler"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbars-primary"
-              aria-controls="navbars-primary"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span class="navbar-toggler-icon"></span>
-            </button>
+      <header class="my-4">
+        <div class="container">
+          <nav class="navbar navbar-expand-lg">
+            <div class="container">
+              <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbars-primary"
+                aria-controls="navbars-primary"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+              >
+                <span class="navbar-toggler-icon"></span>
+              </button>
 
-            <div
-              class="collapse navbar-collapse d-lg-flex"
-              id="navbars-primary"
-            >
-              <a class="navbar-brand" href="/">
-                <div class="logo">{SITE_TITLE}</div>
-              </a>
-              <ul class="navbar-nav col justify-content-lg-end">
-                <li class="nav-item">
-                  <a class="nav-link" href="/portfolio">portfolio</a>
-                  <a class="nav-link" href="/photoswipe">photoswipe</a>
+              <div
+                class="collapse navbar-collapse d-lg-flex"
+                id="navbars-primary"
+              >
+                <a class="navbar-brand" href="/">
+                  <div class="logo">{SITE_TITLE}</div>
+                </a>
+                <ul class="navbar-nav col justify-content-lg-end">
+                  <!-- <li class="nav-item">
+                  <a class="nav-link" href="/portfolio"> portfolio </a>
+                  <a class="nav-link" href="/photoswipe"> photoswipe </a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="/#about">About</a>
@@ -65,56 +67,80 @@ const {
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="/#contact">Contact</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/blog">Blog</a>
-                </li>
-                <li class="nav-item">
-                  <ThemeToggleButton />
-                </li>
-              </ul>
+                </li> -->
+                  <li class="nav-item">
+                    <a class="nav-link" href="/blog">Blog</a>
+                  </li>
+                  <li class="nav-item">
+                    <ThemeToggleButton />
+                  </li>
+                </ul>
+              </div>
             </div>
-          </div>
-        </nav>
+          </nav>
+
+          <hr />
+        </div>
       </header>
 
       <slot />
 
-      <footer class="py-5">
-        <div class="container">
-          <div
-            class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top"
-          >
-            <p>&copy; {today.getFullYear()} JasperYong.com</p>
-            <ul class="list-unstyled d-flex">
-              <li class="ms-3">
-                <a
-                  class="link-body-emphasis"
-                  href="https://github.com/jasperyzh/"
-                  target="_blank"
+      <footer>
+        <div class="container py-4">
+          <hr />
+          <div class="row my-4">
+            <div class="col-md-6">
+              <p>
+                <strong class="d-inline-block mb-1"
+                  >Learner, web developer, and blogger. — JasperYong</strong
                 >
-                  <i class="bi bi-github"></i>
-                </a>
-              </li>
-              <li class="ms-3">
-                <a
-                  class="link-body-emphasis"
-                  href="https://www.instagram.com/jasperyzh/"
-                  target="_blank"
-                >
-                  <i class="bi bi-instagram"></i>
-                </a>
-              </li>
-              <li class="ms-3">
-                <a
-                  class="link-body-emphasis"
-                  href="https://www.linkedin.com/in/jaspery/"
-                  target="_blank"
-                >
-                  <i class="bi bi-linkedin"></i>
-                </a>
-              </li>
-            </ul>
+                <br />
+                Thank you for visiting my website! This blog is a collection of my
+                learnings, experiments, and personal projects. I hope you find something
+                that inspires or resonates with you. Enjoy exploring, and come back
+                soon!
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div
+                class="d-flex flex-column flex-sm-row justify-content-between"
+              >
+                <p>
+                  <small>&copy; {today.getFullYear()} JasperYong.com</small>
+                </p>
+                <ul class="list-unstyled d-flex">
+                  <li class="ms-3">
+                    <a
+                      class="link-body-emphasis"
+                      href="https://github.com/jasperyzh/"
+                      target="_blank"
+                    >
+                      <i class="bi bi-github"></i>
+                    </a>
+                  </li>
+                  <li class="ms-3">
+                    <a
+                      class="link-body-emphasis"
+                      href="https://www.instagram.com/jasperyzh/"
+                      target="_blank"
+                    >
+                      <i class="bi bi-instagram"></i>
+                    </a>
+                  </li>
+                  <li class="ms-3">
+                    <a
+                      class="link-body-emphasis"
+                      href="https://www.linkedin.com/in/jaspery/"
+                      target="_blank"
+                    >
+                      <i class="bi bi-linkedin"></i>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </footer>
@@ -137,7 +163,6 @@ const {
     min-height: 100%;
     margin: 0;
   }
-
   .wrapper {
     display: grid;
     grid-template-rows: auto 1fr auto; /* Header, main, and footer rows */
