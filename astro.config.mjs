@@ -5,15 +5,14 @@ import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import vue from "@astrojs/vue";
 
-import { fileURLToPath } from 'node:url';
-import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from "node:url";
+import { dirname, resolve } from "node:path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Now you can use __dirname as needed, e.g.:
 // const somePath = resolve(__dirname, 'some-folder');
-
 
 /* 
 7. Add Markdown Support (Optional) -- prismjs
@@ -33,10 +32,10 @@ In your astro.config.mjs, add this to enable syntax highlighting for code blocks
 export default defineConfig({
   site: "https://jasperyong.com",
   markdown: {
-    syntaxHighlight: 'prism',
+    syntaxHighlight: "prism",
     prism: {
-      theme: 'twilight'
-    }
+      theme: "twilight",
+    },
   },
   // base: '/',
 
@@ -56,7 +55,14 @@ export default defineConfig({
     resolve: {
       alias: {
         "@": resolve("./src"),
-        'photoswipe/dist/photoswipe-lightbox.esm.js': resolve(__dirname, 'node_modules/photoswipe/dist/photoswipe-lightbox.esm.js')
+        "photoswipe/dist/photoswipe-lightbox.esm.js": resolve(
+          __dirname,
+          "node_modules/photoswipe/dist/photoswipe-lightbox.esm.js"
+        ),
+        "photoswipe/dist/photoswipe.esm.js": resolve(
+          __dirname,
+          "node_modules/photoswipe/dist/photoswipe.esm.js"
+        ),
       },
     },
   },
