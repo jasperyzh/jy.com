@@ -29,6 +29,7 @@
     "nice-color-palettes": "4.0.0",
     "photoswipe": "^5.4.4",
     "prismjs": "^1.29.0",
+    "sass-embedded": "^1.85.1",
     "svg-path-parser": "1.1.0",
     "three": "0.147.0",
     "vue": "^3.5.13"
