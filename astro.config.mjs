@@ -33,9 +33,6 @@ export default defineConfig({
   site: "https://jasperyong.com",
   markdown: {
     syntaxHighlight: "prism",
-    prism: {
-      theme: "twilight",
-    },
   },
   // base: '/',
 
@@ -55,14 +52,8 @@ export default defineConfig({
     resolve: {
       alias: {
         "@": resolve("./src"),
-        "photoswipe/dist/photoswipe-lightbox.esm.js": resolve(
-          __dirname,
-          "node_modules/photoswipe/dist/photoswipe-lightbox.esm.js"
-        ),
-        "photoswipe/dist/photoswipe.esm.js": resolve(
-          __dirname,
-          "node_modules/photoswipe/dist/photoswipe.esm.js"
-        ),
+        // Simplified aliases for photoswipe - this should work better with build systems
+        "photoswipe": resolve(__dirname, "node_modules/photoswipe"),
       },
     },
   },

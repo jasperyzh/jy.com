@@ -1,16 +1,44 @@
 ---
-import { Debug } from 'astro:components';
+/**
+ * Flexible component for displaying a list of blog posts
+ * Features:
+ * - Can receive pre-filtered posts or fetch all posts
+ * - Supports filtering by tags
+ * - Configurable sort order
+ * - Optional limit for showing a subset of posts
+ * - Handles draft posts (hidden in production)
+ */
 import { getCollection } from "astro:content";
-
 import EntriesOne from "./EntriesOne.astro";
 
-// Define props with flexibility for homepage, blog, or tag filtering
-const { posts = null, tags = [], sort = "desc", limit = null } = Astro.props;
+interface Props {
+  // Optional pre-filtered posts, if not provided will fetch all posts
+  posts?: any[];
+  // Filter posts by these tags (if posts not provided)
+  tags?: string[];
+  // Sort order: "asc" or "desc" by date
+  sort?: "asc" | "desc";
+  // Optional limit for number of posts to display
+  limit?: number;
+  // Optional collection to fetch (defaults to "blog")
+  collection?: string;
+  // Optional layout style
+  layout?: "grid" | "list";
+}
 
-// Fetch all posts only if `posts` isn’t provided
-const allPosts = posts ?? (await getCollection("blog"));
+const { 
+  posts = null, 
+  tags = [], 
+  sort = "desc", 
+  limit = null,
+  collection = "blog",
+  layout = "list"
+} = Astro.props;
 
-// Filter posts if specific tags are provided and no pre-filtered posts are passed
+// Fetch all posts only if `posts` isn't provided
+const allPosts = posts ?? (await getCollection(collection));
+
+// Filter posts if specific tags are provided and no pre-filtered posts were passed
 let filteredPosts = allPosts;
 if (tags.length > 0 && posts === null) {
   filteredPosts = allPosts.filter((post) => {
@@ -22,31 +50,51 @@ if (tags.length > 0 && posts === null) {
 
 // Sort posts based on the `sort` prop
 let sortedPosts = filteredPosts.sort((a, b) => {
-  const dateA = new Date(a.data.pubDate);
-  const dateB = new Date(b.data.pubDate);
+  const dateA = new Date(a.data.pubDate || a.data.date || new Date());
+  const dateB = new Date(b.data.pubDate || b.data.date || new Date());
   return sort === "asc" ? dateA - dateB : dateB - dateA;
 });
  
-// Filter out draft posts
+// Filter out draft posts in production
+if (import.meta.env.PROD) {
+  sortedPosts = sortedPosts.filter(post => !post.data.draft);
+}
 
-sortedPosts = sortedPosts.filter((post) => {
-
-  if (!post.data.draft) {
-    return true;
-  }
-});
-
-// Apply the limit if it’s set
+// Apply the limit if it's set
 if (limit) {
   sortedPosts = sortedPosts.slice(0, limit);
 }
+
+// Choose the right container class based on layout
+const containerClass = layout === "grid" 
+  ? "row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" 
+  : "entries-list";
 ---
 
-<div class="entries-list">
-<!-- <Debug {sortedPosts} /> -->
+<div class={containerClass}>
   {
-    sortedPosts.map((post) => (
-      <EntriesOne {post} />
-    ))
+    sortedPosts.length > 0 ? (
+      layout === "grid" ? (
+        sortedPosts.map((post) => (
+          <div class="col">
+            <EntriesOne post={post} layout="card" />
+          </div>
+        ))
+      ) : (
+        sortedPosts.map((post) => (
+          <EntriesOne post={post} />
+        ))
+      )
+    ) : (
+      <p class="text-muted">No posts found.</p>
+    )
   }
 </div>
+
+<style>
+  .entries-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+</style>

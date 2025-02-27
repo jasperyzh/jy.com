@@ -1,0 +1,17 @@
+---
+/**
+ * A simple link component that can be used for navigation.
+ * It supports all standard anchor tag attributes.
+ */
+
+type Props = {
+  href: string;
+  [key: string]: any;
+};
+
+const { href, ...rest } = Astro.props;
+---
+
+<a href={href} {...rest}>
+  <slot />
+</a>

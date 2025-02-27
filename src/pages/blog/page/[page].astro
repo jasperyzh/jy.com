@@ -1,46 +1,62 @@
 ---
 /**
- * Blog index page with pagination support
- * Displays all blog posts organized by date (newest first)
- * Also shows a tag cloud for filtering posts by topic
+ * Paginated blog page
+ * Handles routes like /blog/page/2, /blog/page/3, etc.
  */
 import Layout from "@/layouts/BaseLayout.astro";
-import EntriesList from "@/components/EntriesList.astro";
 import { getCollection } from "astro:content";
 import TagCloud from "@/components/TagCloud.astro";
 import Pagination from "@/components/Pagination.astro";
 
-// Pagination configuration
-export const POSTS_PER_PAGE = 6;
+// Import the posts per page constant from blog index
+import { POSTS_PER_PAGE } from "../index.astro";
 
-// Get all blog posts
-const allPosts = await getCollection("ob_blog");
+// Define props and generate static paths
+export async function getStaticPaths() {
+  const allPosts = await getCollection("ob_blog");
+  
+  // Sort posts by date (newest first)
+  const sortedPosts = allPosts.sort((a, b) => {
+    const dateA = new Date(a.data.pubDate || a.data.date || new Date());
+    const dateB = new Date(b.data.pubDate || b.data.date || new Date());
+    return dateB.getTime() - dateA.getTime();
+  });
+  
+  // Filter out draft posts in production
+  const publishedPosts = import.meta.env.PROD 
+    ? sortedPosts.filter(post => !post.data.draft)
+    : sortedPosts;
+  
+  // Calculate total number of pages
+  const totalPages = Math.ceil(publishedPosts.length / POSTS_PER_PAGE);
+  
+  // Generate an array of page numbers [1, 2, 3, ...]
+  return Array.from({ length: totalPages }).map((_, i) => {
+    const page = i + 1;
+    const start = i * POSTS_PER_PAGE;
+    const end = start + POSTS_PER_PAGE;
+    
+    return {
+      params: { page: page.toString() },
+      props: { 
+        posts: publishedPosts.slice(start, end),
+        totalPosts: publishedPosts.length,
+        currentPage: page,
+        totalPages,
+      },
+    };
+  });
+}
 
-// Sort posts by date (newest first)
-const sortedPosts = allPosts.sort((a, b) => {
-  const dateA = new Date(a.data.pubDate || a.data.date || new Date());
-  const dateB = new Date(b.data.pubDate || b.data.date || new Date());
-  return dateB.getTime() - dateA.getTime();
-});
+// Define page props
+const { posts, totalPosts, currentPage, totalPages } = Astro.props;
 
-// Filter out draft posts in production
-const publishedPosts = import.meta.env.PROD 
-  ? sortedPosts.filter(post => !post.data.draft)
-  : sortedPosts;
-
-// Calculate pagination
-const totalPages = Math.ceil(publishedPosts.length / POSTS_PER_PAGE);
-const currentPage = 1;
-const start = 0;
-const end = start + POSTS_PER_PAGE;
-const paginatedPosts = publishedPosts.slice(start, end);
-
-// Calculate previous and next page URLs
-const prevUrl = currentPage > 1 ? `/blog/page/${currentPage - 1}` : null;
+// Calculate pagination URLs
+const prevUrl = currentPage > 1 ? `/blog/page/${currentPage - 1}` : currentPage > 2 ? '/blog' : null;
 const nextUrl = currentPage < totalPages ? `/blog/page/${currentPage + 1}` : null;
 ---
 
-<Layout title="Blog - All Posts">
+<Layout title={`Blog - Page ${currentPage}`}>
   <main>
     <section class="container py-4">
       <h1 class="mb-4">All Blog Posts</h1>
@@ -52,10 +68,9 @@ const nextUrl = currentPage < totalPages ? `/blog/page/${currentPage + 1}` : nul
       </div>
 
       <div class="row mb-4">
-        {/* Show count of posts */}
         <div class="col-md-12">
           <p class="text-muted">
-            Showing {paginatedPosts.length} of {publishedPosts.length} posts
+            Showing {posts.length} of {totalPosts} posts
             {totalPages > 1 && `(Page ${currentPage} of ${totalPages})`}
           </p>
         </div>
@@ -63,7 +78,7 @@ const nextUrl = currentPage < totalPages ? `/blog/page/${currentPage + 1}` : nul
 
       <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-4">
         {
-          paginatedPosts.map((post) => (
+          posts.map((post) => (
             <div class="col">
               <div class="card h-100">
                 <div class="card-body">
@@ -82,7 +97,7 @@ const nextUrl = currentPage < totalPages ? `/blog/page/${currentPage + 1}` : nul
                         </a>
                       ))}
                   </div>
-                  <a class="stretched-link" href={`/blog/${post.id}`} aria-label={`Read ${post.data.title}`} />
+                  <a class="stretched-link" href={`/blog/${post.slug}`} aria-label={`Read ${post.data.title}`} />
                 </div>
               </div>
             </div>
@@ -91,13 +106,11 @@ const nextUrl = currentPage < totalPages ? `/blog/page/${currentPage + 1}` : nul
       </div>
 
       {/* Pagination controls */}
-      {(prevUrl || nextUrl) && (
-        <div class="row">
-          <div class="col-md-12">
-            <Pagination {prevUrl} {nextUrl} />
-          </div>
+      <div class="row">
+        <div class="col-md-12">
+          <Pagination {prevUrl} {nextUrl} />
         </div>
-      )}
+      </div>
     </section>
   </main>
 </Layout>

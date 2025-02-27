@@ -1,6 +1,8 @@
 ---
 import Layout from "@/layouts/BaseLayout.astro";
 import { Image } from "astro:assets";
+// Import CSS directly - this is a more reliable approach
+import "photoswipe/dist/photoswipe.css";
 
 const portfolioItems = [
   {
@@ -86,17 +88,26 @@ const portfolioItems = [
     </div>
   </main>
 </Layout>
-<link rel="stylesheet" href="node_modules/photoswipe/dist/photoswipe.css" />
 <script>
-  import PhotoSwipeLightbox from "photoswipe/dist/photoswipe-lightbox.esm.js";
-
-  const lightbox = new PhotoSwipeLightbox({
-    gallery: ".grid",
-    children: ".gallery-item",
-    pswpModule: () => import("photoswipe/dist/photoswipe.esm.js"),
-  });
-
-  lightbox.init();
+  // Use dynamic imports for better compatibility with build systems
+  const loadPhotoswipe = async () => {
+    try {
+      const PhotoSwipeLightbox = (await import('photoswipe/dist/photoswipe-lightbox.esm.js')).default;
+      
+      const lightbox = new PhotoSwipeLightbox({
+        gallery: '.grid',
+        children: '.gallery-item',
+        pswpModule: () => import('photoswipe/dist/photoswipe.esm.js'),
+      });
+      
+      lightbox.init();
+    } catch (error) {
+      console.error('Failed to initialize PhotoSwipe:', error);
+    }
+  };
+  
+  // Initialize when the DOM is ready
+  document.addEventListener('DOMContentLoaded', loadPhotoswipe);
 </script>
 
 <style>

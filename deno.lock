@@ -4024,6 +4024,7 @@
         "npm:sass-embedded@^1.85.1",
         "npm:svg-path-parser@1.1.0",
         "npm:three@0.147.0",
+        "npm:vitest@^3.0.7",
         "npm:vue@^3.5.13"
       ]
     }

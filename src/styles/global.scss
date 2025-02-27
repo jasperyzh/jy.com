@@ -6,6 +6,61 @@ img {
   max-width: 100%;
   height: auto;
 }
+
+// Dark Mode Styles
+:root {
+  --body-bg: #ffffff;
+  --body-color: #212529;
+  --border-color: #dee2e6;
+  --card-bg: #ffffff;
+  --card-shadow: rgba(0, 0, 0, 0.1);
+}
+
+// Apply Dark Theme
+:root.theme-dark {
+  --body-bg: #121212;
+  --body-color: #f8f9fa;
+  --border-color: #495057;
+  --card-bg: #1e1e1e;
+  --card-shadow: rgba(0, 0, 0, 0.3);
+  
+  // Override Bootstrap variables for dark mode
+  --bs-body-bg: var(--body-bg);
+  --bs-body-color: var(--body-color);
+  --bs-border-color: var(--border-color);
+  --bs-card-bg: var(--card-bg);
+  
+  // Add dark mode overrides for specific elements
+  .navbar, footer {
+    background-color: #1a1a1a !important;
+  }
+  
+  .card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+  }
+  
+  a:not(.btn):not(.nav-link) {
+    color: #90caf9;
+    
+    &:hover {
+      color: #bbdefb;
+    }
+  }
+  
+  hr {
+    border-color: var(--border-color);
+  }
+}
+
+// Transition for smooth theme switching
+body {
+  transition: 
+    background-color 0.2s ease,
+    color 0.2s ease;
+  background-color: var(--body-bg);
+  color: var(--body-color);
+}
 /* 
 // Theme Configuration
 :root {

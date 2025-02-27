@@ -1,9 +1,19 @@
 ---
-
 // critical styling
 // critical script
 // critical tracking
 
+interface Props {
+  title?: string | undefined;
+  description?: string | undefined;
+  image?: string;
+}
+
+const {
+  title,
+  description,
+  image = "/placeholder-post.jpg",
+} = Astro.props as Props;
 ---
 
 <!-- Global Metadata -->
@@ -11,17 +21,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <meta name="generator" content={Astro.generator} />
-
-<!-- SEO -->
-
-<!-- <title>{title}</title>
-<meta name="description" property="og:description" content={description} /> -->
-
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
-<meta property="og:url" content={Astro.url} />
-<meta property="og:title" content={title} />
-<meta property="og:image" content={new URL(image, Astro.url)} />
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
@@ -63,6 +62,7 @@
 
 <script is:inline>
   // This code is inlined in the head to make dark mode instant & blocking.
+  // This prevents theme flicker on page load
   const getThemePreference = () => {
     if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
       return localStorage.getItem("theme");
@@ -71,14 +71,25 @@
       ? "dark"
       : "light";
   };
-  const isDark = getThemePreference() === "dark";
+  
+  // Apply theme immediately before page render
+  const themeValue = getThemePreference();
+  const isDark = themeValue === "dark";
+  
+  // Apply theme to document
   document.documentElement.classList[isDark ? "add" : "remove"]("theme-dark");
-
+  
+  // For Bootstrap compatibility
+  document.documentElement.setAttribute("data-bs-theme", isDark ? "dark" : "light");
+  
   if (typeof localStorage !== "undefined") {
     // Watch the document element and persist user preference when it changes.
     const observer = new MutationObserver(() => {
       const isDark = document.documentElement.classList.contains("theme-dark");
       localStorage.setItem("theme", isDark ? "dark" : "light");
+      
+      // Keep Bootstrap theme in sync
+      document.documentElement.setAttribute("data-bs-theme", isDark ? "dark" : "light");
     });
     observer.observe(document.documentElement, {
       attributes: true,

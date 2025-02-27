@@ -4,6 +4,7 @@ import "@/styles/global.scss";
 import { SITE_TITLE, SITE_DESCRIPTION } from "@/consts";
 
 import Head from "./Head.astro";
+import HeadCritical from "./HeadCritical.astro";
 import ThemeToggleButton from "@/components/ThemeToggleButton.astro";
 
 import { SITE_TITLE } from "../consts";
@@ -23,10 +24,11 @@ import { Debug } from "astro:components";
 console.log(Astro);
 ---
 
-<html lang="en">
+<html lang="en" class="">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <HeadCritical />
     <Head title={title} description={description} />
   </head>
   <body>
