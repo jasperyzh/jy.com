@@ -26,4 +26,4 @@ pnpm-debug.log*
 .idea/
 
 # copied content
-src/content/blog/
+# src/content/blog/
