@@ -1,7 +1,7 @@
 ---
 // import { Debug } from "astro/components";
 // import { Image } from "@astrojs/image/components";
-import { slugify, dateToNumber } from "./Utils;
+import { formatYymmddDate } from "@/utils/formatDate";
 // import Link from "./Link.astro";
 
 const { data, url, heading, classes } = Astro.props;
@@ -28,7 +28,7 @@ const image = url;
   />
   <div class="content">
     <p class="meta">
-      {dateToNumber(pubDate)} | {tag.join(", ")}
+      {formatYymmddDate(pubDate).toLocaleDateString()} | {tag.join(", ")}
     </p>
     <Heading class="title">
       <a href={`/blog/${url}/`}>

@@ -9,6 +9,8 @@ import EntriesList from "@/components/EntriesList.astro";
 import { getCollection } from "astro:content";
 import TagCloud from "@/components/TagCloud.astro";
 import Pagination from "@/components/Pagination.astro";
+import { formatYymmddDate } from "@/utils/formatDate";
+import { Debug } from "astro:components";
 
 // Pagination configuration
 export const POSTS_PER_PAGE = 6;
@@ -18,8 +20,8 @@ const allPosts = await getCollection("ob_blog");
 
 // Sort posts by date (newest first)
 const sortedPosts = allPosts.sort((a, b) => {
-  const dateA = new Date(a.data.pubDate || a.data.date || new Date());
-  const dateB = new Date(b.data.pubDate || b.data.date || new Date());
+  const dateA = formatYymmddDate(a.data.pubDate || a.data.date || new Date());
+  const dateB = formatYymmddDate(b.data.pubDate || b.data.date || new Date());
   return dateB.getTime() - dateA.getTime();
 });
 
@@ -38,6 +40,7 @@ const paginatedPosts = publishedPosts.slice(start, end);
 // Calculate previous and next page URLs
 const prevUrl = currentPage > 1 ? `/blog/page/${currentPage - 1}` : null;
 const nextUrl = currentPage < totalPages ? `/blog/page/${currentPage + 1}` : null;
+
 ---
 
 <Layout title="Blog - All Posts">
@@ -69,7 +72,8 @@ const nextUrl = currentPage < totalPages ? `/blog/page/${currentPage + 1}` : nul
                 <div class="card-body">
                   <h5 class="card-title">{post.data.title}</h5>
                   <p class="text-muted small">
-                    {new Date(post.data.pubDate || post.data.date || new Date()).toLocaleDateString()}
+                    {formatYymmddDate(post.data.pubDate || post.data.date || new Date()).toLocaleString('default', { year: 'numeric', month: 'short', day: 'numeric' })}
+                    {/* {formatYymmddDate(post.data.pubDate || post.data.date || new Date()).toLocaleDateString()} */}
                   </p>
                   <p class="card-text">
                     {post.data.description || "No description available"}

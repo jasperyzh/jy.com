@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "astro dev --allow-read",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "bash ./scripts/copy-blog-posts.sh && astro build",
     "check": "astro check",
     "preview": "astro preview",
     "astro": "astro",

@@ -2,6 +2,7 @@
 // const { title, post.data. = "test", description, pubDate, author, image, tags } = Astro.props;
 
 import { Debug } from "astro:components";
+import { formatYymmddDate } from "@/utils/formatDate";
 const { post } = Astro.props;
 // const post.data.image_url = image.url ? image.url : "";
 // const post.data.image_alt = image.alt ? image.alt : `Image of ${title}`;
@@ -13,7 +14,7 @@ const { post } = Astro.props;
   <!-- Access data properties -->
   <h2>{post.data.title}</h2>
   <p>{post.data.description}</p>
-  <p>Published on: {new Date(post.data.pubDate).toLocaleDateString()}</p>
+  <p>Published on: {formatYymmddDate(post.data.pubDate).toLocaleDateString()}</p>
   {
     post.data.image_url && (
       <figure class="block w-full lg:col-span-2">
@@ -36,7 +37,7 @@ const { post } = Astro.props;
     class="card-content flex-fill d-flex flex-column justify-content-between h-100 p-3"
   >
     <header class="card-header">
-      <time datetime={post.data.pubDate}>{post.data.pubDate}</time>
+      <time datetime={formatYymmddDate(post.data.pubDate).toISOString()}>{formatYymmddDate(post.data.pubDate).toLocaleDateString()}</time>
       <a href={`/blog/${post.id}`} title={post.data.title}>
         <h3>
           {post.data.title}

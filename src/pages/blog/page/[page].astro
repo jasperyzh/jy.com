@@ -7,6 +7,7 @@ import Layout from "@/layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 import TagCloud from "@/components/TagCloud.astro";
 import Pagination from "@/components/Pagination.astro";
+import { formatYymmddDate } from "@/utils/formatDate";
 
 // Import the posts per page constant from blog index
 import { POSTS_PER_PAGE } from "../index.astro";
@@ -17,8 +18,8 @@ export async function getStaticPaths() {
   
   // Sort posts by date (newest first)
   const sortedPosts = allPosts.sort((a, b) => {
-    const dateA = new Date(a.data.pubDate || a.data.date || new Date());
-    const dateB = new Date(b.data.pubDate || b.data.date || new Date());
+    const dateA = formatYymmddDate(a.data.pubDate || a.data.date || new Date());
+    const dateB = formatYymmddDate(b.data.pubDate || b.data.date || new Date());
     return dateB.getTime() - dateA.getTime();
   });
   
@@ -84,7 +85,7 @@ const nextUrl = currentPage < totalPages ? `/blog/page/${currentPage + 1}` : nul
                 <div class="card-body">
                   <h5 class="card-title">{post.data.title}</h5>
                   <p class="text-muted small">
-                    {new Date(post.data.pubDate || post.data.date || new Date()).toLocaleDateString()}
+                    {formatYymmddDate(post.data.pubDate || post.data.date || new Date()).toLocaleDateString()}
                   </p>
                   <p class="card-text">
                     {post.data.description || "No description available"}
