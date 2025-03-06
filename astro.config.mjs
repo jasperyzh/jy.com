@@ -4,6 +4,7 @@ import { defineConfig } from "astro/config";
 // import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import vue from "@astrojs/vue";
+import AstroPWA from '@vite-pwa/astro';
 
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
@@ -40,6 +41,43 @@ export default defineConfig({
     // mdx(),
     vue(),
     sitemap(),
+    AstroPWA({
+      registerType: 'autoUpdate',
+      manifest: {
+        name: 'Jasper Yong',
+        short_name: 'JY',
+        description: 'Jasper Yong\'s personal website and blog',
+        theme_color: '#ffffff',
+        background_color: '#ffffff',
+        display: 'standalone',
+        icons: [
+          {
+            src: '/pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: '/pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+          },
+          {
+            src: '/pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable',
+          }
+        ]
+      },
+      workbox: {
+        navigateFallback: '/',
+        globPatterns: ['**/*.{css,js,html,svg,png,ico,jpg,jpeg}'],
+      },
+      devOptions: {
+        enabled: true,
+        navigateFallbackAllowlist: [/^\/$/],
+      }
+    }),
   ],
   vite: {
     css: {

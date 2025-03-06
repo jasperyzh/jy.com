@@ -5,12 +5,13 @@
   "scripts": {
     "dev": "astro dev --allow-read",
     "start": "astro dev",
-    "build": "bash ./scripts/copy-blog-posts.sh && astro build",
+    "build": "bash ./scripts/copy-blog-posts.sh && node scripts/generate-pwa-icons.js && astro build",
     "check": "astro check",
     "preview": "astro preview",
     "astro": "astro",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "generate-pwa-icons": "node scripts/generate-pwa-icons.js"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
@@ -37,7 +38,9 @@
     "vue": "^3.5.13"
   },
   "devDependencies": {
+    "@vite-pwa/astro": "^0.5.0",
     "prettier-plugin-astro": "^0.14.1",
+    "sharp": "^0.33.5",
     "vitest": "^3.0.7"
   }
 }

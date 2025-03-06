@@ -26,8 +26,8 @@ const sortedPosts = allPosts.sort((a, b) => {
 });
 
 // Filter out draft posts in production
-const publishedPosts = import.meta.env.PROD 
-  ? sortedPosts.filter(post => !post.data.draft)
+const publishedPosts = import.meta.env.PROD
+  ? sortedPosts.filter((post) => !post.data.draft)
   : sortedPosts;
 
 // Calculate pagination
@@ -39,8 +39,8 @@ const paginatedPosts = publishedPosts.slice(start, end);
 
 // Calculate previous and next page URLs
 const prevUrl = currentPage > 1 ? `/blog/page/${currentPage - 1}` : null;
-const nextUrl = currentPage < totalPages ? `/blog/page/${currentPage + 1}` : null;
-
+const nextUrl =
+  currentPage < totalPages ? `/blog/page/${currentPage + 1}` : null;
 ---
 
 <Layout title="Blog - All Posts">
@@ -72,7 +72,13 @@ const nextUrl = currentPage < totalPages ? `/blog/page/${currentPage + 1}` : nul
                 <div class="card-body">
                   <h5 class="card-title">{post.data.title}</h5>
                   <p class="text-muted small">
-                    {formatYymmddDate(post.data.pubDate || post.data.date || new Date()).toLocaleString('default', { year: 'numeric', month: 'short', day: 'numeric' })}
+                    {formatYymmddDate(
+                      post.data.pubDate || post.data.date || new Date()
+                    ).toLocaleString("default", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
                     {/* {formatYymmddDate(post.data.pubDate || post.data.date || new Date()).toLocaleDateString()} */}
                   </p>
                   <p class="card-text">
@@ -81,12 +87,20 @@ const nextUrl = currentPage < totalPages ? `/blog/page/${currentPage + 1}` : nul
                   <div class="card-tags mb-2">
                     {post.data.tags &&
                       post.data.tags.map((tag) => (
-                        <a href={`/tags/${tag}`} class="tag badge bg-primary me-2 text-decoration-none" key={tag}>
+                        <a
+                          href={`/tags/${tag}`}
+                          class="tag badge bg-primary me-2 text-decoration-none"
+                          key={tag}
+                        >
                           {tag}
                         </a>
                       ))}
                   </div>
-                  <a class="stretched-link" href={`/blog/${post.id}`} aria-label={`Read ${post.data.title}`} />
+                  <a
+                    class="stretched-link"
+                    href={`/blog/${post.id}`}
+                    aria-label={`Read ${post.data.title}`}
+                  />
                 </div>
               </div>
             </div>
@@ -95,13 +109,15 @@ const nextUrl = currentPage < totalPages ? `/blog/page/${currentPage + 1}` : nul
       </div>
 
       {/* Pagination controls */}
-      {(prevUrl || nextUrl) && (
-        <div class="row">
-          <div class="col-md-12">
-            <Pagination {prevUrl} {nextUrl} />
+      {
+        (prevUrl || nextUrl) && (
+          <div class="row">
+            <div class="col-md-12">
+              <Pagination {prevUrl} {nextUrl} />
+            </div>
           </div>
-        </div>
-      )}
+        )
+      }
     </section>
   </main>
 </Layout>
@@ -111,7 +127,7 @@ const nextUrl = currentPage < totalPages ? `/blog/page/${currentPage + 1}` : nul
     position: relative;
     z-index: 2;
   }
-  
+
   .card-tags a {
     pointer-events: auto;
   }

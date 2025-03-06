@@ -6,8 +6,7 @@ import { SITE_TITLE, SITE_DESCRIPTION } from "@/consts";
 import Head from "./Head.astro";
 import HeadCritical from "./HeadCritical.astro";
 import ThemeToggleButton from "@/components/ThemeToggleButton.astro";
-
-import { SITE_TITLE } from "../consts";
+import PWAInstall from "@/components/PWAInstall.astro";
 
 const today = new Date();
 
@@ -20,8 +19,6 @@ interface Props {
 const { title, description } = Astro.props as Props;
 
 import { Debug } from "astro:components";
-
-console.log(Astro);
 ---
 
 <html lang="en" class="">
@@ -147,6 +144,9 @@ console.log(Astro);
         </div>
       </footer>
     </div>
+
+    <!-- PWA Installation Button -->
+    <PWAInstall />
 
     <script>
       import "bootstrap/dist/js/bootstrap.bundle.min.js";
