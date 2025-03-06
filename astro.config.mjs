@@ -75,7 +75,7 @@ export default defineConfig({
         globPatterns: ['**/*.{css,js,html,svg,png,ico,jpg,jpeg,md,json}'],
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/jasperyong\.com\/blog\/.*/,
+            urlPattern: ({ url }) => url.pathname.startsWith('/blog/'),
             handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'blog-content',
@@ -86,7 +86,7 @@ export default defineConfig({
             },
           },
           {
-            urlPattern: /^https:\/\/jasperyong\.com\/.*/,
+            urlPattern: ({ url }) => url.pathname !== '/offline',
             handler: 'NetworkFirst',
             options: {
               cacheName: 'site-pages',
