@@ -2,6 +2,7 @@
 import { getCollection, render } from "astro:content";
 import Layout from "@/layouts/BaseLayout.astro";
 import ReturnButton from "@/components/ReturnButton.astro";
+import CacheCurrentPage from "@/components/CacheCurrentPage.astro";
 
 // import SingleSidebar from "../../components/SingleSidebar.astro";
 
@@ -74,6 +75,9 @@ const { Content } = await render(entry);
       }
     </style>
   </main>
+  
+  <!-- Cache this page for offline use -->
+  <CacheCurrentPage />
 </Layout>
 
 <script>

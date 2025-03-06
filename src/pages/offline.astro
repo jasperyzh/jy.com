@@ -1,0 +1,95 @@
+---
+import Layout from "@/layouts/BaseLayout.astro";
+---
+
+<Layout title="Offline" description="You are currently offline">
+  <main class="container py-5">
+    <div class="text-center">
+      <h1>You're currently offline</h1>
+      <p class="lead">
+        Don't worry! You can still access previously visited pages.
+      </p>
+      
+      <div class="my-5">
+        <h2>Available offline:</h2>
+        <ul class="list-group my-4" id="cached-pages">
+          <li class="list-group-item">
+            <a href="/">Homepage</a>
+          </li>
+          <!-- Dynamically populated with JavaScript -->
+        </ul>
+      </div>
+      
+      <div class="alert alert-info">
+        Please reconnect to the internet to view all content.
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  // Check for cached pages when offline
+  async function listCachedPages() {
+    if (!('caches' in window)) return;
+    
+    try {
+      const cache = await caches.open('site-pages');
+      const keys = await cache.keys();
+      const blogCache = await caches.open('blog-content');
+      const blogKeys = await blogCache.keys();
+      
+      const allKeys = [...keys, ...blogKeys];
+      const cacheList = document.getElementById('cached-pages');
+      
+      // Clear existing list items except the homepage
+      const items = cacheList.querySelectorAll('li:not(:first-child)');
+      items.forEach(item => item.remove());
+      
+      // Create a Set to track unique URLs to avoid duplicates
+      const uniqueUrls = new Set();
+      uniqueUrls.add('/'); // Homepage is always in the list
+      
+      allKeys.forEach(request => {
+        const url = new URL(request.url);
+        // Only add pages from our domain and ignore assets
+        if (url.hostname === window.location.hostname && 
+            !url.pathname.match(/\.(css|js|png|jpg|svg|ico|json)$/)) {
+          
+          // Only add unique paths
+          if (!uniqueUrls.has(url.pathname)) {
+            uniqueUrls.add(url.pathname);
+            
+            // Create friendly names
+            let pageName = url.pathname;
+            if (pageName.endsWith('/')) pageName = pageName.slice(0, -1);
+            pageName = pageName.split('/').pop() || 'Home';
+            pageName = pageName.charAt(0).toUpperCase() + pageName.slice(1);
+            
+            // Add blog prefix for blog posts
+            if (url.pathname.includes('/blog/')) {
+              pageName = 'Blog: ' + pageName;
+            }
+            
+            const li = document.createElement('li');
+            li.className = 'list-group-item';
+            li.innerHTML = `<a href="${url.pathname}">${pageName}</a>`;
+            cacheList.appendChild(li);
+          }
+        }
+      });
+      
+      // If no cached pages found other than homepage
+      if (uniqueUrls.size <= 1) {
+        const li = document.createElement('li');
+        li.className = 'list-group-item text-muted';
+        li.textContent = 'No other pages cached. Visit some pages while online first.';
+        cacheList.appendChild(li);
+      }
+    } catch (error) {
+      console.error('Error listing cached pages:', error);
+    }
+  }
+  
+  // Run when page loads
+  document.addEventListener('DOMContentLoaded', listCachedPages);
+</script>

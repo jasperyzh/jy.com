@@ -7,6 +7,7 @@ import Head from "./Head.astro";
 import HeadCritical from "./HeadCritical.astro";
 import ThemeToggleButton from "@/components/ThemeToggleButton.astro";
 import PWAInstall from "@/components/PWAInstall.astro";
+import OfflineNotification from "@/components/OfflineNotification.astro";
 
 const today = new Date();
 
@@ -29,6 +30,9 @@ import { Debug } from "astro:components";
     <Head title={title} description={description} />
   </head>
   <body>
+    <!-- Offline notification banner -->
+    <OfflineNotification />
+    
     <div class="wrapper">
       <header class="my-4">
         <div class="container">

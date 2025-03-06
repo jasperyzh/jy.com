@@ -70,8 +70,34 @@ export default defineConfig({
         ]
       },
       workbox: {
-        navigateFallback: '/',
-        globPatterns: ['**/*.{css,js,html,svg,png,ico,jpg,jpeg}'],
+        navigateFallback: '/offline',
+        navigateFallbackAllowlist: [/^(?!\/_image).*$/],
+        globPatterns: ['**/*.{css,js,html,svg,png,ico,jpg,jpeg,md,json}'],
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/jasperyong\.com\/blog\/.*/,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'blog-content',
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+              },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/jasperyong\.com\/.*/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'site-pages',
+              expiration: {
+                maxEntries: 20,
+                maxAgeSeconds: 60 * 60 * 24 * 7, // 7 days
+              },
+              networkTimeoutSeconds: 3,
+            },
+          },
+        ],
       },
       devOptions: {
         enabled: true,

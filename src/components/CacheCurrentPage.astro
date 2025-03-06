@@ -1,0 +1,35 @@
+---
+// Component to cache the current page for offline use
+// This should be added to blog post pages
+---
+
+<script>
+  // This script will run on the client to cache the current page for offline use
+  if ('serviceWorker' in navigator && 'caches' in window) {
+    document.addEventListener('DOMContentLoaded', () => {
+      // Only cache the page if we're on a blog post
+      if (window.location.pathname.includes('/blog/')) {
+        // Get current URL
+        const currentUrl = window.location.href;
+        
+        // Cache the current page HTML
+        caches.open('blog-content').then(cache => {
+          // Cache the current page
+          cache.add(currentUrl).then(() => {
+            console.log('Page cached for offline use:', currentUrl);
+          }).catch(error => {
+            console.error('Failed to cache page:', error);
+          });
+          
+          // Cache all images on the page
+          const images = document.querySelectorAll('img');
+          images.forEach(img => {
+            if (img.src) {
+              cache.add(img.src).catch(e => console.log('Failed to cache image:', e));
+            }
+          });
+        });
+      }
+    });
+  }
+</script>
