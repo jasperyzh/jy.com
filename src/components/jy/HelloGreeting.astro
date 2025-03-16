@@ -1,0 +1,47 @@
+<p class="hello_world">
+  <span class="japanese-text">(。・∀・)ノ*:･ﾟ</span>hello_world
+  <span class="stars">
+    <span class="star animate--moveUpDown" style="--animation-delay: 0s">🌟</span>
+    <span class="star animate--moveUpDown" style="--animation-delay: 0.314s">🌟</span>
+    <span class="star animate--moveUpDown" style="--animation-delay: 0.628s">🌟</span>
+  </span>
+</p>
+
+<style>
+  .hello_world {
+    font-size: var(--fs-small, 1rem);
+    display: inline-block;
+    position: relative;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .japanese-text {
+    font-family: 'Hiragino Kaku Gothic Pro', 'Meiryo', sans-serif;
+  }
+  
+  span.stars {
+    position: absolute;
+    right: -3rem;
+    top: 0;
+    span.star {
+      display: inline-block;
+      font-family: monospace;
+      filter: drop-shadow(3px 3px 12px rgba(252 213 63 / 1));
+    }
+  }
+  .animate--moveUpDown {
+    animation: moveUpDown 2s ease-in-out infinite;
+    animation-delay: var(--animation-delay, 0);
+  }
+  @keyframes moveUpDown {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(
+        -1.5rem
+      ); /* Adjust the value to control the height of the bounce */
+    }
+  }
+</style>

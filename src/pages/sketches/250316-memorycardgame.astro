@@ -1,0 +1,583 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { audioPlayer } from "@/scripts/custom-tone.js";
+---
+
+<BaseLayout title="Memory Card Game">
+  <main>
+    <h1>Memory Card Game</h1>
+
+    <div id="app"></div>
+    <div id="confetti-container"></div>
+
+    <!-- Volume Control UI -->
+    <div class="audio-controls">
+      <label for="volume-slider">Volume:</label>
+      <input type="range" id="volume-slider" min="0" max="100" value="40" />
+      <button id="mute-toggle">🔊</button>
+    </div>
+  </main>
+</BaseLayout>
+
+<style is:global>
+  @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+  main {
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+    padding: 40px 20px;
+    background-color: #f5f7fa;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h1 {
+    text-align: center;
+    color: #4a5568;
+    margin-bottom: 30px;
+  }
+
+  /* Audio Controls Styling */
+  .audio-controls {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border-radius: 50px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .audio-controls label {
+    margin-right: 10px;
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  .audio-controls input[type="range"] {
+    width: 80px;
+    margin-right: 10px;
+  }
+
+  .audio-controls button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    transition: all 0.2s;
+  }
+
+  .audio-controls button:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  /* Confetti container */
+  #confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* Memory Game Specific Styles */
+  #memory-game {
+    text-align: center;
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    z-index: 10;
+    border-radius: 10px;
+  }
+
+  .overlay-content {
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    text-align: center;
+  }
+
+  .game-area-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .timer {
+    margin-bottom: 15px;
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #4a5568;
+    background-color: #edf2f7;
+    padding: 8px 16px;
+    border-radius: 30px;
+    display: inline-block;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .game-board {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(80px, 100px));
+    gap: 15px;
+    justify-content: center;
+    margin: 30px auto;
+    max-width: 480px;
+  }
+
+  .card {
+    width: 100%;
+    height: 0;
+    padding-bottom: 100%; /* Makes cards square regardless of width */
+    border: none;
+    display: block;
+    cursor: pointer;
+    position: relative;
+    perspective: 1000px;
+    transition: transform 0.3s;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+  }
+
+  .card.flipped .card-front {
+    transform: rotateY(0);
+  }
+
+  .card.flipped .card-back {
+    transform: rotateY(180deg);
+  }
+
+  .card.matched {
+    transform: scale(1.05);
+    transition:
+      transform 0.5s,
+      box-shadow 0.5s;
+    box-shadow: 0 0 20px rgba(72, 187, 120, 0.8);
+  }
+  
+  .card.matched .card-front {
+    background-color: #9ae6b4;
+    animation: pulse 1.5s infinite;
+  }
+  
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(72, 187, 120, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(72, 187, 120, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(72, 187, 120, 0); }
+  }
+
+  .card .card-front,
+  .card .card-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 28px;
+    font-weight: bold;
+    transition: transform 0.5s ease;
+  }
+
+  .card .card-front {
+    background-color: white;
+    transform: rotateY(180deg);
+    color: #4a5568;
+  }
+
+  .card .card-back {
+    background-color: #90cdf4;
+    color: white;
+  }
+
+  .game-controls {
+    margin-top: 20px;
+  }
+
+  .game-complete-message {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #9ae6b4;
+    border-radius: 8px;
+    color: #276749;
+  }
+
+  button {
+    background-color: #4299e1;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Poppins", sans-serif;
+    box-shadow: 0 4px 6px rgba(66, 153, 225, 0.3);
+  }
+
+  button:hover {
+    background-color: #3182ce;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(66, 153, 225, 0.4);
+  }
+  
+  button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(66, 153, 225, 0.4);
+  }
+</style>
+
+<script>
+  // Import Vue from CDN in the client-side script
+  import {
+    createApp,
+    ref,
+    computed,
+    onUnmounted,
+  } from "vue/dist/vue.esm-bundler.js";
+  import { audioPlayer } from "@/scripts/custom-tone.js";
+
+  // Confetti function
+  function createConfetti() {
+    const container = document.getElementById("confetti-container");
+    if (!container) return; // Guard clause for null check
+
+    const colors = [
+      "#667eea",
+      "#764ba2",
+      "#48bb78",
+      "#38a169",
+      "#f56565",
+      "#e53e3e",
+      "#fbd38d",
+      "#ed8936",
+    ];
+    const confettiCount = 200;
+
+    // Clear any existing confetti
+    container.innerHTML = ""; // Safe to use since we have the guard clause above
+
+    for (let i = 0; i < confettiCount; i++) {
+      const confetti = document.createElement("div");
+      const size = Math.random() * 10 + 5; // Random size between 5-15px
+
+      confetti.style.position = "absolute";
+      confetti.style.width = `${size}px`;
+      confetti.style.height = `${size}px`;
+      confetti.style.backgroundColor =
+        colors[Math.floor(Math.random() * colors.length)];
+      confetti.style.borderRadius = Math.random() > 0.5 ? "50%" : "0"; // Circle or square
+      confetti.style.opacity = `${Math.random() * 0.8 + 0.2}`; // Convert to string for TypeScript
+
+      // Random starting position (top of screen, random horizontal position)
+      confetti.style.left = `${Math.random() * 100}vw`;
+      confetti.style.top = `-${size}px`;
+
+      // Random rotation
+      confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+      // Animation properties
+      const duration = Math.random() * 3 + 2; // 2-5 seconds
+      const delay = Math.random() * 2; // 0-2 seconds delay
+
+      confetti.style.animation = `fall ${duration}s ease-in ${delay}s forwards`;
+
+      // Safe to use since we have the guard clause above
+      container.appendChild(confetti);
+
+      // Remove confetti after animation completes
+      setTimeout(
+        () => {
+          confetti.remove();
+        },
+        (duration + delay) * 1000
+      );
+    }
+
+    // Add fall animation to the document if it doesn't exist
+    if (!document.getElementById("confetti-animation")) {
+      const style = document.createElement("style");
+      style.id = "confetti-animation";
+      style.textContent = `
+                @keyframes fall {
+                    0% { transform: translateY(0) rotate(0deg); }
+                    100% { transform: translateY(100vh) rotate(720deg); }
+                }
+            `;
+      document.head.appendChild(style);
+    }
+  }
+
+  // Setup audio volume controls
+  function setupAudioControls() {
+    const volumeSlider = document.getElementById("volume-slider");
+    const muteToggle = document.getElementById("mute-toggle");
+
+    if (volumeSlider && muteToggle) {
+      // Set initial volume value
+      volumeSlider.addEventListener("input", (e) => {
+        const value = parseInt(e.target.value, 10) / 100;
+        audioPlayer.setVolume(value);
+
+        // Update mute button icon
+        muteToggle.textContent = value === 0 ? "🔇" : "🔊";
+      });
+
+      // Set up mute toggle
+      muteToggle.addEventListener("click", () => {
+        if (audioPlayer.isMuted) {
+          audioPlayer.unmute();
+          muteToggle.textContent = "🔊";
+          volumeSlider.value = audioPlayer.volume * 100;
+        } else {
+          audioPlayer.mute();
+          muteToggle.textContent = "🔇";
+        }
+      });
+    }
+  }
+
+  // Create Vue app
+  document.addEventListener("DOMContentLoaded", () => {
+    // Set up Vue app
+    const app = createApp({
+      template: `
+            <div id="memory-game">
+                <div v-if="!gameStarted" class="overlay">
+                    <div class="overlay-content">
+                        <h1>Memory Card Game</h1>
+                        <p>Match all the pairs as quickly as possible!</p>
+                        <button @click="startGame">Start Game</button>
+                    </div>
+                </div>
+                
+                <div :class="{ 'game-area-disabled': !gameStarted }">
+                    <div class="timer">Time: {{ timer }}s</div>
+                    <div class="game-board">
+                        <div
+                            v-for="(card, index) in shuffledCards"
+                            :key="index"
+                            class="card"
+                            :class="{ flipped: card.isFlipped || card.isMatched, matched: card.isMatched }"
+                            @click="flipCard(index)"
+                        >
+                            <div class="card-front">{{ card.isFlipped || card.isMatched ? card.value : '?' }}</div>
+                            <div class="card-back">?</div>
+                        </div>
+                    </div>
+                    <div v-if="isGameComplete && gameStarted" class="game-complete-message">
+                        <h2>Congratulations! You completed the game in {{ timer }} seconds!</h2>
+                        <button @click="resetGame">Play Again</button>
+                    </div>
+                    <div v-else class="game-controls">
+                        <button @click="resetGame">Reset Game</button>
+                    </div>
+                </div>
+            </div>
+            `,
+      setup() {
+        // Card data
+        const cards = [
+          { value: "A", isFlipped: false, isMatched: false },
+          { value: "A", isFlipped: false, isMatched: false },
+          { value: "B", isFlipped: false, isMatched: false },
+          { value: "B", isFlipped: false, isMatched: false },
+          { value: "C", isFlipped: false, isMatched: false },
+          { value: "C", isFlipped: false, isMatched: false },
+          { value: "D", isFlipped: false, isMatched: false },
+          { value: "D", isFlipped: false, isMatched: false },
+          { value: "E", isFlipped: false, isMatched: false },
+          { value: "E", isFlipped: false, isMatched: false },
+          { value: "F", isFlipped: false, isMatched: false },
+          { value: "F", isFlipped: false, isMatched: false },
+        ];
+
+        // Reactive state
+        const shuffledCards = ref([]);
+        const flippedCards = ref([]);
+        const timer = ref(0);
+        const timerInterval = ref(null);
+        const gameStarted = ref(false);
+
+        // Computed properties
+        const isGameComplete = computed(() => {
+          return shuffledCards.value.every((card) => card.isMatched);
+        });
+
+        // Methods
+        const shuffleCards = () => {
+          shuffledCards.value = [...cards]
+            .sort(() => Math.random() - 0.5)
+            .map((card) => ({ ...card }));
+        };
+
+        const flipCard = (index) => {
+          const card = shuffledCards.value[index];
+
+          if (
+            card.isFlipped ||
+            card.isMatched ||
+            flippedCards.value.length >= 2 ||
+            !gameStarted.value
+          ) {
+            return;
+          }
+
+          // Play card flip sound with small delay to avoid timing conflicts
+          if (audioPlayer.initialized) {
+            setTimeout(() => {
+              audioPlayer.playNote("C5", "16n");
+            }, 50);
+          }
+
+          card.isFlipped = true;
+          flippedCards.value.push({ ...card, index });
+
+          if (flippedCards.value.length === 2) {
+            checkForMatch();
+          }
+        };
+
+        const checkForMatch = () => {
+          const [card1, card2] = flippedCards.value;
+          if (card1.value === card2.value) {
+            shuffledCards.value[card1.index].isMatched = true;
+            shuffledCards.value[card2.index].isMatched = true;
+            addMatchEffect(card1.index, card2.index);
+
+            // Play correct match sound with delay to avoid timing conflicts
+            if (audioPlayer.initialized) {
+              setTimeout(() => {
+                audioPlayer.playCorrect();
+              }, 100);
+            }
+          } else {
+            // Play wrong match sound with delay to avoid timing conflicts
+            if (audioPlayer.initialized) {
+              setTimeout(() => {
+                audioPlayer.playWrong();
+              }, 100);
+            }
+
+            setTimeout(() => {
+              shuffledCards.value[card1.index].isFlipped = false;
+              shuffledCards.value[card2.index].isFlipped = false;
+            }, 1000);
+          }
+          flippedCards.value = [];
+
+          if (isGameComplete.value) {
+            clearInterval(timerInterval.value);
+
+            // Play completion sound and show confetti
+            setTimeout(() => {
+              if (audioPlayer.initialized) {
+                setTimeout(() => {
+                  audioPlayer.playComplete();
+                }, 200);
+              }
+              createConfetti();
+            }, 500);
+          }
+        };
+
+        const addMatchEffect = (index1, index2) => {
+          setTimeout(() => {
+            shuffledCards.value[index1].isMatched = true;
+            shuffledCards.value[index2].isMatched = true;
+          }, 500);
+        };
+
+        const resetGame = () => {
+          flippedCards.value = [];
+          shuffleCards();
+          timer.value = 0;
+          clearInterval(timerInterval.value);
+          startTimer();
+        };
+
+        const startGame = async () => {
+          // Initialize audio on game start
+          if (!audioPlayer.initialized) {
+            try {
+              await audioPlayer.init();
+              audioPlayer.setVolume(0.4);
+              console.log("Audio initialized on game start");
+            } catch (error) {
+              console.error("Failed to initialize audio:", error);
+            }
+          }
+
+          gameStarted.value = true;
+          shuffleCards();
+          startTimer();
+        };
+
+        const startTimer = () => {
+          timerInterval.value = setInterval(() => {
+            timer.value++;
+          }, 1000);
+        };
+
+        // Cleanup
+        onUnmounted(() => {
+          if (timerInterval.value) {
+            clearInterval(timerInterval.value);
+          }
+        });
+
+        return {
+          shuffledCards,
+          flippedCards,
+          timer,
+          gameStarted,
+          isGameComplete,
+          flipCard,
+          resetGame,
+          startGame,
+        };
+      },
+    });
+
+    app.mount("#app");
+
+    // Setup audio controls
+    setupAudioControls();
+  });
+</script>

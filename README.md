@@ -3,7 +3,12 @@
 
 ## tech stack
 - astrojs
-- ...
+- tailwindcss > bootstrapcss
+- vue3
+- tone.js
+- pixi.js
+- three.js
+- canvas-sketch
 
 ## blog & portfolio
 Build blog to share journey.
@@ -29,8 +34,9 @@ Build personal portfolio to showcase projects and skills.
 
 ## exercises & challenge
 
-- [ ] QuizGame
-- [ ] Flashcards
+- [x] QuizGame
+- [x] Flashcards
+- [x] SurveyForm
 
 
 
