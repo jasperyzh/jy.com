@@ -1,139 +1,208 @@
 ---
-import HelloGreeting from "@/components/jy/HelloGreeting.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
 
-// Import Deno's specific imports
-// const examplesDir = "./src/pages/sketches"; // Define the folder path
+import { Button } from "@/components/starwind/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/starwind/card";
 
-// let exampleLinks = [];
+// Get all sketch files using simple glob pattern without importing content
+const paths = await import.meta.glob(["./**/*.astro"], { eager: true });
 
-// try {
-//     // Read all file names inside `examplesDir` using Deno.
-//     for await (const dirEntry of Deno.readDir(examplesDir)) {
-//         console.log(
-//                 dirEntry.name,
-//                 dirEntry.isFile,
-//                 /\.astro$/.test(dirEntry.name),
-//                 /^\d{6}-.*\.astro$/.test(dirEntry.name),
-//             );
+// Convert file paths to links
+const sketchesLinks = Object.keys(paths)
+  .filter((path) => {
+    // Skip files/directories that start with a dot, except for the leading './' in glob paths
+    const pathSegments = path.split("/");
+    const hasHiddenSegment = pathSegments.some((segment, index) => {
+      // Skip the first segment which is just '.' from the './' prefix
+      if (index === 0 && segment === ".") return false;
+      // Check if this segment starts with a dot (hidden file/directory)
+      return segment.startsWith(".");
+    });
 
-//         // Check if it's a file and if it matches the pattern for quiz files
-//         if (
-//             dirEntry.isFile &&
-//             /\.astro$/.test(dirEntry.name) &&
-//             /^\d{6}-.*\.astro$/.test(dirEntry.name)
-//         ) {
+    // Skip index.astro and photoswipe.astro (our utility pages)
+    const isExcludedFile =
+      path.endsWith("index.astro") || path.endsWith("photoswipe.astro");
 
-//             // console.log('hello?')
+    // Get the filename for checking patterns
+    const filename = path.split("/").pop() || "";
 
-//             exampleLinks.push({
-//                 name: dirEntry.name.replace(/\.astro$/, ""), // Remove file extension for display
-//                 url: `/sketches/${dirEntry.name.replace(/\.astro$/, "")}`, // Link without .astro extension
-//             });
-//         }
-//     }
+    // Include files with hyphens in their name that aren't excluded or hidden
+    return filename.includes("-") && !isExcludedFile && !hasHiddenSegment;
+  })
+  .map((path) => {
+    // Extract the filename without extension
+    const filename =
+      path
+        .split("/")
+        .pop()
+        ?.replace(/\.astro$/, "") || "";
 
-//     // Sort the example links alphabetically by the file name.
-//     exampleLinks = exampleLinks.sort((a, b) => a.name.localeCompare(b.name));
-
-//     console.log(exampleLinks);
-// } catch (error) {
-//     console.error("Error reading directory:", error);
-// }
-// Define the folder path for the main sketches directory
-const mainDir = "./src/pages/sketches";
-
-// let sketchesLinks = [];
-let sketchesLinks: {
-  name: string;
-  url: string;
-}[] = [];
-
-try {
-  // Loop through foreseeable years (e.g., 2024, 2025, 2026)
-  // const years = ["2024", "2025" /* , , "2026" */];
-
-  // for (const year of years) {
-  //   // Construct the path to the year directory
-  //   const yearPath = `${mainDir}/${year}`;
-
-  //   // Read all file names inside the year directory
-  //   for await (const dirEntry of Deno.readDir(yearPath)) {
-  //     /* console.log(
-  //               dirEntry.name,
-  //               dirEntry.isFile,
-  //               /\.astro$/.test(dirEntry.name),
-  //               /^\d{6}-.*\.astro$/.test(dirEntry.name),
-  //           ); */
-
-  //     // Check if it's a file and if it matches the pattern for `.astro` sketches
-  //     if (
-  //       dirEntry.isFile &&
-  //       /\.astro$/.test(dirEntry.name) &&
-  //       /^\d{6}-.*\.astro$/.test(dirEntry.name)
-  //     ) {
-  //       sketchesLinks.push({
-  //         name: dirEntry.name.replace(/\.astro$/, ""), // Remove file extension for display
-  //         url: `/sketches/${year}/${dirEntry.name.replace(/\.astro$/, "")}`, // Construct the URL without the .astro extension
-  //       });
-  //     }
-  //   }
-
-  // }
-
-  for await (const dirEntry of Deno.readDir(mainDir)) {
-    console.log(
-                dirEntry.name,
-                dirEntry.isFile,
-                /\.astro$/.test(dirEntry.name),
-                /^\d{6}-.*\.astro$/.test(dirEntry.name),
-            );
-
-    // Check if it's a file and if it matches the pattern for `.astro` sketches
-    if (
-      dirEntry.isFile &&
-      /\.astro$/.test(dirEntry.name) &&
-      /^\d{6}-.*\.astro$/.test(dirEntry.name)
-    ) {
-      sketchesLinks.push({
-        name: dirEntry.name.replace(/\.astro$/, ""), // Remove file extension for display
-        url: `/sketches/${dirEntry.name.replace(/\.astro$/, "")}`, // Construct the URL without the .astro extension
-      });
+    // Get a display name that's more readable
+    let displayName = filename;
+    // If it has a date pattern (YYMMDD-), format it nicely
+    if (/^\d{6}-/.test(filename)) {
+      const datePart = filename.substring(0, 6);
+      const titlePart = filename.substring(7).replace(/-/g, " ");
+      const year = "20" + datePart.substring(0, 2);
+      const month = datePart.substring(2, 4);
+      const day = datePart.substring(4, 6);
+      displayName = `${titlePart} (${year}-${month}-${day})`;
     }
-  }
 
-  // Sort the sketches links alphabetically by the file name
-  sketchesLinks = sketchesLinks.sort((a, b) => a.name.localeCompare(b.name));
+    // Create the URL path, preserving subdirectory structure
+    // Remove the leading './' and the '.astro' extension
+    const urlPath = path.slice(2).replace(/\.astro$/, "");
 
-  console.log(sketchesLinks);
-} catch (error) {
-  console.error("Error reading directory:", error);
-}
+    // Extract subdirectory if present
+    const pathParts = path.slice(2).split("/");
+    const hasSubdir = pathParts.length > 1;
+    const subdir = hasSubdir ? pathParts.slice(0, -1).join("/") : "";
+
+    return {
+      name: displayName,
+      originalName: filename,
+      url: `/sketches/${urlPath}`,
+      subdir: subdir,
+      fullPath: path,
+    };
+  })
+  .sort((a, b) => {
+    // First sort by subdirectory
+    if (a.subdir !== b.subdir) {
+      return a.subdir.localeCompare(b.subdir);
+    }
+
+    // Then by filename (which may have date prefixes)
+    return a.originalName.localeCompare(b.originalName);
+  });
+
+// Enable debug mode with ?debug=true in URL
+const showDebug = Astro.url.searchParams.get("debug") === "true";
+
+// Log sketches to console for server-side debugging
+console.log("Found sketches:", sketchesLinks);
 ---
 
-<html lang="en">
-  <head>
-    <title>My Past sketches</title>
-    <meta name="description" content="A collection of my past sketches" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
-  </head>
-  <body>
-    <div>
-      <h2>My Past sketches</h2>
-      <p>
-        This page lists all the sketches I have done in the past. It's superraw,
-        so don't expect pretty UI.
-      </p>
-      <HelloGreeting />
-      <ul>
-        {
-          sketchesLinks.map((link) => (
-            <li>
-              <a href={link.url}>{link.name}</a>
-            </li>
-          ))
-        }
-      </ul>
+<BaseLayout
+  title="My Past Sketches"
+  description="A collection of my past sketches"
+>
+  <main class="container mx-auto">
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+        <h2 class="mb-4">My Past Sketches</h2>
+        <p class="lead mb-4">
+          This page lists all the sketches I have done in the past. It's a
+          collection of experiments and learning projects.
+        </p>
+        <hr />
+        <p>
+          My creative practice explores the intersection of coding, generative
+          art, and mathematics. Through algorithms and computational processes,
+          I create dynamic, evolving visual compositions that bridge technology
+          and art. Inspired by mathematical principles like fractals, geometry,
+          and the golden ratio, I aim to express my curiosity about patterns and
+          structures that shape our reality.
+        </p>
+
+        <p>
+          A key aspect of my work is bringing digital creations into the
+          physical world. Using pen plotters, I transform algorithmically
+          generated designs into tangible, hand-drawn artifacts. Each piece is a
+          unique iteration of my code, capturing a moment in time and space that
+          can never be replicated exactly.
+        </p>
+
+        <p>
+          My art is a form of self-expression and exploration. It allows me to
+          engage with the world and share my fascination with the connections
+          between art, science, and technology. Through my work, I hope to
+          inspire others to see the beauty that emerges when these disciplines
+          converge.
+        </p>
+        <div class="mt-4">
+          {
+            sketchesLinks.length === 0 ? (
+              <div class="alert alert-info">
+                No sketches found. Try adding some files with the naming pattern
+                [YYMMDD]-[name].astro
+              </div>
+            ) : (
+              (() => {
+                // Group sketches by subdirectory
+                const sketchesBySubdir = {};
+
+                sketchesLinks.forEach((link) => {
+                  const category = link.subdir || "Root";
+                  if (!sketchesBySubdir[category]) {
+                    sketchesBySubdir[category] = [];
+                  }
+                  sketchesBySubdir[category].push(link);
+                });
+
+                // Render each group
+                return Object.entries(sketchesBySubdir).map(
+                  ([category, links]: [string, typeof sketchesLinks]) => (
+                    <Card class="w-[460px]">
+                      <CardHeader>
+                        <CardTitle>
+                          {category === "Root" ? "Main Sketches" : category}
+                        </CardTitle>
+                        {/* <CardDescription>
+                            Deploy your new project in one-click.
+                          </CardDescription> */}
+                      </CardHeader>
+                      <CardContent class="flex flex-col gap-2">
+                        {links.map((link) => (
+                          <Button href={link.url}>{link.name}</Button>
+                        ))}
+                      </CardContent>
+                      {/* <CardFooter></CardFooter> */}
+                    </Card>
+                  )
+                );
+              })()
+            )
+          }
+        </div>
+      </div>
+
+      {
+        showDebug && (
+          <div class="col-lg-8 mx-auto mt-5">
+            <div class="card">
+              <div class="card-header bg-dark text-white">
+                Debug Information
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">
+                  Found {sketchesLinks.length} sketches
+                </h5>
+                <pre
+                  class="bg-light p-3 mt-3"
+                  style="max-height: 400px; overflow: auto;"
+                >
+                  {JSON.stringify(sketchesLinks, null, 2)}
+                </pre>
+                <h5 class="card-title mt-4">All Paths</h5>
+                <pre
+                  class="bg-light p-3 mt-3"
+                  style="max-height: 400px; overflow: auto;"
+                >
+                  {JSON.stringify(Object.keys(paths), null, 2)}
+                </pre>
+              </div>
+            </div>
+          </div>
+        )
+      }
     </div>
-  </body>
-</html>
+  </main>
+</BaseLayout>

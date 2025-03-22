@@ -1,0 +1,151 @@
+---
+/**
+ * MicroblogPost component
+ * Displays a single microblog post with text, images, and/or videos
+ */
+import { type CollectionEntry, render } from "astro:content";
+import FormattedDate from "../FormattedDate.astro";
+import ShareButton from "./ShareButton.astro";
+
+interface Props {
+  post: CollectionEntry<"microblog">;
+}
+
+const { post } = Astro.props;
+// const { Content } = await post.render();
+const { Content } = await render(post);
+
+// Function to generate a readable ID from the post slug
+const getPostId = (slug: string) => {
+  return slug.split("/").pop() || slug;
+};
+
+// Get post ID for linking and sharing
+const postId = getPostId(post.id);
+---
+
+<article class="microblog-post card mb-4" id={`post-${postId}`}>
+  <div class="card-body">
+    <!-- Optional title -->
+    {post.data.title && <h3 class="card-title h5">{post.data.title}</h3>}
+    
+    <!-- Post metadata -->
+    <div class="microblog-meta d-flex justify-content-between align-items-center mb-3">
+      <FormattedDate date={post.data.pubDate} />
+      
+      <!-- Tags -->
+      {post.data.tags && (
+        <div class="microblog-tags">
+          {post.data.tags.map(tag => (
+            <a href={`/microblog/tags/${tag}`} class="badge bg-secondary text-decoration-none me-1">
+              #{tag}
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+    
+    <!-- Post content -->
+    <div class="microblog-content mb-3">
+      <Content />
+    </div>
+    
+    <!-- Media content (images/videos) -->
+    {post.data.media && post.data.media.length > 0 && (
+      <div class="microblog-media mb-3">
+        {post.data.media.map(item => (
+          <div class="microblog-media-item mb-2">
+            {item.type === 'image' ? (
+              <figure class="figure">
+                <img 
+                  src={item.url} 
+                  alt={item.alt || ''} 
+                  class="figure-img img-fluid rounded"
+                  loading="lazy"
+                />
+                {item.caption && (
+                  <figcaption class="figure-caption text-center">
+                    {item.caption}
+                  </figcaption>
+                )}
+              </figure>
+            ) : (
+              <div class="ratio ratio-16x9">
+                <video 
+                  controls 
+                  preload="none"
+                  poster={item.alt && `/img/placeholder.png`}
+                >
+                  <source src={item.url} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+                {item.caption && <p class="text-center mt-1">{item.caption}</p>}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    )}
+    
+    <!-- Location info if available -->
+    {post.data.location && (
+      <div class="microblog-location text-muted small mb-3">
+        <i class="bi bi-geo-alt"></i> {post.data.location.name}
+      </div>
+    )}
+    
+    <!-- Post actions -->
+    <div class="microblog-actions d-flex justify-content-between">
+      <div class="action-buttons">
+        <a 
+          href={`/microblog/${postId}`} 
+          class="btn btn-sm btn-outline-primary me-2"
+          aria-label="View post details"
+        >
+          <i class="bi bi-eye"></i> View
+        </a>
+        
+        <ShareButton postId={postId} />
+      </div>
+      
+      <a 
+        href={`/microblog/${postId}`} 
+        class="text-muted text-decoration-none small"
+      >
+        Permalink
+      </a>
+    </div>
+  </div>
+</article>
+
+<style>
+  .microblog-post {
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+  
+  .microblog-post:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .microblog-content {
+    font-size: 1.1rem;
+    line-height: 1.5;
+  }
+  
+  .microblog-media-item img {
+    max-height: 400px;
+    width: auto;
+    margin: 0 auto;
+    display: block;
+    object-fit: contain;
+  }
+  
+  @media (max-width: 768px) {
+    .microblog-media-item img {
+      max-height: 300px;
+    }
+  }
+</style>

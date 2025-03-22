@@ -1,12 +1,16 @@
 ---
 import { getCollection } from "astro:content";
-import { slugifyTag } from "@/utils/tags";
+import { slugifyTag, getAllUniqueTags } from "@/utils/tags";
 
-// Fetch all posts from the "ob_blog" collection
+// Fetch posts from both collections
 const obPosts = await getCollection("ob_blog");
+const microPosts = await getCollection("microblog").catch(() => []);
 
-// Count occurrences of each tag
-const tagCounts = obPosts
+// Combine all posts
+const allPosts = [...obPosts, ...microPosts];
+
+// Count occurrences of each tag across both collections
+const tagCounts = allPosts
   .flatMap((post) => post.data.tags || [])
   .reduce((acc, tag) => {
     acc[tag] = (acc[tag] || 0) + 1;
@@ -14,7 +18,7 @@ const tagCounts = obPosts
   }, {});
 
 // Get all unique tags
-const uniqueTags = Object.keys(tagCounts);
+const uniqueTags = Object.keys(tagCounts).sort();
 
 // Get the minimum and maximum counts for normalization
 const minCount = Math.min(...Object.values(tagCounts));

@@ -15,5 +15,32 @@
     },
     "[javascript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "tailwindCSS.includeLanguages": {
+        "astro": "html",
+        "javascript": "javascript",
+        "typescript": "javascript",
+        "vue": "html"
+    },
+    "tailwindCSS.experimental.classRegex": [
+        ["class=\"([^\"]*)", "\"([^\"]*)"],
+        ["className=\"([^\"]*)", "\"([^\"]*)"],
+        [":class=\"([^\"]*)", "\"([^\"]*)"]
+    ],
+    "editor.quickSuggestions": {
+        "strings": true,
+        "comments": false,
+        "other": true
+    },
+    "editor.inlineSuggest.enabled": true,
+    "editor.suggest.showStatusBar": true,
+    "tailwindCSS.emmetCompletions": true,
+    "tailwindCSS.validate": true,
+    "css.validate": false,
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "explicit"
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
     }
 }

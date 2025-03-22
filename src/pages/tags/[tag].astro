@@ -6,59 +6,129 @@ import ReturnButton from '@/components/ReturnButton.astro';
 
 // Generate static paths for all tags
 export async function getStaticPaths() {
-  const allPosts = await getCollection("ob_blog");
+  // Get posts from both collections
+  const blogPosts = await getCollection("ob_blog");
+  const microblogPosts = await getCollection("microblog").catch(() => []);
+  
+  // Combine all posts
+  const allPosts = [...blogPosts, ...microblogPosts];
+  
+  // Get all unique tags
   const tags = getAllUniqueTags(allPosts);
 
+  console.log('tags test', tags);
   
   return tags.map(tag => ({
     params: { tag: slugifyTag(tag) },
-    props: { tag, posts: allPosts.filter(post => post.data.tags?.includes(tag)) }
+    props: { 
+      tag, 
+      posts: blogPosts.filter(post => post.data.tags?.includes(tag)),
+      microPosts: microblogPosts.filter(post => post.data.tags?.includes(tag))
+    }
   }));
 }
 
-// Get the tag and posts from props
-const { tag, posts } = Astro.props;
-const title = `Posts tagged with "${tag}"`;
+// Get the tag, posts, and microPosts from props
+const { tag, posts, microPosts } = Astro.props;
+const title = `Content tagged with "${tag}"`;
+const hasBlogPosts = posts.length > 0;
+const hasMicroPosts = microPosts.length > 0;
 
 ---
 
 <Layout title={title}>
   <main class="container py-4">
-    <!-- button return to all blog posts -->
-    <ReturnButton href="/blog" label="Return to all blog posts" />
+    <div class="d-flex gap-2 mb-4">
+      <ReturnButton href="/blog" label="Return to Blog" />
+      <ReturnButton href="/microblog" label="Return to Microblog" />
+    </div>
     
-    <!--  -->
-    <h1 class="mb-4">Posts tagged with "{tag}"</h1>
-    {posts.length > 0 ? (
-      <div class="row row-cols-1 row-cols-md-2 g-4">
-        {posts.map(post => (
-          <div class="col" key={post.slug}>
-            <div class="card h-100">
+    <h1 class="mb-4">Content tagged with "{tag}"</h1>
+    
+    {/* Blog Posts Section */}
+    {hasBlogPosts && (
+      <section class="mb-5">
+        <h2 class="h3 mb-3">Blog Posts</h2>
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+          {posts.map((post) => (
+            <div class="col">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h5 class="card-title">
+                    <a href={`/blog/${post.id}`} class="text-decoration-none">
+                      {post.data.title}
+                    </a>
+                  </h5>
+                  <p class="card-text">{post.data.description}</p>
+                  <div class="d-flex gap-2">
+                    {post.data.tags?.map((postTag) => (
+                      <a 
+                        href={`/tags/${slugifyTag(postTag)}`} 
+                        class="badge text-bg-secondary text-decoration-none"
+                      >
+                        {postTag}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+    
+    {/* Microblog Posts Section */}
+    {hasMicroPosts && (
+      <section>
+        <h2 class="h3 mb-3">Microblog Posts</h2>
+        <div class="microblog-posts">
+          {microPosts.map((post) => (
+            <div class="card mb-3">
               <div class="card-body">
-                <h5 class="card-title">
-                  <a href={`/blog/${post.id}`} class="text-decoration-none">
-                    {post.data.title}
-                  </a>
-                </h5>
-                <p class="card-text">{post.data.description}</p>
+                {post.data.title && <h5 class="card-title">{post.data.title}</h5>}
+                <p class="card-text">{post.body}</p>
+                {post.data.media && post.data.media.length > 0 && (
+                  <div class="media-container mb-3">
+                    {post.data.media.map((media) => (
+                      <div class="media-item">
+                        {media.type === "image" ? (
+                          <img src={media.url} alt={media.alt || ""} class="img-fluid rounded" />
+                        ) : (
+                          <video src={media.url} controls class="img-fluid rounded"></video>
+                        )}
+                        {media.caption && <p class="text-muted small mt-1">{media.caption}</p>}
+                      </div>
+                    ))}
+                  </div>
+                )}
                 <div class="d-flex gap-2">
-                  {post.data.tags?.map(postTag => (
+                  {post.data.tags?.map((postTag) => (
                     <a 
                       href={`/tags/${slugifyTag(postTag)}`} 
                       class="badge text-bg-secondary text-decoration-none"
-                      key={postTag}
                     >
                       {postTag}
                     </a>
                   ))}
                 </div>
+                <div class="text-muted small mt-2">
+                  <a href={`/microblog/${post.id}`} class="text-decoration-none">
+                    View post
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+      </section>
+    )}
+    
+    {/* No Content Message */}
+    {!hasBlogPosts && !hasMicroPosts && (
+      <div class="alert alert-info">
+        <p>No content found with tag "{tag}".</p>
       </div>
-    ) : (
-      <p>No posts found for this tag.</p>
     )}
   </main>
 </Layout>

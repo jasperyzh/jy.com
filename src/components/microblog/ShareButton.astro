@@ -1,0 +1,135 @@
+---
+/**
+ * ShareButton component
+ * Provides functionality to share microblog posts to a private social system
+ */
+
+interface Props {
+  postId: string;
+}
+
+const { postId } = Astro.props;
+
+// Generate the full URL for the post
+const baseUrl = import.meta.env.SITE || 'http://localhost:4321';
+const postUrl = `${baseUrl}/microblog/${postId}`;
+---
+
+<button 
+  class="btn btn-sm btn-outline-secondary share-button" 
+  data-post-id={postId}
+  data-post-url={postUrl}
+>
+  <i class="bi bi-share"></i> Share
+</button>
+
+<script>
+  // Initialize all share buttons
+  document.addEventListener('DOMContentLoaded', () => {
+    const shareButtons = document.querySelectorAll('.share-button');
+    
+    shareButtons.forEach(button => {
+      button.addEventListener('click', async (e) => {
+        const btn = e.currentTarget as HTMLButtonElement;
+        const postId = btn.getAttribute('data-post-id');
+        const postUrl = btn.getAttribute('data-post-url');
+        
+        if (!postId || !postUrl) return;
+        
+        // Temporarily change button state
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Sharing...';
+        btn.disabled = true;
+        
+        try {
+          // Use real API in production, mock in development
+          if (import.meta.env.PROD) {
+            await sharePost(postId, postUrl);
+          } else {
+            // Use mock for development testing
+            await mockSharePost(postId, postUrl);
+          }
+          
+          // Show success state
+          btn.innerHTML = '<i class="bi bi-check-circle"></i> Shared!';
+          btn.classList.remove('btn-outline-secondary');
+          btn.classList.add('btn-success');
+          
+          // Reset button after 2 seconds
+          setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-outline-secondary');
+            btn.disabled = false;
+          }, 2000);
+          
+        } catch (error) {
+          // Handle errors
+          console.error('Error sharing post:', error);
+          btn.innerHTML = '<i class="bi bi-exclamation-circle"></i> Failed';
+          btn.classList.remove('btn-outline-secondary');
+          btn.classList.add('btn-danger');
+          
+          // Reset button after 2 seconds
+          setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.remove('btn-danger');
+            btn.classList.add('btn-outline-secondary');
+            btn.disabled = false;
+          }, 2000);
+        }
+      });
+    });
+  });
+  
+  // Function to share posts via the API
+  async function sharePost(postId: string, postUrl: string): Promise<void> {
+    const response = await fetch('/api/share', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        postId,
+        postUrl,
+      }),
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Failed to share post');
+    }
+    
+    return response.json();
+  }
+  
+  // Fallback function for development testing when API might not be available
+  async function mockSharePost(postId: string, postUrl: string): Promise<void> {
+    // Log for development tracing
+    console.log(`[DEV] Sharing post ${postId} with URL ${postUrl}`);
+    
+    // Simulate network delay
+    return new Promise((resolve, reject) => {
+      // Simulate success with 90% probability
+      const willSucceed = Math.random() < 0.9;
+      
+      setTimeout(() => {
+        if (willSucceed) {
+          resolve();
+        } else {
+          reject(new Error('Sharing failed (simulated failure)'));
+        }
+      }, 1000);
+    });
+  }
+</script>
+
+<style>
+  .share-button {
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .share-button:hover {
+    transform: scale(1.05);
+  }
+</style>

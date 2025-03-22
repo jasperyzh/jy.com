@@ -1,501 +1,517 @@
 ---
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/starwind/select";
+import { Label } from "@/components/starwind/label";
+import { Input } from "@/components/starwind/input";
+
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
 const sketch_title = "PixiJS Filters Showcase";
 const slug = Astro.url.pathname.split("/").pop().replace(".astro", ""); // Extract slug
 const display_title = sketch_title ? sketch_title : slug;
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{sketch_title}</title>
-    <!-- No external scripts needed here, we'll import via npm in the script tag -->
-  </head>
+<BaseLayout title={sketch_title}>
+  <main class="container mx-auto pixi-sketch">
+    <div class="my-4">
 
-  <body>
-    <main>
-      <div class="controls">
-        <div class="dropdown">
-          <button class="dropdown-button">Select Filter</button>
-          <div class="dropdown-content" id="filter-dropdown">
-            <!-- Filters will be populated by JavaScript -->
+      <div class="filter-container">
+        <Select id="filter-select" class="filter-select">
+          <SelectTrigger class="w-[180px]">
+            <SelectValue placeholder="Select Filter" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>PixiJS Filters</SelectLabel>
+              <SelectItem value="None">None</SelectItem>
+              <SelectItem value="Adjustment">Adjustment</SelectItem>
+              <SelectItem value="ASCII">ASCII</SelectItem>
+              <SelectItem value="Bloom">Bloom</SelectItem>
+              <SelectItem value="Blur">Blur</SelectItem>
+              <SelectItem value="Bulge Pinch">Bulge Pinch</SelectItem>
+              <SelectItem value="Color Matrix - Sepia"
+                >Color Matrix - Sepia</SelectItem
+              >
+              <SelectItem value="Color Matrix - Negative"
+                >Color Matrix - Negative</SelectItem
+              >
+              <SelectItem value="Dot">Dot</SelectItem>
+              <SelectItem value="Drop Shadow">Drop Shadow</SelectItem>
+              <SelectItem value="Emboss">Emboss</SelectItem>
+              <SelectItem value="Glitch">Glitch</SelectItem>
+              <SelectItem value="Glow">Glow</SelectItem>
+              <SelectItem value="Kawase Blur">Kawase Blur</SelectItem>
+              <SelectItem value="Motion Blur">Motion Blur</SelectItem>
+              <SelectItem value="Old Film">Old Film</SelectItem>
+              <SelectItem value="Pixelate">Pixelate</SelectItem>
+              <SelectItem value="RGB Split">RGB Split</SelectItem>
+              <SelectItem value="Shockwave">Shockwave</SelectItem>
+              <SelectItem value="Tilt Shift">Tilt Shift</SelectItem>
+              <SelectItem value="Twist">Twist</SelectItem>
+              <SelectItem value="Zoom Blur">Zoom Blur</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+
+        <!-- Fallback filter buttons in case the Select component has issues -->
+        <!-- <div class="filter-buttons" style="display: none; margin-top: 10px;">
+          <p>Manual Filter Selection:</p>
+          <div class="button-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 5px;">
+            <button class="filter-button" data-filter="None">None</button>
+            <button class="filter-button" data-filter="ASCII">ASCII</button>
+            <button class="filter-button" data-filter="Bloom">Bloom</button>
+            <button class="filter-button" data-filter="Glitch">Glitch</button>
+            <button class="filter-button" data-filter="Blur">Blur</button>
+            <button class="filter-button" data-filter="Glow">Glow</button>
           </div>
-        </div>
-        <div class="filter-info">
-          <h3 id="current-filter">Current Filter: None</h3>
-        </div>
+        </div> -->
+      </div>
+      <h3 id="current-filter" class="my-4">Current Filter: None</h3>
+      
+    </div>
+
+    <div class="upload-controls">
+      <div class="mb-3">
+        <Label size="md" for="background-upload">Change Background: </Label>
+        <Input
+          type="file"
+          id="background-upload"
+          accept="image/*"
+          placeholder="Background input"
+        />
       </div>
 
-      <div class="upload-controls">
-        <div class="upload-item">
-          <label for="background-upload">Change Background:</label>
-          <input type="file" id="background-upload" accept="image/*" />
-        </div>
-        <div class="upload-item">
-          <label for="sprite-upload">Change Sprite:</label>
-          <input type="file" id="sprite-upload" accept="image/*" />
-        </div>
+      <div class="mb-3">
+        <Label size="md" for="sprite-upload">Change Sprite: </Label>
+        <Input
+          type="file"
+          id="sprite-upload"
+          accept="image/*"
+          placeholder="Sprite input"
+        />
       </div>
+    </div>
 
-      <div id="pixi-container"></div>
+    <div id="pixi-container"></div>
+    <div class="filter-info">
+    </div>
 
-      <aside>
-        {display_title}
-      </aside>
-    </main>
+    <aside>
+      {display_title}
+    </aside>
+  </main>
+</BaseLayout>
 
-    <script>
-      //   import { Application, Assets, Sprite } from 'pixi.js';
-      import * as PIXI from "pixi.js";
-      import * as filters from "pixi-filters";
+<script>
 
-      (async () => {
-        // Create a new application
-        const app = new PIXI.Application();
+  import * as PIXI from "pixi.js";
+  import * as filters from "pixi-filters";
 
-        // Initialize the application
-        await app.init({
-          background: "#cc88ee",
-          //   resizeTo: window,
-          width: 800,
-          height: 600,
-          //   backgroundColor: 0x1099bb,
-          //   resolution: window.devicePixelRatio || 1,
-        });
+  (async () => {
+    // Create a new application
+    const app = new PIXI.Application();
 
-        // Append the application canvas to the document body
-        const pixiContainer = document.getElementById("pixi-container");
-        if (pixiContainer) {
-          pixiContainer.appendChild(app.canvas);
+    // Initialize the application
+    await app.init({
+      background: "#cc88ee",
+      //   resizeTo: window,
+      width: 800,
+      height: 600,
+      //   backgroundColor: 0x1099bb,
+      //   resolution: window.devicePixelRatio || 1,
+    });
+
+    // Append the application canvas to the document body
+    const pixiContainer = document.getElementById("pixi-container");
+    if (pixiContainer) {
+      pixiContainer.appendChild(app.canvas);
+    }
+
+    // Load the bunny texture
+    const texture = await PIXI.Assets.load("/img/bunny.png");
+
+    // Create a bunny Sprite
+    const bunny = new PIXI.Sprite(texture);
+
+    // Center the sprite's anchor point
+    bunny.anchor.set(0.5);
+
+    // Move the sprite to the center of the screen
+    bunny.x = app.screen.width / 2;
+    bunny.y = app.screen.height / 2;
+    bunny.scale.set(3); // Make the bunny larger
+
+    // Create a container for the bunny
+    const container = new PIXI.Container();
+    container.addChild(bunny);
+    app.stage.addChild(container);
+
+    // Define available filters
+    const filterOptions = {
+      None: null,
+      Adjustment: new filters.AdjustmentFilter({
+        gamma: 1.5,
+        saturation: 2,
+      }),
+      ASCII: new filters.AsciiFilter(),
+      Bloom: new filters.BloomFilter(),
+      Blur: new PIXI.BlurFilter(),
+      "Bulge Pinch": new filters.BulgePinchFilter({
+        radius: 200,
+        strength: 0.5,
+      }),
+      "Color Matrix - Sepia": (function () {
+        const f = new PIXI.ColorMatrixFilter();
+        f.sepia(true);
+        return f;
+      })(),
+      "Color Matrix - Negative": (function () {
+        const f = new PIXI.ColorMatrixFilter();
+        f.negative(true);
+        return f;
+      })(),
+      Dot: new filters.DotFilter(),
+      "Drop Shadow": new filters.DropShadowFilter(),
+      Emboss: new filters.EmbossFilter(),
+      Glitch: new filters.GlitchFilter(),
+      Glow: new filters.GlowFilter({ distance: 15, outerStrength: 2 }),
+      "Kawase Blur": new filters.KawaseBlurFilter({
+        strength: 5,
+        quality: 9,
+      }),
+      "Motion Blur": new filters.MotionBlurFilter({
+        velocity: [40, 40],
+        kernelSize: 15,
+      }),
+      "Old Film": new filters.OldFilmFilter(),
+      Pixelate: new filters.PixelateFilter(5),
+      "RGB Split": new filters.RGBSplitFilter({
+        red: [5, 0],
+        green: [0, 5],
+        blue: [8, 0],
+      }),
+      Shockwave: new filters.ShockwaveFilter(),
+      "Tilt Shift": new filters.TiltShiftFilter({
+        blur: 200,
+        gradientBlur: 300,
+      }),
+      Twist: new filters.TwistFilter({
+        angle: 4,
+        radius: 200,
+        offset: { x: app.screen.width / 2, y: app.screen.height / 2 },
+      }),
+      "Zoom Blur": new filters.ZoomBlurFilter({
+        strength: 0.1,
+        center: [app.screen.width / 2, app.screen.height / 2],
+      }),
+    };
+
+    // Apply ASCII filter initially
+    container.filters = [filterOptions["ASCII"]];
+
+    // Update the current filter display
+    const currentFilterElement = document.getElementById("current-filter");
+    if (currentFilterElement) {
+      currentFilterElement.textContent = "Current Filter: ASCII";
+    }
+
+    // Set initial value for the Select component
+    setTimeout(() => {
+      const selectValue = document.querySelector("select-value");
+      if (selectValue) {
+        selectValue.textContent = "ASCII";
+      }
+    }, 100); // Small delay to ensure component is mounted
+
+    // The Select dropdown is now populated in the HTML
+    // Setup event listeners when DOM is fully loaded
+    document.addEventListener("DOMContentLoaded", () => {
+      console.log("DOM fully loaded, looking for select component");
+      setupSelectEventListeners();
+    });
+
+    // Also attempt to setup immediately in case DOM is already loaded
+    setupSelectEventListeners();
+
+    // Try again after a delay to ensure component is fully rendered/initialized
+    setTimeout(setupSelectEventListeners, 500);
+
+    // Function to set up event listeners for the Select component
+    function setupSelectEventListeners() {
+      // Try various selectors that might match the Select component
+      const selectors = [
+        ".starwind-select",
+        "#filter-select",
+        "select",
+        "[data-radix-select-trigger]",
+        ".select-value",
+        "select-trigger",
+      ];
+
+      // Try each selector
+      for (const selector of selectors) {
+        const elements = document.querySelectorAll(selector);
+
+        if (elements.length > 0) {
+          console.log(
+            `Found ${elements.length} elements with selector '${selector}':`,
+            elements
+          );
+
+          elements.forEach((el) => {
+            // Add various event listeners to catch all possible events
+            ["starwind-select:change", "change", "input"].forEach(
+              (eventType) => {
+                el.addEventListener(eventType, function (e) {
+                  console.log(`${selector} ${eventType} event:`, e);
+
+                  // Handle both standard and custom events with type safety
+                  // Using a type assertion to avoid TypeScript errors
+                  const customEvent = e as {
+                    detail?: { value: string };
+                    target?: { value: string };
+                  };
+                  const filterName =
+                    customEvent.detail?.value || customEvent.target?.value;
+
+                  if (filterName && typeof filterName === "string") {
+                    console.log(
+                      `Selected filter '${filterName}' via ${eventType}`
+                    );
+
+                    if (filterOptions.hasOwnProperty(filterName)) {
+                      console.log("Applying filter:", filterName);
+                      // Apply selected filter
+                      container.filters = filterOptions[filterName]
+                        ? [filterOptions[filterName]]
+                        : [];
+
+                      // Update the current filter display
+                      const currentFilterElement =
+                        document.getElementById("current-filter");
+                      if (currentFilterElement) {
+                        currentFilterElement.textContent = `Current Filter: ${filterName}`;
+                      }
+                    }
+                  }
+                });
+              }
+            );
+
+            // Also watch for click events on this element
+            el.addEventListener("click", function () {
+              console.log(`Click on ${selector}:`, this);
+            });
+          });
         }
+      }
 
-        // Load the bunny texture
-        const texture = await PIXI.Assets.load("/img/bunny.png");
+      // Also add a document-level event listener for the custom event
+      document.addEventListener("starwind-select:change", function (e) {
+        console.log("Document-level starwind-select:change event:", e);
+        // Using a type assertion to avoid TypeScript errors
+        const customEvent = e as { detail: { value: string } };
+        const filterName = customEvent.detail?.value;
 
-        // Create a bunny Sprite
-        const bunny = new PIXI.Sprite(texture);
+        if (filterName && filterOptions.hasOwnProperty(filterName)) {
+          console.log("Applying filter from document listener:", filterName);
+          // Apply selected filter
+          container.filters = filterOptions[filterName]
+            ? [filterOptions[filterName]]
+            : [];
 
-        // Center the sprite's anchor point
-        bunny.anchor.set(0.5);
-
-        // Move the sprite to the center of the screen
-        bunny.x = app.screen.width / 2;
-        bunny.y = app.screen.height / 2;
-        bunny.scale.set(3); // Make the bunny larger
-
-        // Create a container for the bunny
-        const container = new PIXI.Container();
-        container.addChild(bunny);
-        app.stage.addChild(container);
-
-        // Define available filters
-        const filterOptions = {
-          None: null,
-          Adjustment: new filters.AdjustmentFilter({
-            gamma: 1.5,
-            saturation: 2,
-          }),
-          ASCII: new filters.AsciiFilter(),
-          Bloom: new filters.BloomFilter(),
-          Blur: new PIXI.BlurFilter(),
-          "Bulge Pinch": new filters.BulgePinchFilter({
-            radius: 200,
-            strength: 0.5,
-          }),
-          "Color Matrix - Sepia": (function () {
-            const f = new PIXI.ColorMatrixFilter();
-            f.sepia(true);
-            return f;
-          })(),
-          "Color Matrix - Negative": (function () {
-            const f = new PIXI.ColorMatrixFilter();
-            f.negative(true);
-            return f;
-          })(),
-          Dot: new filters.DotFilter(),
-          "Drop Shadow": new filters.DropShadowFilter(),
-          Emboss: new filters.EmbossFilter(),
-          Glitch: new filters.GlitchFilter(),
-          Glow: new filters.GlowFilter({ distance: 15, outerStrength: 2 }),
-          "Kawase Blur": new filters.KawaseBlurFilter({
-            strength: 5,
-            quality: 9,
-          }),
-          "Motion Blur": new filters.MotionBlurFilter({
-            velocity: [40, 40],
-            kernelSize: 15,
-          }),
-          "Old Film": new filters.OldFilmFilter(),
-          Pixelate: new filters.PixelateFilter(5),
-          "RGB Split": new filters.RGBSplitFilter({
-            red: [5, 0],
-            green: [0, 5],
-            blue: [8, 0],
-          }),
-          Shockwave: new filters.ShockwaveFilter(),
-          "Tilt Shift": new filters.TiltShiftFilter({
-            blur: 200,
-            gradientBlur: 300,
-          }),
-          Twist: new filters.TwistFilter({
-            angle: 4,
-            radius: 200,
-            offset: { x: app.screen.width / 2, y: app.screen.height / 2 },
-          }),
-          "Zoom Blur": new filters.ZoomBlurFilter({
-            strength: 0.1,
-            center: [app.screen.width / 2, app.screen.height / 2],
-          }),
-        };
-
-        // Apply ASCII filter initially
-        container.filters = [filterOptions["ASCII"]];
-
-        // Update the current filter display
-        const currentFilterElement = document.getElementById("current-filter");
-        if (currentFilterElement) {
-          currentFilterElement.textContent = "Current Filter: ASCII";
+          // Update the current filter display
+          const currentFilterElement =
+            document.getElementById("current-filter");
+          if (currentFilterElement) {
+            currentFilterElement.textContent = `Current Filter: ${filterName}`;
+          }
         }
+      });
 
-        const dropdownButton = document.querySelector(".dropdown-button");
-        if (dropdownButton) {
-          dropdownButton.textContent = "ASCII";
-        }
+      // Set up fallback filter buttons
+      const fallbackButtons = document.querySelectorAll(".filter-button");
+      if (fallbackButtons.length > 0) {
+        console.log("Found fallback filter buttons:", fallbackButtons);
+        // Show the fallback buttons after a delay if the Select event isn't working
+        setTimeout(() => {
+          const buttonContainer = document.querySelector(".filter-buttons");
+          if (buttonContainer) {
+            buttonContainer.style.display = "block";
+          }
+        }, 2000);
 
-        // Set up dropdown for filter selection
-        const dropdown = document.getElementById("filter-dropdown");
+        // Add click event listeners to the fallback buttons
+        fallbackButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            const filterName = this.getAttribute("data-filter");
+            console.log("Filter button clicked:", filterName);
 
-        // Populate dropdown
-        if (dropdown) {
-          Object.keys(filterOptions).forEach(function (filterName) {
-            const option = document.createElement("a");
-            option.textContent = filterName;
-            option.classList.add("dropdown-item");
-            option.href = "#";
-            option.addEventListener("click", function (e) {
-              e.preventDefault();
+            if (filterName && filterOptions.hasOwnProperty(filterName)) {
               // Apply selected filter
               container.filters = filterOptions[filterName]
                 ? [filterOptions[filterName]]
                 : [];
 
+              // Update the current filter display
               const currentFilterElement =
                 document.getElementById("current-filter");
               if (currentFilterElement) {
                 currentFilterElement.textContent = `Current Filter: ${filterName}`;
               }
-
-              const dropdownButtonElement =
-                document.querySelector(".dropdown-button");
-              if (dropdownButtonElement) {
-                dropdownButtonElement.textContent = filterName;
-              }
-            });
-            dropdown.appendChild(option);
-          });
-        }
-
-        // Toggle dropdown visibility
-        if (dropdown) {
-          const dropdownButton = document.querySelector(".dropdown-button");
-          if (dropdownButton) {
-            dropdownButton.addEventListener("click", function () {
-              dropdown.classList.toggle("show");
-            });
-          }
-
-          // Close dropdown when clicking outside
-          window.addEventListener("click", function (event) {
-            if (
-              event.target instanceof Element &&
-              !event.target.matches(".dropdown-button")
-            ) {
-              if (dropdown.classList.contains("show")) {
-                dropdown.classList.remove("show");
-              }
             }
           });
-        }
-
-        // Handle file uploads for background
-        const backgroundUpload = document.getElementById("background-upload");
-        if (backgroundUpload) {
-          backgroundUpload.addEventListener("change", (e) => {
-            const target = e.target;
-            if (
-              target &&
-              "files" in target &&
-              target.files &&
-              target.files[0]
-            ) {
-              const file = target.files[0];
-              const reader = new FileReader();
-
-              reader.onload = (event) => {
-                if (event.target && event.target.result) {
-                  try {
-                    // Create an image element
-                    const img = new Image();
-                    img.src = event.target.result.toString();
-
-                    img.onload = () => {
-                      // Create a canvas and draw the image to it
-                      const canvas = document.createElement("canvas");
-                      canvas.width = img.width;
-                      canvas.height = img.height;
-                      const ctx = canvas.getContext("2d");
-                      ctx.drawImage(img, 0, 0);
-
-                      // Create the texture from the canvas
-                      const backgroundTexture = PIXI.Texture.from(canvas);
-
-                      // Remove old background if it exists
-                      const oldBackground = app.stage.children.find(
-                        (child) => child.label === "background"
-                      );
-                      if (oldBackground) {
-                        app.stage.removeChild(oldBackground);
-                      }
-
-                      // Create a new background sprite
-                      const background = new PIXI.Sprite(backgroundTexture);
-                      background.label = "background";
-                      background.width = app.screen.width;
-                      background.height = app.screen.height;
-
-                      // Add background at the bottom layer
-                      app.stage.addChildAt(background, 0);
-
-                      console.log("Background image updated successfully");
-                    };
-                  } catch (error) {
-                    console.error("Error loading background image:", error);
-                  }
-                }
-              };
-
-              reader.readAsDataURL(file);
-            }
-          });
-        }
-
-        // Handle file uploads for sprite
-        const spriteUpload = document.getElementById("sprite-upload");
-        if (spriteUpload) {
-          spriteUpload.addEventListener("change", (e) => {
-            const target = e.target;
-            if (
-              target &&
-              "files" in target &&
-              target.files &&
-              target.files[0]
-            ) {
-              const file = target.files[0];
-              const reader = new FileReader();
-
-              reader.onload = (event) => {
-                if (event.target && event.target.result) {
-                  try {
-                    // Create an image element
-                    const img = new Image();
-                    img.src = event.target.result.toString();
-
-                    img.onload = () => {
-                      // Create a canvas and draw the image to it
-                      const canvas = document.createElement("canvas");
-                      canvas.width = img.width;
-                      canvas.height = img.height;
-                      const ctx = canvas.getContext("2d");
-                      ctx.drawImage(img, 0, 0);
-
-                      // Create the texture from the canvas
-                      const newTexture = PIXI.Texture.from(canvas);
-
-                      // Update the bunny texture
-                      bunny.texture = newTexture;
-
-                      console.log("Sprite image updated successfully");
-                    };
-                  } catch (error) {
-                    console.error("Error loading sprite image:", error);
-                  }
-                }
-              };
-
-              reader.readAsDataURL(file);
-            }
-          });
-        }
-
-        // Variables for special filter animations
-        let elapsed = 0;
-
-        // Listen for animate update
-        app.ticker.add((time) => {
-          // Update elapsed time
-          elapsed += time.deltaTime / 60;
-
-          // Rotate bunny
-          bunny.rotation += 0.1 * time.deltaTime;
-
-          // Update special filters
-          if (
-            container.filters &&
-            Array.isArray(container.filters) &&
-            container.filters.length > 0
-          ) {
-            const currentFilter = container.filters[0];
-
-            // Update shockwave filter
-            if (currentFilter instanceof filters.ShockwaveFilter) {
-              // Configure shockwave parameters if not already set
-              if (!currentFilter.center) {
-                currentFilter.center = [
-                  app.screen.width / 2,
-                  app.screen.height / 2,
-                ];
-                currentFilter.radius = 80;
-                currentFilter.amplitude = 30;
-                currentFilter.wavelength = 40;
-              }
-              currentFilter.time = elapsed;
-            }
-
-            // Update glitch filter
-            if (currentFilter instanceof filters.GlitchFilter) {
-              currentFilter.seed = Math.random();
-            }
-          }
         });
-      })();
-    </script>
-  </body>
-</html>
-
-<style lang="scss" is:global>
-  *,
-  ::before,
-  ::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    color: #333;
-  }
-
-  main {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-
-  #pixi-container {
-    margin: 20px auto;
-    width: 800px;
-    height: 600px;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  }
-
-  .controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 15px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-
-  .dropdown {
-    position: relative;
-    display: inline-block;
-  }
-
-  .dropdown-button {
-    background-color: #4caf50;
-    color: white;
-    padding: 12px 20px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-    min-width: 180px;
-    text-align: left;
-    position: relative;
-
-    &:after {
-      content: "▼";
-      position: absolute;
-      right: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 12px;
+      }
     }
 
-    &:hover {
-      background-color: #45a049;
+    // Handle file uploads for background
+    const backgroundUpload = document.getElementById("background-upload");
+    if (backgroundUpload) {
+      backgroundUpload.addEventListener("change", (e) => {
+        const target = e.target;
+        if (target && "files" in target && target.files && target.files[0]) {
+          const file = target.files[0];
+          const reader = new FileReader();
+
+          reader.onload = (event) => {
+            if (event.target && event.target.result) {
+              try {
+                // Create an image element
+                const img = new Image();
+                img.src = event.target.result.toString();
+
+                img.onload = () => {
+                  // Create a canvas and draw the image to it
+                  const canvas = document.createElement("canvas");
+                  canvas.width = img.width;
+                  canvas.height = img.height;
+                  const ctx = canvas.getContext("2d");
+                  ctx.drawImage(img, 0, 0);
+
+                  // Create the texture from the canvas
+                  const backgroundTexture = PIXI.Texture.from(canvas);
+
+                  // Remove old background if it exists
+                  const oldBackground = app.stage.children.find(
+                    (child) => child.label === "background"
+                  );
+                  if (oldBackground) {
+                    app.stage.removeChild(oldBackground);
+                  }
+
+                  // Create a new background sprite
+                  const background = new PIXI.Sprite(backgroundTexture);
+                  background.label = "background";
+                  background.width = app.screen.width;
+                  background.height = app.screen.height;
+
+                  // Add background at the bottom layer
+                  app.stage.addChildAt(background, 0);
+
+                  console.log("Background image updated successfully");
+                };
+              } catch (error) {
+                console.error("Error loading background image:", error);
+              }
+            }
+          };
+
+          reader.readAsDataURL(file);
+        }
+      });
     }
-  }
 
-  .dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 180px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-    max-height: 600px;
-    overflow-y: auto;
-    border-radius: 4px;
+    // Handle file uploads for sprite
+    const spriteUpload = document.getElementById("sprite-upload");
+    if (spriteUpload) {
+      spriteUpload.addEventListener("change", (e) => {
+        const target = e.target;
+        if (target && "files" in target && target.files && target.files[0]) {
+          const file = target.files[0];
+          const reader = new FileReader();
 
-    &.show {
-      display: flex;
-      flex-direction: column;
-    }
-  }
+          reader.onload = (event) => {
+            if (event.target && event.target.result) {
+              try {
+                // Create an image element
+                const img = new Image();
+                img.src = event.target.result.toString();
 
-  .dropdown-item {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
+                img.onload = () => {
+                  // Create a canvas and draw the image to it
+                  const canvas = document.createElement("canvas");
+                  canvas.width = img.width;
+                  canvas.height = img.height;
+                  const ctx = canvas.getContext("2d");
+                  ctx.drawImage(img, 0, 0);
 
-    &:hover {
-      background-color: #f1f1f1;
-    }
-  }
-  .filter-info {
-    padding: 10px 20px;
-    background-color: #f8f8f8;
-    border-radius: 4px;
-    border-left: 4px solid #4caf50;
-  }
+                  // Create the texture from the canvas
+                  const newTexture = PIXI.Texture.from(canvas);
 
-  aside {
-    margin-top: 20px;
-    text-align: center;
-    font-size: 14px;
-    color: #666;
-  }
+                  // Update the bunny texture
+                  bunny.texture = newTexture;
 
-  @media (max-width: 850px) {
-    #pixi-container {
-      width: 100%;
-      height: auto;
-      aspect-ratio: 4/3;
+                  console.log("Sprite image updated successfully");
+                };
+              } catch (error) {
+                console.error("Error loading sprite image:", error);
+              }
+            }
+          };
+
+          reader.readAsDataURL(file);
+        }
+      });
     }
 
-    .controls {
-      flex-direction: column;
-      gap: 15px;
-    }
-  }
-</style>
+    // Variables for special filter animations
+    let elapsed = 0;
+
+    // Listen for animate update
+    app.ticker.add((time) => {
+      // Update elapsed time
+      elapsed += time.deltaTime / 60;
+
+      // Rotate bunny
+      bunny.rotation += 0.1 * time.deltaTime;
+
+      // Update special filters
+      if (
+        container.filters &&
+        Array.isArray(container.filters) &&
+        container.filters.length > 0
+      ) {
+        const currentFilter = container.filters[0];
+
+        // Update shockwave filter
+        if (currentFilter instanceof filters.ShockwaveFilter) {
+          // Configure shockwave parameters if not already set
+          if (!currentFilter.center) {
+            currentFilter.center = [
+              app.screen.width / 2,
+              app.screen.height / 2,
+            ];
+            currentFilter.radius = 80;
+            currentFilter.amplitude = 30;
+            currentFilter.wavelength = 40;
+          }
+          currentFilter.time = elapsed;
+        }
+
+        // Update glitch filter
+        if (currentFilter instanceof filters.GlitchFilter) {
+          currentFilter.seed = Math.random();
+        }
+      }
+    });
+  })();
+</script>

@@ -1,17 +1,25 @@
 ---
 import Layout from "@/layouts/BaseLayout.astro";
 import { SITE_DESCRIPTION } from "../consts";
+import HelloGreeting from "@/components/jy/HelloGreeting.astro";
 
-import ComponentSketchHomepage from "../pages/sketches/component-sketch-homepage.astro";
+// import ComponentSketchHomepage from "../pages/sketches/component-sketch-homepage.astro";
+
+import IconifyComponent from "@/components/IconifyComponent.astro";
+import TeamSection from "@/components/TeamSection.astro";
 ---
 
 <Layout title="Homepage" description={SITE_DESCRIPTION}>
-  <main class="d-flex flex-column align-items-center justify-content-center">
-    <figure class="text-center">
-      <ComponentSketchHomepage />
-      <figcaption class="figure-caption badge bg-secondary my-3">
-        Mesh Gradient: colours goes whee~
-      </figcaption>
-    </figure>
+  <main>
+    <div class="grid align-items self-center text-center py-16">
+      <div>
+        <HelloGreeting />
+
+        <IconifyComponent />
+        <TeamSection />
+      </div>
+    </div>
+
+    
   </main>
 </Layout>

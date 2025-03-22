@@ -3,7 +3,7 @@
 
 ## tech stack
 - astrojs
-- tailwindcss > bootstrapcss
+- tailwindcss
 - vue3
 - tone.js
 - pixi.js
@@ -20,7 +20,6 @@ Build personal portfolio to showcase projects and skills.
 
 - [241205] pull all the .md blog post from obsidian into astro content collection
 - [241207] try to learn bootstrap holistic; also how to customize bootstrap easily?
-
 - [241207] just build the fucking thing.
 
 - [ ] Blog with CMS capabilities, Rich text editor

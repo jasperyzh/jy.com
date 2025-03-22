@@ -1,0 +1,114 @@
+---
+/**
+ * Microblog content type filter page
+ * Displays microblog posts filtered by content type (text, image, video, mixed)
+ */
+import Layout from "@/layouts/BaseLayout.astro";
+import MicroblogFeed from "@/components/microblog/MicroblogFeed.astro";
+import { getCollection } from "astro:content";
+
+// Generate static paths for all content types
+export async function getStaticPaths() {
+  // Define valid content types
+  const VALID_TYPES = ["text", "image", "video", "mixed"];
+  
+  return VALID_TYPES.map((type) => ({
+    params: { type },
+    props: { type },
+  }));
+}
+
+const { type } = Astro.props;
+
+// Get all microblog posts
+const allPosts = await getCollection("microblog");
+
+// Filter posts by content type and draft status
+const filteredPosts = allPosts.filter((post) => {
+  // Filter out drafts and private posts in production
+  const isPublished = !import.meta.env.PROD || 
+    (!post.data.draft && !post.data.isPrivate);
+  
+  // Filter by content type
+  const matchesType = post.data.contentType === type;
+  
+  return isPublished && matchesType;
+});
+
+// Sort by publication date (newest first)
+const sortedPosts = filteredPosts.sort((a, b) => {
+  const dateA = a.data.pubDate instanceof Date ? a.data.pubDate : new Date();
+  const dateB = b.data.pubDate instanceof Date ? b.data.pubDate : new Date();
+  return dateB.getTime() - dateA.getTime();
+});
+
+// Get display name for the content type
+const getTypeDisplayName = (type) => {
+  switch (type) {
+    case "text": return "Text Posts";
+    case "image": return "Image Posts";
+    case "video": return "Video Posts";
+    case "mixed": return "Mixed Content";
+    default: return "Posts";
+  }
+};
+
+const typeDisplayName = getTypeDisplayName(type);
+---
+
+<Layout 
+  title={`Microblog - ${typeDisplayName}`} 
+  description={`Microblog posts with ${type} content`}
+>
+  <main class="container py-4">
+    <section>
+      <h1 class="mb-2">Microblog</h1>
+      <h2 class="filter-title mb-4">
+        {type === "text" && <i class="bi bi-file-text me-1"></i>}
+        {type === "image" && <i class="bi bi-image me-1"></i>}
+        {type === "video" && <i class="bi bi-film me-1"></i>}
+        {type === "mixed" && <i class="bi bi-collection me-1"></i>}
+        {typeDisplayName}
+      </h2>
+      
+      <MicroblogFeed 
+        posts={sortedPosts}
+        showFilters={true}
+        currentFilter={type}
+      />
+    </section>
+  </main>
+</Layout>
+
+<style>
+  h1 {
+    font-size: 2.5rem;
+  }
+  
+  .filter-title {
+    font-size: 1.5rem;
+    color: #444;
+    display: flex;
+    align-items: center;
+  }
+  
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 2rem;
+    }
+    
+    .filter-title {
+      font-size: 1.2rem;
+    }
+  }
+</style>
+
+<script>
+  // Import Bootstrap icons if not already loaded
+  if (!document.querySelector('link[href*="bootstrap-icons"]')) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css';
+    document.head.appendChild(link);
+  }
+</script>

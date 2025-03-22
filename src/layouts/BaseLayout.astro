@@ -1,14 +1,9 @@
 ---
-// import "@/styles/global.scss";
-import "@/styles/tailwind.css";
+import "@/styles/starwind.css";
 
 import { SITE_TITLE, SITE_DESCRIPTION } from "@/consts";
 
 import Head from "./Head.astro";
-import HeadCritical from "./HeadCritical.astro";
-import ThemeToggleButton from "@/components/ThemeToggleButton.astro";
-import PWAInstall from "@/components/PWAInstall.astro";
-import OfflineNotification from "@/components/OfflineNotification.astro";
 
 const today = new Date();
 
@@ -21,98 +16,24 @@ interface Props {
 const { title, description } = Astro.props as Props;
 
 import { Debug } from "astro:components";
+
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
 ---
 
-<html lang="en" class="">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <HeadCritical />
     <Head title={title} description={description} />
   </head>
   <body>
-    <!-- Offline notification banner -->
-    <OfflineNotification />
-
     <div class="wrapper">
-      <header class="my-4">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav class="flex items-center justify-between h-16">
-            <div class="flex items-center justify-between w-full">
-              <!-- Mobile menu button-->
-              <div class="md:hidden">
-                <button
-                  type="button"
-                  class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-                  aria-controls="mobile-menu"
-                  aria-expanded="false"
-                  id="mobile-menu-button"
-                >
-                  <span class="sr-only">Open main menu</span>
-                  <!-- Menu icon -->
-                  <svg
-                    class="block h-6 w-6"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M4 6h16M4 12h16M4 18h16"></path>
-                  </svg>
-                </button>
-              </div>
+      <header class="mb-4">
+        <div class="container mx-auto">
 
-              <!-- Logo/Brand -->
-              <a href="/" class="flex-shrink-0 flex items-center">
-                <div class="text-xl font-bold">{SITE_TITLE}</div>
-              </a>
-
-              <!-- Desktop Navigation -->
-              <div class="hidden md:block">
-                <div class="ml-10 flex items-center space-x-4">
-                  <!-- <a href="/portfolio" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Portfolio</a>
-                  <a href="/photoswipe" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Photoswipe</a>
-                  <a href="/#about" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">About</a>
-                  <a href="/#work" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Work</a>
-                  <a href="/#contact" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Contact</a> -->
-                  <a
-                    href="/sketches"
-                    class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
-                    >Sketches</a
-                  >
-                  <a
-                    href="/blog"
-                    class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
-                    >Blog</a
-                  >
-                  <div class="flex items-center justify-center">
-                    <ThemeToggleButton />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </nav>
-
-          <!-- Mobile menu, show/hide based on menu state -->
-          <div class="md:hidden hidden" id="mobile-menu">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <!-- <a href="/portfolio" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Portfolio</a>
-              <a href="/photoswipe" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Photoswipe</a>
-              <a href="/#about" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">About</a>
-              <a href="/#work" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Work</a>
-              <a href="/#contact" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Contact</a> -->
-              <a
-                href="/blog"
-                class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
-                >Blog</a
-              >
-            </div>
-          </div>
+          <Navbar />
+          
 
           <hr class="mt-2 border-gray-200" />
         </div>
@@ -135,90 +56,21 @@ import { Debug } from "astro:components";
 
       <slot />
 
-      <footer>
-        <div class="container py-4">
-          <hr />
-          <div class="row my-4">
-            <div class="col-md-6">
-              <p>
-                <strong class="d-inline-block mb-1"
-                  >Learner, web developer, and blogger. — JasperYong</strong
-                >
-                <br />
-                Thank you for visiting my website! This blog is a collection of my
-                learnings, experiments, and personal projects. I hope you find something
-                that inspires or resonates with you. Enjoy exploring, and come back
-                soon!
-              </p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col">
-              <div
-                class="d-flex flex-column flex-sm-row justify-content-between"
-              >
-                <p>
-                  <small>&copy; {today.getFullYear()} JasperYong.com</small>
-                </p>
-                <ul class="list-unstyled d-flex">
-                  <li class="ms-3">
-                    <a
-                      class="link-body-emphasis"
-                      href="https://github.com/jasperyzh/"
-                      target="_blank"
-                    >
-                      <i class="bi bi-github"></i>
-                    </a>
-                  </li>
-                  <li class="ms-3">
-                    <a
-                      class="link-body-emphasis"
-                      href="https://www.instagram.com/jasperyzh/"
-                      target="_blank"
-                    >
-                      <i class="bi bi-instagram"></i>
-                    </a>
-                  </li>
-                  <li class="ms-3">
-                    <a
-                      class="link-body-emphasis"
-                      href="https://www.linkedin.com/in/jaspery/"
-                      target="_blank"
-                    >
-                      <i class="bi bi-linkedin"></i>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+
+      <!-- new footer component  -->
+      <Footer />
     </div>
 
-    <!-- PWA Installation Button -->
-    <PWAInstall />
-
-    <script>
-      import "bootstrap/dist/js/bootstrap.bundle.min.js";
-
-      // Add “loaded” class once the document has completely loaded.
-      addEventListener("load", () =>
-        document.documentElement.classList.add("loaded")
-      );
+    <!-- Site-wide initialization script -->
+    <script is:inline>
+      // Initialize microblog animations
+      document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(function () {
+          document.querySelectorAll(".microblog-post").forEach(function (post) {
+            post.classList.add("post-visible");
+          });
+        }, 200);
+      });
     </script>
   </body>
 </html>
-
-<style>
-  html,
-  body {
-    min-height: 100%;
-    margin: 0;
-  }
-  .wrapper {
-    display: grid;
-    grid-template-rows: auto 1fr auto; /* Header, main, and footer rows */
-    min-height: 100vh;
-  }
-</style>

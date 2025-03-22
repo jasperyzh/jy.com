@@ -1,0 +1,32 @@
+---
+// https://github.com/natemoo-re/astro-icon
+// https://github.com/iconify/iconify/tree/main/iconify-icon/icon
+// https://icon-sets.iconify.design/?category=Logos
+import { Icon } from "astro-icon/components";
+
+---
+<div class="container mx-auto">
+  <div class="icons-demo mt-4">
+    <h3>Icon Examples</h3>
+    <!-- Bootstrap Icons (already installed) -->
+
+    <p>
+      <Icon name="bi:house" class="inline-block mb-2" width="48" height="48" /> bi:house
+    </p>
+
+    <p>
+      <Icon name="bi:person" class="inline-block mb-2" width="48" height="48" />
+      bi:person
+    </p>
+
+    <p>
+      <Icon name="bi:github" class="inline-block mb-2" width="48" height="48" />
+      bi:github
+    </p>
+  </div>
+
+  <p>
+    Iconify is the most versatile icon framework.<br />Install more icon sets
+    with: npm i -D @iconify-json/[collection-name]
+  </p>
+</div>

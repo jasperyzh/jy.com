@@ -4,131 +4,133 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 
 <BaseLayout title="The Malaysian Clock - CSS Version">
   <main>
-    <div class="container">
+    <div class="container mx-auto">
       <h1>The Malaysian Clock</h1>
       <p>A sketch of THE Malaysian Favourite Clock.</p>
-    </div>
-    <div class="clock-container">
-      <div class="clock">
-        <div class="outer-ring"></div>
-        <div class="inner-face"></div>
-        <!-- Clock Ticks -->
-        <div class="ticks">
-          <!-- Major ticks (hours) will be created by JavaScript -->
-          <!-- Minor ticks (minutes) will be created by JavaScript -->
+      <div id="the-malaysian-clock">
+        <div class="clock-container">
+          <div class="clock">
+            <div class="outer-ring"></div>
+            <div class="inner-face"></div>
+            <!-- Clock Ticks -->
+            <div class="ticks">
+              <!-- Major ticks (hours) will be created by JavaScript -->
+              <!-- Minor ticks (minutes) will be created by JavaScript -->
+            </div>
+            <!-- Clock Hands -->
+            <div class="hand hour-hand"></div>
+            <div class="hand minute-hand"></div>
+            <div class="hand second-hand"></div>
+          </div>
         </div>
-        <!-- Clock Hands -->
-        <div class="hand hour-hand"></div>
-        <div class="hand minute-hand"></div>
-        <div class="hand second-hand"></div>
       </div>
+      <div id="canvas"></div>
     </div>
-    <div id="canvas"></div>
   </main>
 </BaseLayout>
-
 <style is:global>
-  #canvas {
-    display: inline-block;
-  }
-  .clock-container {
-    width: 512px;
-    height: 512px;
-    justify-content: center;
-    align-items: center;
-  }
+  #the-malaysian-clock {
+    #canvas {
+      display: inline-block;
+    }
+    .clock-container {
+      width: 512px;
+      height: 512px;
+      justify-content: center;
+      align-items: center;
+    }
 
-  .clock {
-    display: grid;
-    grid-template-columns: minmax(180px, 1fr);
-    grid-template-rows: minmax(180px, 1fr);
-    aspect-ratio: 1/1;
-    min-width: 512px;
+    .clock {
+      display: grid;
+      grid-template-columns: minmax(180px, 1fr);
+      grid-template-rows: minmax(180px, 1fr);
+      aspect-ratio: 1/1;
+      min-width: 512px;
 
-    position: relative;
-  }
+      position: relative;
+    }
 
-  .outer-ring {
-    width: 100%;
-    height: 100%;
-    grid-column: 1 / 2;
-    grid-row: 1 / 2;
-    border: 1rem solid red;
-    border-radius: 50%;
-    position: relative;
-  }
+    .outer-ring {
+      width: 100%;
+      height: 100%;
+      grid-column: 1 / 2;
+      grid-row: 1 / 2;
+      border: 1rem solid red;
+      border-radius: 50%;
+      position: relative;
+    }
 
-  .inner-face {
-    width: 100%;
-    height: 100%;
-    grid-column: 1 / 2;
-    grid-row: 1 / 2;
-    /* position: relative; */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background-color: rgb(8, 9, 146);
-    border: 2rem solid white;
-  }
+    .inner-face {
+      width: 100%;
+      height: 100%;
+      grid-column: 1 / 2;
+      grid-row: 1 / 2;
+      /* position: relative; */
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-color: rgb(8, 9, 146);
+      border: 2rem solid white;
+    }
 
-  .hand {
-    position: absolute;
-    top: 39.5%;
-    /* still 39.5% of vague center */
-    left: 50%;
-    transform-origin: 50% 20%; /* Move pivot point slightly down from top edge */
-    background-color: rgb(255, 224, 26);
-    z-index: 10;
-  }
+    .hand {
+      position: absolute;
+      top: 39.5%;
+      /* still 39.5% of vague center */
+      left: 50%;
+      transform-origin: 50% 20%; /* Move pivot point slightly down from top edge */
+      background-color: rgb(255, 224, 26);
+      z-index: 10;
+    }
 
-  .hour-hand {
-    width: 14px;
-    height: 45%; /* Increased height to account for the part that extends beyond center */
-    margin-left: -7px;
-  }
-  .minute-hand {
-    width: 8px;
-    height: 48%; /* Increased height to account for the part that extends beyond center */
-    margin-left: -4px;
-  }
+    .hour-hand {
+      width: 14px;
+      height: 45%; /* Increased height to account for the part that extends beyond center */
+      margin-left: -7px;
+    }
+    .minute-hand {
+      width: 8px;
+      height: 48%; /* Increased height to account for the part that extends beyond center */
+      margin-left: -4px;
+    }
 
-  .second-hand {
-    width: 8px;
-    height: 53%; /* Increased height to account for the part that extends beyond center */
-    margin-left: -4px;
-  }
-  .ticks {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    grid-column: 1 / 2;
-    grid-row: 1 / 2;
-    z-index: 5;
+    .second-hand {
+      width: 8px;
+      height: 53%; /* Increased height to account for the part that extends beyond center */
+      margin-left: -4px;
+    }
+    .ticks {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      grid-column: 1 / 2;
+      grid-row: 1 / 2;
+      z-index: 5;
 
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
-  }
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr;
+    }
 
-  .tick {
-    position: absolute;
-    display: block;
-    width: 4px;
-    height: 8px;
-    background-color: white;
-    transform-origin: center center;
-  }
+    .tick {
+      position: absolute;
+      display: block;
+      width: 4px;
+      height: 8px;
+      background-color: white;
+      transform-origin: center center;
+    }
 
-  .tick.major {
-    width: 6px;
-    height: 15px;
-    background-color: white;
-    z-index: 6;
+    .tick.major {
+      width: 6px;
+      height: 15px;
+      background-color: white;
+      z-index: 6;
+    }
   }
 </style>
-
 <script is:inline>
   // Wait for DOM to be fully loaded
   document.addEventListener("DOMContentLoaded", () => {

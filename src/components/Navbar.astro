@@ -1,0 +1,107 @@
+---
+import { Button } from "@/components/starwind/button";
+import { SITE_TITLE } from "@/consts";
+import ThemeToggleButton from "@/components/ThemeToggle.astro";
+---
+
+<nav class="flex items-center justify-between h-16">
+  <div class="flex items-center justify-between w-full">
+    <!-- Mobile menu button-->
+    <div class="md:hidden">
+      <button
+        type="button"
+        class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+        id="mobile-menu-button"
+      >
+        <span class="sr-only">Open main menu</span>
+        <!-- Menu icon -->
+        <svg
+          class="block h-6 w-6"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Logo/Brand -->
+    <a href="/" class="flex-shrink-0 flex items-center">
+      <div class="text-xl font-bold">{SITE_TITLE}</div>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <div class="hidden md:block">
+      <div class="ml-10 flex items-center space-x-4">
+        <Button
+          href="/portfolio"
+          class="bg-transparent text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800"
+          size="sm">Portfolio</Button
+        >
+        <Button
+          href="/resume"
+          class="bg-transparent text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800"
+          size="sm">Resume</Button
+        >
+        <Button
+          href="/sketches"
+          class="bg-transparent text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800"
+          size="sm">Sketches</Button
+        >
+        <Button
+          href="/blog"
+          class="bg-transparent text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800"
+          size="sm">blog</Button
+        >
+        <Button
+          href="/microblog"
+          class="bg-transparent text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800"
+          size="sm">microblog</Button
+        >
+        <div class="flex items-center justify-center">
+          <ThemeToggleButton />
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile menu, show/hide based on menu state -->
+<div class="md:hidden hidden" id="mobile-menu">
+  <div class="flex flex-col">
+    <Button
+      href="/portfolio"
+      class="bg-transparent text-gray-800 hover:text-gray-200"
+      size="sm">Portfolio</Button
+    >
+    <Button
+      href="/resume"
+      class="bg-transparent text-gray-800 hover:text-gray-200"
+      size="sm">Resume</Button
+    >
+    <Button
+      href="/sketches"
+      class="bg-transparent text-gray-800 hover:text-gray-200"
+      size="sm">Sketches</Button
+    >
+    <Button
+      href="/blog"
+      class="bg-transparent text-gray-800 hover:text-gray-200"
+      size="sm">blog</Button
+    >
+    <Button
+      href="/microblog"
+      class="bg-transparent text-gray-800 hover:text-gray-200"
+      size="sm">microblog</Button
+    >
+  </div>
+</div>

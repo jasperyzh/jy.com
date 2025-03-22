@@ -1,0 +1,26 @@
+---
+import { Switch } from "@/components/starwind/switch";
+---
+
+<Switch id="theme-switch" variant="secondary" label="☀️🌒" />
+
+<script>
+  // https://starwind.dev/docs/components/switch/
+  import type { SwitchChangeEvent } from "@/components/starwind/switch";
+
+  const themeSwitch = document.querySelector("#theme-switch") as HTMLElement;
+
+  const isDark = document.documentElement.classList.contains("dark");
+  themeSwitch.setAttribute("aria-checked", isDark);
+
+  themeSwitch.addEventListener("starwind-switch:change", (e: Event) => {
+    // Get current theme
+    const event = e as SwitchChangeEvent;
+
+    const isDark = document.documentElement.classList.contains("dark");
+    document.documentElement.classList.toggle("dark", !isDark);
+
+    // Update localStorage to persist theme
+    localStorage.setItem("theme", !isDark ? "dark" : "light");
+  });
+</script>

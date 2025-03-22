@@ -1,0 +1,179 @@
+---
+const currentYear = new Date().getFullYear();
+
+interface FooterLink {
+  title: string;
+  items: {
+    text: string;
+    href: string;
+    external?: boolean;
+  }[];
+}
+
+const footerLinks: FooterLink[] = [
+  {
+    title: "Solutions",
+    items: [
+      { text: "Marketing", href: "#" },
+      { text: "Analytics", href: "#" },
+      { text: "Automation", href: "#" },
+      { text: "Commerce", href: "#" },
+      { text: "Insights", href: "#" },
+    ],
+  },
+  {
+    title: "Support",
+    items: [
+      { text: "Submit ticket", href: "#" },
+      { text: "Documentation", href: "#" },
+      { text: "Guides", href: "#" },
+    ],
+  },
+  {
+    title: "Company",
+    items: [
+      { text: "About", href: "#" },
+      { text: "Blog", href: "/blog" },
+      { text: "Jobs", href: "#" },
+      { text: "Press", href: "#" },
+    ],
+  },
+  {
+    title: "Legal",
+    items: [
+      { text: "Terms of service", href: "#" },
+      { text: "Privacy policy", href: "#" },
+      { text: "License", href: "#" },
+    ],
+  },
+];
+
+const socialLinks = [
+  { platform: "facebook", href: "https://facebook.com", icon: "mdi:facebook" },
+  { platform: "instagram", href: "https://www.instagram.com/jasperyzh/", icon: "mdi:instagram" },
+  { platform: "twitter", href: "https://twitter.com", icon: "mdi:twitter" },
+  { platform: "github", href: "https://github.com/jasperyzh/", icon: "mdi:github" },
+  { platform: "youtube", href: "https://youtube.com", icon: "mdi:youtube" },
+];
+---
+
+
+
+<!-- <footer class="mt-4">
+  <div class="container mx-auto">
+    <hr />
+    <div class="row my-4">
+      <div class="col-md-6">
+        <p>
+          <strong class="d-inline-block mb-1 max-w-sm"
+            >Learner, web developer, and blogger. — JasperYong</strong
+          >
+          <br />
+          Thank you for visiting my website! This blog is a collection of my
+          learnings, experiments, and personal projects. I hope you find something
+          that inspires or resonates with you. Enjoy exploring, and come back
+          soon!
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div
+          class="d-flex flex-column flex-sm-row justify-content-between"
+        >
+          <p>
+            <small>&copy; {today.getFullYear()} JasperYong.com</small>
+          </p>
+          <ul class="list-unstyled d-flex">
+            <li class="ms-3">
+              <a
+                class="link-body-emphasis"
+                href="https://github.com/jasperyzh/"
+                target="_blank"
+              >
+                <i class="bi bi-github"></i>
+              </a>
+            </li>
+            <li class="ms-3">
+              <a
+                class="link-body-emphasis"
+                href="https://www.instagram.com/jasperyzh/"
+                target="_blank"
+              >
+                <i class="bi bi-instagram"></i>
+              </a>
+            </li>
+            <li class="ms-3">
+              <a
+                class="link-body-emphasis"
+                href="https://www.linkedin.com/in/jaspery/"
+                target="_blank"
+              >
+                <i class="bi bi-linkedin"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer> -->
+
+<footer class="bg-white border-t border-gray-200 py-12 mt-24">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
+      <div class="md:col-span-2">
+        <div class="flex items-center mb-4">
+          <svg class="h-8 w-auto text-indigo-600" viewBox="0 0 40 40" fill="currentColor">
+            <path d="M20 6.5C14.5 6.5 9.5 9 9.5 15.5C9.5 19.5 11.5 22 14.5 24L12 33.5L20 29L28 33.5L25.5 24C28.5 22 30.5 19.5 30.5 15.5C30.5 9 25.5 6.5 20 6.5Z"></path>
+          </svg>
+          <span class="ml-2 text-xl font-bold text-gray-900">JasperYong</span>
+        </div>
+        <p class="text-gray-600 max-w-md">
+          Making the world a better place through constructing elegant hierarchies.
+        </p>
+        <div class="mt-4 flex space-x-4">
+          {socialLinks.map((link) => (
+            <a 
+              href={link.href} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="text-gray-400 hover:text-gray-500"
+              aria-label={`${link.platform} link`}
+            >
+              <span class="sr-only">{link.platform}</span>
+              <span class="iconify w-5 h-5" data-icon={link.icon}></span>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      {footerLinks.map((section) => (
+        <div>
+          <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase">
+            {section.title}
+          </h3>
+          <ul class="mt-4 space-y-2">
+            {section.items.map((link) => (
+              <li>
+                <a 
+                  href={link.href} 
+                  class="text-base text-gray-600 hover:text-gray-900"
+                  {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                >
+                  {link.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-12 pt-8 border-t border-gray-200">
+      <p class="text-sm text-gray-500">
+        &copy; {currentYear} JasperYong.com. All rights reserved.
+      </p>
+    </div>
+  </div>
+</footer>

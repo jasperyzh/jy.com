@@ -1,5 +1,7 @@
 ---
-import Link from "./Link.astro";
+// import Link from "./Link.astro";
+
+import Button from "@/components/starwind/button";
 
 const { prevUrl, nextUrl } = Astro.props;
 ---
@@ -7,16 +9,16 @@ const { prevUrl, nextUrl } = Astro.props;
 <nav aria-label="pagination">
   {
     prevUrl && (
-      <Link href={prevUrl} class="prev">
+      <Button href={prevUrl} class="prev">
         Newer
-      </Link>
+      </Button>
     )
   }
   {
     nextUrl && (
-      <Link href={nextUrl} class="next">
+      <Button href={nextUrl} class="next">
         Older
-      </Link>
+      </Button>
     )
   }
 </nav>

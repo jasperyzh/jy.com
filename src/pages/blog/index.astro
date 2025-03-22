@@ -12,6 +12,19 @@ import Pagination from "@/components/Pagination.astro";
 import { formatYymmddDate } from "@/utils/formatDate";
 import { Debug } from "astro:components";
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/starwind/card";
+// import { Button } from "@/components/starwind/button";
+import { Badge } from "@/components/starwind/badge";
+
+import { Button } from "@/components/starwind/button";
+
 // Pagination configuration
 export const POSTS_PER_PAGE = 6;
 
@@ -45,33 +58,25 @@ const nextUrl =
 
 <Layout title="Blog - All Posts">
   <main>
-    <section class="container py-4">
+    <section class="container mx-auto">
       <h1 class="mb-4">All Blog Posts</h1>
 
-      <div class="row mb-4">
-        <div class="col-md-12">
-          <TagCloud />
-        </div>
+      <div class="container">
+        <TagCloud />
+        <p>
+          Showing {paginatedPosts.length} of {publishedPosts.length} posts
+          {totalPages > 1 && `(Page ${currentPage} of ${totalPages})`}
+        </p>
       </div>
 
-      <div class="row mb-4">
-        {/* Show count of posts */}
-        <div class="col-md-12">
-          <p class="text-muted">
-            Showing {paginatedPosts.length} of {publishedPosts.length} posts
-            {totalPages > 1 && `(Page ${currentPage} of ${totalPages})`}
-          </p>
-        </div>
-      </div>
-
-      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-4">
+      <div class="container grid grid-cols-4 gap-4">
         {
           paginatedPosts.map((post) => (
-            <div class="col">
-              <div class="card h-100">
-                <div class="card-body">
-                  <h5 class="card-title">{post.data.title}</h5>
-                  <p class="text-muted small">
+            <>
+              <Card class="w-[400px]">
+                <CardHeader>
+                  <CardTitle>{post.data.title}</CardTitle>
+                  <CardDescription>
                     {formatYymmddDate(
                       post.data.pubDate || post.data.date || new Date()
                     ).toLocaleString("default", {
@@ -80,45 +85,31 @@ const nextUrl =
                       day: "numeric",
                     })}
                     {/* {formatYymmddDate(post.data.pubDate || post.data.date || new Date()).toLocaleDateString()} */}
-                  </p>
-                  <p class="card-text">
+                    <br />
                     {post.data.description || "No description available"}
-                  </p>
+                  </CardDescription>
+                </CardHeader>
+                <CardContent class="flex flex-col gap-4">
+                  {/* <div class="flex w-full flex-col gap-2">test</div> */}
                   <div class="card-tags mb-2">
                     {post.data.tags &&
                       post.data.tags.map((tag) => (
-                        <a
-                          href={`/tags/${tag}`}
-                          class="tag badge bg-primary me-2 text-decoration-none"
-                          key={tag}
-                        >
-                          {tag}
-                        </a>
+                        <Badge href={`/tags/${tag}`}>{tag}</Badge>
                       ))}
                   </div>
-                  <a
-                    class="stretched-link"
-                    href={`/blog/${post.id}`}
-                    aria-label={`Read ${post.data.title}`}
-                  />
-                </div>
-              </div>
-            </div>
+                </CardContent>
+                <CardFooter class="flex justify-between">
+                  <Button href={`/blog/${post.id}`}>Read</Button>
+                </CardFooter>
+              </Card>
+            </>
           ))
         }
       </div>
-
-      {/* Pagination controls */}
-      {
-        (prevUrl || nextUrl) && (
-          <div class="row">
-            <div class="col-md-12">
-              <Pagination {prevUrl} {nextUrl} />
-            </div>
-          </div>
-        )
-      }
     </section>
+
+    {/* Pagination controls */}
+    {(prevUrl || nextUrl) && <Pagination {prevUrl} {nextUrl} />}
   </main>
 </Layout>
 
