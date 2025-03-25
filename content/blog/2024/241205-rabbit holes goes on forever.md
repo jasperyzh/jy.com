@@ -2,7 +2,7 @@
 pubDate: 241012
 title: rabbit holes goes on forever 2
 description: An exploration of 'Keep it Simple, Essential'—a step beyond the KISS principle. Learn how this approach helps identify what truly matters and why I adopted it.
-tags: ["WebDevelopment", "FrontendDevelopment", "DIY", "Content", "test"]
+tags: ["WebDevelopment", "FrontendDevelopment", "DIY", "Content"]
 draft: 0
 ---
 

@@ -10,8 +10,12 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 
 import icon from "astro-icon";
-
 import react from "@astrojs/react";
+
+// Import our custom YouTube markdown plugin
+import { remarkYouTubeEmbed } from "./src/utils/youtube-markdown-plugin.js";
+
+import mdx from "@astrojs/mdx";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -38,12 +42,13 @@ export default defineConfig({
   site: "https://jasperyong.com",
   markdown: {
     syntaxHighlight: "prism",
+    remarkPlugins: [remarkYouTubeEmbed],
   },
   // base: '/',
 
   integrations: [// mdx(),
   // PWA integration removed
-  vue(), sitemap(), icon(), react()],
+  vue(), sitemap(), icon(), react(), mdx()],
   vite: {
     plugins: [tailwindcss()],
     css: {

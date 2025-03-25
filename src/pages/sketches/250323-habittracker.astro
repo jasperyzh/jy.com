@@ -1,0 +1,14 @@
+---
+// Habit Tracker App with AstroJS and VueJS
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import HabitTracker from '@/components/habittracker/HabitTracker.vue';
+---
+
+<BaseLayout title="Habit Tracker" description="Track your daily habits and build consistency">
+  <main class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6 text-center">Habit Tracker</h1>
+    <div class="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+      <HabitTracker client:load />
+    </div>
+  </main>
+</BaseLayout>

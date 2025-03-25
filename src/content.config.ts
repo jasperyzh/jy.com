@@ -8,9 +8,7 @@ import { formatYymmddDate } from "@/utils/formatDate";
 const ob_blog = defineCollection({
   loader: glob({
     pattern: "**/*.md",
-    base: import.meta.env.DEV
-      ? "/home/matsu/Documents/_note/_note/blog"
-      : "./content/blog",
+    base: "./content/blog",
   }),
   schema: z.object({
     title: z.string(), // The title of the post

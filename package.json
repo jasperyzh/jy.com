@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
+    "@astrojs/mdx": "^4.2.1",
     "@astrojs/react": "^4.2.1",
     "@astrojs/rss": "4.0.11",
     "@astrojs/sitemap": "^3.3.0",
@@ -28,6 +29,7 @@
     "better-sqlite3": "^11.9.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "lucide-react": "^0.483.0",
     "photoswipe": "^5.4.4",
     "pinia": "^3.0.1",

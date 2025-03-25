@@ -7,7 +7,7 @@ import { getCollection, render } from "astro:content";
 import Layout from "@/layouts/BaseLayout.astro";
 import ReturnButton from "@/components/ReturnButton.astro";
 import FormattedDate from "@/components/FormattedDate.astro";
-import CacheCurrentPage from "@/components/CacheCurrentPage.astro";
+
 
 // Generate static paths for all microblog posts
 export async function getStaticPaths() {
@@ -154,8 +154,6 @@ const ogImage = entry.data.media?.[0]?.url || '/placeholder.png';
     </article>
   </main>
   
-  <!-- Cache this page for offline use -->
-  <CacheCurrentPage />
 </Layout>
 
 <style>

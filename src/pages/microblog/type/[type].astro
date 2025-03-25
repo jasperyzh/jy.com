@@ -11,27 +11,60 @@ import { getCollection } from "astro:content";
 export async function getStaticPaths() {
   // Define valid content types
   const VALID_TYPES = ["text", "image", "video", "mixed"];
-  
+
   return VALID_TYPES.map((type) => ({
-    params: { type },
-    props: { type },
+    params: { type }, // This creates the route parameter
+    props: { type }, // This passes the parameter as a prop
   }));
 }
 
+// Method 1: Get from props (recommended way)
 const { type } = Astro.props;
+
+// Method 2: Get from URL params (alternative way)
+const urlType = Astro.params.type;
+
+// Method 3: Get from current URL path
+const currentPath = Astro.url.pathname;
+const typeFromPath = currentPath.split("/").pop();
+
+console.log("Type from props:", type);
+console.log("Type from params:", urlType);
+console.log("Type from path:", typeFromPath);
 
 // Get all microblog posts
 const allPosts = await getCollection("microblog");
 
+// Debug all posts
+/* console.log('All posts found:', allPosts.map(post => ({ 
+  id: post.id, 
+  contentType: post.data.contentType || 'text',
+  draft: post.data.draft,
+  isPrivate: post.data.isPrivate
+}))); */
+
 // Filter posts by content type and draft status
 const filteredPosts = allPosts.filter((post) => {
   // Filter out drafts and private posts in production
-  const isPublished = !import.meta.env.PROD || 
-    (!post.data.draft && !post.data.isPrivate);
-  
-  // Filter by content type
-  const matchesType = post.data.contentType === type;
-  
+  const isPublished =
+    !import.meta.env.PROD || (!post.data.draft && !post.data.isPrivate);
+
+  // Filter by content type - ensure we handle missing contentType by defaulting to 'text'
+  const postType = post.data.contentType || "text";
+
+  // Debug the type values
+  // console.log(`Post: ${post.id}, Post Type: ${postType}, Filter Type: ${type}`);
+
+  // Important: Add null checks before toLowerCase() to prevent errors
+  const postTypeLower =
+    typeof postType === "string" ? postType.toLowerCase() : "text";
+  const typeLower = typeof typeFromPath === "string" ? typeFromPath.toLowerCase() : "";
+
+  const matchesType = postTypeLower === typeLower;
+
+  // console.log(`Post: ${post.id}, Type: ${postType}, Filter: ${type}, Matches: ${matchesType}, Published: ${isPublished}`);
+  console.log("Matches type:", postTypeLower, typeLower);
+
   return isPublished && matchesType;
 });
 
@@ -45,60 +78,95 @@ const sortedPosts = filteredPosts.sort((a, b) => {
 // Get display name for the content type
 const getTypeDisplayName = (type) => {
   switch (type) {
-    case "text": return "Text Posts";
-    case "image": return "Image Posts";
-    case "video": return "Video Posts";
-    case "mixed": return "Mixed Content";
-    default: return "Posts";
+    case "text":
+      return "Text Posts";
+    case "image":
+      return "Image Posts";
+    case "video":
+      return "Video Posts";
+    case "mixed":
+      return "Mixed Content";
+    default:
+      return "Posts";
   }
 };
 
 const typeDisplayName = getTypeDisplayName(type);
 ---
 
-<Layout 
-  title={`Microblog - ${typeDisplayName}`} 
+<Layout
+  title={`Microblog - ${typeDisplayName}`}
   description={`Microblog posts with ${type} content`}
 >
-  <main class="container py-4">
-    <section>
-      <h1 class="mb-2">Microblog</h1>
-      <h2 class="filter-title mb-4">
-        {type === "text" && <i class="bi bi-file-text me-1"></i>}
-        {type === "image" && <i class="bi bi-image me-1"></i>}
-        {type === "video" && <i class="bi bi-film me-1"></i>}
-        {type === "mixed" && <i class="bi bi-collection me-1"></i>}
-        {typeDisplayName}
-      </h2>
-      
-      <MicroblogFeed 
+  <main>
+    <div class="twitter-header">
+      <div class="header-content">
+        <h1>Microblog</h1>
+        <h2 class="filter-title">
+          {type === "text" && <i class="bi bi-file-text me-1" />}
+          {type === "image" && <i class="bi bi-image me-1" />}
+          {type === "video" && <i class="bi bi-film me-1" />}
+          {type === "mixed" && <i class="bi bi-collection me-1" />}
+          {typeDisplayName}
+        </h2>
+      </div>
+    </div>
+
+    <div class="twitter-container">
+      <MicroblogFeed
         posts={sortedPosts}
         showFilters={true}
         currentFilter={type}
       />
-    </section>
+    </div>
   </main>
 </Layout>
 
 <style>
-  h1 {
-    font-size: 2.5rem;
+  main {
+    max-width: 100%;
   }
-  
+
+  .twitter-header {
+    background-color: #1da1f2;
+    color: white;
+    padding: 2rem 0;
+  }
+
+  .header-content {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
   .filter-title {
-    font-size: 1.5rem;
-    color: #444;
+    font-size: 1.3rem;
+    font-weight: normal;
+    color: rgba(255, 255, 255, 0.9);
     display: flex;
     align-items: center;
+    margin-top: 0.5rem;
   }
-  
+
+  .twitter-container {
+    padding: 1rem 0;
+    background-color: #f7f9fa;
+    min-height: calc(100vh - 180px);
+  }
+
   @media (max-width: 768px) {
     h1 {
-      font-size: 2rem;
+      font-size: 1.75rem;
     }
-    
+
     .filter-title {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
     }
   }
 </style>
@@ -106,9 +174,10 @@ const typeDisplayName = getTypeDisplayName(type);
 <script>
   // Import Bootstrap icons if not already loaded
   if (!document.querySelector('link[href*="bootstrap-icons"]')) {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css';
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href =
+      "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css";
     document.head.appendChild(link);
   }
 </script>
