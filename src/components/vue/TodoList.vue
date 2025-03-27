@@ -1,6 +1,19 @@
 <template>
   <div class="todo-list">
-    <StorageSwitcher />
+    
+    <div class="storage-switcher mb-4 p-4 bg-gray-100 rounded-lg">
+    <h3 class="text-lg font-medium mb-2">Storage Mode</h3>
+    <p class="mt-2 text-sm text-gray-600">
+      {{ useSqlite ? 
+        'Using server API with SQLite backend' : 
+        'Using localStorage for browser-based storage' 
+      }}
+    </p>
+    <p v-if="useSqlite && isPreview" class="mt-2 text-xs text-amber-600">
+      Note: SQLite mode requires Astro's SSR enabled. If you're seeing errors, you may be in static mode.
+    </p>
+  </div>
+  
     
     <div v-if="apiError" class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
       <p>{{ apiErrorMessage }}</p>
@@ -56,15 +69,14 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
 import { useTodoStore } from '../../stores/todo';
-import { useTodoSqliteStore } from '../../stores/todo-sqlite';
+// import { useTodoSqliteStore } from '../../stores/todo-sqlite';
 import { useStorageStore } from '../../stores/storage';
 import { pinia } from '../../pinia-plugin';
 import TodoItem from './TodoItem.vue';
-import StorageSwitcher from './StorageSwitcher.vue';
 
 // Initialize Pinia stores using our pinia instance
 const localTodoStore = useTodoStore(pinia);
-const sqliteTodoStore = useTodoSqliteStore(pinia);
+// const sqliteTodoStore = useTodoSqliteStore(pinia);
 const storageStore = useStorageStore(pinia);
 
 // Use computed to get the active store based on preference

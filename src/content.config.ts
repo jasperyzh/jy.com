@@ -8,7 +8,7 @@ import { formatYymmddDate } from "@/utils/formatDate";
 const ob_blog = defineCollection({
   loader: glob({
     pattern: "**/*.md",
-    base: "./content/blog",
+    base: "./src/content/blog",
   }),
   schema: z.object({
     title: z.string(), // The title of the post
@@ -35,7 +35,7 @@ const ob_blog = defineCollection({
 const microblog = defineCollection({
   loader: glob({
     pattern: "**/*.md",
-    base: "./content/microblog",
+    base: "./src/content/microblog",
   }),
   schema: z.object({
     // Optional title since not all microblog posts need a title
