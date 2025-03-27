@@ -1,155 +1,157 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { audioPlayer } from "@/scripts/custom-tone.js";
+import { audioPlayer } from "@/utils/custom-tone.js";
 ---
 
 <BaseLayout title="Wheel of Fortune">
-  <main>
+  <main class="container mx-auto">
     <h1>Wheel of Fortune</h1>
 
-    <div id="app"></div>
-    <div id="confetti-container"></div>
+    <div class="wheel-fortune">
+      <div id="app"></div>
+      <div id="confetti-container"></div>
 
-    <!-- Volume Control UI -->
-    <div class="audio-controls">
-      <label for="volume-slider">Volume:</label>
-      <input type="range" id="volume-slider" min="0" max="100" value="40" />
-      <button id="mute-toggle">🔊</button>
+      <!-- Volume Control UI -->
+      <div class="audio-controls">
+        <label for="volume-slider">Volume:</label>
+        <input type="range" id="volume-slider" min="0" max="100" value="40" />
+        <button id="mute-toggle">🔊</button>
+      </div>
     </div>
   </main>
 </BaseLayout>
-<!-- 
 <style is:global>
-  .wheel-container {
-    position: relative;
-    margin: 20px auto;
-    width: 300px;
-    height: 300px;
-  }
-
-  .wheel {
-    position: relative;
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    border: 5px solid #333;
-    transform-origin: 50% 50%;
-    transition: transform 5s ease-out;
-    overflow: hidden;
-  }
-
-  /* Each segment forms a wedge. */
-  .segment {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    transform-origin: 50% 50%;
-    clip-path: polygon(50% 50%, 0% 0%, 50% 0%);
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-  }
-
-  .segment-text {
-    transform: rotate(90deg) translate(-10px, -8px);
-    transform-origin: 0% bottom;
-    margin-top: 0px;
-    font-size: 14px;
-    font-weight: bold;
-    text-align: center;
-    width: 60px;
-  }
-
-  .pointer {
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-left: 15px solid transparent;
-    border-right: 15px solid transparent;
-    border-bottom: 25px solid red;
-    top: -10px;
-    left: 50%;
-    transform: translateX(-31%) rotate(-180deg);
-    z-index: 10;
-  }
-
-  button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-  }
-
-  button:hover:not(:disabled) {
-    background-color: #45a049;
-  }
-
-  button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-  }
-
-  .result {
-    margin-top: 20px;
-    text-align: center;
-    position: relative;
-  }
-
-  #confetti-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    overflow: hidden;
-    z-index: 999;
-  }
-
-  .confetti-piece {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    animation: fall 3s linear forwards;
-    opacity: 0;
-  }
-
-  @keyframes fall {
-    0% {
-      transform: translateY(-50px) rotate(0deg);
-      opacity: 1;
+  .wheel-fortune {
+    .wheel-container {
+      position: relative;
+      margin: 20px auto;
+      width: 300px;
+      height: 300px;
     }
 
-    100% {
-      transform: translateY(100vh) rotate(360deg);
+    .wheel {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      border: 5px solid #333;
+      transform-origin: 50% 50%;
+      transition: transform 5s ease-out;
+      overflow: hidden;
+    }
+
+    /* Each segment forms a wedge. */
+    .segment {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      transform-origin: 50% 50%;
+      clip-path: polygon(50% 50%, 0% 0%, 50% 0%);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .segment-text {
+      transform: rotate(90deg) translate(-10px, -8px);
+      transform-origin: 0% bottom;
+      margin-top: 0px;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+      width: 60px;
+    }
+
+    .pointer {
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-bottom: 25px solid red;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-31%) rotate(-180deg);
+      z-index: 10;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover:not(:disabled) {
+      background-color: #45a049;
+    }
+
+    button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+
+    .result {
+      margin-top: 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    #confetti-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 999;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      animation: fall 3s linear forwards;
       opacity: 0;
     }
-  }
 
-  .audio-controls {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 10px;
-    border-radius: 5px;
-    z-index: 100;
-  }
+    @keyframes fall {
+      0% {
+        transform: translateY(-50px) rotate(0deg);
+        opacity: 1;
+      }
 
-  .audio-controls button {
-    margin: 0;
-    padding: 5px 10px;
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .audio-controls {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 10px;
+      border-radius: 5px;
+      z-index: 100;
+    }
+
+    .audio-controls button {
+      margin: 0;
+      padding: 5px 10px;
+    }
   }
 </style>
- -->
 <script>
   // Import Vue in the client-side script
   import {
@@ -158,7 +160,7 @@ import { audioPlayer } from "@/scripts/custom-tone.js";
     computed,
     onUnmounted,
   } from "vue/dist/vue.esm-bundler.js";
-  import { audioPlayer } from "@/scripts/custom-tone.js";
+  import { audioPlayer } from "@/utils/custom-tone.js";
 
   // Create a wheel of fortune component
   const WheelOfFortune = {
@@ -221,10 +223,13 @@ import { audioPlayer } from "@/scripts/custom-tone.js";
         }
 
         // Play spin sound
-        audioPlayer.playMelody([
-          { note: "G3", duration: "8n" },
-          { note: "C4", duration: "8n" }
-        ], 240); // Faster tempo for quick sound effect
+        audioPlayer.playMelody(
+          [
+            { note: "G3", duration: "8n" },
+            { note: "C4", duration: "8n" },
+          ],
+          240
+        ); // Faster tempo for quick sound effect
 
         const spins = Math.floor(Math.random() * 5) + 5; // Random spins: 5 to 9
         const randomAngle = Math.random() * 360; // Random offset angle

@@ -1,4 +1,7 @@
 ---
+/* 
+throws errors
+
 import {
   Select,
   SelectContent,
@@ -8,7 +11,7 @@ import {
   SelectSeparator,
   SelectTrigger,
   SelectValue,
-} from "@/components/starwind/select";
+} from "@/components/starwind/select"; */
 import { Label } from "@/components/starwind/label";
 import { Input } from "@/components/starwind/input";
 
@@ -24,7 +27,7 @@ const display_title = sketch_title ? sketch_title : slug;
     <div class="my-4">
 
       <div class="filter-container">
-        <Select id="filter-select" class="filter-select">
+        <!-- <Select id="filter-select" class="filter-select">
           <SelectTrigger class="w-[180px]">
             <SelectValue placeholder="Select Filter" />
           </SelectTrigger>
@@ -59,10 +62,10 @@ const display_title = sketch_title ? sketch_title : slug;
               <SelectItem value="Zoom Blur">Zoom Blur</SelectItem>
             </SelectGroup>
           </SelectContent>
-        </Select>
+        </Select> -->
 
         <!-- Fallback filter buttons in case the Select component has issues -->
-        <!-- <div class="filter-buttons" style="display: none; margin-top: 10px;">
+        <div class="filter-buttons" style="margin-top: 10px;">
           <p>Manual Filter Selection:</p>
           <div class="button-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 5px;">
             <button class="filter-button" data-filter="None">None</button>
@@ -72,7 +75,7 @@ const display_title = sketch_title ? sketch_title : slug;
             <button class="filter-button" data-filter="Blur">Blur</button>
             <button class="filter-button" data-filter="Glow">Glow</button>
           </div>
-        </div> -->
+        </div>
       </div>
       <h3 id="current-filter" class="my-4">Current Filter: None</h3>
       

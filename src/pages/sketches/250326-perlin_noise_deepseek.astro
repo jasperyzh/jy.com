@@ -1,0 +1,482 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const sketch_title = "Organic Symphony";
+---
+
+<BaseLayout title={sketch_title}>
+  <script
+    is:inline
+    src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+  <style>
+    #controls {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 15px;
+      border-radius: 8px;
+      color: white;
+      font-family: "Courier New", monospace;
+      max-width: 300px;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    button,
+    select {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 8px 12px;
+      margin: 5px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    button:hover,
+    select:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    input[type="range"] {
+      width: 100%;
+      margin: 8px 0;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    .slider-container {
+      margin-bottom: 15px;
+    }
+    h3 {
+      margin-top: 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      padding-bottom: 8px;
+    }
+    #presets {
+      margin-top: 15px;
+    }
+  </style>
+    <div id="myCanvas"></div>
+
+  <div id="controls">
+    <h3>Organic Symphony</h3>
+
+
+    <div class="slider-container">
+      <label for="noiseScale"
+        >Noise Scale: <span id="noiseScaleValue">0.02</span></label
+      >
+      <input
+        type="range"
+        id="noiseScale"
+        min="0.001"
+        max="0.05"
+        step="0.001"
+        value="0.02"
+      />
+    </div>
+
+    <div class="slider-container">
+      <label for="speed">Flow Speed: <span id="speedValue">0.5</span></label>
+      <input type="range" id="speed" min="0.1" max="2" step="0.1" value="0.5" />
+    </div>
+
+    <div class="slider-container">
+      <label for="particleCount"
+        >Particle Density: <span id="particleCountValue">200</span></label
+      >
+      <input
+        type="range"
+        id="particleCount"
+        min="50"
+        max="500"
+        step="10"
+        value="200"
+      />
+    </div>
+
+    <div class="slider-container">
+      <label for="gridSize">Grid Size: <span id="gridSizeValue">30</span></label
+      >
+      <input type="range" id="gridSize" min="10" max="60" step="2" value="30" />
+    </div>
+
+    <div>
+      <button id="newSeed">New Seed</button>
+      <button id="save">Save Image</button>
+      <button id="toggleGrid">Hide Grid</button>
+    </div>
+
+    <div id="presets">
+      <label for="presetSelect">Presets:</label>
+      <select id="presetSelect">
+        <option value="default">Default</option>
+        <option value="chaos">Controlled Chaos</option>
+        <option value="serene">Serene Flow</option>
+        <option value="vibrant">Vibrant Grid</option>
+        <option value="minimal">Minimalist</option>
+      </select>
+    </div>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  let canvas;
+  let gridSize = 30;
+  let noiseScale = 0.02;
+  let flowSpeed = 0.5;
+  let seed;
+  let particles = [];
+  let particleCount = 200;
+  let showGrid = true;
+  let colorTheme = "default";
+  let bgColor;
+  let lastFrameTime = 0;
+  const fpsLimit = 30;
+  const fpsInterval = 1000 / fpsLimit;
+
+  function setup() {
+    canvas = createCanvas(windowWidth, windowHeight);
+    canvas.parent("myCanvas");
+
+    // createCanvas(windowWidth, windowHeight);
+    colorMode(HSB, 360, 100, 100, 1);
+    pixelDensity(1);
+    bgColor = color(0, 0, 10);
+
+    initializeArt();
+    setupControls();
+  }
+
+  function initializeArt() {
+    seed = floor(random(100000));
+    noiseSeed(seed);
+    randomSeed(seed);
+
+    // Create particles
+    particles = [];
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(createParticle());
+    }
+
+    // Initial background
+    drawNoiseBackground();
+  }
+
+  function createParticle() {
+    return {
+      pos: createVector(random(width), random(height)),
+      prevPos: createVector(random(width), random(height)),
+      hue: getThemeHue(),
+      life: random(100, 200),
+      maxLife: random(100, 200),
+      size: random(1, 3),
+      speed: random(1, 3),
+    };
+  }
+
+  function getThemeHue() {
+    switch (colorTheme) {
+      case "chaos":
+        return random(360);
+      case "serene":
+        return random(180, 240);
+      case "vibrant":
+        return random(0, 60);
+      case "minimal":
+        return 200;
+      default:
+        return random(360);
+    }
+  }
+
+  function draw() {
+    const now = performance.now();
+    const elapsed = now - lastFrameTime;
+
+    if (elapsed > fpsInterval) {
+      lastFrameTime = now - (elapsed % fpsInterval);
+
+      // Fade background for motion trails
+      background(bgColor.levels[0], bgColor.levels[1], bgColor.levels[2], 10);
+
+      // Draw grid layer if enabled
+      if (showGrid) {
+        drawOrganicGrid();
+      }
+
+      // Update and draw flow field
+      updateFlowField();
+    }
+  }
+
+  function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+    drawNoiseBackground();
+  }
+
+  function drawNoiseBackground() {
+    push();
+    noStroke();
+    for (let x = 0; x < width; x += 2) {
+      for (let y = 0; y < height; y += 2) {
+        let n = noise(x * 0.01, y * 0.01);
+        fill(0, 0, map(n, 0, 1, 5, 15), 0.8);
+        rect(x, y, 2, 2);
+      }
+    }
+    pop();
+  }
+
+  function drawOrganicGrid() {
+    push();
+    noStroke();
+
+    for (let x = 0; x < width; x += gridSize) {
+      for (let y = 0; y < height; y += gridSize) {
+        // Multiple noise layers for varied effects
+        let hueNoise = noise(x * noiseScale, y * noiseScale);
+        let sizeNoise = noise(x * noiseScale * 1.3 + 100, y * noiseScale * 1.3);
+        let rotNoise = noise(x * noiseScale * 0.7 + 200, y * noiseScale * 0.7);
+        let shapeNoise = noise(x * noiseScale * 2 + 300, y * noiseScale * 2);
+        let brightnessNoise = noise(
+          x * noiseScale * 0.5 + 400,
+          y * noiseScale * 0.5
+        );
+
+        // Map noise to properties with theme variations
+        let hue, sat, bri, size, angle;
+
+        switch (colorTheme) {
+          case "chaos":
+            hue = map(hueNoise, 0, 1, 0, 360);
+            sat = map(sizeNoise, 0, 1, 70, 100);
+            bri = map(brightnessNoise, 0, 1, 50, 90);
+            size = map(pow(sizeNoise, 3), 0, 1, gridSize * 0.2, gridSize * 0.9);
+            break;
+          case "serene":
+            hue = map(hueNoise, 0, 1, 180, 240);
+            sat = 40;
+            bri = map(brightnessNoise, 0, 1, 40, 70);
+            size = map(sizeNoise, 0, 1, gridSize * 0.3, gridSize * 0.7);
+            break;
+          case "vibrant":
+            hue = map(hueNoise, 0, 1, 0, 120);
+            sat = 80;
+            bri = 70 + brightnessNoise * 20;
+            size = map(pow(sizeNoise, 2), 0, 1, gridSize * 0.4, gridSize);
+            break;
+          case "minimal":
+            hue = 200;
+            sat = 10;
+            bri = map(brightnessNoise, 0, 1, 30, 70);
+            size = map(sizeNoise, 0, 1, gridSize * 0.2, gridSize * 0.5);
+            break;
+          default:
+            hue = map(hueNoise, 0, 1, 150, 300);
+            sat = 60 + sizeNoise * 30;
+            bri = map(brightnessNoise, 0, 1, 40, 90);
+            size = map(sizeNoise, 0, 1, gridSize * 0.3, gridSize * 0.8);
+        }
+
+        angle = rotNoise * TWO_PI;
+        let alpha = map(size, gridSize * 0.2, gridSize * 0.9, 0.5, 0.9);
+
+        push();
+        translate(x + gridSize / 2, y + gridSize / 2);
+        rotate(angle);
+        fill(hue, sat, bri, alpha);
+
+        // Multiple shape types with different probabilities
+        if (shapeNoise < 0.3) {
+          ellipse(0, 0, size, size);
+        } else if (shapeNoise < 0.6) {
+          triangle(-size / 2, size / 2, size / 2, size / 2, 0, -size / 2);
+        } else if (shapeNoise < 0.9) {
+          rectMode(CENTER);
+          rect(0, 0, size * 0.8, size * 0.8, size * 0.2);
+        } else {
+          beginShape();
+          for (let i = 0; i < 5; i++) {
+            let a = (i * TWO_PI) / 5;
+            let r = size * 0.4;
+            vertex(r * cos(a), r * sin(a));
+          }
+          endShape(CLOSE);
+        }
+        pop();
+      }
+    }
+    pop();
+  }
+
+  function updateFlowField() {
+    for (let p of particles) {
+      // Store previous position
+      p.prevPos.set(p.pos.x, p.pos.y);
+
+      // Get noise-based angle from 3D noise (including time)
+      let angle =
+        noise(
+          p.pos.x * noiseScale * 0.5,
+          p.pos.y * noiseScale * 0.5,
+          frameCount * 0.005 * flowSpeed
+        ) *
+        TWO_PI *
+        4;
+
+      // Add some randomness to the angle for more organic motion
+      angle +=
+        (noise(p.pos.x * noiseScale * 2, frameCount * 0.003) * PI) / 4 - PI / 8;
+
+      // Move particle
+      let vel = p5.Vector.fromAngle(angle);
+      vel.mult(p.speed * flowSpeed);
+      p.pos.add(vel);
+      p.life--;
+
+      // Draw particle trail with theme-based colors
+      let trailAlpha = map(p.life, 0, p.maxLife, 0.1, 0.4);
+      let trailColor;
+
+      switch (colorTheme) {
+        case "serene":
+          trailColor = color(p.hue, 40, 90, trailAlpha);
+          break;
+        case "vibrant":
+          trailColor = color(p.hue, 80, 100, trailAlpha);
+          break;
+        case "minimal":
+          trailColor = color(200, 15, 100, trailAlpha * 0.5);
+          break;
+        default:
+          trailColor = color(p.hue, 70, 90, trailAlpha);
+      }
+
+      stroke(trailColor);
+      strokeWeight(p.size);
+      line(p.prevPos.x, p.prevPos.y, p.pos.x, p.pos.y);
+
+      // Particle renewal
+      if (
+        p.pos.x < -20 ||
+        p.pos.x > width + 20 ||
+        p.pos.y < -20 ||
+        p.pos.y > height + 20 ||
+        p.life <= 0
+      ) {
+        // Fade out particles near the edge
+        if (
+          !(p.pos.x < 0 || p.pos.x > width || p.pos.y < 0 || p.pos.y > height)
+        ) {
+          let fadeParticle = createParticle();
+          Object.assign(p, fadeParticle);
+        } else {
+          // Create new particle from edge
+          let newP = createParticle();
+          if (random() < 0.5) {
+            newP.pos.x = random([-10, width + 10]);
+            newP.pos.y = random(height);
+          } else {
+            newP.pos.y = random([-10, height + 10]);
+            newP.pos.x = random(width);
+          }
+          Object.assign(p, newP);
+        }
+      }
+    }
+  }
+
+  function setupControls() {
+    // Value displays
+    document.getElementById("noiseScale").addEventListener("input", (e) => {
+      noiseScale = parseFloat(e.target.value);
+      document.getElementById("noiseScaleValue").textContent =
+        noiseScale.toFixed(3);
+    });
+
+    document.getElementById("speed").addEventListener("input", (e) => {
+      flowSpeed = parseFloat(e.target.value);
+      document.getElementById("speedValue").textContent = flowSpeed.toFixed(1);
+    });
+
+    document.getElementById("particleCount").addEventListener("input", (e) => {
+      let newCount = parseInt(e.target.value);
+      if (newCount > particleCount) {
+        // Add particles
+        for (let i = particleCount; i < newCount; i++) {
+          particles.push(createParticle());
+        }
+      } else if (newCount < particleCount) {
+        // Remove particles
+        particles.length = newCount;
+      }
+      particleCount = newCount;
+      document.getElementById("particleCountValue").textContent = particleCount;
+    });
+
+    document.getElementById("gridSize").addEventListener("input", (e) => {
+      gridSize = parseInt(e.target.value);
+      document.getElementById("gridSizeValue").textContent = gridSize;
+    });
+
+    // Buttons
+    document.getElementById("newSeed").addEventListener("click", () => {
+      initializeArt();
+    });
+
+    document.getElementById("save").addEventListener("click", () => {
+      saveCanvas("organic-symphony-" + seed, "png");
+    });
+
+    document
+      .getElementById("toggleGrid")
+      .addEventListener("click", function () {
+        showGrid = !showGrid;
+        this.textContent = showGrid ? "Hide Grid" : "Show Grid";
+      });
+
+    // Presets
+    document.getElementById("presetSelect").addEventListener("change", (e) => {
+      colorTheme = e.target.value;
+
+      switch (colorTheme) {
+        case "chaos":
+          bgColor = color(0, 0, 5);
+          noiseScale = 0.015;
+          flowSpeed = 0.8;
+          break;
+        case "serene":
+          bgColor = color(200, 30, 15);
+          noiseScale = 0.025;
+          flowSpeed = 0.3;
+          break;
+        case "vibrant":
+          bgColor = color(0, 0, 10);
+          noiseScale = 0.02;
+          flowSpeed = 0.5;
+          break;
+        case "minimal":
+          bgColor = color(0, 0, 20);
+          noiseScale = 0.03;
+          flowSpeed = 0.2;
+          break;
+        default:
+          bgColor = color(0, 0, 10);
+          noiseScale = 0.02;
+          flowSpeed = 0.5;
+      }
+
+      // Update slider displays
+      document.getElementById("noiseScale").value = noiseScale;
+      document.getElementById("noiseScaleValue").textContent =
+        noiseScale.toFixed(3);
+      document.getElementById("speed").value = flowSpeed;
+      document.getElementById("speedValue").textContent = flowSpeed.toFixed(1);
+
+      // Reinitialize with new theme
+      initializeArt();
+    });
+  }
+</script>
