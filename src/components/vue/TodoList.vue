@@ -69,10 +69,13 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
 import { useTodoStore } from '../../stores/todo';
-// import { useTodoSqliteStore } from '../../stores/todo-sqlite';
 import { useStorageStore } from '../../stores/storage';
-import { pinia } from '../../pinia-plugin';
 import TodoItem from './TodoItem.vue';
+
+import { createPinia } from 'pinia';
+
+// Create and export Pinia instance
+const pinia = createPinia();
 
 // Initialize Pinia stores using our pinia instance
 const localTodoStore = useTodoStore(pinia);

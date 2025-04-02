@@ -1,0 +1,234 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout>
+  <main class="container mx-auto">
+    <h1>Flow Arrow</h1>
+
+    <!-- p5.js core library -->
+    <script
+      is:inline
+      src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+    <!-- p5.js DOM library (for createButton, etc.) -->
+    <script
+      is:inline
+      src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.dom.min.js"
+    ></script>
+    <!-- dat.GUI library -->
+    <script
+      is:inline
+      src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.min.js"
+    ></script>
+    <!-- p5.svg library -->
+    <script
+      is:inline
+      src="https://cdn.jsdelivr.net/npm/p5.js-svg@1.5.1/dist/p5.svg.min.js"
+    ></script>
+    <!-- Your sketch file -->
+    <div id="p5js-canvas"></div>
+  </main>
+</BaseLayout>
+
+<script is:inline>
+  // --- Parameters ---
+  let params = {
+    numLines: 180, // Number of lines to draw
+    minLineLength: 30, // Minimum length of a line
+    maxLineLength: 250, // Maximum length of a line
+    flowStrength: 60,  // How strongly the flow field pushes the curve (Increased default)
+    randomCurvature: 5, // Max random deviation perpendicular to flow (Reduced default)
+    noiseScale: 0.01, // Scale of the Perlin noise field
+    driftFactor: 0.05, // How much lines tend to drift horizontally (Reduced default)
+    strokeThickness: 1.2, // Line thickness
+    arrowSize: 5, // Size of the arrowhead lines
+    allowLeftDrift: 0.1, // Probability (0-1) a line drifts left instead of right (Less relevant now?)
+    startYVariance: 0.4, // How much vertical variation in start points (0=bottom edge, 1=full canvas)
+    startXPadding: 50, // Allow lines to start slightly off-screen horizontally
+    startYPadding: 50, // Allow lines to start slightly off-screen vertically
+    redraw: function () {
+      noiseSeed(millis()); // Optional: Re-seed noise for variation on redraw
+      redrawSketch();
+    }, // Function to be called by GUI button
+  };
+
+  // --- Global Variables ---
+  let gui;
+  let lines = []; // Optional: Store line data if needed later
+  let canvas;
+
+
+  // --- Setup ---
+  function setup() {
+    canvas = createCanvas(800, 600, SVG); // Use SVG renderer for export
+
+    // use parent id
+    // let parent = document.getElementById("p5js-canvas");
+    // parent.style.width = "800px";
+    // parent.style.height = "600px";
+
+    // set parent id to canvas
+    canvas.parent("p5js-canvas");
+
+    pixelDensity(1); // Ensure consistent scaling, especially for SVG
+
+    // Create GUI - using p5.GUI
+    gui = new dat.GUI({ name: "Line Controls" });
+    // Add sliders for each parameter
+    gui.add(params, "numLines", 10, 500).step(1).onChange(redrawSketch);
+    gui.add(params, "minLineLength", 10, 200).step(1).onChange(redrawSketch);
+    gui.add(params, "maxLineLength", 50, 600).step(10).onChange(redrawSketch);
+    gui.add(params, "flowStrength", 0, 150).step(1).onChange(redrawSketch);
+    gui.add(params, "randomCurvature", 0, 50).step(1).onChange(redrawSketch);
+    gui.add(params, "noiseScale", 0.001, 0.1).step(0.001).onChange(redrawSketch);
+    gui.add(params, "driftFactor", 0, 0.5).step(0.01).onChange(redrawSketch);
+    gui.add(params, "strokeThickness", 0.1, 5).step(0.1).onChange(redrawSketch);
+    gui.add(params, "arrowSize", 1, 20).step(0.5).onChange(redrawSketch);
+    gui.add(params, "allowLeftDrift", 0, 1).step(0.05).onChange(redrawSketch);
+    gui.add(params, "startYVariance", 0, 1).step(0.05).onChange(redrawSketch);
+    gui.add(params, "startXPadding", 0, 200).step(5).onChange(redrawSketch);
+    gui.add(params, "startYPadding", 0, 200).step(5).onChange(redrawSketch);
+    // Add randomize function to params
+    params.randomize = function() {
+      params.numLines = random(10, 500);
+      params.minLineLength = random(10, 200);
+      params.maxLineLength = random(50, 600);
+      params.flowStrength = random(0, 150);
+      params.randomCurvature = random(0, 50);
+      params.noiseScale = random(0.001, 0.1);
+      params.driftFactor = random(0, 0.5);
+      params.strokeThickness = random(0.1, 1);
+      params.arrowSize = random(1, 20);
+      params.allowLeftDrift = random(0, 1);
+      params.startYVariance = random(0, 1);
+      params.startXPadding = random(0, 200);
+      params.startYPadding = random(0, 200);
+      redrawSketch();
+    };
+    gui.add(params, "redraw");
+    gui.add(params, "randomize").name("Randomize Values");
+
+    // Add Export button using p5 native method
+    let exportButton = createButton("Export SVG");
+    exportButton.mousePressed(exportSVG);
+    exportButton.position(10, height + 15); // Position below canvas
+
+    noLoop(); // We only need to draw when requested
+    noiseSeed(millis()); // Initial noise seed
+    redrawSketch(); // Initial drawing
+  }
+
+  // --- Drawing ---
+  // This function is called initially and when the 'Redraw' button is pressed
+  function redrawSketch() {
+    background(255); // White background
+    stroke(0); // Black lines
+    strokeWeight(params.strokeThickness);
+    noFill(); // No fill for shapes (lines and arrowheads)
+
+    lines = []; // Clear previous line data if you were storing it
+
+    for (let i = 0; i < params.numLines; i++) {
+      // --- Generate Line Properties ---
+      let sx = random(-params.startXPadding, width + params.startXPadding);
+      let sy = random(
+        height * (1 - params.startYVariance),
+        height + params.startYPadding
+      );
+      let lineLength = random(params.minLineLength, params.maxLineLength);
+
+      // Calculate drift: mostly right, sometimes left
+      let drift = random(0.05, params.driftFactor) * lineLength;
+      if (random() < params.allowLeftDrift) {
+        drift *= -1; // Make it drift left
+      }
+
+      // Introduce some randomness in the 'upward' direction too
+      let angleVariation = random(-PI / 32, PI / 32);
+      let verticalLength = lineLength * cos(angleVariation);
+      let horizontalOffsetFromAngle = lineLength * sin(angleVariation);
+
+      // End point based on length, drift and slight angle variation
+      let ex = sx + drift + horizontalOffsetFromAngle;
+      let ey = sy - verticalLength; // Y decreases upwards
+
+      // --- Calculate Control Point using Flow Field ---
+      // Midpoint between start and end
+      let mx = (sx + ex) / 2;
+      let my = (sy + ey) / 2;
+
+      // Get flow direction from Perlin noise, mapped to a range around 'up'
+      let noiseValue = noise(mx * params.noiseScale, my * params.noiseScale);
+      // Map noise (0-1) to an angle range around -PI/2 (up), e.g., +/- 60 degrees (PI/3)
+      let flowDeviation = map(noiseValue, 0, 1, -PI/3, PI/3);
+      let flowAngle = -HALF_PI + flowDeviation; // Center angle around 'up'
+
+      // Calculate the main offset based on the flow field direction and strength
+      let flowOffsetX = cos(flowAngle) * params.flowStrength;
+      let flowOffsetY = sin(flowAngle) * params.flowStrength;
+
+      // Calculate the secondary random offset, perpendicular to the flow (Keep for subtle variation)
+      let randomAngle = flowAngle + HALF_PI; // Perpendicular direction
+      let randomOffsetMag = random(-params.randomCurvature, params.randomCurvature);
+      let randomOffsetX = cos(randomAngle) * randomOffsetMag;
+      let randomOffsetY = sin(randomAngle) * randomOffsetMag;
+
+      // Final control point is midpoint + flow offset + random offset
+      let cx = mx + flowOffsetX + randomOffsetX;
+      let cy = my + flowOffsetY + randomOffsetY;
+
+      // --- Draw the Curve ---
+      beginShape();
+      vertex(sx, sy); // Start point
+      quadraticVertex(cx, cy, ex, ey); // Control point, end point
+      endShape();
+
+      // --- Draw the Arrowhead ---
+      drawArrowhead(cx, cy, ex, ey, params.arrowSize);
+    }
+    console.log("Sketch redrawn.");
+  }
+
+  // Function to draw an arrowhead at the end of the curve
+  // Uses the control point and end point to determine the curve's end direction
+  function drawArrowhead(controlX, controlY, endX, endY, size) {
+    // Calculate the angle of the curve's end tangent
+    // This is approximated by the line from the control point to the end point
+    let angle = atan2(endY - controlY, endX - controlX);
+
+    push(); // Isolate transformations and style
+    translate(endX, endY); // Move origin to the endpoint
+    rotate(angle); // Rotate coordinate system to align with the tangent
+
+    // Draw the two lines of the arrowhead
+    // These point "backwards" along the tangent direction
+    let arrowWingAngle = PI / 6; // Angle between tangent and arrowhead wing (30 degrees)
+    line(0, 0, -size * cos(arrowWingAngle), -size * sin(arrowWingAngle));
+    line(0, 0, -size * cos(arrowWingAngle), size * sin(arrowWingAngle));
+
+    // Alternative arrowhead using triangle (can be filled)
+    // fill(0); // Make arrowhead solid black
+    // noStroke(); // Don't draw outline for triangle
+    // triangle(0, 0, -size, -size / 2.5, -size, size / 2.5);
+
+    pop(); // Restore previous drawing state
+  }
+
+  // --- Export ---
+  function exportSVG() {
+    save("flowing_lines.svg"); // p5.svg library provides this function
+    console.log("SVG exported.");
+  }
+
+  // --- GUI Interaction ---
+  // p5.gui automatically handles updating the params object.
+  // The redrawSketch function reads directly from the params object.
+
+  // Optional: If you want sliders to update the drawing live without pressing redraw
+  // function draw() {
+  //   // This would be called continuously
+  //   // Might be slow with many lines and SVG renderer
+  //   // redrawSketch();
+  // }
+  // If using draw(), remove noLoop() from setup()
+</script>
