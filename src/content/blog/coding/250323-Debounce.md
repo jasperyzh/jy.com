@@ -1,9 +1,11 @@
 ---
 pubDate: 250323
-title: One-Page-One-Topic
-description: One Page One Topic is a method of taking notes, to write about a topic or a system in a single page.
-tags: ["OnePageOneTopic", "blog", "test"]
-draft: 1
+title: "Understanding Debounce: A Practical Guide"
+description: "Learn how debounce functions help control event frequency in web applications for better performance and user experience."
+tags: ["JavaScript", "Web Development", "Performance", "UI/UX"]
+draft: 0
+thumbnail: "/img/placeholder.png"
+category: "Web Development"
 ---
 
 - [[250111-Debounce – Controlling Event Frequency]] 

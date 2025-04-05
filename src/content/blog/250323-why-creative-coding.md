@@ -1,9 +1,11 @@
 ---
 pubDate: 250323
-title: Why Creative Coding
-description: test
-tags: ["CreativeCoding"]
+title: "Why Creative Coding Matters"
+description: "Exploring how creative coding bridges art and technology, fostering innovation and new forms of digital expression."
+tags: ["creative coding", "art", "technology", "p5js"]
 draft: 0
+thumbnail: "/img/placeholder.png"
+category: "Generative Art"
 ---
 
 # Why and How I got into Creative Coding?

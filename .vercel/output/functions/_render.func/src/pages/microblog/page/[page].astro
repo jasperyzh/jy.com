@@ -1,0 +1,86 @@
+---
+/**
+ * Microblog pagination page
+ * Handles pagination for the microblog feed
+ */
+import Layout from "@/layouts/BaseLayout.astro";
+import MicroblogFeed from "@/components/microblog/MicroblogFeed.astro";
+import { getCollection } from "astro:content";
+
+// Pagination configuration
+export const POSTS_PER_PAGE = 10;
+
+// Generate static paths for pagination
+export async function getStaticPaths({ paginate }) {
+  // Get all microblog posts
+  const allMicroblogPosts = await getCollection("microblog");
+  
+  // Sort posts by date (newest first)
+  const sortedPosts = allMicroblogPosts.sort((a, b) => {
+    const dateA = a.data.pubDate instanceof Date ? a.data.pubDate : new Date();
+    const dateB = b.data.pubDate instanceof Date ? b.data.pubDate : new Date();
+    return dateB.getTime() - dateA.getTime();
+  });
+  
+  // Filter out draft posts and private posts in production
+  const publishedPosts = import.meta.env.PROD
+    ? sortedPosts.filter((post) => !post.data.draft && !post.data.isPrivate)
+    : sortedPosts;
+  
+  // Generate pages for each paginated set of posts
+  return paginate(publishedPosts, { pageSize: POSTS_PER_PAGE });
+}
+
+// Get page data from Astro
+const { page } = Astro.props;
+const { currentPage, data: posts, lastPage, url } = page;
+
+// Calculate previous and next page URLs
+const prevUrl = currentPage > 1 ? url.prev : null;
+const nextUrl = currentPage < lastPage ? url.next : null;
+---
+
+<Layout 
+  title={`Microblog - Page ${currentPage}`} 
+  description={`Microblog posts - Page ${currentPage} of ${lastPage}`}
+>
+  <main class="container py-4">
+    <section>
+      <h1 class="mb-4">Microblog</h1>
+      <p class="lead mb-4">
+        Quick thoughts, photos, and updates - Page {currentPage} of {lastPage}
+      </p>
+      
+      <MicroblogFeed 
+        posts={posts}
+        currentPage={currentPage}
+        totalPages={lastPage}
+        prevUrl={prevUrl}
+        nextUrl={nextUrl}
+      />
+    </section>
+  </main>
+</Layout>
+
+<style>
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 2rem;
+    }
+  }
+</style>
+
+<script>
+  // Import Bootstrap icons if not already loaded
+  if (!document.querySelector('link[href*="bootstrap-icons"]')) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css';
+    document.head.appendChild(link);
+  }
+</script>

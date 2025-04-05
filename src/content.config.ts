@@ -19,6 +19,7 @@ const ob_blog = defineCollection({
         "For best SEO results, please keep the description under 160 characters."
       ), // The description of the post with SEO-friendly character limit
     // pubDate: z.coerce.date(), // Automatically converts date strings or numbers to Date objects
+    
     pubDate: z.preprocess(
       (arg) => formatYymmddDate(arg as string | number | Date),
       z.date()
@@ -27,7 +28,14 @@ const ob_blog = defineCollection({
       .union([z.boolean(), z.number()])
       .transform((value) => Boolean(value))
       .default(false), // Supports both boolean and number for `draft`, defaults to false
-    tags: z.array(z.string()).optional(),
+    tags: z.array(z.string()), // Now required
+    thumbnail: z.string(), // Required thumbnail image URL or path
+    category: z.enum([
+      "Web Development", 
+      "Workflow", 
+      "Curiousity", 
+      "Generative Art"
+    ]), // Required category from preset list
   }),
 });
 
@@ -42,7 +50,7 @@ const microblog = defineCollection({
     title: z.string().optional(),
     // Content type to help with filtering (text, image, video, mixed)
     contentType: z.enum(['text', 'image', 'video', 'mixed']).default('text'),
-    // Media files for the post (URLs or paths to images/videos)
+    // Media files for the post (URLs or paths to images/videos )
     media: z.array(
       z.object({
         url: z.string(),

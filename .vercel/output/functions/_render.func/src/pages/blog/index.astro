@@ -1,0 +1,125 @@
+---
+/**
+ * Blog index page with pagination support
+ * Displays all blog posts organized by date (newest first)
+ * Also shows a tag cloud for filtering posts by topic
+ */
+import Layout from "@/layouts/BaseLayout.astro";
+import EntriesList from "@/components/EntriesList.astro";
+import { getCollection } from "astro:content";
+import TagCloud from "@/components/TagCloud.astro";
+import Pagination from "@/components/Pagination.astro";
+import { formatYymmddDate } from "@/utils/formatDate";
+import { Debug } from "astro:components";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/starwind/card";
+// import { Button } from "@/components/starwind/button";
+import { Badge } from "@/components/starwind/badge";
+
+import { Button } from "@/components/starwind/button";
+
+// Pagination configuration
+export const POSTS_PER_PAGE = 6;
+
+// Get all blog posts
+const allPosts = await getCollection("ob_blog");
+
+// Sort posts by date (newest first)
+const sortedPosts = allPosts.sort((a, b) => {
+  const dateA = formatYymmddDate(a.data.pubDate || a.data.date || new Date());
+  const dateB = formatYymmddDate(b.data.pubDate || b.data.date || new Date());
+  return dateB.getTime() - dateA.getTime();
+});
+
+// Filter out draft posts in production
+const publishedPosts = import.meta.env.PROD
+  ? sortedPosts.filter((post) => !post.data.draft)
+  : sortedPosts;
+
+// Calculate pagination
+const totalPages = Math.ceil(publishedPosts.length / POSTS_PER_PAGE);
+const currentPage = 1;
+const start = 0;
+const end = start + POSTS_PER_PAGE;
+const paginatedPosts = publishedPosts.slice(start, end);
+
+// Calculate previous and next page URLs
+const prevUrl = currentPage > 1 ? `/blog/page/${currentPage - 1}` : null;
+const nextUrl =
+  currentPage < totalPages ? `/blog/page/${currentPage + 1}` : null;
+---
+
+<Layout title="Blog - All Posts">
+  <main>
+    <section class="container mx-auto">
+      <h1 class="mb-4">All Blog Posts</h1>
+
+      <div class="container">
+        <TagCloud />
+        <p>
+          Showing {paginatedPosts.length} of {publishedPosts.length} posts
+          {totalPages > 1 && `(Page ${currentPage} of ${totalPages})`}
+        </p>
+      </div>
+
+      <div class="container grid grid-cols-4 gap-4">
+        {
+          paginatedPosts.map((post) => (
+            <>
+              <Card class="w-[400px]">
+                <CardHeader>
+                  <CardTitle>{post.data.title}</CardTitle>
+                  <CardDescription>
+                    {formatYymmddDate(
+                      post.data.pubDate || post.data.date || new Date()
+                    ).toLocaleString("default", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                    {/* {formatYymmddDate(post.data.pubDate || post.data.date || new Date()).toLocaleDateString()} */}
+                    <br />
+                    {post.data.description || "No description available"}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent class="flex flex-col gap-4">
+                  {/* <div class="flex w-full flex-col gap-2">test</div> */}
+                  <div class="card-tags mb-2">
+                    {post.data.tags &&
+                      post.data.tags.map((tag) => (
+                        <Badge href={`/tags/${tag}`}>{tag}</Badge>
+                      ))}
+                  </div>
+                </CardContent>
+                <CardFooter class="flex justify-between">
+                  <Button href={`/blog/${post.id}`}>Read</Button>
+                </CardFooter>
+              </Card>
+            </>
+          ))
+        }
+      </div>
+    </section>
+
+    {/* Pagination controls */}
+    {(prevUrl || nextUrl) && <Pagination {prevUrl} {nextUrl} />}
+  </main>
+</Layout>
+
+<style>
+  .card-tags {
+    position: relative;
+    z-index: 2;
+  }
+
+  .card-tags a {
+    pointer-events: auto;
+  }
+</style>

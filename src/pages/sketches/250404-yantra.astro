@@ -1,0 +1,1021 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro"
+
+title: "Generative Mystical Diagram"
+description: "Interactive generative art creating beautiful mandala-like mystical diagrams with customizable color palettes and animation options."
+tags: ["p5js", "generative-art", "interactive", "svg"]
+thumbnail: "/img/placeholder.png"
+category: "Generative Art"
+---
+
+<BaseLayout title="Generative Mystical Diagram">
+
+    <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
+    <script is:inline src="https://unpkg.com/p5.js-svg@1.5.1/dist/p5.svg.js"></script>
+    <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.min.js"></script>
+    <style is:inline>
+      canvas {
+        display: block;
+        margin: 0 auto;
+      }
+      .dg.main .close-button {
+        /* Keep GUI visible */
+        display: none;
+      }
+      /* body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      } */
+      #json-container {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 10px;
+        border-radius: 5px;
+        z-index: 1000;
+        display: none;
+      }
+      #parameters-json {
+        width: 400px;
+        height: 300px;
+        background: #111;
+        color: #eee;
+        border: 1px solid #333;
+        padding: 5px;
+        font-family: monospace;
+        font-size: 11px;
+      }
+      .json-buttons {
+        margin-top: 5px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .json-buttons button {
+        background: #333;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+      .json-buttons button:hover {
+        background: #555;
+      }
+    </style>
+    <main>
+      <div id="canvas"></div>
+    </main>
+    
+    <div id="json-container">
+      <textarea id="parameters-json"></textarea>
+      <div class="json-buttons">
+        <button id="copy-json">Copy to Clipboard</button>
+        <button id="apply-json">Apply JSON</button>
+        <button id="close-json">Close</button>
+      </div>
+    </div>
+    
+    <script is:inline>
+      let gui;
+      let globalParams = {
+        seed: Math.floor(Math.random() * 10000),
+        regenerate: function () {
+          randomSeed(this.seed);
+          noiseSeed(this.seed); // Seed noise as well
+          clear(); // Clear SVG buffer if needed (might not be strictly necessary with background redraw)
+          redraw(); // Request a redraw
+        },
+        saveSVG: function () {
+          save("mystical_diagram_" + this.seed + ".svg");
+        },
+        backgroundColor: "#000000",
+        // Global animation controls
+        allAnimationEnabled: false,
+        globalAnimationSpeed: 1.0,
+        toggleAllAnimations: function() {
+          layerParams.forEach(layer => {
+            layer.animationEnabled = this.allAnimationEnabled;
+          });
+        },
+        // Color palette selection
+        selectedColorPalette: 0,
+        colorPaletteMode: "fixed", // "fixed", "random", "gradient"
+        regenerateColors: function() {
+          applyColorPalette(this.selectedColorPalette, this.colorPaletteMode);
+          redraw();
+        },
+        // Radius adjustment
+        randomizeRadii: function() {
+          randomizeLayerRadii();
+          // Update GUI
+          for (let i = 0; i < gui.__controllers.length; i++) {
+            gui.__controllers[i].updateDisplay();
+          }
+          redraw();
+        },
+        // JSON export function
+        showJSON: function() {
+          const jsonData = {
+            global: {
+              seed: this.seed,
+              backgroundColor: this.backgroundColor,
+              allAnimationEnabled: this.allAnimationEnabled,
+              globalAnimationSpeed: this.globalAnimationSpeed,
+              selectedColorPalette: this.selectedColorPalette,
+              colorPaletteMode: this.colorPaletteMode
+            },
+            layers: layerParams
+          };
+          
+          document.getElementById('parameters-json').value = JSON.stringify(jsonData, null, 2);
+          document.getElementById('json-container').style.display = 'block';
+        }
+      };
+
+      // Color palettes
+      const colorPalettes = [
+        // Palette 1
+        ["#FF6F30", "#FFB30F", "#FFEA00", "#A0D65B", "#F7F4E8"],
+        // Palette 2
+        ["#40E0D0", "#FF6F61", "#FFD700", "#FFFFFF", "#2F4F4F"],
+        // Palette 3
+        ["#333333", "#1F3A8A", "#00ADEF", "#B0B3B8", "#E0E0E0"],
+        // Palette 4
+        ["#B0B0B0", "#FF6F61", "#6AEBB6", "#FFC107", "#FFFFFF"],
+        // Palette 5
+        ["#1A1A4B", "#4B0082", "#3C3F8C", "#9A6FBA", "#E1E1E1"]
+      ];
+
+      // --- Layer Parameter Structure ---
+      // Use an array to hold layer configurations for easier iteration
+      let layerParams = [];
+      const MAX_LAYERS = 8; // Maximum layers controllable by GUI
+
+      // Function to apply a color palette to layers
+      function applyColorPalette(paletteIndex, mode) {
+        const palette = colorPalettes[paletteIndex];
+        const enabledLayers = layerParams.filter(layer => layer.enabled);
+        
+        if (mode === "fixed") {
+          // Evenly distribute colors across layers
+          enabledLayers.forEach((layer, index) => {
+            const colorIndex = index % palette.length;
+            layer.strokeColor = palette[colorIndex];
+            // Make fill color a darker version of stroke color
+            const fillColor = color(palette[colorIndex]);
+            fillColor.setRed(fillColor.levels[0] * 0.5);
+            fillColor.setGreen(fillColor.levels[1] * 0.5);
+            fillColor.setBlue(fillColor.levels[2] * 0.5);
+            layer.fillColor = fillColor.toString('#rrggbb');
+          });
+        } 
+        else if (mode === "random") {
+          // Randomly assign colors to layers
+          enabledLayers.forEach(layer => {
+            const randomColorIndex = Math.floor(random(palette.length));
+            layer.strokeColor = palette[randomColorIndex];
+            
+            // Make fill color a darker version of stroke color
+            const fillColor = color(palette[randomColorIndex]);
+            fillColor.setRed(fillColor.levels[0] * 0.5);
+            fillColor.setGreen(fillColor.levels[1] * 0.5);
+            fillColor.setBlue(fillColor.levels[2] * 0.5);
+            layer.fillColor = fillColor.toString('#rrggbb');
+          });
+        } 
+        else if (mode === "gradient") {
+          // Create gradient-like effect from inner to outer layers
+          enabledLayers.forEach((layer, index) => {
+            // Calculate normalized position in the sequence
+            const position = index / (enabledLayers.length - 1);
+            // Map position to an index in the palette, allowing for smooth interpolation
+            const exactIndex = position * (palette.length - 1);
+            const index1 = Math.floor(exactIndex);
+            const index2 = Math.min(Math.ceil(exactIndex), palette.length - 1);
+            const remainder = exactIndex - index1;
+            
+            // Interpolate between two colors
+            if (index1 === index2 || remainder === 0) {
+              layer.strokeColor = palette[index1];
+            } else {
+              const c1 = color(palette[index1]);
+              const c2 = color(palette[index2]);
+              
+              const r = Math.round(lerp(c1.levels[0], c2.levels[0], remainder));
+              const g = Math.round(lerp(c1.levels[1], c2.levels[1], remainder));
+              const b = Math.round(lerp(c1.levels[2], c2.levels[2], remainder));
+              
+              layer.strokeColor = `rgb(${r},${g},${b})`;
+            }
+            
+            // Make fill color a darker version of stroke color
+            const fillColor = color(layer.strokeColor);
+            fillColor.setRed(fillColor.levels[0] * 0.5);
+            fillColor.setGreen(fillColor.levels[1] * 0.5);
+            fillColor.setBlue(fillColor.levels[2] * 0.5);
+            layer.fillColor = fillColor.toString('#rrggbb');
+          });
+        }
+      }
+
+      // Function to randomize layer radii without overlap
+      function randomizeLayerRadii() {
+        const enabledLayers = layerParams.filter(layer => layer.enabled);
+        
+        // Sort enabled layers by current radius to maintain similar order
+        enabledLayers.sort((a, b) => a.radius - b.radius);
+        
+        // Calculate min and max radius bounds
+        const minRadius = 40; // Minimum inner radius
+        const maxRadius = Math.min(width, height) / 1.8; // Maximum outer radius
+        const availableSpace = maxRadius - minRadius;
+        
+        // Determine minimum spacing between layers based on shape sizes
+        let minSpacing = 0;
+        enabledLayers.forEach(layer => {
+          minSpacing = Math.max(minSpacing, layer.shapeSize * 1.2); // Use largest shape size to determine spacing
+        });
+        
+        // Assign new radii with proper spacing
+        let currentRadius = minRadius;
+        enabledLayers.forEach((layer, index) => {
+          // Random radius between current position and next allowed position
+          const nextLayerAllowedPos = (index === enabledLayers.length - 1) 
+            ? maxRadius
+            : currentRadius + minSpacing + (availableSpace / enabledLayers.length);
+          
+          const randomRadius = currentRadius + minSpacing + random(0, nextLayerAllowedPos - currentRadius - minSpacing);
+          layer.radius = Math.round(randomRadius);
+          
+          // Update current radius for next layer
+          currentRadius = randomRadius;
+        });
+      }
+
+      // Random parameters generator
+      function randomizeLayerParams(params) {
+        // Save enabled state and radius to maintain structure
+        const wasEnabled = params.enabled;
+        const originalRadius = params.radius;
+        
+        // Randomize parameters within reasonable ranges
+        params.enabled = wasEnabled;
+        params.radius = originalRadius;
+        params.numElements = Math.floor(random(6, 120));
+        params.shapeType = random(shapeTypes);
+        params.shapeSize = random(2, 40);
+        params.rotationOffset = random(0, TWO_PI);
+        params.strokeWeight = random(0.5, 3);
+        
+        // Colors are now handled by palette system
+        // We'll keep this part for individual layer randomization
+        // But the color palette functions will override these when applied
+        const randomHue = random(0, 100); 
+        const randomSat = random(70, 100);
+        const randomBright = random(70, 100);
+        colorMode(HSB, 100);
+        params.strokeColor = color(randomHue, randomSat, randomBright).toString('#rrggbb');
+        params.fillColor = color(randomHue, randomSat, random(30, 60)).toString('#rrggbb');
+        colorMode(RGB, 255);
+        
+        params.opacity = Math.floor(random(150, 255));
+        params.animationEnabled = random() > 0.5;
+        params.animationSpeed = random(-0.008, 0.008);
+        params.usePerlinNoise = random() > 0.6;
+        params.noiseMagnitude = random(0, 15);
+        params.noiseScale = random(0.01, 0.2);
+        params.noiseTimeScale = random(0.001, 0.02);
+        
+        return params;
+      }
+
+      // --- Predefined Custom Shape Functions ---
+      // These functions draw shapes relative to (0, 0) and use shapeSize
+      function drawCustomSpike(size) {
+        triangle(
+          0,
+          -size * 0.7,
+          -size * 0.2,
+          size * 0.3,
+          size * 0.2,
+          size * 0.3
+        );
+      }
+
+      function drawCustomPetal(size) {
+        beginShape();
+        vertex(0, -size * 0.6); // Tip
+        bezierVertex(
+          size * 0.5,
+          -size * 0.4,
+          size * 0.4,
+          size * 0.4,
+          0,
+          size * 0.5
+        ); // Right side
+        bezierVertex(
+          -size * 0.4,
+          size * 0.4,
+          -size * 0.5,
+          -size * 0.4,
+          0,
+          -size * 0.6
+        ); // Left side
+        endShape(CLOSE);
+      }
+
+      function drawCustomGearTooth(size) {
+        beginShape();
+        vertex(-size * 0.5, -size * 0.5);
+        vertex(size * 0.5, -size * 0.5);
+        vertex(size * 0.3, size * 0.5);
+        vertex(-size * 0.3, size * 0.5);
+        endShape(CLOSE);
+      }
+
+      function drawWavyLine(size) {
+        // Draws a short line segment with a wave - meant to connect into a circle
+        // Note: Size here might represent the segment length/amplitude differently
+        beginShape();
+        noFill(); // Explicitly no fill for line segments
+        vertex(0, 0);
+        quadraticVertex(size * 0.5, size * 0.3, size, 0); // A simple wave segment outwards
+        endShape();
+      }
+
+      const shapeTypes = [
+        "circle",
+        "triangle",
+        "line",
+        "square",
+        "spike",
+        "petal",
+        "gearTooth",
+        "wavyLine",
+      ]; // Available shapes
+
+      let centerX, centerY;
+      let noiseTime = 0; // For temporal noise evolution
+
+      function setup() {
+        let canvas = createCanvas(windowWidth, windowHeight, SVG); // Use SVG renderer
+        canvas.parent('canvas'); // Put the canvas in the canvas div
+        angleMode(RADIANS);
+        centerX = width / 2;
+        centerY = height / 2;
+
+        // --- Initialize Default Layer Parameters ---
+        // Start with a few default layers, users can modify/add via GUI potentially
+        layerParams.push({
+          enabled: true, // Allow disabling a layer
+          radius: 40,
+          numElements: 12,
+          shapeType: "petal",
+          shapeSize: 15,
+          rotationOffset: 0,
+          strokeWeight: 1.5,
+          strokeColor: "#FFD700", // Gold
+          fillColor: "#000000", // Black (removed alpha)
+          opacity: 255,
+          animationEnabled: true,
+          animationSpeed: 0.001, // Slow rotation
+          usePerlinNoise: false,
+          noiseMagnitude: 2, // Pixel offset
+          noiseScale: 0.05, // How "zoomed in" the noise field is
+          noiseTimeScale: 0.005, // How fast noise evolves over time
+        });
+
+        layerParams.push({
+          enabled: true,
+          radius: 80,
+          numElements: 48,
+          shapeType: "line",
+          shapeSize: 10, // Length of the line
+          rotationOffset: PI / 48, // Offset slightly
+          strokeWeight: 1,
+          strokeColor: "#EEC600",
+          fillColor: "#000000", // Black (removed alpha)
+          opacity: 200,
+          animationEnabled: false,
+          animationSpeed: -0.0005,
+          usePerlinNoise: true,
+          noiseMagnitude: 3,
+          noiseScale: 0.04,
+          noiseTimeScale: 0.004,
+        });
+
+        layerParams.push({
+          enabled: true,
+          radius: 120,
+          numElements: 24,
+          shapeType: "gearTooth",
+          shapeSize: 12,
+          rotationOffset: 0,
+          strokeWeight: 2,
+          strokeColor: "#FFFACD", // Lemon Chiffon (lighter gold)
+          fillColor: "#000000", // Black (removed alpha)
+          opacity: 255,
+          animationEnabled: true,
+          animationSpeed: 0.0003,
+          usePerlinNoise: false,
+          noiseMagnitude: 1,
+          noiseScale: 0.06,
+          noiseTimeScale: 0.006,
+        });
+
+        layerParams.push({
+          enabled: true,
+          radius: 160,
+          numElements: 60,
+          shapeType: "circle",
+          shapeSize: 4,
+          rotationOffset: PI / 60,
+          strokeWeight: 0.8,
+          strokeColor: "#EEC600",
+          fillColor: "#EEC600", // Gold (removed alpha)
+          opacity: 180,
+          animationEnabled: true,
+          animationSpeed: -0.0008,
+          usePerlinNoise: true,
+          noiseMagnitude: 4,
+          noiseScale: 0.02,
+          noiseTimeScale: 0.002,
+        });
+
+        // Add more layers as needed up to MAX_LAYERS
+
+        // Initialize remaining potential layers as disabled
+        for (let i = layerParams.length; i < MAX_LAYERS; i++) {
+          layerParams.push({
+            enabled: false,
+            radius: 200 + i * 40,
+            numElements: 30,
+            shapeType: "circle",
+            shapeSize: 5,
+            rotationOffset: 0,
+            strokeWeight: 1,
+            strokeColor: "#FFD700",
+            fillColor: "#000000", // Black (removed alpha)
+            opacity: 255,
+            animationEnabled: false,
+            animationSpeed: 0.001,
+            usePerlinNoise: false,
+            noiseMagnitude: 2,
+            noiseScale: 0.05,
+            noiseTimeScale: 0.005,
+          });
+        }
+
+        // --- Setup GUI ---
+        gui = new dat.GUI();
+        const globalFolder = gui.addFolder("Global Settings");
+        globalFolder
+          .addColor(globalParams, "backgroundColor")
+          .name("Background");
+        globalFolder
+          .add(globalParams, "seed")
+          .min(0)
+          .step(1)
+          .name("Random Seed")
+          .onChange(globalParams.regenerate);
+        globalFolder.add(globalParams, "regenerate").name("Regenerate");
+        globalFolder.add(globalParams, "saveSVG").name("Save as SVG");
+        
+        // Add global animation controls
+        const globalAnimFolder = globalFolder.addFolder("Global Animation");
+        globalAnimFolder.add(globalParams, "allAnimationEnabled").name("All Animations").onChange(globalParams.toggleAllAnimations);
+        globalAnimFolder.add(globalParams, "globalAnimationSpeed").min(0.1).max(5).step(0.1).name("Global Speed");
+        globalAnimFolder.open();
+        
+        // Add color palette controls
+        const colorPaletteFolder = globalFolder.addFolder("Color Palette");
+        colorPaletteFolder.add(globalParams, "selectedColorPalette", {
+          "Orange-Yellow": 0,
+          "Teal-Gold": 1,
+          "Blue-Gray": 2,
+          "Colorful": 3,
+          "Purple": 4
+        }).name("Palette");
+        colorPaletteFolder.add(globalParams, "colorPaletteMode", {
+          "Fixed Distribution": "fixed",
+          "Random": "random",
+          "Gradient": "gradient"
+        }).name("Color Mode");
+        colorPaletteFolder.add(globalParams, "regenerateColors").name("Apply Colors");
+        colorPaletteFolder.open();
+        
+        // Add radius randomization
+        globalFolder.add(globalParams, "randomizeRadii").name("Randomize Radii");
+        
+        // Add JSON export button
+        globalFolder.add(globalParams, "showJSON").name("Edit JSON");
+        
+        // Add global randomize function
+        globalFolder.add({
+          randomizeAll: function() {
+            for (let i = 0; i < layerParams.length; i++) {
+              if (layerParams[i].enabled) {
+                randomizeLayerParams(layerParams[i]);
+              }
+            }
+            
+            // Randomize radii to ensure no overlap
+            randomizeLayerRadii();
+            
+            // Apply selected color palette
+            applyColorPalette(globalParams.selectedColorPalette, globalParams.colorPaletteMode);
+            
+            // Update GUI
+            for (let i = 0; i < gui.__controllers.length; i++) {
+              gui.__controllers[i].updateDisplay();
+            }
+          }
+        }, "randomizeAll").name("🎲 Randomize All");
+        
+        globalFolder.open();
+
+        // --- Add GUI controls for each layer ---
+        for (let i = 0; i < MAX_LAYERS; i++) {
+          addLayerGui(gui, layerParams[i], i + 1);
+        }
+
+        // --- Initial Seed Application ---
+        randomSeed(globalParams.seed);
+        noiseSeed(globalParams.seed);
+        
+        // Initial color palette application
+        applyColorPalette(globalParams.selectedColorPalette, globalParams.colorPaletteMode);
+
+        //noLoop(); // Uncomment for static image generation for SVG export if animation causes issues
+      }
+
+      function draw() {
+        background(globalParams.backgroundColor);
+        translate(centerX, centerY); // Move origin to center
+
+        noiseTime += 0.01; // Increment time for temporal noise evolution
+
+        // --- Draw Layers ---
+        layerParams.forEach((params) => {
+          if (params.enabled) {
+            drawLayer(params);
+          }
+        });
+      }
+
+      function drawLayer(params) {
+        push(); // Isolate layer transformations and styles
+
+        // --- Calculate current rotation (static + animated) ---
+        let currentRotation = params.rotationOffset;
+        if (params.animationEnabled) {
+          // Use seconds for smoother animation speed control independent of frameRate
+          // Apply global animation speed multiplier
+          currentRotation += (millis() / 1000.0) * params.animationSpeed * globalParams.globalAnimationSpeed;
+        }
+        rotate(currentRotation);
+
+        // --- Set Drawing Styles ---
+        // Handle Color and Opacity
+        let strokeCol = color(params.strokeColor);
+        strokeCol.setAlpha(params.opacity);
+        stroke(strokeCol);
+        strokeWeight(params.strokeWeight);
+
+        let fillCol = color(params.fillColor);
+        fillCol.setAlpha(params.opacity); // Apply opacity to fill as well
+        // Check if fill should be applied (e.g., if alpha > 0)
+        if (params.shapeType === "line" || params.shapeType === "wavyLine" || params.opacity === 0) {
+          noFill();
+        } else {
+          fill(fillCol);
+        }
+
+        // --- Draw Elements in the Layer ---
+        const angleIncrement = TWO_PI / params.numElements;
+        for (let i = 0; i < params.numElements; i++) {
+          const angle = i * angleIncrement;
+          let x = params.radius * cos(angle);
+          let y = params.radius * sin(angle);
+          let elementRotation = angle; // Base rotation aligns radially outward
+
+          // --- Apply Perlin Noise (if enabled) ---
+          if (params.usePerlinNoise) {
+            // Calculate noise based on position and time
+            // Adding angle helps make noise pattern circular/consistent around the layer
+            let noiseFactorX = noise(
+              cos(angle) * params.noiseScale,
+              sin(angle) * params.noiseScale,
+              noiseTime * params.noiseTimeScale
+            );
+            let noiseFactorY = noise(
+              cos(angle) * params.noiseScale + 10,
+              sin(angle) * params.noiseScale + 10,
+              noiseTime * params.noiseTimeScale
+            ); // Offset noise input slightly for Y
+
+            // Map noise (0 to 1) to an offset range (-mag/2 to +mag/2 or 0 to mag, depends on desired effect)
+            let offsetX = map(
+              noiseFactorX,
+              0,
+              1,
+              -params.noiseMagnitude,
+              params.noiseMagnitude
+            );
+            let offsetY = map(
+              noiseFactorY,
+              0,
+              1,
+              -params.noiseMagnitude,
+              params.noiseMagnitude
+            );
+
+            // Apply noise as positional jitter
+            x += offsetX;
+            y += offsetY;
+
+            // Optional: Could also apply noise to rotation or size here
+            // let rotNoise = map(noise(cos(angle)*params.noiseScale + 20, sin(angle)*params.noiseScale + 20, noiseTime*params.noiseTimeScale), 0, 1, -PI/8, PI/8);
+            // elementRotation += rotNoise * (params.noiseMagnitude / 5); // Scale rotation noise effect
+          }
+
+          push(); // Isolate element transformations
+          translate(x, y);
+          rotate(elementRotation); // Rotate the element itself
+
+          // --- Draw the selected shape ---
+          drawElementShape(params.shapeType, params.shapeSize);
+
+          pop(); // Restore from element's transformations
+        }
+
+        pop(); // Restore from layer's transformations
+      }
+
+      function drawElementShape(shapeType, shapeSize) {
+        // Reset fill/stroke based on shape type if needed (esp. for lines)
+        if (shapeType === "line" || shapeType === "wavyLine") {
+          noFill(); // Lines typically don't have fill
+        }
+
+        switch (shapeType) {
+          case "circle":
+            ellipse(0, 0, shapeSize, shapeSize);
+            break;
+          case "square":
+            rectMode(CENTER);
+            rect(0, 0, shapeSize, shapeSize);
+            break;
+          case "triangle":
+            // Simple equilateral-ish triangle pointing outwards
+            let h = shapeSize * (sqrt(3) / 2); // Height approximation
+            triangle(
+              0,
+              -h / 1.5,
+              -shapeSize / 2,
+              h / 2.5,
+              shapeSize / 2,
+              h / 2.5
+            );
+            break;
+          case "line":
+            // Draws a line outwards from the element's origin
+            line(0, 0, 0, -shapeSize); // Draw line 'up' which gets rotated outwards
+            break;
+          // --- Custom Shapes ---
+          case "spike":
+            drawCustomSpike(shapeSize);
+            break;
+          case "petal":
+            drawCustomPetal(shapeSize);
+            break;
+          case "gearTooth":
+            drawCustomGearTooth(shapeSize);
+            break;
+          case "wavyLine":
+            // Draw wavy line aligned outward. Size affects length/curve here.
+            push();
+            rotate(-PI / 2); // Align the base line drawing function correctly
+            drawWavyLine(shapeSize);
+            pop();
+            break;
+          default:
+            ellipse(0, 0, shapeSize, shapeSize); // Fallback to circle
+        }
+      }
+
+      // --- GUI Helper Function ---
+      function addLayerGui(guiInstance, params, layerIndex) {
+        const folder = guiInstance.addFolder(`Layer ${layerIndex}`);
+        folder.add(params, "enabled").name("Enabled").onChange(redraw); // Redraw if layer is toggled
+        folder
+          .add(params, "radius")
+          .min(0)
+          .max(max(width, height) / 1.5)
+          .step(1)
+          .name("Radius");
+        folder
+          .add(params, "numElements")
+          .min(1)
+          .max(200)
+          .step(1)
+          .name("Num Elements");
+        folder.add(params, "shapeType", shapeTypes).name("Shape Type");
+        folder
+          .add(params, "shapeSize")
+          .min(1)
+          .max(100)
+          .step(0.5)
+          .name("Shape Size");
+        folder
+          .add(params, "rotationOffset")
+          .min(0)
+          .max(TWO_PI)
+          .step(0.01)
+          .name("Rotation Offset");
+        folder
+          .add(params, "strokeWeight")
+          .min(0)
+          .max(10)
+          .step(0.1)
+          .name("Stroke Weight");
+        folder.addColor(params, "strokeColor").name("Stroke Color");
+        folder.addColor(params, "fillColor").name("Fill Color");
+        folder.add(params, "opacity").min(0).max(255).step(1).name("Opacity");
+        
+        // Add randomize button for this layer
+        folder.add({
+          randomize: function() {
+            randomizeLayerParams(params);
+            // Update GUI to reflect new values (this is tricky with dat.gui)
+            // A simple approach is to just refresh the page
+            for (let i = 0; i < gui.__controllers.length; i++) {
+              gui.__controllers[i].updateDisplay();
+            }
+          }
+        }, 'randomize').name('🎲 Randomize Layer');
+
+        const animFolder = folder.addFolder("Animation");
+        animFolder.add(params, "animationEnabled").name("Enabled");
+        animFolder
+          .add(params, "animationSpeed")
+          .min(-0.02)
+          .max(0.02)
+          .step(0.0001)
+          .name("Speed");
+        // animFolder.open(); // Optional: keep animation controls visible
+
+        const noiseFolder = folder.addFolder("Perlin Noise");
+        noiseFolder.add(params, "usePerlinNoise").name("Enabled");
+        noiseFolder
+          .add(params, "noiseMagnitude")
+          .min(0)
+          .max(50)
+          .step(0.5)
+          .name("Magnitude");
+        noiseFolder
+          .add(params, "noiseScale")
+          .min(0.001)
+          .max(0.5)
+          .step(0.001)
+          .name("Scale");
+        noiseFolder
+          .add(params, "noiseTimeScale")
+          .min(0)
+          .max(0.1)
+          .step(0.001)
+          .name("Time Scale");
+        // noiseFolder.open(); // Optional: keep noise controls visible
+
+        if (params.enabled) {
+          folder.open(); // Keep folders for initially enabled layers open
+        }
+      }
+
+      function windowResized() {
+        resizeCanvas(windowWidth, windowHeight);
+        centerX = width / 2;
+        centerY = height / 2;
+        // Note: GUI parameter ranges might need adjusting if canvas size changes drastically
+      }
+      
+      // Setup event listeners for JSON functionality
+      window.addEventListener('DOMContentLoaded', () => {
+        // Copy JSON to clipboard
+        document.getElementById('copy-json').addEventListener('click', () => {
+          const jsonText = document.getElementById('parameters-json');
+          jsonText.select();
+          document.execCommand('copy');
+          alert('JSON copied to clipboard!');
+        });
+        
+        // Apply JSON from textarea
+        document.getElementById('apply-json').addEventListener('click', () => {
+          try {
+            const jsonText = document.getElementById('parameters-json').value;
+            const data = JSON.parse(jsonText);
+            
+            // Apply global settings
+            if (data.global) {
+              globalParams.seed = data.global.seed || globalParams.seed;
+              globalParams.backgroundColor = data.global.backgroundColor || globalParams.backgroundColor;
+              globalParams.allAnimationEnabled = data.global.allAnimationEnabled || false;
+              globalParams.globalAnimationSpeed = data.global.globalAnimationSpeed || 1.0;
+              globalParams.selectedColorPalette = data.global.selectedColorPalette || 0;
+              globalParams.colorPaletteMode = data.global.colorPaletteMode || "fixed";
+            }
+            
+            // Apply layer settings
+            if (data.layers && Array.isArray(data.layers)) {
+              const layerCount = Math.min(data.layers.length, MAX_LAYERS);
+              for (let i = 0; i < layerCount; i++) {
+                Object.assign(layerParams[i], data.layers[i]);
+              }
+            }
+            
+            // Update the sketch
+            randomSeed(globalParams.seed);
+            noiseSeed(globalParams.seed);
+            
+            // Apply color palette based on loaded settings
+            applyColorPalette(globalParams.selectedColorPalette, globalParams.colorPaletteMode);
+            
+            // Try to update GUI
+            for (let i = 0; i < gui.__controllers.length; i++) {
+              gui.__controllers[i].updateDisplay();
+            }
+            
+            document.getElementById('json-container').style.display = 'none';
+          } catch (e) {
+            alert('Error applying JSON: ' + e.message);
+          }
+        });
+        
+        // Close JSON panel
+        document.getElementById('close-json').addEventListener('click', () => {
+          document.getElementById('json-container').style.display = 'none';
+        });
+      });
+    </script>
+</BaseLayout>
+
+
+<!-- 
+
+{
+  "global": {
+    "seed": 56,
+    "backgroundColor": "#000000",
+    "allAnimationEnabled": true,
+    "globalAnimationSpeed": 3.5
+  },
+  "layers": [
+    {
+      "enabled": true,
+      "radius": 158,
+      "numElements": 108,
+      "shapeType": "triangle",
+      "shapeSize": 9.5,
+      "rotationOffset": 0.9564283549199957,
+      "strokeWeight": 2.328973076189868,
+      "strokeColor": "#0196c5",
+      "fillColor": "#014358",
+      "opacity": 205,
+      "animationEnabled": true,
+      "animationSpeed": -0.0020287132114171985,
+      "usePerlinNoise": true,
+      "noiseMagnitude": 4.833440633956343,
+      "noiseScale": 0.026621906475629654,
+      "noiseTimeScale": 0.0023729262296110394
+    },
+    {
+      "enabled": true,
+      "radius": 214,
+      "numElements": 108,
+      "shapeType": "triangle",
+      "shapeSize": 24,
+      "rotationOffset": 0.44063719261632006,
+      "strokeWeight": 2.218483778531663,
+      "strokeColor": "#1284e5",
+      "fillColor": "#083c68",
+      "opacity": 253,
+      "animationEnabled": false,
+      "animationSpeed": 0.00046332778036594323,
+      "usePerlinNoise": false,
+      "noiseMagnitude": 14.224252591375262,
+      "noiseScale": 0.16941859433194623,
+      "noiseTimeScale": 0.0010583297628909349
+    },
+    {
+      "enabled": true,
+      "radius": 263,
+      "numElements": 108,
+      "shapeType": "triangle",
+      "shapeSize": 35,
+      "rotationOffset": 5.853632363969602,
+      "strokeWeight": 0.98768179200124,
+      "strokeColor": "#42deda",
+      "fillColor": "#1d6260",
+      "opacity": 248,
+      "animationEnabled": false,
+      "animationSpeed": 0.0123,
+      "usePerlinNoise": true,
+      "noiseMagnitude": 6.312392188701779,
+      "noiseScale": 0.17655296666314826,
+      "noiseTimeScale": 0.016168789168819784
+    },
+    {
+      "enabled": true,
+      "radius": 304,
+      "numElements": 108,
+      "shapeType": "triangle",
+      "shapeSize": 16.5,
+      "rotationOffset": 4.737481366749014,
+      "strokeWeight": 1.4884074021829292,
+      "strokeColor": "#2fc2e3",
+      "fillColor": "#1a6d7f",
+      "opacity": 203,
+      "animationEnabled": true,
+      "animationSpeed": -0.005151797994971275,
+      "usePerlinNoise": true,
+      "noiseMagnitude": 3.1279868655838072,
+      "noiseScale": 0.1477937694056891,
+      "noiseTimeScale": 0.006887291947379708
+    },
+    {
+      "enabled": true,
+      "radius": 350,
+      "numElements": 108,
+      "shapeType": "triangle",
+      "shapeSize": 44,
+      "rotationOffset": 4.329737378049525,
+      "strokeWeight": 2,
+      "strokeColor": "#1bd8ec",
+      "fillColor": "#0e6d77",
+      "opacity": 233,
+      "animationEnabled": true,
+      "animationSpeed": -0.0099,
+      "usePerlinNoise": true,
+      "noiseMagnitude": 3.4115025610662997,
+      "noiseScale": 0.19799206068506464,
+      "noiseTimeScale": 0.007966472206637263
+    },
+    {
+      "enabled": true,
+      "radius": 413,
+      "numElements": 108,
+      "shapeType": "triangle",
+      "shapeSize": 50.5,
+      "rotationOffset": 2.4763500787434727,
+      "strokeWeight": 1.537443891982548,
+      "strokeColor": "#14a6c2",
+      "fillColor": "#094d5a",
+      "opacity": 246,
+      "animationEnabled": true,
+      "animationSpeed": 0.0018406313210725788,
+      "usePerlinNoise": false,
+      "noiseMagnitude": 4.894757999572903,
+      "noiseScale": 0.08093660993268713,
+      "noiseTimeScale": 0.012550112089142203
+    },
+    {
+      "enabled": true,
+      "radius": 481,
+      "numElements": 108,
+      "shapeType": "triangle",
+      "shapeSize": 54,
+      "rotationOffset": 6.180172461858238,
+      "strokeWeight": 1.3570228022290394,
+      "strokeColor": "#23baa5",
+      "fillColor": "#198374",
+      "opacity": 172,
+      "animationEnabled": true,
+      "animationSpeed": -0.0077060311883687975,
+      "usePerlinNoise": true,
+      "noiseMagnitude": 3.4532238193787634,
+      "noiseScale": 0.1483069663657807,
+      "noiseTimeScale": 0.005804291592910886
+    },
+    {
+      "enabled": true,
+      "radius": 548,
+      "numElements": 108,
+      "shapeType": "triangle",
+      "shapeSize": 69,
+      "rotationOffset": 2.87,
+      "strokeWeight": 1.7000000000000002,
+      "strokeColor": "#1fec32",
+      "fillColor": "#10791a",
+      "opacity": 216,
+      "animationEnabled": true,
+      "animationSpeed": 0.0126,
+      "usePerlinNoise": false,
+      "noiseMagnitude": 0,
+      "noiseScale": 0.47700000000000004,
+      "noiseTimeScale": 0.077
+    }
+  ]
+}
+ -->

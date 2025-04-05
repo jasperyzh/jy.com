@@ -16,17 +16,17 @@ const { post } = Astro.props;
   <p>{post.data.description}</p>
   <p>Published on: {formatYymmddDate(post.data.pubDate).toLocaleDateString()}</p>
   {
-    post.data.image_url && (
+    post.data.thumbnail && (
       <figure class="block w-full lg:col-span-2">
-        <a href={`/blog/${post.data.id}`} title={post.data.title}>
+        <a href={`/blog/${post.id}`} title={post.data.title}>
           <div class="image-container">
             <div class="placeholder">
               <div class="loading-spinner" />
             </div>
             <img
               class="lazy-image object-cover bg-center h-full w-full"
-              data-src={post.data.image_url}
-              alt={post.data.image_alt}
+              data-src={post.data.thumbnail}
+              alt={`Thumbnail for ${post.data.title}`}
             />
           </div>
         </a>
@@ -46,9 +46,16 @@ const { post } = Astro.props;
     </header>
 
     <p class="description">{post.data.description}</p>
+    
+    {post.data.category && (
+      <div class="category mb-2">
+        <span class="badge rounded-pill text-bg-primary">{post.data.category}</span>
+      </div>
+    )}
+    
     <div class="tags mt-2">
       {
-        post.data.tags.map((tag) => (
+        post.data.tags && post.data.tags.map((tag) => (
           <a href={`/tags/${tag}`} class="tag-badge">
             <span class="badge rounded-pill text-bg-secondary">{tag}</span>
           </a>

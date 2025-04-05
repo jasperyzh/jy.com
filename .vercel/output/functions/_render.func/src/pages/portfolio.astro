@@ -1,0 +1,451 @@
+---
+import Layout from "@/layouts/BaseLayout.astro";
+import { SITE_TITLE } from "../consts";
+
+// Portfolio items data
+const portfolioItems = [
+  {
+    title: "Paramount Property",
+    category: "Web Development",
+    thumbnail: "https://picsum.photos/id/237/1920/1080",
+    images: [
+      {
+        src: "https://picsum.photos/id/237/1920/1080",
+        width: 1920,
+        height: 1080,
+        caption: "Homepage design showcasing property listings",
+      },
+      {
+        src: "https://picsum.photos/id/238/800/600",
+        width: 800,
+        height: 600,
+        caption: "Interactive property search interface",
+      },
+      {
+        src: "https://picsum.photos/id/239/800/600",
+        width: 800,
+        height: 600,
+        caption: "Mobile responsive design",
+      },
+    ],
+    description:
+      "Corporate website development for Malaysia's leading property developer",
+    tags: ["WordPress", "Custom Theme", "Property Portal"],
+    year: "2023",
+  },
+  {
+    title: "E-commerce Platform",
+    category: "Full Stack Development",
+    thumbnail: "https://picsum.photos/id/240/1920/1080",
+    images: [
+      {
+        src: "https://picsum.photos/id/240/1920/1080",
+        width: 1920,
+        height: 1080,
+        caption: "Product catalog with advanced filtering",
+      },
+      {
+        src: "https://picsum.photos/id/242/800/600",
+        width: 800,
+        height: 600,
+        caption: "Shopping cart and checkout process",
+      },
+      {
+        src: "https://picsum.photos/id/243/800/600",
+        width: 800,
+        height: 600,
+        caption: "Admin dashboard for inventory management",
+      },
+    ],
+    description:
+      "Modern e-commerce platform with real-time inventory management",
+    tags: ["React", "Node.js", "MongoDB"],
+    year: "2023",
+  },
+  {
+    title: "Travel Blog Platform",
+    category: "Web Design",
+    thumbnail: "https://picsum.photos/id/244/1920/1080",
+    images: [
+      {
+        src: "https://picsum.photos/id/244/1920/1080",
+        width: 1920,
+        height: 1080,
+        caption: "Homepage with featured destinations",
+      },
+      {
+        src: "https://picsum.photos/id/216/800/600",
+        width: 800,
+        height: 600,
+        caption: "Blog post layout with rich media",
+      },
+      {
+        src: "https://picsum.photos/id/217/800/600",
+        width: 800,
+        height: 600,
+        caption: "Interactive map integration",
+      },
+    ],
+    description:
+      "Custom blog platform for travel enthusiasts with dynamic content management",
+    tags: ["Astro", "TailwindCSS", "Markdown"],
+    year: "2024",
+  },
+  {
+    title: "Healthcare Dashboard",
+    category: "UI/UX Design",
+    thumbnail: "https://picsum.photos/id/248/1920/1080",
+    images: [
+      {
+        src: "https://picsum.photos/id/248/1920/1080",
+        width: 1920,
+        height: 1080,
+        caption: "Patient monitoring dashboard",
+      },
+      {
+        src: "https://picsum.photos/id/250/800/600",
+        width: 800,
+        height: 600,
+        caption: "Medical records interface",
+      },
+      {
+        src: "https://picsum.photos/id/251/800/600",
+        width: 800,
+        height: 600,
+        caption: "Analytics and reporting tools",
+      },
+    ],
+    description:
+      "Interactive dashboard for healthcare professionals with real-time patient monitoring",
+    tags: ["Vue.js", "D3.js", "Firebase"],
+    year: "2023",
+  },
+  {
+    title: "Mobile Banking App",
+    category: "Mobile Development",
+    thumbnail: "https://picsum.photos/id/252/1920/1080",
+    images: [
+      {
+        src: "https://picsum.photos/id/252/1920/1080",
+        width: 1920,
+        height: 1080,
+        caption: "Mobile banking home screen",
+      },
+      {
+        src: "https://picsum.photos/id/254/800/600",
+        width: 800,
+        height: 600,
+        caption: "Transaction history and analytics",
+      },
+      {
+        src: "https://picsum.photos/id/255/800/600",
+        width: 800,
+        height: 600,
+        caption: "Secure payment interface",
+      },
+    ],
+    description: "Secure and user-friendly mobile banking application",
+    tags: ["React Native", "TypeScript", "AWS"],
+    year: "2024",
+  },
+  {
+    title: "AI Content Platform",
+    category: "Machine Learning",
+    thumbnail: "https://picsum.photos/id/256/1920/1080",
+    images: [
+      {
+        src: "https://picsum.photos/id/256/1920/1080",
+        width: 1920,
+        height: 1080,
+        caption: "AI content generation interface",
+      },
+      {
+        src: "https://picsum.photos/id/258/800/600",
+        width: 800,
+        height: 600,
+        caption: "Content optimization dashboard",
+      },
+      {
+        src: "https://picsum.photos/id/259/800/600",
+        width: 800,
+        height: 600,
+        caption: "Analytics and performance metrics",
+      },
+    ],
+    description: "AI-powered content generation and optimization platform",
+    tags: ["Python", "TensorFlow", "FastAPI"],
+    year: "2024",
+  },
+];
+
+// Group projects by year
+const projectsByYear = portfolioItems.reduce((acc, project) => {
+  acc[project.year] = [...(acc[project.year] || []), project];
+  return acc;
+}, {});
+
+const { exposedPortfolioItems } = Astro.props;
+---
+
+<Layout title={`Portfolio - ${SITE_TITLE}`}>
+  <main class="container-fluid py-5 px-4 bg-gray-100 dark:bg-gray-900">
+    <div class="container mx-auto gallery-parent">
+      <div class="text-center mb-12">
+        <p class="text-sm uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2">Elements</p>
+        <h1 class="text-4xl md:text-5xl font-bold mb-2 text-gray-900 dark:text-white">See the highlights</h1>
+        <p class="text-xl text-gray-600 dark:text-gray-300">
+          of this website.
+        </p>
+      </div>
+
+      {
+        Object.entries(projectsByYear)
+          .reverse()
+          .map(([year, projects]) => (
+            <div class="mb-12">
+              <h2 class="text-2xl font-semibold mb-6 text-gray-800 dark:text-gray-200">{year}</h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                {projects.map((item, index) => (
+                  <div class="group" data-index={index}>
+                    <div class="bg-gray-800 rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-xl">
+                      <div class="relative">
+                        <a
+                          href={item.images[0].src}
+                          data-pswp-width="1920"
+                          data-pswp-height="1080"
+                          target="_blank"
+                          class="gallery-link block"
+                        >
+                          <div class="relative p-4 pt-6 pb-5">
+                            <div class="absolute top-0 left-0 right-0 flex items-center px-4 py-2 space-x-1">
+                              <div class="w-3 h-3 bg-red-400 rounded-full"></div>
+                              <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                              <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+                            </div>
+                            <div class="border border-gray-600 rounded-md overflow-hidden">
+                              <img
+                                src={item.thumbnail}
+                                class="w-full object-cover aspect-video"
+                                alt={item.title}
+                                loading="lazy"
+                              />
+                            </div>
+                          </div>
+                        </a>
+
+                        {item.images.map((image, imgIndex) =>
+                          imgIndex > 0 ? (
+                            <a
+                              key={imgIndex}
+                              href={image.src}
+                              data-pswp-width={image.width}
+                              data-pswp-height={image.height}
+                              target="_blank"
+                              class="gallery-link hidden"
+                            ></a>
+                          ) : null
+                        )}
+
+                        {item.images.length > 1 && (
+                          <span class="absolute top-2 right-2 text-xs bg-black bg-opacity-70 text-white px-2 py-1 rounded-full">
+                            <i class="bi bi-images" /> {item.images.length}
+                          </span>
+                        )}
+                      </div>
+                      <div class="p-5 pt-0">
+                        <div class="flex justify-between items-start mb-3">
+                          <h3 class="text-lg font-medium text-white">{item.title}</h3>
+                          <span class="text-xs text-teal-400 font-medium px-2 py-1 rounded bg-teal-400 bg-opacity-10">
+                            {item.category}
+                          </span>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-4">{item.description}</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                          {item.tags.map((tag) => (
+                            <span class="text-xs font-medium text-gray-300 bg-gray-700 px-2 py-1 rounded">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                        <div class="flex justify-between items-center pt-2 border-t border-gray-700">
+                          <span class="text-xs text-gray-400">{item.year}</span>
+                          <button class="text-sm text-white hover:text-teal-400 transition-colors duration-200 flex items-center gap-1">
+                            View Project <i class="bi bi-arrow-right"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))
+      }
+    </div>
+  </main>
+</Layout>
+
+<script>
+  import PhotoSwipeLightbox from "photoswipe/dist/photoswipe-lightbox.esm.js";
+
+  const lightbox = new PhotoSwipeLightbox({
+    gallery: ".gallery-parent",
+    children: ".gallery-link",
+    pswpModule: () => import("photoswipe/dist/photoswipe.esm.js"),
+  });
+
+  lightbox.init();
+</script>
+
+<style>
+    /* We'll let Tailwind handle most of the styling */
+  .gallery-link {
+    cursor: pointer;
+    display: block;
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+
+  /* portfolio--astro theme */
+  :root {
+    --_placeholder-bg: linear-gradient(transparent, transparent);
+    --bg-image-main: url("/assets/backgrounds/bg-main-light-800w.jpg");
+    --bg-image-main-curves: url("/assets/backgrounds/bg-main-light.svg");
+    --bg-image-subtle-1: var(--_placeholder-bg);
+    --bg-image-subtle-2: var(--_placeholder-bg);
+    --bg-image-footer: var(--_placeholder-bg);
+    --bg-svg-blend-mode: overlay;
+    --bg-blend-mode: darken;
+    --bg-image-aspect-ratio: 2.25;
+    --bg-scale: 1.68;
+    --bg-aspect-ratio: calc(var(--bg-image-aspect-ratio) / var(--bg-scale));
+    --bg-gradient-size: calc(var(--bg-scale) * 100%);
+  }
+
+  :root.theme-dark {
+    --bg-image-main: url("/assets/backgrounds/bg-main-dark-800w.jpg");
+    --bg-image-main-curves: url("/assets/backgrounds/bg-main-dark.svg");
+    --bg-svg-blend-mode: darken;
+    --bg-blend-mode: lighten;
+  }
+
+  /* These backgrounds are displayed below the fold, so we lazy load them
+     once the `.loaded` class has been set.  */
+  :root.loaded {
+    --bg-image-subtle-1: url("/assets/backgrounds/bg-subtle-1-light-800w.jpg");
+    --bg-image-subtle-2: url("/assets/backgrounds/bg-subtle-2-light-800w.jpg");
+    --bg-image-footer: url("/assets/backgrounds/bg-footer-light-800w.jpg");
+  }
+
+  :root.loaded.theme-dark {
+    --bg-image-subtle-1: url("/assets/backgrounds/bg-subtle-1-dark-800w.jpg");
+    --bg-image-subtle-2: url("/assets/backgrounds/bg-subtle-2-dark-800w.jpg");
+    --bg-image-footer: url("/assets/backgrounds/bg-footer-dark-800w.jpg");
+  }
+
+  @media (min-width: 50em) {
+    :root {
+      --bg-scale: 1;
+      --bg-image-main: url("/assets/backgrounds/bg-main-light-1440w.jpg");
+    }
+
+    :root.theme-dark {
+      --bg-image-main: url("/assets/backgrounds/bg-main-dark-1440w.jpg");
+    }
+
+    :root.loaded {
+      --bg-image-subtle-1: url("/assets/backgrounds/bg-subtle-1-light-1440w.jpg");
+      --bg-image-subtle-2: url("/assets/backgrounds/bg-subtle-2-light-1440w.jpg");
+      --bg-image-footer: url("/assets/backgrounds/bg-footer-light-1440w.jpg");
+    }
+
+    :root.loaded.theme-dark {
+      --bg-image-subtle-1: url("/assets/backgrounds/bg-subtle-1-dark-1440w.jpg");
+      --bg-image-subtle-2: url("/assets/backgrounds/bg-subtle-2-dark-1440w.jpg");
+      --bg-image-footer: url("/assets/backgrounds/bg-footer-dark-1440w.jpg");
+    }
+  }
+  
+  .backgrounds {
+    min-height: 100%;
+    isolation: isolate;
+    background:
+    /*noise*/
+      url("/assets/backgrounds/noise.png") top center/220px repeat,
+      /*footer*/ var(--bg-image-footer) bottom center/var(--bg-gradient-size)
+        no-repeat,
+      /*header1*/ var(--bg-image-main-curves) top center/var(--bg-gradient-size)
+        no-repeat,
+      /*header2*/ var(--bg-image-main) top center/var(--bg-gradient-size)
+        no-repeat,
+      /*base*/ var(--gray-999);
+    background-blend-mode:
+    /*noise*/
+      overlay,
+      /*footer*/ var(--bg-blend-mode),
+      /*header1*/ var(--bg-svg-blend-mode),
+      /*header2*/ normal,
+      /*base*/ normal;
+  }
+
+  @media (forced-colors: active) {
+    /* Deactivate custom backgrounds for high contrast users. */
+    .backgrounds {
+      background: none;
+      background-blend-mode: none;
+      --bg-gradient-size: none;
+    }
+  }
+</style>
+
+<style is:global>
+  @import "photoswipe/dist/photoswipe.css";
+
+  /* PhotoSwipe Customization */
+  .pswp__caption {
+    background: rgba(0, 0, 0, 0.85);
+    padding: 16px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    backdrop-filter: blur(10px);
+  }
+
+  .pswp__title {
+    color: white;
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+
+  .pswp__description {
+    color: #ccc;
+    margin: 4px 0 0;
+    font-size: 0.875rem;
+  }
+  
+  /* Tailwind classes for dark mode */
+  .dark .bg-gray-100 {
+    background-color: #111827;
+  }
+  
+  .dark .text-gray-800 {
+    color: #d1d5db;
+  }
+</style>

@@ -1,0 +1,347 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Tiny Undo Stack - Drawing Example">
+  <main>
+    <h1>Simple Drawing with Undo/Redo</h1>
+    <div class="controls">
+      <button id="undoBtn" disabled>Undo</button>
+      <button id="redoBtn" disabled>Redo</button>
+      <button id="clearBtn">Clear All</button>
+    </div>
+    <canvas id="drawingCanvas" width="600" height="400"></canvas>
+    <p>Draw on the canvas by clicking and dragging.</p>
+    <!--     
+        <script src="undoStack.js"></script>
+        <script src="script.js"></script> -->
+  </main>
+</BaseLayout>
+
+<style is:inline>
+  /* 
+body {
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f4f4f4;
+} */
+
+  h1 {
+    color: #333;
+  }
+
+  .controls {
+    margin-bottom: 15px;
+  }
+
+  button {
+    padding: 8px 15px;
+    margin: 0 5px;
+    font-size: 1em;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #e7e7e7;
+  }
+
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #f0f0f0;
+  }
+
+  button:hover:not(:disabled) {
+    background-color: #dcdcdc;
+  }
+
+  #drawingCanvas {
+    border: 2px solid #333;
+    background-color: #fff;
+    cursor: crosshair;
+    touch-action: none; /* Prevent default touch actions like scrolling */
+  }
+
+  p {
+    margin-top: 15px;
+    color: #555;
+  }
+</style>
+
+<script is:inline>
+  // 3. JavaScript Undo Stack (undoStack.js):
+  function createUndoStack() {
+    const past = []; // Actions that have been done and can be undone
+    const future = []; // Actions that have been undone and can be redone
+
+    return {
+      /**
+       * Pushes a new action onto the undo stack.
+       * Executes the doFn immediately.
+       * Clears the redo stack.
+       * @param {Function} doFn - The function to execute to perform the action.
+       * @param {Function} undoFn - The function to execute to undo the action.
+       * @param {...any} withArgumentsToClone - Arguments to be deep-cloned and passed to doFn and undoFn.
+       */
+      push(doFn, undoFn, ...withArgumentsToClone) {
+        // Clone arguments to prevent issues with mutable objects and closures
+        const clonedArgs = structuredClone(withArgumentsToClone);
+
+        const action = {
+          // Wrapper functions to ensure the cloned arguments are used
+          doWithData() {
+            doFn(...clonedArgs);
+          },
+          undoWithData() {
+            undoFn(...clonedArgs);
+          },
+        };
+
+        // Execute the action immediately
+        action.doWithData();
+
+        // Add the action to the past (undo stack)
+        past.push(action);
+
+        // Adding a new action clears the future (redo stack)
+        if (future.length > 0) {
+          console.log("Clearing redo stack because a new action was pushed.");
+          future.length = 0;
+        }
+      },
+
+      /**
+       * Undoes the last action.
+       * Moves the action from the past stack to the future stack.
+       */
+      undo() {
+        const action = past.pop();
+        if (action) {
+          console.log("Undoing action...");
+          action.undoWithData();
+          future.unshift(action); // Add to the beginning of the redo stack
+        } else {
+          console.log("Nothing to undo.");
+        }
+      },
+
+      /**
+       * Redoes the last undone action.
+       * Moves the action from the future stack back to the past stack.
+       */
+      redo() {
+        const action = future.shift(); // Remove from the beginning of the redo stack
+        if (action) {
+          console.log("Redoing action...");
+          action.doWithData();
+          past.push(action); // Add back to the end of the undo stack
+        } else {
+          console.log("Nothing to redo.");
+        }
+      },
+
+      /**
+       * Checks if there are actions that can be undone.
+       * @returns {boolean} True if undo is available, false otherwise.
+       */
+      get undoAvailable() {
+        return past.length > 0;
+      },
+
+      /**
+       * Checks if there are actions that can be redone.
+       * @returns {boolean} True if redo is available, false otherwise.
+       */
+      get redoAvailable() {
+        return future.length > 0;
+      },
+
+      /**
+       * Clears both the undo and redo stacks.
+       * @returns {boolean} True.
+       */
+      clear() {
+        console.log("Clearing undo/redo history.");
+        past.length = 0;
+        future.length = 0;
+        return true;
+      },
+    };
+  }
+
+  // If using modules (though not strictly required for this simple example)
+  // export { createUndoStack };
+</script>
+
+<script is:inline>
+  // 4. JavaScript Application Logic (script.js):
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const canvas = document.getElementById("drawingCanvas");
+    const ctx = canvas.getContext("2d");
+    const undoBtn = document.getElementById("undoBtn");
+    const redoBtn = document.getElementById("redoBtn");
+    const clearBtn = document.getElementById("clearBtn");
+
+    // --- State ---
+    let isDrawing = false;
+    let currentStroke = []; // Array of points {x, y} for the stroke currently being drawn
+    let strokes = []; // Array of completed strokes (each stroke is an array of points)
+    const undoStack = createUndoStack();
+
+    // --- Canvas Setup ---
+    ctx.lineWidth = 3;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = "#000000";
+
+    // --- Drawing Functions ---
+    function getMousePos(evt) {
+      const rect = canvas.getBoundingClientRect();
+      // Adjust for touch events
+      const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+      const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top,
+      };
+    }
+
+    function startDrawing(e) {
+      isDrawing = true;
+      currentStroke = []; // Start a new stroke
+      const pos = getMousePos(e);
+      currentStroke.push(pos);
+      // Draw the starting point immediately (optional, good for dots)
+      // ctx.beginPath();
+      // ctx.moveTo(pos.x, pos.y);
+      // ctx.lineTo(pos.x, pos.y); // Draw a tiny line segment or dot
+      // ctx.stroke();
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      const pos = getMousePos(e);
+
+      // Draw line segment visually as mouse moves
+      ctx.beginPath();
+      // Use the last point in currentStroke as the start
+      const lastPoint = currentStroke[currentStroke.length - 1];
+      ctx.moveTo(lastPoint.x, lastPoint.y);
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+
+      // Add point to the current stroke data
+      currentStroke.push(pos);
+      e.preventDefault(); // Prevent scrolling on touch devices
+    }
+
+    function stopDrawing() {
+      if (!isDrawing) return;
+      isDrawing = false;
+
+      // Only save if the stroke has more than one point (or your desired threshold)
+      if (currentStroke.length > 1) {
+        console.log(
+          `Stroke finished with ${currentStroke.length} points. Pushing to undo stack.`
+        );
+        // --- UNDO STACK INTEGRATION ---
+        // We need functions to add and remove *this specific stroke*
+        const strokeToAdd = currentStroke; // Keep reference before resetting
+
+        const addStrokeAction = (strokeData) => {
+          console.log("Executing: Add Stroke");
+          strokes.push(strokeData);
+          redrawCanvas(); // Redraw everything including the new stroke
+          updateButtonStates();
+        };
+
+        const removeStrokeAction = (strokeData) => {
+          console.log("Executing: Remove Stroke");
+          // In a more complex scenario, you might search for strokeData,
+          // but here we assume it's always the last one added by the corresponding 'do'.
+          const removed = strokes.pop();
+          // Optional check: console.log("Removed stroke matches expected?", removed === strokeData); // Note: This won't work due to cloning
+          redrawCanvas(); // Redraw without the removed stroke
+          updateButtonStates();
+        };
+
+        // Push the actions and the stroke data (which will be cloned)
+        // The push method executes addStrokeAction immediately.
+        undoStack.push(addStrokeAction, removeStrokeAction, strokeToAdd);
+        // We don't call addStrokeAction here, push does it!
+      } else {
+        console.log("Stroke too short, not saving.");
+      }
+
+      // Reset current stroke for the next drawing action
+      currentStroke = [];
+      // No need to redraw here, push already triggered redraw via addStrokeAction
+      updateButtonStates(); // Update buttons after potential push
+    }
+
+    function redrawCanvas() {
+      console.log(`Redrawing canvas with ${strokes.length} strokes.`);
+      // Clear the entire canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Redraw all committed strokes
+      strokes.forEach((stroke) => {
+        if (stroke.length < 2) return; // Need at least two points to draw a line
+
+        ctx.beginPath();
+        ctx.moveTo(stroke[0].x, stroke[0].y);
+        for (let i = 1; i < stroke.length; i++) {
+          ctx.lineTo(stroke[i].x, stroke[i].y);
+        }
+        ctx.stroke();
+      });
+    }
+
+    // --- UI Update Function ---
+    function updateButtonStates() {
+      undoBtn.disabled = !undoStack.undoAvailable;
+      redoBtn.disabled = !undoStack.redoAvailable;
+      console.log(
+        `UI Update: Can Undo: ${undoStack.undoAvailable}, Can Redo: ${undoStack.redoAvailable}`
+      );
+    }
+
+    // --- Clear Functionality ---
+    function clearAll() {
+      strokes = []; // Clear the drawing data
+      undoStack.clear(); // Clear the history
+      redrawCanvas(); // Clear the visual canvas
+      updateButtonStates(); // Update buttons
+    }
+
+    // --- Event Listeners ---
+    // Mouse events
+    canvas.addEventListener("mousedown", startDrawing);
+    canvas.addEventListener("mousemove", draw);
+    canvas.addEventListener("mouseup", stopDrawing);
+    canvas.addEventListener("mouseout", stopDrawing); // Stop drawing if mouse leaves canvas
+
+    // Touch events
+    canvas.addEventListener("touchstart", startDrawing);
+    canvas.addEventListener("touchmove", draw);
+    canvas.addEventListener("touchend", stopDrawing);
+    canvas.addEventListener("touchcancel", stopDrawing); // Handle interruption
+
+    undoBtn.addEventListener("click", () => {
+      undoStack.undo();
+      // Note: The undoFn (removeStrokeAction) calls redraw and update buttons
+    });
+
+    redoBtn.addEventListener("click", () => {
+      undoStack.redo();
+      // Note: The doFn (addStrokeAction) calls redraw and update buttons
+    });
+
+    clearBtn.addEventListener("click", clearAll);
+
+    // --- Initial State ---
+    updateButtonStates(); // Set initial button states
+  });
+</script>

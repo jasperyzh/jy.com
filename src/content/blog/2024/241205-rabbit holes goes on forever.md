@@ -1,9 +1,11 @@
 ---
-pubDate: 241012
-title: rabbit holes goes on forever 2
-description: An exploration of 'Keep it Simple, Essential'—a step beyond the KISS principle. Learn how this approach helps identify what truly matters and why I adopted it.
-tags: ["WebDevelopment", "FrontendDevelopment", "DIY", "Content"]
+pubDate: 241205
+title: "Down the Rabbit Hole: The Endless Journey of Learning"
+description: "Exploring how deep learning journeys can lead us through interconnected topics, challenges, and unexpected discoveries."
+tags: ["Learning", "Technology", "Web Development", "Personal Growth"]
 draft: 0
+thumbnail: "/img/placeholder.png"
+category: "Workflow"
 ---
 
 
@@ -26,13 +28,13 @@ CSS scroll-driven animations are currently [only available in Chromium](https://
 3. Cover all bases: If you can do option 1, do it. Otherwise, try option 2.
     
 
-The typical approach will be option 2 based on the current support. It depends on how critical that scroll animation is to your design. You can do a lot with option 1. Especially when it’s those “little details”.
+The typical approach will be option 2 based on the current support. It depends on how critical that scroll animation is to your design. You can do a lot with option 1. Especially when it's those "little details".
 
-In today’s demo, any animation is a “bonus”. If a user scrolled our page and didn't see it, they wouldn't know unless they were looking for it. That said, let's do option 3!
+In today's demo, any animation is a "bonus". If a user scrolled our page and didn't see it, they wouldn't know unless they were looking for it. That said, let's do option 3!
 
 ### The Grid
 
-First, you want to think about what elements you need to get this working. It’s a grid of images.
+First, you want to think about what elements you need to get this working. It's a grid of images.
 
 When you look at the animation you're trying to make, it's as if layers of the grid move at different rates. The best path here is to split the grid into layers and have each layer use the same grid layout. Then you can animate each layer with different timing.
 
@@ -97,7 +99,7 @@ Now for each layer, use `subgrid`. Using a subgrid lets each layer use the grid 
 }
 ```
 
-The scaling image goes in the center. It’s a direct child so you can place it with `grid-area`.
+The scaling image goes in the center. It's a direct child so you can place it with `grid-area`.
 
 ``` css
 .grid .scaler {
@@ -115,9 +117,9 @@ Now you have a grid of images ready to animate!
 
 ](https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F1ef883ca-c80b-408e-9624-8890d4a0fff0_1800x1350.png)
 
-Using the CSS Grid features in Chrome’s Developer Tools
+Using the CSS Grid features in Chrome's Developer Tools
 
-**NOTE::** You may have to make a few adjustments to get things working in all browsers with subgrid. For example, a percentage gap didn’t work for this demo in Safari. Switching to a clamped container query unit did work.
+**NOTE::** You may have to make a few adjustments to get things working in all browsers with subgrid. For example, a percentage gap didn't work for this demo in Safari. Switching to a clamped container query unit did work.
 
 ### Laying Foundations
 
@@ -132,7 +134,7 @@ Scroll animations come in different shapes and sizes. There are a few common tri
 
 This demo presented at Figma Config (hence the Figma logo) shows how the trick works.
 
-If you want to see a clip of me talking through that demo, it’s here 👇 (do not feel obliged)
+If you want to see a clip of me talking through that demo, it's here 👇 (do not feel obliged)
 
 For our demo. Wrap the grid in a content block inside a section.
 
@@ -172,7 +174,7 @@ Now you can start animating things! One last thing before we move things. Be min
 
 The animation for the center image is straightforward. Animate its `height` and `width` from `100vh` and `100vw`. An open-ended animation means the image will animate to its size within the grid.
 
-You’re animating based on the parent, so set a `view-timeline` on that element.
+You're animating based on the parent, so set a `view-timeline` on that element.
 
 ``` css
 main section:first-of-type {

@@ -1,0 +1,353 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="The Malaysian Clock - CSS Version">
+  <main>
+    <div class="container mx-auto">
+      <h1>The Malaysian Clock</h1>
+      <p>A sketch of THE Malaysian Favourite Clock.</p>
+      <div id="the-malaysian-clock">
+        <div class="clock-container">
+          <div class="clock">
+            <div class="outer-ring"></div>
+            <div class="inner-face"></div>
+            <!-- Clock Ticks -->
+            <div class="ticks">
+              <!-- Major ticks (hours) will be created by JavaScript -->
+              <!-- Minor ticks (minutes) will be created by JavaScript -->
+            </div>
+            <!-- Clock Hands -->
+            <div class="hand hour-hand"></div>
+            <div class="hand minute-hand"></div>
+            <div class="hand second-hand"></div>
+          </div>
+        </div>
+      </div>
+      <div id="canvas"></div>
+    </div>
+  </main>
+</BaseLayout>
+<style is:global>
+  #the-malaysian-clock {
+    #canvas {
+      display: inline-block;
+    }
+    .clock-container {
+      width: 512px;
+      height: 512px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .clock {
+      display: grid;
+      grid-template-columns: minmax(180px, 1fr);
+      grid-template-rows: minmax(180px, 1fr);
+      aspect-ratio: 1/1;
+      min-width: 512px;
+
+      position: relative;
+    }
+
+    .outer-ring {
+      width: 100%;
+      height: 100%;
+      grid-column: 1 / 2;
+      grid-row: 1 / 2;
+      border: 1rem solid red;
+      border-radius: 50%;
+      position: relative;
+    }
+
+    .inner-face {
+      width: 100%;
+      height: 100%;
+      grid-column: 1 / 2;
+      grid-row: 1 / 2;
+      /* position: relative; */
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-color: rgb(8, 9, 146);
+      border: 2rem solid white;
+    }
+
+    .hand {
+      position: absolute;
+      top: 39.5%;
+      /* still 39.5% of vague center */
+      left: 50%;
+      transform-origin: 50% 20%; /* Move pivot point slightly down from top edge */
+      background-color: rgb(255, 224, 26);
+      z-index: 10;
+    }
+
+    .hour-hand {
+      width: 14px;
+      height: 45%; /* Increased height to account for the part that extends beyond center */
+      margin-left: -7px;
+    }
+    .minute-hand {
+      width: 8px;
+      height: 48%; /* Increased height to account for the part that extends beyond center */
+      margin-left: -4px;
+    }
+
+    .second-hand {
+      width: 8px;
+      height: 53%; /* Increased height to account for the part that extends beyond center */
+      margin-left: -4px;
+    }
+    .ticks {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      grid-column: 1 / 2;
+      grid-row: 1 / 2;
+      z-index: 5;
+
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr;
+    }
+
+    .tick {
+      position: absolute;
+      display: block;
+      width: 4px;
+      height: 8px;
+      background-color: white;
+      transform-origin: center center;
+    }
+
+    .tick.major {
+      width: 6px;
+      height: 15px;
+      background-color: white;
+      z-index: 6;
+    }
+  }
+</style>
+<script is:inline>
+  // Wait for DOM to be fully loaded
+  document.addEventListener("DOMContentLoaded", () => {
+    // Create clock ticks
+    function createClockTicks() {
+      const ticksContainer = document.querySelector(".ticks");
+
+      if (!ticksContainer) {
+        console.error("Ticks container not found");
+        return;
+      }
+
+      for (let i = 0; i < 60; i++) {
+        const tick = document.createElement("div");
+        tick.className = "tick";
+
+        // Make hour ticks (every 5 minutes) larger
+        if (i % 5 === 0) {
+          tick.classList.add("major");
+        }
+
+        // Position the tick around the clock face
+        const angle = (i / 60) * 360;
+        tick.style.transform = `rotate(${angle}deg)`;
+
+        // Calculate position using trigonometry
+        const radius = 210; // Distance from center to tick
+        const angleRad = (angle * Math.PI) / 180; // Convert to radians
+
+        // Calculate x and y position
+        const x = Math.sin(angleRad) * radius;
+        const y = -Math.cos(angleRad) * radius;
+
+        // Position the tick absolutely
+        tick.style.transform = "none"; // Clear rotation
+        tick.style.top = `calc(50% + ${y}px)`;
+        tick.style.left = `calc(50% + ${x}px)`;
+
+        // For major ticks (hour markers), make them larger
+        if (i % 5 === 0) {
+          tick.style.height = "10px";
+          tick.style.width = "24px";
+          tick.style.marginLeft = "-12px";
+          tick.style.marginTop = "-5px";
+        } else {
+          tick.style.height = "6px";
+          tick.style.width = "12px";
+          tick.style.marginLeft = "-6px";
+          tick.style.marginTop = "-3px";
+        }
+
+        // Rotate the tick to point toward the center
+        tick.style.transform = `rotate(${angle + 90}deg)`;
+
+        ticksContainer.appendChild(tick);
+      }
+    }
+
+    // Update clock hands
+    function updateClock() {
+      const now = new Date();
+
+      // Get local time (browser will handle timezone)
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
+      const milliseconds = now.getMilliseconds();
+
+      const adjustAngleAsHandPointToRight = 180;
+      // Calculate angles for hands with smooth movement
+      // Hour hand: 30 degrees per hour + partial movement based on minutes
+      const hourAngle =
+        (hours % 12) * 30 + (minutes / 60) * 30 - adjustAngleAsHandPointToRight;
+
+      // Minute hand: 6 degrees per minute + partial movement based on seconds
+      const minuteAngle =
+        minutes * 6 + (seconds / 60) * 6 - adjustAngleAsHandPointToRight;
+
+      // Second hand: 6 degrees per second + partial movement based on milliseconds for smooth motion
+      const secondAngle = seconds * 6 - adjustAngleAsHandPointToRight;
+
+      // Apply rotations to hands with null checks
+      const hourHand = document.querySelector(".hour-hand");
+      const minuteHand = document.querySelector(".minute-hand");
+      const secondHand = document.querySelector(".second-hand");
+
+      if (hourHand instanceof HTMLElement) {
+        hourHand.style.transform = `rotate(${hourAngle}deg)`;
+      }
+
+      if (minuteHand instanceof HTMLElement) {
+        minuteHand.style.transform = `rotate(${minuteAngle}deg)`;
+      }
+
+      if (secondHand instanceof HTMLElement) {
+        secondHand.style.transform = `rotate(${secondAngle}deg)`;
+      }
+    }
+
+    // Initialize the clock
+    createClockTicks();
+    updateClock();
+
+    // Update clock more frequently for smoother second hand movement
+    setInterval(updateClock, 50);
+  });
+</script>
+
+<script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.8.0/p5.js"
+></script>
+
+<script is:inline>
+  function setup_canvas() {
+    let _canvas = createCanvas(512, 512);
+    _canvas.parent("canvas");
+    frameRate(60);
+    background(13);
+  }
+
+  // sketch
+  let yellow = [255, 224, 26];
+  let blue = [8, 9, 146];
+
+  function setup() {
+    setup_canvas();
+    describe("A sketch of THE Malaysian Favourite Clock.");
+    // sketch
+
+    angleMode(DEGREES);
+  }
+
+  function draw() {
+    background(13);
+
+    // sketch
+    push();
+    draw_clock();
+    pop();
+  }
+
+  function draw_clock() {
+    // Translate the origin to the center of the canvas
+    translate(width / 2, height / 2);
+    strokeCap(SQUARE);
+
+    // Draw clock face
+    stroke(255, 0, 0);
+    strokeWeight(38);
+    ellipse(0, 0, 350, 350);
+
+    fill(blue);
+    stroke(255);
+    strokeWeight(12);
+    ellipse(0, 0, 350, 350);
+
+    // Draw the ticks
+    for (let i = 0; i < 60; i++) {
+      let len = i % 5 === 0 ? 15 : 8;
+      if (i % 5 === 0) {
+        strokeWeight(6);
+      } else {
+        strokeWeight(4);
+      }
+      let angle = map(i, 0, 60, 0, 360);
+      let x1 = cos(angle) * 165;
+      let y1 = sin(angle) * 165;
+      let x2 = cos(angle) * (165 - len);
+      let y2 = sin(angle) * (165 - len);
+      line(x1, y1, x2, y2);
+    }
+
+    // Get the current UTC time
+    let now = new Date();
+    let hours = now.getUTCHours() + 8; // Convert to Malaysia time (GMT+8)
+    let minutes = now.getUTCMinutes();
+    let seconds = now.getUTCSeconds();
+
+    // Correct for number over 24
+    hours = hours >= 24 ? hours - 24 : hours;
+
+    let adjustAngleAsHandPointToRight = 90;
+
+    // Calculate angles for hands
+    let hourAngle =
+      map(hours % 12, 0, 12, 0, 360) +
+      minutes * 0.5 -
+      adjustAngleAsHandPointToRight;
+    let minuteAngle =
+      map(minutes, 0, 60, 0, 360) +
+      map(seconds, 0, 60, 0, 6) -
+      adjustAngleAsHandPointToRight;
+    let secondAngle =
+      map(seconds, 0, 60, 0, 360) - adjustAngleAsHandPointToRight;
+
+    // Draw the second hand
+    push();
+    // translate(10, 0);
+    stroke(yellow);
+    strokeWeight(5);
+    rotate(secondAngle);
+    line(-22, 0, 164, 0);
+    pop();
+
+    // Draw the minute hand
+    push();
+    stroke(yellow);
+    strokeWeight(6);
+    rotate(minuteAngle);
+    line(-20, 0, 148, 0);
+    pop();
+
+    // Draw the hour hand
+    push();
+    stroke(yellow);
+    strokeWeight(12);
+    rotate(hourAngle);
+    line(-20, 0, 140, 0);
+    pop();
+  }
+</script>

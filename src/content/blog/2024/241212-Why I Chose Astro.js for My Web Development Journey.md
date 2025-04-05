@@ -1,19 +1,21 @@
 ---
 pubDate: 241212
-title: Why I Chose Astro.js for My Web Development Journey
-description: Astro.js - A fast, scalable, and eco-friendly web framework. Build performant, SEO-optimized static sites with minimal JavaScript and flexible features.
-tags: ["WebDevelopment", "FrontendDevelopment", "AstroJS"]
+title: "Why I Chose Astro.js for My Web Development Journey"
+description: "An exploration of Astro.js's benefits for content-focused websites, comparing it with other frameworks and explaining why it's ideal for modern web development."
+tags: ["Web Development", "Astro.js", "JavaScript", "Performance"]
 draft: 0
+thumbnail: "/img/placeholder.png"
+category: "Web Development"
 ---
 
 
-Astro.js has become my go-to framework for creating performant, scalable, and content-focused websites. Its static-first approach, combined with minimal JavaScript and flexibility, aligns perfectly with my goals of building fast, SEO-friendly, and sustainable projects. Here's why Astro.js stands out and how I’m using it in my web development journey.
+Astro.js has become my go-to framework for creating performant, scalable, and content-focused websites. Its static-first approach, combined with minimal JavaScript and flexibility, aligns perfectly with my goals of building fast, SEO-friendly, and sustainable projects. Here's why Astro.js stands out and how I'm using it in my web development journey.
 
 ## What Makes Astro.js the Perfect Choice for Me?
 
 When searching for a static site generator, I wanted something simple and lightweight—free of unnecessary bloat, routers, or framework-specific dependencies. I initially considered Gridsome and Jekyll, but their support had waned by the time I found them. Fortunately, I discovered Astro.js.
 
-Astro’s philosophy of building static sites by default, with the option to add JavaScript only when needed, was exactly what I was looking for. This modular, "only-add-what-you-need" approach ensures every site is fast, efficient, and easy to maintain.
+Ast's philosophy of building static sites by default, with the option to add JavaScript only when needed, was exactly what I was looking for. This modular, "only-add-what-you-need" approach ensures every site is fast, efficient, and easy to maintain.
 
 ## Key Features of Astro.js
 
@@ -31,7 +33,7 @@ Astro generates static HTML by default, ensuring lightning-fast load times and i
 
 ### 💡 **Markdown/MDX Support**
 
-Astro’s built-in support for Markdown and MDX simplifies content creation, making it ideal for blogs, documentation, and content-heavy sites.
+Astro's built-in support for Markdown and MDX simplifies content creation, making it ideal for blogs, documentation, and content-heavy sites.
 
 ---
 
@@ -39,7 +41,7 @@ Astro’s built-in support for Markdown and MDX simplifies content creation, mak
 
 ### 🚀 **Performance-Optimized**
 
-Astro’s static-first philosophy is perfect for projects where performance is key, such as blogs, portfolios, and documentation.
+Astro's static-first philosophy is perfect for projects where performance is key, such as blogs, portfolios, and documentation.
 
 ### 🌍 **Sustainable Web Development**
 
@@ -74,7 +76,7 @@ For those new to Astro, I recommend exploring free themes available at [Astro Th
 
 ## Next Steps in My Astro.js Journey
 
-Astro has grown significantly since its launch in 2021, with its latest version (v5) offering even more tools and capabilities. I’m excited to explore these advanced features and incorporate them into my projects.
+Astro has grown significantly since its launch in 2021, with its latest version (v5) offering even more tools and capabilities. I'm excited to explore these advanced features and incorporate them into my projects.
 
 1. **Explore Advanced Features**: Dive deeper into Content Collections and Content Layers.
 2. **Explore Server-side Rendering (SSR)**: Also a new feature call Server Island, where dynamic content can be render via Server-side.

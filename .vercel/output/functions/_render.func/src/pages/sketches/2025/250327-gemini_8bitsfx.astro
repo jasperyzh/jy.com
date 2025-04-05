@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vanilla JS SFX Generator</title>
+    <script
+      is:inline
+      src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"
+    ></script>
+    <style is:inline>
+      /* ... (Keep existing CSS) ... */
+      body {
+        font-family: sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        background-color: #f4f4f4;
+      }
+      .container {
+        display: flex;
+        gap: 30px;
+        width: 100%;
+        max-width: 900px;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .controls,
+      .visualization {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+      fieldset {
+        border: 1px solid #ccc;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+      }
+      legend {
+        font-weight: bold;
+        padding: 0 5px;
+        color: #333;
+      }
+      label {
+        display: block;
+        margin-bottom: 3px;
+        font-size: 0.9em;
+        color: #555;
+      }
+      input[type="range"] {
+        width: 100%;
+        cursor: pointer;
+      }
+      select {
+        width: 100%;
+        padding: 5px;
+      }
+      button {
+        padding: 12px 25px;
+        font-size: 1.1em;
+        cursor: pointer;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        transition: background-color 0.2s ease;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      button:active {
+        background-color: #004085;
+      }
+      .value-display {
+        font-style: italic;
+        color: #666;
+        font-size: 0.85em;
+        margin-left: 5px;
+      }
+      .placeholder {
+        border: 2px dashed #ccc;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #aaa;
+        border-radius: 5px;
+        text-align: center;
+      }
+      /* Basic Responsive */
+      @media (max-width: 700px) {
+        .container {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Retro Sound Effect Generator (Vanilla JS)</h1>
+
+    <div class="container">
+      <!-- Column 1: Controls -->
+      <div class="controls">
+        <h2>Controls</h2>
+        <button id="playButton">Play Sound</button>
+        {/* ... Keep all the sliders/selects HTML ... */}
+        <div>
+          <label for="volumeSlider"
+            >Volume: <span class="value-display" id="volumeValue">-10 dB</span
+            ></label
+          >
+          <input
+            type="range"
+            id="volumeSlider"
+            min="-60"
+            max="0"
+            step="0.5"
+            value="-10"
+          />
+        </div>
+        <div>
+          <label for="waveTypeSelect">Wave Type:</label>
+          <select id="waveTypeSelect">
+            <option value="sine">Sine</option>
+            <option value="square" selected>Square</option>
+            <option value="sawtooth">Sawtooth</option>
+            <option value="triangle">Triangle</option>
+            <option value="noise">Noise</option>
+          </select>
+        </div>
+        <div>
+          <label for="startFrequencySlider"
+            >Start Frequency: <span
+              class="value-display"
+              id="startFrequencyValue">440 Hz</span
+            ></label
+          >
+          <input
+            type="range"
+            id="startFrequencySlider"
+            min="20"
+            max="2000"
+            step="1"
+            value="440"
+          />
+        </div>
+        <fieldset>
+          <legend>Envelope</legend>
+          <div>
+            <label for="attackSlider"
+              >Attack: <span class="value-display" id="attackValue">0.010s</span
+              ></label
+            >
+            <input
+              type="range"
+              id="attackSlider"
+              min="0.001"
+              max="2"
+              step="0.001"
+              value="0.01"
+            />
+          </div>
+          <div>
+            <label for="decaySlider"
+              >Decay: <span class="value-display" id="decayValue">0.100s</span
+              ></label
+            >
+            <input
+              type="range"
+              id="decaySlider"
+              min="0.001"
+              max="2"
+              step="0.001"
+              value="0.1"
+            />
+          </div>
+          <div>
+            <label for="sustainSlider"
+              >Sustain: <span class="value-display" id="sustainValue">0.50</span
+              ></label
+            >
+            <input
+              type="range"
+              id="sustainSlider"
+              min="0"
+              max="1"
+              step="0.01"
+              value="0.5"
+            />
+          </div>
+          <div>
+            <label for="releaseSlider"
+              >Release: <span class="value-display" id="releaseValue"
+                >1.000s</span
+              ></label
+            >
+            <input
+              type="range"
+              id="releaseSlider"
+              min="0.01"
+              max="5"
+              step="0.01"
+              value="1.0"
+            />
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Filters</legend>
+          <div>
+            <label for="lpCutoffSlider"
+              >Low-pass Cutoff (Log): <span
+                class="value-display"
+                id="lpCutoffValue">~5623 Hz</span
+              ></label
+            >
+            <input
+              type="range"
+              id="lpCutoffSlider"
+              min="1"
+              max="100"
+              step="1"
+              value="75"
+            />
+          </div>
+          <div>
+            <label for="lpResonanceSlider"
+              >Low-pass Resonance: <span
+                class="value-display"
+                id="lpResonanceValue">1.0</span
+              ></label
+            >
+            <input
+              type="range"
+              id="lpResonanceSlider"
+              min="0.1"
+              max="20"
+              step="0.1"
+              value="1"
+            />
+          </div>
+          <div>
+            <label for="hpCutoffSlider"
+              >High-pass Cutoff (Log): <span
+                class="value-display"
+                id="hpCutoffValue">~20 Hz</span
+              ></label
+            >
+            <input
+              type="range"
+              id="hpCutoffSlider"
+              min="1"
+              max="100"
+              step="1"
+              value="1"
+            />
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- Column 2: Visualization (Placeholder) -->
+      <div class="visualization">
+        <h2>Visualization (Todo)</h2>
+        <div class="placeholder">Waveform Preview Canvas Here</div>
+      </div>
+    </div>
+
+    <script is:inline>
+      document.addEventListener("DOMContentLoaded", () => {
+        // --- Global Tone.js Objects & State ---
+        let isInitialized = false;
+        let osc = null;
+        let noise = null;
+        let envelope = null;
+        let lpFilter = null;
+        let hpFilter = null;
+        let masterVolume = null;
+
+        // Initial Parameter Values
+        let params = {
+          /* ... same as before ... */ volume: -10,
+          waveType: "square",
+          startFrequency: 440,
+          attack: 0.01,
+          decay: 0.1,
+          sustain: 0.5,
+          release: 1.0,
+          lpCutoffSlider: 75,
+          lpResonance: 1,
+          hpCutoffSlider: 1,
+        };
+
+        // --- DOM Element References ---
+        const playButton = document.getElementById("playButton");
+        // ... (get all other element references as before) ...
+        const volumeSlider = document.getElementById("volumeSlider");
+        const volumeValue = document.getElementById("volumeValue");
+        const waveTypeSelect = document.getElementById("waveTypeSelect");
+        const startFrequencySlider = document.getElementById(
+          "startFrequencySlider"
+        );
+        const startFrequencyValue = document.getElementById(
+          "startFrequencyValue"
+        );
+        const attackSlider = document.getElementById("attackSlider");
+        const attackValue = document.getElementById("attackValue");
+        const decaySlider = document.getElementById("decaySlider");
+        const decayValue = document.getElementById("decayValue");
+        const sustainSlider = document.getElementById("sustainSlider");
+        const sustainValue = document.getElementById("sustainValue");
+        const releaseSlider = document.getElementById("releaseSlider");
+        const releaseValue = document.getElementById("releaseValue");
+        const lpCutoffSlider = document.getElementById("lpCutoffSlider");
+        const lpCutoffValue = document.getElementById("lpCutoffValue");
+        const lpResonanceSlider = document.getElementById("lpResonanceSlider");
+        const lpResonanceValue = document.getElementById("lpResonanceValue");
+        const hpCutoffSlider = document.getElementById("hpCutoffSlider");
+        const hpCutoffValue = document.getElementById("hpCutoffValue");
+
+        // --- Helper Functions ---
+        const logScale = (value, min, max) => {
+          /* ... same as before ... */
+          const minLog = Math.log(min || 1); // Avoid log(0)
+          const maxLog = Math.log(max);
+          const scale = (maxLog - minLog) / (100 - 1); // Slider range 1-100
+          return Math.exp(minLog + scale * (value - 1));
+        };
+        const updateDisplays = () => {
+          /* ... same as before ... */
+          volumeValue.textContent = `${parseFloat(volumeSlider.value).toFixed(1)} dB`;
+          startFrequencyValue.textContent = `${parseFloat(startFrequencySlider.value).toFixed(0)} Hz`;
+          attackValue.textContent = `${parseFloat(attackSlider.value).toFixed(3)}s`;
+          decayValue.textContent = `${parseFloat(decaySlider.value).toFixed(3)}s`;
+          sustainValue.textContent = `${parseFloat(sustainSlider.value).toFixed(2)}`;
+          releaseValue.textContent = `${parseFloat(releaseSlider.value).toFixed(3)}s`;
+          lpCutoffValue.textContent = `~${logScale(parseFloat(lpCutoffSlider.value), 20, 20000).toFixed(0)} Hz`;
+          lpResonanceValue.textContent = `${parseFloat(lpResonanceSlider.value).toFixed(1)}`;
+          hpCutoffValue.textContent = `~${logScale(parseFloat(hpCutoffSlider.value), 20, 20000).toFixed(0)} Hz`;
+        };
+
+        // Function to initialize Tone.js objects
+        const initializeTone = () => {
+          // Dispose existing nodes if re-initializing (safety measure)
+          osc?.dispose();
+          noise?.dispose();
+          envelope?.dispose();
+          lpFilter?.dispose();
+          hpFilter?.dispose();
+          masterVolume?.dispose();
+
+          // Create nodes
+          masterVolume = new Tone.Volume(params.volume).toDestination();
+          envelope = new Tone.AmplitudeEnvelope({
+            /* ... params ... */ attack: params.attack,
+            decay: params.decay,
+            sustain: params.sustain,
+            release: params.release,
+          }).connect(masterVolume);
+          lpFilter = new Tone.Filter({
+            /* ... params ... */
+            frequency: logScale(params.lpCutoffSlider, 20, 20000),
+            type: "lowpass",
+            Q: params.lpResonance,
+          }).connect(envelope);
+          hpFilter = new Tone.Filter({
+            /* ... params ... */
+            frequency: logScale(params.hpCutoffSlider, 20, 20000),
+            type: "highpass",
+          }).connect(lpFilter);
+
+          // Create sources but DON'T start them here.
+          osc = new Tone.Oscillator({
+            frequency: params.startFrequency,
+            type: params.waveType,
+          });
+          noise = new Tone.Noise("white");
+
+          // Connect the initial source. Tone.js will handle starting it on trigger.
+          connectSource(params.waveType);
+
+          // *** IMPORTANT: Start the sources *now* after they are created and connected.
+          // *** Tone.js often requires sources to be started once to be usable.
+          // *** They won't make sound until triggered by the envelope.
+          osc.start();
+          noise.start();
+
+          console.log(
+            "Tone.js components initialized and sources started (but silent)."
+          );
+        };
+
+        // Function to connect the correct source
+        const connectSource = (type) => {
+          if (!hpFilter || !osc || !noise) return;
+          // osc.disconnect(hpFilter);
+          // noise.disconnect(hpFilter);
+
+          osc.disconnect(); // ✅ Safely remove all osc connections
+          noise.disconnect(); // ✅ Safely remove all noise connections
+
+          /*  if (type === "noise") {
+            noise.connect(hpFilter);
+          } else {
+            // Update oscillator type if needed (safer than relying on initial creation)
+            if (osc.type !== type) {
+              osc.type = type;
+            }
+            osc.connect(hpFilter);
+          } */
+          if (type === "noise") {
+            noise.connect(hpFilter);
+          } else {
+            osc.type = type;
+            osc.connect(hpFilter);
+          }
+          console.log(`Connected source: ${type}`);
+        };
+
+        // --- Event Listener Setup ---
+
+        // Play Button (REVISED)
+        playButton.addEventListener("click", async () => {
+          // 1. Ensure AudioContext is running (only does something on first click)
+          if (Tone.context.state !== "running") {
+            console.log("AudioContext not running, attempting Tone.start()...");
+            await Tone.start();
+            console.log(
+              "AudioContext state after Tone.start():",
+              Tone.context.state
+            );
+          }
+
+          // 2. Initialize Tone objects if they don't exist yet
+          if (!isInitialized) {
+            console.log("First play click: Initializing Tone components...");
+            initializeTone();
+            isInitialized = true;
+          }
+
+          // 3. Check if initialization seems successful
+          if (!envelope || !osc || !noise) {
+            console.error(
+              "Initialization failed or pending, cannot play sound."
+            );
+            // Maybe try initializing again? Or alert user.
+            if (!isInitialized) {
+              // If first attempt failed
+              console.log("Retrying initialization...");
+              initializeTone();
+              isInitialized = true; // Assume success for now
+              if (!envelope) return; // Bail if still failed
+            } else {
+              return; // Bail if failed on subsequent clicks
+            }
+          }
+
+          // 4. Trigger the envelope
+          const now = Tone.now();
+          // Using triggerAttackRelease is often simpler for basic SFX
+          const duration = params.attack + params.decay + params.release; // Total potential duration
+          // Let's use triggerAttackRelease - it handles start/stop based on envelope times
+          envelope.triggerAttackRelease(duration, now); // Duration here is max length
+
+          console.log(
+            `Triggering sound (max duration: ${duration.toFixed(3)}s) at ${now.toFixed(3)}`
+          );
+        });
+
+        // Parameter Sliders & Select (Input listeners - REVISED slightly for clarity)
+        volumeSlider.addEventListener("input", (e) => {
+          params.volume = parseFloat(e.target.value);
+          // Use rampTo for smoother volume changes, especially if changed during playback
+          if (masterVolume) masterVolume.volume.rampTo(params.volume, 0.05);
+          volumeValue.textContent = `${params.volume.toFixed(1)} dB`;
+        });
+
+        waveTypeSelect.addEventListener("change", (e) => {
+          params.waveType = e.target.value;
+          // Reconnect the source immediately if already initialized
+          if (isInitialized) {
+            connectSource(params.waveType);
+          }
+        });
+
+        startFrequencySlider.addEventListener("input", (e) => {
+          params.startFrequency = parseFloat(e.target.value);
+          if (osc) osc.frequency.value = params.startFrequency; // Direct set is fine for base freq
+          startFrequencyValue.textContent = `${params.startFrequency.toFixed(0)} Hz`;
+        });
+
+        // --- Envelope Parameter Updates ---
+        attackSlider.addEventListener("input", (e) => {
+          params.attack = parseFloat(e.target.value);
+          if (envelope) envelope.attack = params.attack;
+          attackValue.textContent = `${params.attack.toFixed(3)}s`;
+        });
+        decaySlider.addEventListener("input", (e) => {
+          params.decay = parseFloat(e.target.value);
+          if (envelope) envelope.decay = params.decay;
+          decayValue.textContent = `${params.decay.toFixed(3)}s`;
+        });
+        sustainSlider.addEventListener("input", (e) => {
+          params.sustain = parseFloat(e.target.value);
+          if (envelope) envelope.sustain = params.sustain;
+          sustainValue.textContent = `${params.sustain.toFixed(2)}`;
+        });
+        releaseSlider.addEventListener("input", (e) => {
+          params.release = parseFloat(e.target.value);
+          if (envelope) envelope.release = params.release;
+          releaseValue.textContent = `${params.release.toFixed(3)}s`;
+        });
+
+        // --- Filter Parameter Updates ---
+        lpCutoffSlider.addEventListener("input", (e) => {
+          params.lpCutoffSlider = parseFloat(e.target.value);
+          const freq = logScale(params.lpCutoffSlider, 20, 20000);
+          // Use rampTo for smoother filter sweeps if changed during playback
+          if (lpFilter) lpFilter.frequency.rampTo(freq, 0.05);
+          lpCutoffValue.textContent = `~${freq.toFixed(0)} Hz`;
+        });
+        lpResonanceSlider.addEventListener("input", (e) => {
+          params.lpResonance = parseFloat(e.target.value);
+          if (lpFilter) lpFilter.Q.value = params.lpResonance; // Direct set is usually fine for Q
+          lpResonanceValue.textContent = `${params.lpResonance.toFixed(1)}`;
+        });
+        hpCutoffSlider.addEventListener("input", (e) => {
+          params.hpCutoffSlider = parseFloat(e.target.value);
+          const freq = logScale(params.hpCutoffSlider, 20, 20000);
+          if (hpFilter) hpFilter.frequency.rampTo(freq, 0.05);
+          hpCutoffValue.textContent = `~${freq.toFixed(0)} Hz`;
+        });
+
+        // --- Initial Setup ---
+        updateDisplays(); // Set initial text values
+
+        // No need to call initializeTone() here, wait for first play click
+      }); // End DOMContentLoaded
+    </script>
+  </body>
+</html>
+
+
+<!-- 
+### **Prompt for Recreating the Sound Effect Generator Tool**  
+
+**Objective:**  
+Create a web-based sound effect generator inspired by `sfxr` and `jsfxr`, with a user-friendly interface for designing retro 8-bit/chiptune-style sounds. The tool should allow users to tweak parameters, save presets, and export sounds in common formats (WAV, MP3).  Use tone.js.
+
+---
+
+### **Key Features to Implement**  
+
+#### **1. Two Modes: Simple & Advanced**  
+- **Simple Mode:**  
+  - Preset buttons (e.g., "Coin", "Jump", "Explosion", "Laser").  
+  - Basic sliders for volume, pitch, and tone.  
+  - One-click randomization ("Mutate").  
+
+- **Advanced Mode:**  
+  - Full control over waveform generation (Square, Saw, Sine, Noise).  
+  - Envelope controls (Attack, Sustain, Decay, Punch).  
+  - Frequency modulation (Vibrato, Arpeggio, Slide).  
+  - Filter controls (Low-pass, High-pass, Resonance).  
+  - Retrigger & Flanger effects.  
+
+#### **2. Improvements Over Existing Tools**  
+- **Visual Waveform Preview:** Show real-time waveform changes as parameters adjust.  
+- **Preset Management:** Save, load, and share custom sound presets (JSON/Base58).  
+- **Export Options:**  
+  - Multiple formats (WAV, MP3, OGG).  
+  - Direct integration with game engines (Unity, Godot, Unreal).  
+- **Undo/Redo History:** Track changes for easy experimentation.  
+- **Polyphonic Playback:** Test multiple sounds simultaneously.  
+
+#### **3. Modern UI Enhancements**  
+- **Dark/Light Mode Toggle**  
+- **Responsive Design:** Works on desktop and mobile.  
+- **Tooltips:** Explain parameters for beginners.  
+- **Keyboard Shortcuts:** Quick adjustments (e.g., arrow keys for fine-tuning).  
+
+---
+
+### **Example UI Layout**  
+
+#### **Simple Mode:**  
+```
+[ Presets: Random | Coin | Jump | Laser | Explosion ]  
+
+Volume: [=====|-----] (-10 dB)  
+Pitch:  [=====|-----] (500 Hz)  
+Tone:   [=====|-----] (Bright)  
+
+[ Play Sound ]  [ Mutate ]  [ Save Preset ]  
+```
+
+#### **Advanced Mode:**  
+```
+Wave Type: [● Square] [○ Saw] [○ Sine] [○ Noise]  
+
+Envelope:  
+- Attack:  [=====|-----] (0.5s)  
+- Sustain: [=====|-----] (0.2s)  
+- Decay:   [=====|-----] (1.0s)  
+- Punch:   [=====|-----] (20%)  
+
+Frequency:  
+- Start:   [=====|-----] (440 Hz)  
+- Slide:   [=====|-----] (+0.5 oct/s)  
+- Vibrato: [=====|-----] (Depth: 10%, Speed: 5Hz)  
+
+Filters:  
+- Low-pass: [=====|-----] (Cutoff: 1000 Hz, Resonance: 30%)  
+- High-pass:[=====|-----] (Cutoff: 200 Hz)  
+
+[ Play ]  [ Undo ]  [ Redo ]  [ Export WAV ]  
+```
+
+---
+
+### **Technical Implementation Suggestions**  
+- **Web Audio API** for real-time sound synthesis.  
+- **React/Vue.js** for a dynamic, state-managed UI.  
+- **LocalStorage** for saving presets.  
+- **WebAssembly (WASM)** for optimized DSP processing if needed.  
+
+---
+
+### **Why This Improves on Existing Tools?**  
+✅ **Easier for beginners** (Simple Mode).  
+✅ **More powerful for experts** (Advanced Mode).  
+✅ **Better workflow** (Undo/Redo, Presets).  
+✅ **More export-friendly** (Multiple formats, game engine support).  
+-->

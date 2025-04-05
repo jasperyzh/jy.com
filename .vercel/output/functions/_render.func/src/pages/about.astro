@@ -1,0 +1,39 @@
+---
+import Layout from "@/layouts/BaseLayout.astro";
+
+import { RESUME_LINK } from "../consts";
+---
+
+<Layout>
+  <main class="d-flex flex-column align-items-center justify-content-center">
+    <section class="container py-3">
+      <div class="row">
+        <div class="col col-md-7">
+          <h2>Welcome to My Website!</h2>
+          <p>
+            Welcome to my website! I'm Jasper, a dedicated full-stack web
+            developer with a passion for crafting seamless web solutions. With
+            over 8 years of experience, I thrive on bringing user-friendly,
+            engaging digital experiences to life. This website is not just a
+            showcase of my work—it's a glimpse into my journey of continuous
+            learning and my pursuit of simplicity and function in every project.
+          </p>
+          <p><strong>What I'm up to Now</strong></p>
+          <p>
+            Currently, I'm on the lookout for new opportunities to expand my
+            skills and knowledge. When I’m not developing or learning, I'm
+            spending time with my family, exploring new hobbies, and indulging
+            in creative pursuits.
+          </p>
+          {
+            RESUME_LINK && (
+              <a href={RESUME_LINK} class="btn btn-primary">
+                Download My Resume
+              </a>
+            )
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>

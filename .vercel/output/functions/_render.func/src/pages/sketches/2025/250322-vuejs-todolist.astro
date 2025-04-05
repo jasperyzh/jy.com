@@ -1,0 +1,119 @@
+---
+// Vue.js Todo List
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import TodoList from '@/components/vue/TodoList.vue';
+
+const title = "Vue.js Todo List";
+---
+
+<BaseLayout title={title}>
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8 text-center">{title}</h1>
+    
+    <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+      <TodoList client:load />
+    </div>
+    
+    <div class="mt-8 text-center text-gray-600">
+      <p>Built with Vue.js 3, Pinia, and Astro</p>
+    </div>
+    
+    <div class="max-w-3xl mx-auto mt-12 p-6 bg-gray-50 rounded-lg shadow text-left">
+      <h2 class="text-2xl font-bold mb-4">Implementation Process</h2>
+      
+      <div class="space-y-6">
+        <section>
+          <h3 class="text-xl font-semibold text-blue-700">1. Project Structure</h3>
+          <p class="mt-2">This Todo List application demonstrates Vue.js integration with Astro, using several important files:</p>
+          <ul class="list-disc ml-6 mt-2 space-y-1">
+            <li><code>src/pages/sketches/2025/250322-vuejs-todolist.astro</code> - Main Astro page</li>
+            <li><code>src/components/vue/TodoList.vue</code> - Parent Vue component</li>
+            <li><code>src/components/vue/TodoItem.vue</code> - Child Vue component</li>
+            <li><code>src/stores/todo.js</code> - Pinia store for state management</li>
+            <li><code>src/pinia-plugin.js</code> - Pinia initialization for Astro</li>
+            <li><code>src/services/db.js</code> - [x] SQLite database service</li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3 class="text-xl font-semibold text-blue-700">2. Vue.js Components</h3>
+          <p class="mt-2">The application uses two Vue components:</p>
+          <ul class="list-disc ml-6 mt-2 space-y-2">
+            <li>
+              <strong>TodoList.vue</strong>: The parent component that handles:
+              <ul class="list-circle ml-6 mt-1">
+                <li>Todo creation form with <code>v-model</code> for two-way binding</li>
+                <li>Rendering the list of todos using <code>v-for</code></li>
+                <li>Conditional rendering with <code>v-if</code>/<code>v-else</code></li>
+                <li>Lifecycle hooks (<code>onMounted</code>) to load todos</li>
+              </ul>
+            </li>
+            <li>
+              <strong>TodoItem.vue</strong>: A child component that:
+              <ul class="list-circle ml-6 mt-1">
+                <li>Receives todo data via props</li>
+                <li>Emits events using <code>$emit</code> for toggle/delete actions</li>
+                <li>Uses dynamic styling with <code>:class</code> binding</li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3 class="text-xl font-semibold text-blue-700">3. State Management with Pinia</h3>
+          <p class="mt-2">Pinia provides reactive state management:</p>
+          <ul class="list-disc ml-6 mt-2 space-y-1">
+            <li>State: Todo items array</li>
+            <li>Getters: Computed properties for filtering todos</li>
+            <li>Actions: Methods to add, toggle, delete, and clear todos</li>
+            <li>Persistence: Saving to localStorage (and optionally SQLite)</li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3 class="text-xl font-semibold text-blue-700">4. Astro Integration</h3>
+          <p class="mt-2">Astro seamlessly integrates with Vue:</p>
+          <ul class="list-disc ml-6 mt-2 space-y-1">
+            <li>Uses <code>client:load</code> directive to hydrate Vue components</li>
+            <li>Provides static HTML for fast initial loading</li>
+            <li>Handles Vue component initialization and state</li>
+          </ul>
+        </section>
+        
+        <section>
+          <h3 class="text-xl font-semibold text-blue-700">5. SQLite Implementation</h3>
+          <p class="mt-2">For persistent local storage, the SQLite database:</p>
+          <ul class="list-disc ml-6 mt-2 space-y-1">
+            <li>Uses <code>better-sqlite3</code> for efficient database operations</li>
+            <li>Creates a local <code>todos.db</code> file in the <code>db</code> directory</li>
+            <li>Provides CRUD operations through the <code>TodoDB</code> service</li>
+            <li>Converts between JavaScript objects and SQLite formats</li>
+          </ul>
+          <p class="mt-2 text-amber-600 font-medium">⚠️ Important Note:</p>
+          <p class="ml-6">SQLite integration only works in server environments (Node.js), not in client-side browsers. This implementation:</p>
+          <ul class="list-disc ml-8 mt-1 space-y-1">
+            <li>Works with Astro's SSR mode (<code>output: 'server'</code> in astro.config.mjs)</li>
+            <li>Uses API endpoints to provide data to Vue components</li>
+            <li>Uses file system access which is not available in browser environments</li>
+          </ul>
+          <p class="mt-2">Our implementation demonstrates both approaches with a clean architecture:</p>
+          <ol class="list-decimal ml-6 mt-2 space-y-2">
+            <li><strong>localStorage store (<code>todo.js</code>)</strong>: Works in client-side browsers</li>
+            <li><strong>API-based SQLite store (<code>todo-sqlite.js</code>)</strong>: Communicates with server-side API endpoints</li>
+            <li><strong>API endpoints (<code>/api/todos.json.js</code>)</strong>: Server-side code that interacts with SQLite</li>
+            <li><strong>Storage switcher</strong>: UI component to toggle between both implementations</li>
+          </ol>
+          <p class="mt-2">This architecture follows best practices by:</p>
+          <ul class="list-disc ml-6 mt-2 space-y-1">
+            <li>Separating client-side and server-side code</li>
+            <li>Using API endpoints for database operations</li>
+            <li>Providing graceful fallback to localStorage if server-side features aren't available</li>
+            <li>Implementing proper error handling for a seamless user experience</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <!-- explain the whole implement process here -->
+  </div>
+</BaseLayout>

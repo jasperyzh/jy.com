@@ -1,13 +1,15 @@
 ---
 pubDate: 250323
-title: Malaysia Past
-description: History of the Southeast Asia Malaysia
-tags: ["History"]
-draft: 1
+title: "Malaysia's Path: From Colonial Rule to Modern Nation"
+description: "An exploration of Malaysia's journey through history, examining its transformation from a colony to a diverse and thriving independent nation."
+tags: ["Malaysia", "History", "Independence"]
+draft: 0
+thumbnail: "/img/placeholder.png"
+category: "Curiousity"
 ---
 
 
-# Exploring the Early Hindu-Buddhist Kingdoms of Southeast Asia: A Journey Through Greater India’s Cultural Legacy
+# Exploring the Early Hindu-Buddhist Kingdoms of Southeast Asia: A Journey Through Greater India's Cultural Legacy
 
 source: https://en.wikipedia.org/wiki/History_of_Malaysia
 

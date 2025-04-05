@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:is(.dark *));
-@plugin "tailwindcss-animate";
-@plugin "@tailwindcss/forms";
+/* @plugin "tailwindcss-animate"; */
+/* @plugin "@tailwindcss/forms"; */
 @variant dark (&:where(.dark, .dark *));
 
 @theme {
@@ -150,6 +150,34 @@
   button {
     @apply cursor-pointer;
   }
+  p {
+    @apply mb-2;
+  }
+  article {
+    h1 {
+      font-size: var(--font-size-4xl, 2.25rem);
+      line-height: 1.15;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    a {
+      color: var(--color-primary);
+      text-decoration: underline;
+    }
+    p {
+      line-height: 1.75;
+      margin-bottom: 1rem;
+    }
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-size: var(--font-size-3xl, 1.5rem);
+
+      margin: 1rem auto;
+    }
+  }
 }
 
 @layer utilities {
@@ -238,33 +266,5 @@
   }
   body {
     @apply bg-background text-foreground;
-  }
-}
-
-/* custom */
-
-article {
-  h1 {
-    font-size: var(--font-size-4xl, 2.25rem);
-    line-height: 1.15;
-    font-weight: 700;
-    margin-bottom: 1rem;
-  }
-  a {
-    color: var(--color-primary);
-    text-decoration: underline;
-  }
-  p {
-    line-height: 1.75;
-    margin-bottom: 1rem;
-  }
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-size: var(--font-size-3xl, 1.5rem);
-
-    margin: 1rem auto;
   }
 }

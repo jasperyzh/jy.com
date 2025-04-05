@@ -1,0 +1,208 @@
+{
+	"version": 3,
+	"routes": [
+		{
+			"handle": "filesystem"
+		},
+		{
+			"src": "^/_astro/(.*)$",
+			"headers": {
+				"cache-control": "public, max-age=31536000, immutable"
+			},
+			"continue": true
+		},
+		{
+			"src": "^/_server-islands/([^/]+?)/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/_image/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/404/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/about/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/blog/page/([^/]+?)/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/blog/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/contact/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/microblog/page/([^/]+?)/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/microblog/tags/([^/]+?)/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/microblog/type/([^/]+?)/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/microblog/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/microblog(?:/(.*?))?/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/portfolio/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/resume/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/2025/250314-pixijs-filter/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/2025/250314-pixijs-videofilter/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/2025/250316-quizgame/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/2025/250316-survey_form/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/2025/250316-the-malaysian-clock/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/2025/250316-wheeloffortune/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/2025/250318-photoswipe/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/2025/250319-portfolio-tailwindtheme/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/2025/250322-carouselsliders/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/2025/250322-fullpageslides/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/2025/250322-gsapanimation/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/2025/250322-invoicegenerator/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/2025/250322-viewtransition/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/2025/250322-vuejs-todolist/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/2025/250323-canvas_generate_art/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/2025/250323-habittracker/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/2025/250326-bento_grid_processing/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/2025/250326-perlin_noise_deepseek/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/2025/250326-perlin_noise_worldmap/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/2025/250326-phaser_dino/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/2025/250327-cloud_works_bento/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/2025/250327-cloud_works_bento2_5/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/2025/250327-gemini_8bitsfx/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/250401-again/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/250401-flowarrow/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/250404-yantra/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/webdev/250323-sirsandwichmenu1/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/webdev/250323-sirsandwichmenu2/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/webdev/250402-goldenratiocssgrid/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/webdev/250402-undo_technique/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/sketches/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/tags/([^/]+?)/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/.*$",
+			"dest": "_render",
+			"status": 404
+		}
+	]
+}

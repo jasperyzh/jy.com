@@ -14,6 +14,11 @@
 Build blog to share journey.
 Build personal portfolio to showcase projects and skills.
 
+### + long-form articles & guides
+
+- ape posts?
+
+
 - Use **Astro** for static content like your bio, skills, and contact information.
 - Integrate **Vue.js** components for interactive elements like a project gallery or testimonials slider.
 - Ensure the site is responsive and accessible.
@@ -30,6 +35,7 @@ Build personal portfolio to showcase projects and skills.
 - [ ] Blog with CMS capabilities
 - [ ] Contact form with backend email service
 - [ ] animated sliders
+- [ ] search function for blog posts or pages
 
 ## exercises & challenge
 
@@ -179,3 +185,29 @@ Check out [our documentation](https://docs.astro.build) or jump into our [Discor
 ## Credit
 
 This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+
+
+
+# logs
+
+### [250404]
+
+- [[250220-Personal Website & Blog - Organization#Blog]]
+
+### [250402]
+
+ 1. Updated global.css to use a more organized structure with:
+    - Modern CSS variables for typography, colors, and spacing
+    - Component abstractions with semantic class names
+    - Properly structured utility classes
+    - Direct @tailwind imports instead of @import
+  2. Enhanced tailwind.config.js with:
+    - Extended theme variables mapped to CSS custom properties
+    - Comprehensive typography configuration
+    - Disabled unused core plugins for better performance
+    - Added future flags for better practices
+  3. Updated starwind.config.json to:
+    - Connect Starwind UI components to the global CSS variables
+    - Ensure consistent theming across components
+
+  You can now use the semantic classes in your components, reducing Tailwind verbosity in templates while maintaining the full power of both systems.

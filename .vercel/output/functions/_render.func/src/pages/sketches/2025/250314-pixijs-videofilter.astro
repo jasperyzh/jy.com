@@ -1,0 +1,492 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const title = "PixiJS Video Filter";
+---
+
+<BaseLayout title={title}>
+  <div class="relative min-h-screen bg-black">
+    <!-- PixiJS Canvas Container -->
+    <div id="pixi-container" class="absolute top-0 left-0 w-full h-full"></div>
+
+    <!-- UI Controls -->
+    <div
+      class="absolute bottom-5 left-0 right-0 mx-auto w-full max-w-xl px-4 py-2 rounded-lg bg-black/50 backdrop-blur-md z-10"
+    >
+      <div class="flex flex-wrap justify-center gap-4">
+        <button
+          id="filter-blur"
+          class="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded"
+          >Blur</button
+        >
+        <button
+          id="filter-pixelate"
+          class="px-3 py-1 bg-purple-500 hover:bg-purple-600 text-white rounded"
+          >Pixelate</button
+        >
+        <button
+          id="filter-glitch"
+          class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded"
+          >Glitch</button
+        >
+        <button
+          id="filter-rgb"
+          class="px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded"
+          >RGB Split</button
+        >
+        <button
+          id="filter-reset"
+          class="px-3 py-1 bg-gray-500 hover:bg-gray-600 text-white rounded"
+          >Reset</button
+        >
+      </div>
+    </div>
+  </div>
+  <!-- Load PixiJS v8 and essential filters from CDN -->
+  <script is:inline src="https://cdn.jsdelivr.net/npm/pixi.js@8.9.0/dist/pixi.min.js"></script>
+  
+  <!-- Load core PixiJS filter effects -->
+  <script is:inline>
+    // Initialize filters namespace if not available
+    window.PIXI = window.PIXI || {};
+    window.PIXI.filters = window.PIXI.filters || {};
+    
+    // Create simple filter classes that can be used in our demo
+    if (!PIXI.filters.BlurFilter) {
+      PIXI.filters.BlurFilter = class BlurFilter extends PIXI.Filter {
+        constructor() {
+          super(
+            // Simple vertex shader
+            `
+              attribute vec2 aVertexPosition;
+              attribute vec2 aTextureCoord;
+              uniform mat3 projectionMatrix;
+              varying vec2 vTextureCoord;
+              void main(void) {
+                gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);
+                vTextureCoord = aTextureCoord;
+              }
+            `,
+            // Blur fragment shader
+            `
+              varying vec2 vTextureCoord;
+              uniform sampler2D uSampler;
+              uniform float blur;
+              uniform vec4 filterArea;
+              
+              void main(void) {
+                vec4 color = vec4(0.0);
+                vec2 pixelSize = vec2(1.0) / filterArea.xy;
+                
+                if (blur <= 0.0) {
+                  color = texture2D(uSampler, vTextureCoord);
+                } else {
+                  float blurSize = blur * 0.1;
+                  for(float x = -4.0; x <= 4.0; x++) {
+                    for(float y = -4.0; y <= 4.0; y++) {
+                      vec2 offset = vec2(x, y) * pixelSize * blurSize;
+                      color += texture2D(uSampler, vTextureCoord + offset);
+                    }
+                  }
+                  color /= 81.0;
+                }
+                
+                gl_FragColor = color;
+              }
+            `
+          );
+          this.blur = 0;
+          this.uniforms.blur = 0;
+        }
+        
+        get blur() {
+          return this.uniforms.blur;
+        }
+        
+        set blur(value) {
+          this.uniforms.blur = value;
+        }
+      };
+    }
+    
+    if (!PIXI.filters.PixelateFilter) {
+      PIXI.filters.PixelateFilter = class PixelateFilter extends PIXI.Filter {
+        constructor() {
+          super(
+            // Vertex shader
+            `
+              attribute vec2 aVertexPosition;
+              attribute vec2 aTextureCoord;
+              uniform mat3 projectionMatrix;
+              varying vec2 vTextureCoord;
+              void main(void) {
+                gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);
+                vTextureCoord = aTextureCoord;
+              }
+            `,
+            // Pixelate fragment shader
+            `
+              varying vec2 vTextureCoord;
+              uniform sampler2D uSampler;
+              uniform float size;
+              uniform vec4 filterArea;
+              
+              void main(void) {
+                vec2 pixelSize = vec2(size) / filterArea.xy;
+                if (pixelSize.x < 1.0 && pixelSize.y < 1.0) {
+                  gl_FragColor = texture2D(uSampler, vTextureCoord);
+                  return;
+                }
+                
+                vec2 coord = vTextureCoord - mod(vTextureCoord, pixelSize);
+                gl_FragColor = texture2D(uSampler, coord);
+              }
+            `
+          );
+          this.size = 1;
+          this.uniforms.size = 1;
+        }
+        
+        get size() {
+          return this.uniforms.size;
+        }
+        
+        set size(value) {
+          this.uniforms.size = value;
+        }
+      };
+    }
+    
+    if (!PIXI.filters.RGBSplitFilter) {
+      PIXI.filters.RGBSplitFilter = class RGBSplitFilter extends PIXI.Filter {
+        constructor() {
+          super(
+            // Vertex shader
+            `
+              attribute vec2 aVertexPosition;
+              attribute vec2 aTextureCoord;
+              uniform mat3 projectionMatrix;
+              varying vec2 vTextureCoord;
+              void main(void) {
+                gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);
+                vTextureCoord = aTextureCoord;
+              }
+            `,
+            // RGB Split fragment shader
+            `
+              varying vec2 vTextureCoord;
+              uniform sampler2D uSampler;
+              uniform vec2 red;
+              uniform vec2 green;
+              uniform vec2 blue;
+              
+              void main(void) {
+                vec4 colorR = texture2D(uSampler, vTextureCoord + red / 100.0);
+                vec4 colorG = texture2D(uSampler, vTextureCoord + green / 100.0);
+                vec4 colorB = texture2D(uSampler, vTextureCoord + blue / 100.0);
+                
+                gl_FragColor = vec4(colorR.r, colorG.g, colorB.b, (colorR.a + colorG.a + colorB.a) / 3.0);
+              }
+            `
+          );
+          
+          this.red = { x: 0, y: 0 };
+          this.green = { x: 0, y: 0 };
+          this.blue = { x: 0, y: 0 };
+          
+          this.uniforms.red = [0, 0];
+          this.uniforms.green = [0, 0];
+          this.uniforms.blue = [0, 0];
+        }
+        
+        get red() {
+          return { x: this.uniforms.red[0], y: this.uniforms.red[1] };
+        }
+        
+        set red(value) {
+          this.uniforms.red = [value.x, value.y];
+        }
+        
+        get green() {
+          return { x: this.uniforms.green[0], y: this.uniforms.green[1] };
+        }
+        
+        set green(value) {
+          this.uniforms.green = [value.x, value.y];
+        }
+        
+        get blue() {
+          return { x: this.uniforms.blue[0], y: this.uniforms.blue[1] };
+        }
+        
+        set blue(value) {
+          this.uniforms.blue = [value.x, value.y];
+        }
+      };
+    }
+    
+    if (!PIXI.filters.GlitchFilter) {
+      PIXI.filters.GlitchFilter = class GlitchFilter extends PIXI.Filter {
+        constructor() {
+          super(
+            // Vertex shader
+            `
+              attribute vec2 aVertexPosition;
+              attribute vec2 aTextureCoord;
+              uniform mat3 projectionMatrix;
+              varying vec2 vTextureCoord;
+              void main(void) {
+                gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);
+                vTextureCoord = aTextureCoord;
+              }
+            `,
+            // Glitch fragment shader
+            `
+              varying vec2 vTextureCoord;
+              uniform sampler2D uSampler;
+              uniform float slices;
+              uniform float offset;
+              uniform float seed;
+              
+              void main(void) {
+                vec2 coord = vTextureCoord;
+                
+                if (slices > 0.0) {
+                  float sliceWidth = 1.0 / slices;
+                  float sliceIndex = floor(coord.x / sliceWidth);
+                  float distortion = seed + sliceIndex;
+                  coord.x += sin(distortion) * offset * sliceWidth;
+                }
+                
+                gl_FragColor = texture2D(uSampler, coord);
+              }
+            `
+          );
+          
+          this.slices = 0;
+          this.offset = 0;
+          this.seed = 0;
+          
+          this.uniforms.slices = 0;
+          this.uniforms.offset = 0;
+          this.uniforms.seed = 0;
+        }
+        
+        get slices() {
+          return this.uniforms.slices;
+        }
+        
+        set slices(value) {
+          this.uniforms.slices = value;
+        }
+        
+        get offset() {
+          return this.uniforms.offset;
+        }
+        
+        set offset(value) {
+          this.uniforms.offset = value;
+        }
+        
+        get seed() {
+          return this.uniforms.seed;
+        }
+        
+        set seed(value) {
+          this.uniforms.seed = value;
+        }
+      };
+    }
+  </script>
+  <script type="module">
+    // PixiJS v8 initialization
+    const initPixi = async () => {
+      try {
+        // Create a new application
+        const app = new PIXI.Application();
+
+        // Initialize the application
+        await app.init({ 
+          resizeTo: window,
+          background: 'transparent', // Transparent background
+          antialias: true
+        });
+
+        // Append the application canvas to the container
+        document.getElementById("pixi-container").appendChild(app.canvas);
+
+        // Create play button that can be used to trigger the video
+        const button = new PIXI.Graphics()
+          .roundRect(0, 0, 100, 100, 10)
+          .fill({ color: 0xffffff, alpha: 0.5 })
+          .beginPath()
+          .moveTo(36, 30)
+          .lineTo(36, 70)
+          .lineTo(70, 50)
+          .closePath()
+          .fill({ color: 0xffffff });
+
+        // Position the button
+        button.position.x = (app.screen.width - button.width) / 2;
+        button.position.y = (app.screen.height - button.height) / 2;
+
+        // Enable interactivity on the button
+        button.eventMode = 'static';
+        button.cursor = 'pointer';
+
+        // Add to the stage
+        app.stage.addChild(button);
+
+
+        // Listen for a click/tap event to start playing the video
+        button.on('pointertap', async () => {
+          try {
+            // Don't need the button anymore
+            button.destroy();
+
+            // Load the video texture using Assets API
+            const videoTexture = await PIXI.Assets.load('https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4');
+
+            // Create a new Sprite using the video texture
+            const videoSprite = new PIXI.Sprite(videoTexture);
+
+            // Center the sprite
+            videoSprite.anchor.set(0.5);
+            videoSprite.position.x = app.screen.width / 2;
+            videoSprite.position.y = app.screen.height / 2;
+
+            // Scale to fit the screen while maintaining aspect ratio
+            const scaleX = app.screen.width / videoTexture.source.videoWidth;
+            const scaleY = app.screen.height / videoTexture.source.videoHeight;
+            const scale = Math.max(scaleX, scaleY);
+            videoSprite.scale.set(scale);
+
+            app.stage.addChild(videoSprite);
+
+            // Create filters - access through PIXI.filters namespace for PixiJS v8
+            const blurFilter = new PIXI.filters.BlurFilter();
+            blurFilter.blur = 0;
+
+            const pixelateFilter = new PIXI.filters.PixelateFilter();
+            pixelateFilter.size = 1;
+
+            const glitchFilter = new PIXI.filters.GlitchFilter();
+            glitchFilter.slices = 0;
+            glitchFilter.offset = 0;
+
+            const rgbFilter = new PIXI.filters.RGBSplitFilter();
+            rgbFilter.red = { x: 0, y: 0 };
+            rgbFilter.green = { x: 0, y: 0 };
+            rgbFilter.blue = { x: 0, y: 0 };
+
+            // Button event listeners
+            document
+              .getElementById("filter-blur")
+              .addEventListener("click", () => {
+                resetFilters();
+                videoSprite.filters = [blurFilter];
+                blurFilter.blur = 10;
+              });
+
+            document
+              .getElementById("filter-pixelate")
+              .addEventListener("click", () => {
+                resetFilters();
+                videoSprite.filters = [pixelateFilter];
+                pixelateFilter.size = 10;
+              });
+
+            document
+              .getElementById("filter-glitch")
+              .addEventListener("click", () => {
+                resetFilters();
+                videoSprite.filters = [glitchFilter];
+                glitchFilter.slices = 10;
+                glitchFilter.offset = 10;
+              });
+
+            document
+              .getElementById("filter-rgb")
+              .addEventListener("click", () => {
+                resetFilters();
+                videoSprite.filters = [rgbFilter];
+                rgbFilter.red = { x: 10, y: 0 };
+                rgbFilter.blue = { x: -10, y: 0 };
+              });
+
+            document
+              .getElementById("filter-reset")
+              .addEventListener("click", () => {
+                resetFilters();
+                videoSprite.filters = [];
+              });
+
+            // Reset all filters to initial state
+            function resetFilters() {
+              blurFilter.blur = 0;
+              pixelateFilter.size = 1;
+              glitchFilter.slices = 0;
+              glitchFilter.offset = 0;
+              rgbFilter.red = { x: 0, y: 0 };
+              rgbFilter.green = { x: 0, y: 0 };
+              rgbFilter.blue = { x: 0, y: 0 };
+            }
+
+            // Add filter animation with ticker
+            app.ticker.add(() => {
+              if (videoSprite.filters?.includes(glitchFilter)) {
+                glitchFilter.seed = Math.random();
+              }
+
+              if (videoSprite.filters?.includes(rgbFilter)) {
+                const time = Date.now() / 1000;
+                rgbFilter.red.x = Math.sin(time) * 10;
+                rgbFilter.blue.x = Math.cos(time) * 10;
+              }
+            });
+
+            // Handle window resize - PixiJS v8 handles most of this automatically
+            window.addEventListener("resize", () => {
+              // Just update sprite position and scale
+              videoSprite.position.x = app.screen.width / 2;
+              videoSprite.position.y = app.screen.height / 2;
+
+              const scaleX = app.screen.width / videoTexture.source.videoWidth;
+              const scaleY = app.screen.height / videoTexture.source.videoHeight;
+              const scale = Math.max(scaleX, scaleY);
+              videoSprite.scale.set(scale);
+            });
+          } catch (videoError) {
+            console.error("Error loading video:", videoError);
+            app.stage.removeChild(button);
+            
+            // Display error message
+            const errorStyle = new PIXI.TextStyle({
+              fill: "#ffffff",
+              fontSize: 18,
+              fontFamily: "Arial"
+            });
+            
+            const errorText = new PIXI.Text(`Error loading video: ${videoError.message}`, errorStyle);
+            errorText.anchor.set(0.5);
+            errorText.position.x = app.screen.width / 2;
+            errorText.position.y = app.screen.height / 2;
+            app.stage.addChild(errorText);
+          }
+        });
+      } catch (error) {
+        console.error("Error initializing PixiJS:", error);
+        document.getElementById("pixi-container").innerHTML = `
+          <div class="flex items-center justify-center h-full w-full bg-gray-900 text-white">
+            <div class="text-center">
+              <h2 class="text-xl mb-4">Error loading PixiJS</h2>
+              <p>${error.message}</p>
+            </div>
+          </div>
+        `;
+      }
+    };
+
+    document.addEventListener("DOMContentLoaded", initPixi);
+  </script>
+</BaseLayout>

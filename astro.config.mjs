@@ -5,6 +5,7 @@ import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import vue from "@astrojs/vue";
 import tailwindcss from "@tailwindcss/vite";
+import vercel from "@astrojs/vercel";
 
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
@@ -23,6 +24,12 @@ const __dirname = dirname(__filename);
 // https://astro.build/config
 export default defineConfig({
   output: "server",
+  adapter: vercel({
+    // Vercel adapter options (optional)
+    webAnalytics: {
+      enabled: true
+    },
+  }),
   site: "https://jasperyong.com",
   markdown: {
     syntaxHighlight: "prism",

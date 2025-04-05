@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Cloud Type Sketches</title>
+  <script is:inline src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.js"></script>
+  <style is:inline>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: auto; /* allows scrolling when content overflows */
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); /* Adjust for responsiveness */
+      grid-gap: 10px;
+      padding: 10px;
+      box-sizing: border-box; /* Include padding in element's total width and height */
+    }
+
+    .sketch-container {
+      position: relative;
+      width: 100%;
+      padding-bottom: 100%; /* Maintain 1:1 aspect ratio */
+      overflow: hidden;
+    }
+
+    .sketch-container canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .button-container {
+      text-align: center;
+      margin-top: 10px;
+      position: absolute;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+
+<div class="grid-container" id="gridContainer">
+</div>
+
+<pre id="console">created with gemini flash 2.0</pre>
+<div class="button-container">
+  <button id="resetButton">Reset All</button>
+</div>
+
+<script is:inline>
+    const cloudTypes = [
+    { name: "Cirrus", drawFunction: drawCirrus },
+    { name: "Cirrostratus", drawFunction: drawCirrostratus },
+    { name: "Cirrocumulus", drawFunction: drawCirrocumulus },
+    { name: "Altostratus", drawFunction: drawAltostratus },
+    { name: "Altocumulus", drawFunction: drawAltocumulus },
+    { name: "Cumulonimbus", drawFunction: drawCumulonimbus },
+    { name: "Cumulus", drawFunction: drawCumulus },
+    { name: "Stratus", drawFunction: drawStratus },
+    { name: "Nimbostratus", drawFunction: drawNimbostratus }
+  ];
+
+  let sketchInstances = {};
+  let visibleSketches = {};
+
+  function createCloudSketch(cloudData) {
+    return function(p) {
+      let isVisible = true;
+      let randomSeed; // Local random seed for each sketch
+
+      p.setup = function() {
+        p.createCanvas(200, 200);
+        p.noLoop();
+        visibleSketches[cloudData.name] = true;
+        randomSeed = p.random(10000); // Initialize seed on setup
+        drawSketch();
+      };
+
+      function drawSketch() {
+        p.randomSeed(randomSeed); // Use the sketch's local seed
+        p.background(220);
+        if (visibleSketches[cloudData.name]) {
+          cloudData.drawFunction(p);
+        } else {
+          p.fill(0);
+          p.textAlign(p.CENTER, p.CENTER);
+          p.text("Sketch Hidden", p.width / 2, p.height / 2);
+        }
+      }
+
+      p.myCustomRedraw = function() {
+        randomSeed = p.random(10000); // Generate new seed on redraw
+        drawSketch();
+      };
+
+      p.toggleVisibility = function() {
+        isVisible = !isVisible;
+        visibleSketches[cloudData.name] = isVisible;
+        drawSketch();
+      };
+    };
+  }
+
+  function addSketchToGrid(cloudData) {
+    const gridContainer = document.getElementById("gridContainer");
+    const sketchContainer = document.createElement("div");
+    sketchContainer.classList.add("sketch-container");
+
+    const canvasId = `canvas-${cloudData.name.replace(/\s+/g, '')}`;
+    sketchContainer.innerHTML = `<div id="${canvasId}"></div>`;
+
+    gridContainer.appendChild(sketchContainer);
+
+    const cloudSketch = createCloudSketch(cloudData);
+    sketchInstances[cloudData.name] = new p5(cloudSketch, canvasId);
+
+    const toggleButton = document.createElement("button");
+    toggleButton.textContent = `Toggle ${cloudData.name}`;
+    toggleButton.addEventListener("click", () => {
+      sketchInstances[cloudData.name].toggleVisibility();
+    });
+
+    const buttonContainer = document.createElement("div");
+    buttonContainer.classList.add("button-container");
+    buttonContainer.appendChild(toggleButton);
+    sketchContainer.appendChild(buttonContainer);
+  }
+
+  cloudTypes.forEach(addSketchToGrid);
+
+  document.getElementById("resetButton").addEventListener("click", () => {
+    for (const cloudName in sketchInstances) {
+      visibleSketches[cloudName] = true;
+      sketchInstances[cloudName].myCustomRedraw();
+    }
+  });
+
+  // Cloud Drawing Functions (Implement your artistic interpretations here)
+
+  function drawCirrus(p) {
+    p.background(230, 240, 255);  // Light blue background
+    p.stroke(150, 150, 255, 150); // Light blue, semi-transparent
+    p.strokeWeight(1 + p.random(1));
+    p.noFill();
+    for (let i = 0; i < 5; i++) {
+      p.beginShape();
+      for (let x = 0; x <= p.width; x += 5 + p.random(5)) {
+        let y = p.height / 2 + p.sin(x / (20 + p.random(10)) + i) * (20 + p.random(15));
+        p.vertex(x, y);
+      }
+      p.endShape();
+    }
+  }
+
+  function drawCirrostratus(p) {
+    let haloColor = p.color(255, 255, 240);
+    haloColor.setAlpha(50 + p.random(50));  // Vary alpha
+    p.background(200, 220, 255); // Light blue sky
+    p.noStroke();
+    p.fill(haloColor); // Very light yellow, semi-transparent
+    p.ellipse(p.width / 2, p.height / 2, 100 + p.random(50), 100 + p.random(50)); // Vary size
+  }
+
+  function drawCirrocumulus(p) {
+    p.background(220, 230, 255); // Lighter Blue
+    p.noStroke();
+    for (let i = 0; i < 40 + p.random(20); i++) {
+      let x = p.random(p.width);
+      let y = p.random(p.height);
+      let size = p.random(5, 15);
+      let cloudColor = p.color(255);
+      cloudColor.setAlpha(150 + p.random(100)); // Vary alpha for depth
+      p.fill(cloudColor);
+      p.ellipse(x, y, size, size);
+    }
+  }
+
+  function drawAltostratus(p) {
+    let baseColor = p.color(180, 180, 180);
+    baseColor.setAlpha(50 + p.random(50));
+
+    p.background(baseColor); // Translucent base
+
+    p.noStroke();
+    for (let i = 0; i < p.height / 10; i++) {
+      let rectColor = p.color(200);
+      rectColor.setAlpha(80 + p.random(40));
+      p.fill(rectColor);
+      p.rect(0, i * 10, p.width, 8 + p.random(4)); // Vary height
+    }
+  }
+
+  function drawAltocumulus(p) {
+    p.background(210, 230, 240); // Softer Blue Sky
+    p.noStroke();
+    for (let i = 0; i < 30 + p.random(15); i++) {
+      let x = p.random(p.width);
+      let y = p.random(p.height);
+      let size = p.random(10, 30);
+      let cloudColor = p.color(240, 240, 240);
+      cloudColor.setAlpha(100 + p.random(100));
+      p.fill(cloudColor);
+      p.ellipse(x, y, size, size);
+    }
+  }
+
+  function drawCumulonimbus(p) {
+    p.background(100); // Dark gray sky
+
+    let cloudColor = p.color(255);
+    cloudColor.setAlpha(150 + p.random(100));
+
+    p.fill(cloudColor);
+    p.beginShape();
+    p.vertex(50, p.height);
+    p.vertex(50, p.height / 2);
+    p.vertex(100, p.height / 4);
+    p.vertex(150, p.height / 2);
+    p.vertex(150, p.height);
+    p.endShape(p.CLOSE);
+
+    let shadowColor = p.color(80);
+    shadowColor.setAlpha(100 + p.random(50));
+    p.fill(shadowColor); //Darken
+    p.triangle(150, p.height, 50, p.height, 100, p.height*1.25);
+  }
+
+  function drawCumulus(p) {
+     let cloudColor = p.color(255);
+        cloudColor.setAlpha(150+p.random(100))
+      p.fill(cloudColor);
+
+      p.noStroke();
+      let baseHeight = 130 + p.random(40);
+
+      p.ellipse(50, baseHeight + (150 - baseHeight), 30 + p.random(20), 30 + p.random(20));
+      p.ellipse(100, baseHeight - 20 + (150 - baseHeight), 40 + p.random(25), 40 + p.random(25));
+      p.ellipse(150, baseHeight + (150 - baseHeight), 30 + p.random(20), 30 + p.random(20));
+      p.ellipse(100, baseHeight + 20 + (150 - baseHeight), 50 + p.random(30), 50 + p.random(30));
+  }
+
+  function drawStratus(p) {
+      let cloudColor = p.color(200);
+        cloudColor.setAlpha(50+p.random(100));
+
+      p.fill(cloudColor);
+    p.noStroke();
+    for (let y = 0; y < p.height; y += 15 + p.random(10)) {
+      p.rect(0, y, p.width, 10 + p.random(5));
+    }
+  }
+
+  function drawNimbostratus(p) {
+      let skyColor = p.color(70);
+      skyColor.setAlpha(50 + p.random(50)); // Add some variation to sky color
+
+      p.background(skyColor);
+
+    p.stroke(255);
+    p.strokeWeight(1);
+    for (let i = 0; i < 50 + p.random(20); i++) {
+      let x = p.random(p.width);
+      let y = p.random(p.height);
+      let rainLength = 5 + p.random(10); // Make rain length variable
+      p.line(x, y, x, y + rainLength);
+    }
+  }
+
+</script>
+</body>
+</html>
