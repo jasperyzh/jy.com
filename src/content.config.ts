@@ -61,4 +61,104 @@ const docs = defineCollection({
   }),
 });
 
-export const collections = { ob_blog, docs };
+// Define resume collection
+const resume = defineCollection({
+  type: 'data',
+  schema: z.object({
+    contactInfo: z.object({
+      name: z.string(),
+      title: z.string(),
+      email: z.string(),
+      website: z.string(),
+      github: z.string(),
+      linkedin: z.string(),
+      location: z.string()
+    }),
+    summary: z.string(),
+    professionalExperience: z.array(
+      z.object({
+        role: z.string(),
+        company: z.string(),
+        period: z.string(),
+        description: z.string(),
+        highlights: z.array(z.string())
+      })
+    ),
+    keyProjects: z.array(
+      z.object({
+        name: z.string(),
+        description: z.string(),
+        highlights: z.array(z.string())
+      })
+    ),
+    personalAchievements: z.array(z.string()),
+    professionalPhilosophy: z.string(),
+    technicalExpertise: z.object({
+      languages: z.array(z.string()),
+      frontendTechnologies: z.array(z.string()),
+      backendTechnologies: z.array(z.string()),
+      tools: z.array(z.string()),
+      designSoftware: z.array(z.string()),
+      databases: z.array(z.string())
+    }),
+    additionalCompetencies: z.array(z.string()),
+    education: z.array(
+      z.object({
+        degree: z.string(),
+        institution: z.string(),
+        year: z.string(),
+        highlights: z.array(z.string())
+      })
+    ),
+    languages: z.array(
+      z.object({
+        language: z.string(),
+        proficiency: z.string()
+      })
+    ),
+    interests: z.array(z.string())
+  })
+});
+
+// Define portfolio collection
+const portfolio = defineCollection({
+  type: 'data',
+  schema: z.object({
+    items: z.array(
+      z.object({
+        title: z.string(),
+        category: z.string(),
+        thumbnail: z.string(),
+        images: z.array(
+          z.object({
+            src: z.string(),
+            width: z.number(),
+            height: z.number(),
+            caption: z.string(),
+          })
+        ),
+        description: z.string(),
+        tags: z.array(z.string()),
+        year: z.string(),
+      })
+    ),
+    skills: z.array(
+      z.object({
+        category: z.string(),
+        items: z.array(z.string())
+      })
+    ),
+    projects: z.array(
+      z.object({
+        title: z.string(),
+        description: z.string(),
+        image: z.string(),
+        tags: z.array(z.string()),
+        demoUrl: z.string(),
+        codeUrl: z.string(),
+      })
+    ),
+  })
+});
+
+export const collections = { ob_blog, docs, resume, portfolio };

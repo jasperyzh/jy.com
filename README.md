@@ -213,6 +213,19 @@ Check out [our documentation](https://docs.astro.build) or jump into our [Discor
 
 ## logs
 
+
+### [250405] discontinue; micro-blogging to social-media
+
+-> [250405] lets cut the fats, will use substack as my main platform for socmed posting
+
+1. post on website
+2. share straight from website
+3. generate seo stuff
+4. How I implement it for my blog?
+	1. pulling all the .md files from Obsidian.md
+- [x] [241206] manage to pull post from obsidian directory!!
+reference: https://chrispennington.blog/blog/
+
 ### [250404]
 
 - [[250220-Personal Website & Blog - Organization#Blog]]

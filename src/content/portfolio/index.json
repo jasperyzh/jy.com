@@ -1,0 +1,205 @@
+{
+  "items": [
+    {
+      "title": "Paramount Property",
+      "category": "Web Development",
+      "thumbnail": "https://picsum.photos/id/237/1920/1080",
+      "images": [
+        {
+          "src": "https://picsum.photos/id/237/1920/1080",
+          "width": 1920,
+          "height": 1080,
+          "caption": "Homepage design showcasing property listings"
+        },
+        {
+          "src": "https://picsum.photos/id/238/800/600",
+          "width": 800,
+          "height": 600,
+          "caption": "Interactive property search interface"
+        },
+        {
+          "src": "https://picsum.photos/id/239/800/600",
+          "width": 800,
+          "height": 600,
+          "caption": "Mobile responsive design"
+        }
+      ],
+      "description": "Corporate website development for Malaysia's leading property developer",
+      "tags": ["WordPress", "Custom Theme", "Property Portal"],
+      "year": "2023"
+    },
+    {
+      "title": "E-commerce Platform",
+      "category": "Full Stack Development",
+      "thumbnail": "https://picsum.photos/id/240/1920/1080",
+      "images": [
+        {
+          "src": "https://picsum.photos/id/240/1920/1080",
+          "width": 1920,
+          "height": 1080,
+          "caption": "Product catalog with advanced filtering"
+        },
+        {
+          "src": "https://picsum.photos/id/242/800/600",
+          "width": 800,
+          "height": 600,
+          "caption": "Shopping cart and checkout process"
+        },
+        {
+          "src": "https://picsum.photos/id/243/800/600",
+          "width": 800,
+          "height": 600,
+          "caption": "Admin dashboard for inventory management"
+        }
+      ],
+      "description": "Modern e-commerce platform with real-time inventory management",
+      "tags": ["React", "Node.js", "MongoDB"],
+      "year": "2023"
+    },
+    {
+      "title": "Travel Blog Platform",
+      "category": "Web Design",
+      "thumbnail": "https://picsum.photos/id/244/1920/1080",
+      "images": [
+        {
+          "src": "https://picsum.photos/id/244/1920/1080",
+          "width": 1920,
+          "height": 1080,
+          "caption": "Homepage with featured destinations"
+        },
+        {
+          "src": "https://picsum.photos/id/216/800/600",
+          "width": 800,
+          "height": 600,
+          "caption": "Blog post layout with rich media"
+        },
+        {
+          "src": "https://picsum.photos/id/217/800/600",
+          "width": 800,
+          "height": 600,
+          "caption": "Interactive map integration"
+        }
+      ],
+      "description": "Custom blog platform for travel enthusiasts with dynamic content management",
+      "tags": ["Astro", "TailwindCSS", "Markdown"],
+      "year": "2024"
+    },
+    {
+      "title": "Healthcare Dashboard",
+      "category": "UI/UX Design",
+      "thumbnail": "https://picsum.photos/id/248/1920/1080",
+      "images": [
+        {
+          "src": "https://picsum.photos/id/248/1920/1080",
+          "width": 1920,
+          "height": 1080,
+          "caption": "Patient monitoring dashboard"
+        },
+        {
+          "src": "https://picsum.photos/id/250/800/600",
+          "width": 800,
+          "height": 600,
+          "caption": "Medical records interface"
+        },
+        {
+          "src": "https://picsum.photos/id/251/800/600",
+          "width": 800,
+          "height": 600,
+          "caption": "Analytics and reporting tools"
+        }
+      ],
+      "description": "Interactive dashboard for healthcare professionals with real-time patient monitoring",
+      "tags": ["Vue.js", "D3.js", "Firebase"],
+      "year": "2023"
+    },
+    {
+      "title": "Mobile Banking App",
+      "category": "Mobile Development",
+      "thumbnail": "https://picsum.photos/id/252/1920/1080",
+      "images": [
+        {
+          "src": "https://picsum.photos/id/252/1920/1080",
+          "width": 1920,
+          "height": 1080,
+          "caption": "Mobile banking home screen"
+        },
+        {
+          "src": "https://picsum.photos/id/254/800/600",
+          "width": 800,
+          "height": 600,
+          "caption": "Transaction history and analytics"
+        },
+        {
+          "src": "https://picsum.photos/id/255/800/600",
+          "width": 800,
+          "height": 600,
+          "caption": "Secure payment interface"
+        }
+      ],
+      "description": "Secure and user-friendly mobile banking application",
+      "tags": ["React Native", "TypeScript", "AWS"],
+      "year": "2024"
+    },
+    {
+      "title": "AI Content Platform",
+      "category": "Machine Learning",
+      "thumbnail": "https://picsum.photos/id/256/1920/1080",
+      "images": [
+        {
+          "src": "https://picsum.photos/id/256/1920/1080",
+          "width": 1920,
+          "height": 1080,
+          "caption": "AI content generation interface"
+        },
+        {
+          "src": "https://picsum.photos/id/258/800/600",
+          "width": 800,
+          "height": 600,
+          "caption": "Content optimization dashboard"
+        },
+        {
+          "src": "https://picsum.photos/id/259/800/600",
+          "width": 800,
+          "height": 600,
+          "caption": "Analytics and performance metrics"
+        }
+      ],
+      "description": "AI-powered content generation and optimization platform",
+      "tags": ["Python", "TensorFlow", "FastAPI"],
+      "year": "2024"
+    }
+  ],
+  "skills": [
+    { "category": "Frontend", "items": ["HTML5", "CSS3", "JavaScript (ES6+)", "React", "Vue", "TailwindCSS", "SASS"] },
+    { "category": "Backend", "items": ["Node.js", "Python", "Django", "Express", "GraphQL", "REST API"] },
+    { "category": "Database", "items": ["MongoDB", "PostgreSQL", "Firebase", "Redis"] },
+    { "category": "DevOps", "items": ["Docker", "AWS", "CI/CD", "Git", "GitHub Actions"] },
+    { "category": "Tools", "items": ["VS Code", "Figma", "Postman", "Jest", "Webpack"] }
+  ],
+  "projects": [
+    {
+      "title": "E-commerce Platform",
+      "description": "A full-stack e-commerce solution with product management, cart functionality, and secure checkout.",
+      "image": "https://images.unsplash.com/photo-1661956602944-249bcd04b63f?q=80&w=2070",
+      "tags": ["React", "Node.js", "MongoDB", "Stripe"],
+      "demoUrl": "#",
+      "codeUrl": "#"
+    },
+    {
+      "title": "Health & Fitness App",
+      "description": "Mobile-first fitness tracking application with workout plans, nutrition tracking, and progress analytics.",
+      "image": "https://images.unsplash.com/photo-1571019613914-85f342c6a11e?q=80&w=2070",
+      "tags": ["React Native", "Firebase", "GraphQL"],
+      "demoUrl": "#",
+      "codeUrl": "#"
+    },
+    {
+      "title": "AI Content Generator",
+      "description": "Using machine learning to create personalized content based on user preferences and behavior.",
+      "image": "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=2070",
+      "tags": ["Python", "TensorFlow", "Flask", "AWS"],
+      "demoUrl": "#",
+      "codeUrl": "#"
+    }
+  ]
+} 

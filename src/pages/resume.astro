@@ -3,6 +3,27 @@ import Layout from "@/layouts/BaseLayout.astro";
 import { Badge } from "@/components/starwind/badge";
 import { Button } from "@/components/starwind/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/starwind/card";
+import { getEntry } from 'astro:content';
+
+// Get resume data from content collection
+const resumeEntry = await getEntry('resume', 'index');
+if (!resumeEntry) {
+  throw new Error('Resume data not found');
+}
+
+const { 
+  contactInfo, 
+  summary, 
+  professionalExperience, 
+  keyProjects, 
+  personalAchievements,
+  professionalPhilosophy,
+  technicalExpertise,
+  additionalCompetencies,
+  education,
+  languages,
+  interests
+} = resumeEntry.data;
 ---
 
 <Layout title="Resume - Jasper Yong">
@@ -11,26 +32,26 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
     <section class="bg-gradient-to-br from-slate-700 to-slate-800 text-white p-8 rounded-lg shadow-lg mb-10">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 class="text-3xl md:text-4xl font-bold mb-2">Jasper Yong Zheng Hong</h1>
-          <a href="https://jasperyong.com" class="text-blue-300 hover:text-blue-200 transition-colors duration-300 mb-4 inline-block">https://jasperyong.com</a>
+          <h1 class="text-3xl md:text-4xl font-bold mb-2">{contactInfo.name}</h1>
+          <a href={`https://${contactInfo.website}`} class="text-blue-300 hover:text-blue-200 transition-colors duration-300 mb-4 inline-block">{contactInfo.website}</a>
         </div>
 
         <div class="flex flex-col gap-2">
           <div class="flex items-center gap-2">
             <span class="text-blue-300"><i class="bi bi-envelope"></i></span>
-            <a href="mailto:jasper.yzh@gmail.com" class="hover:text-blue-300 transition-colors duration-300">jasper.yzh@gmail.com</a>
+            <a href={`mailto:${contactInfo.email}`} class="hover:text-blue-300 transition-colors duration-300">{contactInfo.email}</a>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-blue-300"><i class="bi bi-phone"></i></span>
-            <a href="tel:+60133912105" class="hover:text-blue-300 transition-colors duration-300">+6013 391 2105</a>
+            <span class="text-blue-300"><i class="bi bi-github"></i></span>
+            <a href={`https://${contactInfo.github}`} class="hover:text-blue-300 transition-colors duration-300">{contactInfo.github}</a>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-blue-300"><i class="bi bi-instagram"></i></span>
-            <a href="https://instagram.com/jasperyzh" class="hover:text-blue-300 transition-colors duration-300">@jasperyzh</a>
+            <span class="text-blue-300"><i class="bi bi-linkedin"></i></span>
+            <a href={`https://${contactInfo.linkedin}`} class="hover:text-blue-300 transition-colors duration-300">{contactInfo.linkedin}</a>
           </div>
           <div class="flex items-center gap-2 mt-1">
             <span class="text-blue-300"><i class="bi bi-geo-alt"></i></span>
-            <address class="not-italic">B70909, 1120 Park Avenue, No 2a, PJS 1/52, Taman Petaling Utama, 46150 Petaling Jaya, Selangor</address>
+            <address class="not-italic">{contactInfo.location}</address>
           </div>
         </div>
       </div>
@@ -43,9 +64,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
         <!-- Professional Summary -->
         <section>
           <h2 class="text-2xl font-bold mb-4 pb-2 border-b border-gray-200">Professional Summary</h2>
-          <p class="text-lg mb-4">
-            Dedicated <strong class="font-semibold">Full-stack Web Developer</strong> with <strong class="font-semibold">8+ years of experience</strong> across front-end and back-end development. Proficient in crafting responsive, user-centric web solutions for diverse industries. Proven ability in team leadership, optimize SEO, and manage project effectively. Passionate about delivering engaging web experiences and continuously expanding expertise in the latest technologies.
-          </p>
+          <p class="text-lg mb-4">{summary}</p>
         </section>
 
         <!-- Professional Experience -->
@@ -53,47 +72,27 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
           <h2 class="text-2xl font-bold mb-4 pb-2 border-b border-gray-200">Professional Experience</h2>
           
           <div class="space-y-6">
-            <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-              <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-3 gap-2">
-                <h3 class="text-xl font-bold">Full-Stack Web Developer</h3>
-                <div class="flex items-center gap-2">
-                  <span class="text-gray-600">Fishermen Analytics | USJ, Selangor, Malaysia</span>
-                  <Badge variant="outline">(2015 - 2024)</Badge>
+            {professionalExperience.map(experience => (
+              <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-3 gap-2">
+                  <h3 class="text-xl font-bold">{experience.role}</h3>
+                  <div class="flex items-center gap-2">
+                    <span class="text-gray-600">{experience.company}</span>
+                    <Badge variant="outline">{experience.period}</Badge>
+                  </div>
+                </div>
+                
+                <p class="text-gray-700 mb-4">{experience.description}</p>
+                
+                <div class="space-y-4">
+                  {experience.highlights.map(highlight => (
+                    <div>
+                      <p class="text-gray-700">{highlight}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
-              
-              <div class="space-y-4">
-                <div>
-                  <h4 class="font-semibold mb-2">Website Design & Development</h4>
-                  <p class="text-gray-700">Develop and maintain responsive websites using HTML, CSS, JavaScript, and WordPress. Optimized performance and reliability for seamless user experiences.</p>
-                </div>
-                
-                <div>
-                  <h4 class="font-semibold mb-2">SEO & Analytics</h4>
-                  <p class="text-gray-700">Increased average SEO scores from 50 to 80+, boosting search engine visibility. Leveraged analytics to enhance user engagement.</p>
-                </div>
-                
-                <div>
-                  <h4 class="font-semibold mb-2">Team Leadership</h4>
-                  <p class="text-gray-700">Lead a small team of developers and designers in delivering web solutions, from email templates to full-fledged websites with CMS. Implemented organizational tools, improving team communication and efficiency.</p>
-                </div>
-                
-                <div>
-                  <h4 class="font-semibold mb-2">Project Management</h4>
-                  <p class="text-gray-700">Managed projects for clients like Yayasan Petronas, Petrosains, Paramount Property, Taylor University, ensuring on-time delivery and driving brand engagement.</p>
-                </div>
-                
-                <div>
-                  <h4 class="font-semibold mb-2">UI/UX Improvements</h4>
-                  <p class="text-gray-700">Collaborated with content and design teams to enhance UI/UX, increasing user retention. Streamlined navigation and improve SEO consistency across all platforms.</p>
-                </div>
-                
-                <div>
-                  <h4 class="font-semibold mb-2">Multimedia Proficiency</h4>
-                  <p class="text-gray-700">Beyond web development, frequently assisted with graphic design, video editing tasks, showcasing versatility and supporting team success. Provide tech support, helping colleagues solve challenges in unfamiliar technical areas.</p>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </section>
 
@@ -102,45 +101,21 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
           <h2 class="text-2xl font-bold mb-4 pb-2 border-b border-gray-200">Key Projects</h2>
           
           <div class="grid grid-cols-1 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>YayasanPetronas.com.my - CSR Platform</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>Developed and launched a CSR-focused website, enhancing the visibility of social initiatives and increasing donor engagement. Leveraged intuitive UX design to ensure seamless navigation and engagement.</p>
-                <p class="font-medium mt-2">Particularly drove awareness of organization's activities, culminating in a high-profile launch event led by Dr. Wan Azizah.</p>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>Petrosains.com.my - Nation's STEM Advocacy</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>Redesigned and revamped the Petrosains website to better support STEM advocacy in Malaysia. The overhaul and refresh interface that emphasizes for catering to a diverse user range from young students to educators.</p>
-                <p class="font-medium mt-2">Significantly enhanced visibility and accessibility of STEM resources, increasing community outreach and education content.</p>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>ParamountProperty.my</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>Managed and expanded the Paramount Property website portfolio, growing the number of projects from 10 to 15 over 7 years. Collaborated with the in-house IT team to ensure continuous service improvement and uptime.</p>
-                <p class="font-medium mt-2">The continuous enhancements contributed to increase user satisfaction and efficiency, supporting sustained business growth.</p>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>BersatuForMakan - Fishermen x BFM Campaign</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>Contributed to a collaborative campaign with BFM to highlight Malaysia's rich culinary heritage after the omission from Netflix's Street Food series by developing dedicated microsite. The microsite played a key role in driving campaign success, which, with a modest budget of RM2000, reached almost 3 million people and generated RM10K in earned media.</p>
-                <p class="font-medium mt-2">Achieved a 628% increase in engagement and sixfold in followers, providing significant PR mileage for BFM.</p>
-              </CardContent>
-            </Card>
+            {keyProjects.map(project => (
+              <Card>
+                <CardHeader>
+                  <CardTitle>{project.name}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>{project.description}</p>
+                  <ul class="list-disc list-inside mt-2">
+                    {project.highlights.map(highlight => (
+                      <li class="font-medium">{highlight}</li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </section>
 
@@ -149,20 +124,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
           <h2 class="text-2xl font-bold mb-4 pb-2 border-b border-gray-200">Personal Achievements</h2>
           
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-white p-4 rounded-lg shadow-sm">
-              <h3 class="font-semibold mb-2">Self-Taught Developer</h3>
-              <p class="text-gray-700">Successfully self-taught to become a season full-stack web developer, continuously expanding expertise in the latest technologies and industry best practices.</p>
-            </div>
-            
-            <div class="bg-white p-4 rounded-lg shadow-sm">
-              <h3 class="font-semibold mb-2">Team Leadership</h3>
-              <p class="text-gray-700">Groomed junior developer, instilling best practices and reducing onboarding time. Pitched new project management processes that improved team cohesion and efficiency.</p>
-            </div>
-            
-            <div class="bg-white p-4 rounded-lg shadow-sm">
-              <h3 class="font-semibold mb-2">Project Management</h3>
-              <p class="text-gray-700">Managed projects from concept to launch, delivering on time and implementing agile methodologies for improved team productivity.</p>
-            </div>
+            {personalAchievements.map(achievement => (
+              <div class="bg-white p-4 rounded-lg shadow-sm">
+                <p class="text-gray-700">{achievement}</p>
+              </div>
+            ))}
           </div>
         </section>
 
@@ -171,8 +137,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
           <h2 class="text-2xl font-bold mb-4 pb-2 border-b border-gray-200">Professional Philosophy</h2>
           
           <div class="bg-white p-6 rounded-lg shadow-sm">
-            <p class="text-gray-700 mb-3">I am passionate about <strong>continuous learning</strong> and creating impactful, user-centric solutions through <strong>cutting-edge technology</strong>. I value <strong>simplicity and clarity</strong> in design, and approach UX challenges with both philosophical and creative problem-solving.</p>
-            <p class="text-gray-700">I strive for a balance in work and life through interests like music, woodworking, and art. Currently exploring AI integration in web development.</p>
+            <p class="text-gray-700">{professionalPhilosophy}</p>
           </div>
         </section>
 
@@ -180,26 +145,25 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
         <section class="mt-10">
           <div class="bg-white p-6 rounded-lg shadow-sm flex flex-col md:flex-row justify-between items-center gap-6">
             <div class="w-40 h-40 bg-gray-200 rounded-lg overflow-hidden flex items-center justify-center">
-              <!-- QR Code Image -->
-              <img src="/img/placeholder.png" alt="QR Code to jasperyzh.com" class="max-w-full max-h-full object-contain" />
+              <img src="/qr-website.png" alt="QR Code to website" class="max-w-full max-h-full object-contain" />
             </div>
             
             <div class="flex flex-col gap-3">
               <div class="flex items-center gap-2">
                 <span class="text-gray-600"><i class="bi bi-envelope"></i></span>
-                <a href="mailto:jasper.yzh@gmail.com" class="text-gray-700 hover:text-blue-600 transition-colors duration-300">jasper.yzh@gmail.com</a>
+                <a href={`mailto:${contactInfo.email}`} class="text-gray-700 hover:text-blue-600 transition-colors duration-300">{contactInfo.email}</a>
               </div>
               <div class="flex items-center gap-2">
-                <span class="text-gray-600"><i class="bi bi-phone"></i></span>
-                <a href="tel:+60133912105" class="text-gray-700 hover:text-blue-600 transition-colors duration-300">+6013 391 2105</a>
+                <span class="text-gray-600"><i class="bi bi-github"></i></span>
+                <a href={`https://${contactInfo.github}`} class="text-gray-700 hover:text-blue-600 transition-colors duration-300">{contactInfo.github}</a>
               </div>
               <div class="flex items-center gap-2">
-                <span class="text-gray-600"><i class="bi bi-instagram"></i></span>
-                <a href="https://instagram.com/jasperyzh" class="text-gray-700 hover:text-blue-600 transition-colors duration-300">@jasperyzh</a>
+                <span class="text-gray-600"><i class="bi bi-linkedin"></i></span>
+                <a href={`https://${contactInfo.linkedin}`} class="text-gray-700 hover:text-blue-600 transition-colors duration-300">{contactInfo.linkedin}</a>
               </div>
               <div class="flex items-center gap-2">
                 <span class="text-gray-600"><i class="bi bi-geo-alt"></i></span>
-                <address class="not-italic text-gray-700">B70909, 1120 Park Avenue, No 2a, PJS 1/52, Taman Petaling Utama, 46150 Petaling Jaya, Selangor</address>
+                <address class="not-italic text-gray-700">{contactInfo.location}</address>
               </div>
             </div>
             
@@ -224,47 +188,54 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
             <div>
               <h3 class="font-semibold mb-3">Languages</h3>
               <div class="flex flex-wrap gap-2">
-                <Badge>HTML</Badge>
-                <Badge>CSS</Badge>
-                <Badge>JavaScript</Badge>
-                <Badge>PHP</Badge>
-                <Badge>TypeScript</Badge>
+                {technicalExpertise.languages.map(lang => (
+                  <Badge>{lang}</Badge>
+                ))}
               </div>
             </div>
             
             <div>
-              <h3 class="font-semibold mb-3">Frameworks / Libraries</h3>
+              <h3 class="font-semibold mb-3">Frontend Technologies</h3>
               <div class="flex flex-wrap gap-2">
-                <Badge>AstroJS</Badge>
-                <Badge>VueJS</Badge>
-                <Badge>WordPress</Badge>
-                <Badge>BootstrapCSS</Badge>
-                <Badge>TailwindCSS</Badge>
+                {technicalExpertise.frontendTechnologies.map(tech => (
+                  <Badge>{tech}</Badge>
+                ))}
+              </div>
+            </div>
+            
+            <div>
+              <h3 class="font-semibold mb-3">Backend Technologies</h3>
+              <div class="flex flex-wrap gap-2">
+                {technicalExpertise.backendTechnologies.map(tech => (
+                  <Badge>{tech}</Badge>
+                ))}
               </div>
             </div>
             
             <div>
               <h3 class="font-semibold mb-3">Tools</h3>
               <div class="flex flex-wrap gap-2">
-                <Badge>Git & GitHub</Badge>
-                <Badge>Linux / CLI</Badge>
-                <Badge>Bash</Badge>
-                <Badge>MySQL</Badge>
-                <Badge>GitHub Actions</Badge>
-                <Badge>Docker</Badge>
-                <Badge>Obsidian.md</Badge>
-                <Badge>AI Chatbots</Badge>
+                {technicalExpertise.tools.map(tool => (
+                  <Badge>{tool}</Badge>
+                ))}
               </div>
             </div>
             
             <div>
-              <h3 class="font-semibold mb-3">Design & UX</h3>
+              <h3 class="font-semibold mb-3">Design Software</h3>
               <div class="flex flex-wrap gap-2">
-                <Badge>Figma</Badge>
-                <Badge>Penpot</Badge>
-                <Badge>Adobe Photoshop</Badge>
-                <Badge>Adobe Illustrator</Badge>
-                <Badge>Inkscape</Badge>
+                {technicalExpertise.designSoftware.map(software => (
+                  <Badge>{software}</Badge>
+                ))}
+              </div>
+            </div>
+            
+            <div>
+              <h3 class="font-semibold mb-3">Databases</h3>
+              <div class="flex flex-wrap gap-2">
+                {technicalExpertise.databases.map(db => (
+                  <Badge>{db}</Badge>
+                ))}
               </div>
             </div>
           </div>
@@ -275,40 +246,14 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
           <h2 class="text-xl font-bold mb-4 pb-2 border-b border-gray-200">Additional Competencies</h2>
           
           <div class="space-y-3">
-            <div class="flex justify-between items-center">
-              <span class="font-medium">Project management</span>
-              <div class="w-1/2 bg-gray-200 rounded-full h-2">
-                <div class="bg-blue-600 h-2 rounded-full" style="width: 90%"></div>
+            {additionalCompetencies.map(competency => (
+              <div class="flex justify-between items-center">
+                <span class="font-medium">{competency}</span>
+                <div class="w-1/2 bg-gray-200 rounded-full h-2">
+                  <div class="bg-blue-600 h-2 rounded-full skill-bar-inner" data-width="90%"></div>
+                </div>
               </div>
-            </div>
-            
-            <div class="flex justify-between items-center">
-              <span class="font-medium">Team leadership</span>
-              <div class="w-1/2 bg-gray-200 rounded-full h-2">
-                <div class="bg-blue-600 h-2 rounded-full" style="width: 85%"></div>
-              </div>
-            </div>
-            
-            <div class="flex justify-between items-center">
-              <span class="font-medium">SEO Optimization</span>
-              <div class="w-1/2 bg-gray-200 rounded-full h-2">
-                <div class="bg-blue-600 h-2 rounded-full" style="width: 80%"></div>
-              </div>
-            </div>
-            
-            <div class="flex justify-between items-center">
-              <span class="font-medium">Responsive design</span>
-              <div class="w-1/2 bg-gray-200 rounded-full h-2">
-                <div class="bg-blue-600 h-2 rounded-full" style="width: 95%"></div>
-              </div>
-            </div>
-            
-            <div class="flex justify-between items-center">
-              <span class="font-medium">Performance tuning</span>
-              <div class="w-1/2 bg-gray-200 rounded-full h-2">
-                <div class="bg-blue-600 h-2 rounded-full" style="width: 75%"></div>
-              </div>
-            </div>
+            ))}
           </div>
         </section>
 
@@ -317,17 +262,18 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
           <h2 class="text-xl font-bold mb-4 pb-2 border-b border-gray-200">Education</h2>
           
           <div class="space-y-4">
-            <div class="relative pl-6 before:content-[''] before:absolute before:left-0 before:top-2 before:w-3 before:h-3 before:bg-blue-600 before:rounded-full before:z-10 after:content-[''] after:absolute after:left-1.5 after:top-2 after:h-full after:w-px after:bg-gray-300 after:-z-10">
-              <h3 class="font-semibold">BA (Hons) in Computer Games Design</h3>
-              <p class="text-gray-600">University of Reading, United Kingdom</p>
-              <p class="text-gray-500">(2009 - 2012)</p>
-            </div>
-            
-            <div class="relative pl-6 before:content-[''] before:absolute before:left-0 before:top-2 before:w-3 before:h-3 before:bg-blue-600 before:rounded-full before:z-10">
-              <h3 class="font-semibold">Diploma in Multimedia Design</h3>
-              <p class="text-gray-600">The One Academy, Malaysia</p>
-              <p class="text-gray-500">(2006 - 2008)</p>
-            </div>
+            {education.map(edu => (
+              <div class="relative pl-6 before:content-[''] before:absolute before:left-0 before:top-2 before:w-3 before:h-3 before:bg-blue-600 before:rounded-full before:z-10 after:content-[''] after:absolute after:left-1.5 after:top-2 after:h-full after:w-px after:bg-gray-300 after:-z-10">
+                <h3 class="font-semibold">{edu.degree}</h3>
+                <p class="text-gray-600">{edu.institution}</p>
+                <p class="text-gray-500">({edu.year})</p>
+                <ul class="list-disc list-inside mt-2">
+                  {edu.highlights.map(highlight => (
+                    <li class="text-gray-600">{highlight}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </section>
 
@@ -336,26 +282,14 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
           <h2 class="text-xl font-bold mb-4 pb-2 border-b border-gray-200">Languages</h2>
           
           <div class="space-y-3">
-            <div class="flex justify-between items-center">
-              <span class="font-medium">English (Fluent)</span>
-              <div class="w-1/2 bg-gray-200 rounded-full h-2">
-                <div class="bg-blue-600 h-2 rounded-full" style="width: 95%"></div>
+            {languages.map(lang => (
+              <div class="flex justify-between items-center">
+                <span class="font-medium">{lang.language}</span>
+                <div class="w-1/2 bg-gray-200 rounded-full h-2">
+                  <div class="bg-blue-600 h-2 rounded-full skill-bar-inner" data-width="90%"></div>
+                </div>
               </div>
-            </div>
-            
-            <div class="flex justify-between items-center">
-              <span class="font-medium">Chinese (Fluent)</span>
-              <div class="w-1/2 bg-gray-200 rounded-full h-2">
-                <div class="bg-blue-600 h-2 rounded-full" style="width: 90%"></div>
-              </div>
-            </div>
-            
-            <div class="flex justify-between items-center">
-              <span class="font-medium">Bahasa Malaysia (Fundamental)</span>
-              <div class="w-1/2 bg-gray-200 rounded-full h-2">
-                <div class="bg-blue-600 h-2 rounded-full" style="width: 70%"></div>
-              </div>
-            </div>
+            ))}
           </div>
         </section>
 
@@ -367,21 +301,9 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
             <div>
               <h3 class="font-semibold mb-3">Interests</h3>
               <div class="flex flex-wrap gap-2">
-                <Badge variant="secondary">Generative Art</Badge>
-                <Badge variant="secondary">Artificial Intelligence</Badge>
-                <Badge variant="secondary">Music / EDM</Badge>
-                <Badge variant="secondary">Philosophy</Badge>
-                <Badge variant="secondary">Economics</Badge>
-                <Badge variant="secondary">Woodworking</Badge>
-              </div>
-            </div>
-            
-            <div>
-              <h3 class="font-semibold mb-3">Learning</h3>
-              <div class="flex flex-wrap gap-2">
-                <Badge variant="secondary">AI Integration in WebDev</Badge>
-                <Badge variant="secondary">BaaS / AppWrite</Badge>
-                <Badge variant="secondary">Advanced TypeScript</Badge>
+                {interests.map(interest => (
+                  <Badge variant="secondary">{interest}</Badge>
+                ))}
               </div>
             </div>
           </div>
@@ -403,17 +325,17 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
   // Add animation and interactivity
   document.addEventListener('DOMContentLoaded', () => {
     // Skill bar animations
-    const skillBars = document.querySelectorAll<HTMLElement>('.bg-blue-600');
+    const skillBars = document.querySelectorAll<HTMLElement>('.skill-bar-inner');
     skillBars.forEach(bar => {
-      const width = bar.style.width;
-      bar.style.width = '0';
+      const width = bar.getAttribute('data-width');
       setTimeout(() => {
-        bar.style.transition = 'width 1s ease-in-out';
-        bar.style.width = width;
+        if (width) {
+          bar.style.width = width;
+        }
       }, 300);
     });
 
-    // Dark mode toggle (placeholder - actual implementation would depend on your setup)
+    // Dark mode toggle
     const themeToggleBtn = document.querySelector('button:has(.bi-moon-stars)');
     if (themeToggleBtn) {
       themeToggleBtn.addEventListener('click', () => {
@@ -447,7 +369,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
     transition: width 1s ease-in-out;
   }
 
-  /* Dark mode styles - would be expanded in a real implementation */
+  /* Dark mode styles */
   .dark body {
     background-color: #1a1a1a;
     color: #f3f4f6;

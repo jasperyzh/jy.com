@@ -1,0 +1,119 @@
+{
+  "contactInfo": {
+    "name": "Jasper Yong",
+    "title": "Full-Stack Web Developer",
+    "email": "info@jasperyong.com",
+    "website": "jasperyong.com",
+    "github": "github.com/jy",
+    "linkedin": "linkedin.com/in/jy",
+    "location": "Kuala Lumpur, Malaysia"
+  },
+  "summary": "Diverse background in various sectors of the tech industry, with solid education and curiosity that have driven a career spanning six years. Proven expertise in building applications across all layers, from server architecture to data storage and user interface. Skilled in leading projects, implementing SDLC methodologies, and streamlining workflow processes to enhance team efficiency and delivery.",
+  
+  "professionalExperience": [
+    {
+      "role": "Full-Stack Web Developer",
+      "company": "Self-Employed / Freelance",
+      "period": "Jan 2019 - Present",
+      "description": "Collaborate with startups and SMEs to develop and maintain websites and web applications using modern technologies.",
+      "highlights": [
+        "Architecture design and API implementation for various projects",
+        "Building scalable, maintainable, and secure applications",
+        "Key collaborations with national clients on high-visibility projects",
+        "Implementation of dynamic frontend solutions with React/Vue/Astro",
+        "Backend development with Node.js, Express, and Postgres"
+      ]
+    },
+    {
+      "role": "Frontend Web Developer",
+      "company": "Tech Solutions Inc.",
+      "period": "June 2017 - Dec 2018",
+      "description": "Participated in the development and maintenance of web applications for corporate clients, leveraging modern JavaScript frameworks.",
+      "highlights": [
+        "Collaborated in agile teams to deliver high-quality web solutions",
+        "Implemented responsive UI components using React and state management",
+        "Integrated with RESTful APIs and GraphQL endpoints",
+        "Optimized applications for performance across devices"
+      ]
+    }
+  ],
+  
+  "keyProjects": [
+    {
+      "name": "E-commerce Platform Redesign",
+      "description": "Complete overhaul of a legacy e-commerce system to modern technology stack",
+      "highlights": [
+        "Improved site performance by 60%",
+        "Implemented JAMstack architecture for enhanced security",
+        "Reduced operational costs by 40%",
+        "Increased conversion rates by 25%"
+      ]
+    },
+    {
+      "name": "Enterprise Resource Management System",
+      "description": "Modular ERP system providing integrated solutions for manufacturing clients",
+      "highlights": [
+        "Real-time data synchronization across modules",
+        "Custom reporting and analytics dashboard",
+        "Integration with IoT devices for production monitoring",
+        "Role-based access control system"
+      ]
+    }
+  ],
+  
+  "personalAchievements": [
+    "Successfully migrated multiple legacy applications to modern frameworks",
+    "Mentored junior developers, creating comprehensive onboarding documentation",
+    "Speaker at regional web development conferences",
+    "Open-source contributor to several popular JavaScript libraries"
+  ],
+  
+  "professionalPhilosophy": "Committed to developing elegant solutions that balance technical excellence with user experience. Advocate for clean, maintainable code and collaborative development processes. Always seeking to expand knowledge and embrace new technologies that enhance digital experiences.",
+  
+  "technicalExpertise": {
+    "languages": ["JavaScript", "TypeScript", "HTML5", "CSS3/SCSS", "SQL", "Python"],
+    "frontendTechnologies": ["React", "Vue.js", "Next.js", "Astro", "Redux", "Tailwind CSS"],
+    "backendTechnologies": ["Node.js", "Express", "REST API Design", "GraphQL"],
+    "tools": ["Git", "Docker", "Jest", "Webpack", "Vite"],
+    "designSoftware": ["Adobe XD", "Figma"],
+    "databases": ["PostgreSQL", "MongoDB", "Redis"]
+  },
+  
+  "additionalCompetencies": [
+    "Advanced problem-solving and analytical thinking",
+    "Strong communication and presentation skills",
+    "Project planning and agile methodology implementation",
+    "UI/UX design principles and best practices",
+    "Performance optimization techniques",
+    "Secure coding practices and implementation",
+    "Cross-browser compatibility and responsive design"
+  ],
+  
+  "education": [
+    {
+      "degree": "Bachelor of Computer Science",
+      "institution": "University of Technology",
+      "year": "2016",
+      "highlights": ["Focus on Software Engineering", "Data Structures & Algorithms"]
+    },
+    {
+      "degree": "Professional Certification in Web Development",
+      "institution": "Tech Academy",
+      "year": "2017",
+      "highlights": ["Frontend & Backend Specialization"]
+    }
+  ],
+  
+  "languages": [
+    {"language": "English", "proficiency": "Professional"},
+    {"language": "Mandarin", "proficiency": "Native"},
+    {"language": "Bahasa Malaysia", "proficiency": "Professional"}
+  ],
+  
+  "interests": [
+    "Continuous learning through online courses and workshops",
+    "Contributing to open-source projects",
+    "Attending tech conferences and meetups",
+    "Exploring emerging technologies in web development"
+  ]
+} 

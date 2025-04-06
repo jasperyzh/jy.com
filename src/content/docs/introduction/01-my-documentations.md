@@ -51,6 +51,6 @@ app.start();
 
 Now that you've installed the package, check out these guides:
 
-- [Configuration Options](/docs/introduction/02-configuration)
+- [Configuration Options](02-configuration.md)
 - [Advanced Features](/docs/advanced-features)
-- [API Reference](/docs/reference/01-api-reference) 
+- [API Reference](01-api-reference.md) 

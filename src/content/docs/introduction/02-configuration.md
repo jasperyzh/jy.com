@@ -75,4 +75,4 @@ The configuration can be set in several ways:
 3. Using environment variables
 4. Using a configuration file
 
-See the [API Reference](/docs/reference/01-api-reference) for more details on these methods. 
+See the [API Reference](01-api-reference.md) for more details on these methods. 
