@@ -1,7 +1,25 @@
 # jasperyong.com
 
+additional documentation at `/docs/01-my-docuemntations`
 
-## tech stack
+## blog & substack
+
+
+
+## documentation: workflow and more
+
+`/src/pages/docs`
+`/src/content/docs` - also sync with obsidian's notes
+
+
+
+
+#### my workflow & frameworks
+
+#### my note-taking methods
+
+###### useful resources & channels
+#### my tech stack
 - astrojs
 - tailwindcss
 - vue3
@@ -10,9 +28,13 @@
 - three.js
 - canvas-sketch
 
-## blog & portfolio
+## portfolio / past-work / resume
 Build blog to share journey.
 Build personal portfolio to showcase projects and skills.
+
+### the scripts
+	`scripts/copy-blog-docs-posts.sh`
+	`scripts/copy-projects-readme-to-obsidian.sh`
 
 ### + long-form articles & guides
 
@@ -182,13 +204,14 @@ All commands are run from the root of the project, from a terminal:
 
 Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
 
-## Credit
 
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+## Projects & Sketches
 
+(list down all the projects and sketches under here, link to related obsidian notes)
 
+- [[250403-Undo Stack Implementation]]
 
-# logs
+## logs
 
 ### [250404]
 

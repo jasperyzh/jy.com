@@ -1,0 +1,198 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+// Add prerender directive to fix the warning
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const allDocs = await getCollection("docs");
+  
+  // Filter out draft posts (unless in development)
+  const publishedDocs = import.meta.env.DEV
+    ? allDocs
+    : allDocs.filter((doc) => !doc.data.draft);
+
+  // Generate paths for each document
+  return publishedDocs.map((entry) => {
+    // Get the path parts
+    const pathParts = entry.id.split('/');
+    
+    // Create a slug that preserves the folder structure
+    const slug = pathParts.length > 1 
+      ? pathParts.join('/') 
+      : entry.id;
+    
+    return {
+      params: { slug },
+      props: { entry, allDocs: publishedDocs },
+    };
+  });
+}
+
+const { entry, allDocs } = Astro.props;
+
+// Check if entry exists before rendering
+let Content;
+if (entry) {
+  const rendered = await render(entry);
+  Content = rendered.Content;
+} else {
+  console.error("Documentation entry not found");
+}
+
+// Extract useful information for navigation
+const pathParts = entry?.id.split('/') || [];
+const section = pathParts.length > 1 ? pathParts[0] : 'root';
+const filename = pathParts.length > 0 ? pathParts[pathParts.length - 1] : '';
+const currentPage = entry?.id || '';
+
+// Organize documentation by sections (directories)
+const docsBySection = {};
+
+// Group documents by section
+allDocs.forEach(doc => {
+  const parts = doc.id.split('/');
+  const docSection = parts.length > 1 ? parts[0] : 'root';
+  
+  if (!docsBySection[docSection]) {
+    docsBySection[docSection] = [];
+  }
+  
+  docsBySection[docSection].push(doc);
+});
+
+// Sort documents within each section by filename
+Object.keys(docsBySection).forEach(sectionKey => {
+  docsBySection[sectionKey].sort((a, b) => {
+    const filenameA = a.id.split('/').pop();
+    const filenameB = b.id.split('/').pop();
+    return filenameA.localeCompare(filenameB);
+  });
+});
+
+// Sort sections (put 'introduction' first)
+const sortedSections = Object.keys(docsBySection).sort((a, b) => {
+  if (a === 'introduction') return -1;
+  if (b === 'introduction') return 1;
+  return a.localeCompare(b);
+});
+
+// Function to get section title
+function getSectionTitle(sectionName) {
+  const titles = {
+    'introduction': 'Introduction',
+    'reference': 'Reference',
+    'root': 'Documentation'
+  };
+  return titles[sectionName] || sectionName.charAt(0).toUpperCase() + sectionName.slice(1);
+}
+
+// Function to extract the display title from a document
+function getDisplayTitle(doc) {
+  const filename = doc.id.split('/').pop();
+  const match = filename.match(/^(\d+)-(.+)\.md$/);
+  
+  if (match) {
+    const [_, number, slug] = match;
+    return {
+      number,
+      title: doc.data.title || slug.replace(/-/g, ' ')
+    };
+  }
+  
+  return {
+    number: '',
+    title: doc.data.title || filename.replace(/\.md$/, '').replace(/-/g, ' ')
+  };
+}
+
+// Function to generate URL for a document
+function getDocUrl(doc) {
+  return `/docs/${doc.id.replace(/\.md$/, '')}`;
+}
+---
+
+<BaseLayout title={entry?.data.title || 'Documentation Not Found'} description={entry?.data.description || 'The requested documentation page could not be found'}>
+  <div class="flex flex-col md:flex-row max-w-7xl mx-auto px-4 py-8 gap-8">
+    <!-- Sidebar -->
+    <aside class="md:w-64 flex-shrink-0 pb-4 md:pb-0">
+      <div class="sticky top-24 overflow-y-auto pr-4 pb-12 max-h-[calc(100vh-6rem)]">
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-2">Documentation</h2>
+          <p class="text-slate-600 dark:text-slate-300 text-sm">Everything you need to know</p>
+        </div>
+
+        <nav>
+          {sortedSections.map(sectionKey => (
+            <div class="mb-6">
+              <h3 class="font-semibold text-sm uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-3">
+                {getSectionTitle(sectionKey)}
+              </h3>
+              <ul class="space-y-2">
+                {docsBySection[sectionKey].map(doc => {
+                  const { number, title } = getDisplayTitle(doc);
+                  const isActive = currentPage === doc.id;
+                  return (
+                    <li>
+                      <a
+                        href={getDocUrl(doc)}
+                        class={`block px-3 py-2 text-sm rounded-md transition-colors ${
+                          isActive
+                            ? "bg-blue-50 text-blue-700 font-medium dark:bg-blue-900/30 dark:text-blue-300"
+                            : "text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+                        }`}
+                      >
+                        {number && <span class="text-slate-500 mr-1">{number}.</span>}
+                        {title}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
+        </nav>
+
+        <div class="mt-8 pt-8 border-t border-slate-200 dark:border-slate-700">
+          <a
+            href="/"
+            class="inline-flex items-center text-sm text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+              ></path>
+            </svg>
+            Back to Home
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 min-w-0">
+      <article class="prose prose-slate dark:prose-invert max-w-none">
+        {Content && (
+          <div class="content-wrapper">
+            <Content />
+          </div>
+        )}
+        {!Content && (
+          <div class="p-4 bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 text-amber-700 dark:text-amber-300 rounded-r-md">
+            <p>Documentation could not be loaded</p>
+          </div>
+        )}
+      </article>
+    </main>
+  </div>
+</BaseLayout> 

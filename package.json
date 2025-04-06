@@ -4,8 +4,8 @@
   "version": "1.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "bash ./scripts/copy-blog-posts.sh && astro build",
-    "sync": "bash ./scripts/copy-projects-readme-to-obsidian.sh",
+    "build": "astro build",
+    "sync": "bash ./scripts/copy-projects-readme-to-obsidian.sh && bash ./scripts/copy-blog-docs-posts.sh",
     "check": "astro check",
     "preview": "astro preview",
     "astro": "astro",

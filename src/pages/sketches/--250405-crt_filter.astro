@@ -1,0 +1,328 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Pixi.js CRT Effect">
+  <main>
+    <style is:inline>
+      body {
+        margin: 0;
+        background-color: #000;
+        overflow: hidden; /* Prevent scrollbars */
+      }
+      canvas {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+      }
+    </style>
+
+    <!-- Include Pixi.js (replace with your local path or preferred CDN) -->
+    <script
+      is:inline
+      src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.4.0/pixi.min.js"
+    ></script>
+    <!-- Include Pixi Filters for better filter support -->
+    <script
+      is:inline
+      src="https://cdnjs.cloudflare.com/ajax/libs/pixi-filters/5.2.1/pixi-filters.js"
+    ></script>
+  </main>
+</BaseLayout>
+
+<script is:inline>
+// Declare app and filter in a scope accessible by both event listeners
+let app = null; // Initialize as null
+let crtFilter = null; // Initialize as null
+let currentResizeSprite = null; // Function to resize sprite
+
+document.addEventListener('DOMContentLoaded', async () => {
+    // --- Try to Initialize Pixi Application using Constructor ---
+    try {
+        console.log("Attempting to initialize Pixi Application...");
+        app = new PIXI.Application({
+            width: window.innerWidth,
+            height: window.innerHeight,
+            backgroundColor: 0x000000,
+            antialias: true,
+            resizeTo: window, // Make canvas fill window initially
+            autoDensity: true, // Adjusts resolution for device pixel ratio
+        });
+
+        // Pixi v7 doesn't need an explicit await here for the constructor usually,
+        // but we'll ensure the view is ready before appending.
+        // If 'view' isn't available immediately, something is wrong with PIXI object.
+        if (!app || !app.view) {
+           throw new Error("PIXI.Application constructor did not return a valid app object or view.");
+        }
+
+        console.log("Pixi Application Initialized successfully via constructor.");
+        document.body.appendChild(app.view); // Append the canvas
+
+    } catch (initError) {
+        console.error("Failed to initialize Pixi Application:", initError);
+        const errorText = document.createElement('p');
+        errorText.textContent = `Failed to initialize Pixi.js: ${initError.message}. Check console & PixiJS CDN link.`;
+        errorText.style.color = 'white';
+        errorText.style.fontFamily = 'sans-serif';
+        errorText.style.position = 'absolute';
+        errorText.style.top = '50%';
+        errorText.style.left = '50%';
+        errorText.style.transform = 'translate(-50%, -50%)';
+        errorText.style.textAlign = 'center';
+        document.body.style.backgroundColor = '#333'; // Dark bg for error
+        document.body.appendChild(errorText);
+        return; // Stop execution if init fails
+    }
+
+    // --- Shader Code (GLSL - unchanged) ---
+    const vertexShader = null;
+    const fragmentShader = `
+        precision highp float;
+
+        varying vec2 vTextureCoord;
+        uniform sampler2D uSampler;
+        uniform vec4 inputSize;     // Populated by Pixi FilterSystem
+        uniform vec2 resolution;    // Custom uniform
+        uniform float time;         // Custom uniform
+
+        // --- Configurable Parameters ---
+        const float WARP_AMOUNT = 0.05;
+        const float SCANLINE_INTENSITY = 0.15;
+        const float SCANLINE_FREQUENCY = 800.0;
+        const float NOISE_AMOUNT = 0.03;
+        const float VIGNETTE_STRENGTH = 0.4;
+        const float VIGNETTE_SMOOTHNESS = 0.6;
+
+        float rand(vec2 co){
+            return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453 + time);
+        }
+
+        vec2 distort(vec2 uv) {
+            vec2 center = vec2(0.5, 0.5);
+            vec2 offset = uv - center;
+            float dist = length(offset);
+            offset *= (1.0 + dist * dist * WARP_AMOUNT);
+            return center + offset;
+        }
+
+        void main(void) {
+            vec2 distortedUv = distort(vTextureCoord);
+            vec4 color = vec4(0.0, 0.0, 0.0, 1.0);
+            float epsilon = 0.001;
+
+            if (distortedUv.x >= 0.0 - epsilon && distortedUv.x <= 1.0 + epsilon &&
+                distortedUv.y >= 0.0 - epsilon && distortedUv.y <= 1.0 + epsilon)
+            {
+                 vec2 clampedUv = clamp(distortedUv, 0.0, 1.0);
+                 color = texture2D(uSampler, clampedUv);
+
+                 float screenY = gl_FragCoord.y;
+                 float scanlineEffect = sin(screenY * SCANLINE_FREQUENCY / resolution.y * 3.14159 * 2.0);
+                 scanlineEffect = (scanlineEffect * 0.5 + 0.5);
+                 scanlineEffect = pow(scanlineEffect, 4.0);
+                 scanlineEffect = 1.0 - (scanlineEffect * SCANLINE_INTENSITY);
+                 color.rgb *= scanlineEffect;
+
+                 float noise = (rand(vTextureCoord) - 0.5) * NOISE_AMOUNT;
+                 color.rgb += noise;
+
+                 vec2 centerDistUv = vTextureCoord - vec2(0.5);
+                 float vignette = length(centerDistUv);
+                 // Corrected smoothstep for darkening from outside in: range start < range end
+                 vignette = 1.0 - smoothstep(VIGNETTE_STRENGTH - VIGNETTE_SMOOTHNESS, VIGNETTE_STRENGTH, vignette);
+                 color.rgb *= vignette;
+
+                 color.rgb = clamp(color.rgb, 0.0, 1.0);
+            }
+
+            gl_FragColor = color;
+        }
+    `;
+
+    // --- Create Filter ---
+    const crtFilterUniforms = {
+        resolution: [app.screen.width, app.screen.height],
+        time: 0.0,
+    };
+    
+    // Try to create a custom filter first, then fall back to built-in if available
+    try {
+        // Assign to the outer scope variable
+        crtFilter = new PIXI.Filter(vertexShader, fragmentShader, crtFilterUniforms);
+        console.log("Custom CRT filter created successfully");
+    } catch (filterError) {
+        console.warn("Failed to create custom filter, trying built-in CRT filter:", filterError);
+        
+        // Check if pixi-filters library is loaded and CRTFilter is available
+        if (PIXI.filters && PIXI.filters.CRTFilter) {
+            crtFilter = new PIXI.filters.CRTFilter({
+                curvature: 1.5,
+                lineWidth: 3,
+                lineContrast: 0.3,
+                noise: 0.3,
+                noiseSize: 1.0,
+                seed: Math.random(),
+                vignetting: 0.3,
+                vignettingAlpha: 1.0,
+                vignettingBlur: 0.3,
+                time: 0.0
+            });
+            console.log("Using built-in CRT filter");
+        } else {
+            // Create a basic color matrix filter as last resort
+            console.warn("Built-in CRT filter not available, using a basic filter");
+            crtFilter = new PIXI.ColorMatrixFilter();
+            // Add slight sepia tone
+            crtFilter.sepia(0.2);
+        }
+    }
+
+    // --- Load Image and Apply Filter ---
+    try {
+        console.log("Loading image...");
+        
+        // Use an explicit path and add a timestamp to prevent caching issues
+        const imagePath = '/img/bg_rotate.jpg?t=' + Date.now();
+        console.log("Attempting to load image from:", imagePath);
+        
+        // Display a loading indicator on screen
+        const loadingText = new PIXI.Text("Loading image...", {
+            fill: 0xffffff,
+            fontSize: 24
+        });
+        loadingText.anchor.set(0.5);
+        loadingText.x = app.screen.width / 2;
+        loadingText.y = app.screen.height / 2;
+        app.stage.addChild(loadingText);
+        
+        // Load the image directly without using the loader
+        let texture;
+        try {
+            texture = await PIXI.Assets.load(imagePath);
+            console.log("Image loaded successfully with PIXI.Assets:", texture);
+        } catch (loadError) {
+            console.warn("Failed to load with PIXI.Assets, trying fallback method:", loadError);
+            
+            // Fallback: Create texture from a standard Image object
+            const img = new Image();
+            texture = await new Promise((resolve, reject) => {
+                img.onload = () => {
+                    const tex = PIXI.Texture.from(img);
+                    resolve(tex);
+                };
+                img.onerror = (err) => {
+                    console.error("Image loading failed:", err);
+                    reject(new Error(`Failed to load image via Image object: ${err.message || 'Unknown error'}`));
+                };
+                img.src = imagePath;
+                
+                // Set a timeout for loading
+                setTimeout(() => {
+                    if (!img.complete) {
+                        reject(new Error("Image loading timed out after 10 seconds"));
+                    }
+                }, 10000);
+            });
+            console.log("Image loaded successfully with fallback method");
+        }
+        
+        // Remove loading indicator
+        app.stage.removeChild(loadingText);
+        
+        // Create sprite with the loaded texture
+        const backgroundImage = new PIXI.Sprite(texture);
+
+        // Define the resize function locally but assign to outer scope variable
+        currentResizeSprite = () => {
+            if (!app || !backgroundImage || !backgroundImage.texture) return; // Safety checks
+
+            const screenW = app.screen.width;
+            const screenH = app.screen.height;
+            const imgW = backgroundImage.texture.width;
+            const imgH = backgroundImage.texture.height;
+            
+            console.log(`Resizing: screen(${screenW}x${screenH}), image(${imgW}x${imgH})`);
+            
+            if (imgW <= 0 || imgH <= 0) {
+                console.error("Invalid image dimensions", imgW, imgH);
+                return; // Avoid division by zero
+            }
+
+            // Fill the screen (cover)
+            const scale = Math.max(screenW / imgW, screenH / imgH);
+            backgroundImage.scale.set(scale);
+
+            backgroundImage.anchor.set(0.5);
+            backgroundImage.x = screenW / 2;
+            backgroundImage.y = screenH / 2;
+
+            console.log(`Resized sprite: screen(${screenW}x${screenH}), image(${imgW}x${imgH}), scale(${scale})`);
+        };
+
+        currentResizeSprite(); // Initial sizing
+
+        // Apply the CRT filter
+        backgroundImage.filters = [crtFilter];
+        
+        // Add to stage
+        app.stage.addChild(backgroundImage);
+        console.log("Sprite added to stage with filter.");
+
+        // --- Animation Loop ---
+        let elapsed = 0.0;
+        app.ticker.add((ticker) => {
+            elapsed += ticker.deltaMS / 1000.0; // Time in seconds
+            if (crtFilter && crtFilter.uniforms) { // Check if filter exists
+                crtFilter.uniforms.time = elapsed;
+            }
+        });
+        console.log("Animation ticker started.");
+
+    } catch (error) {
+        console.error("Error loading image or setting up sprite:", error);
+        const errorText = new PIXI.Text(
+            `Error loading image or setting up sprite:\n${error.message}\nPlease check console & image path.`,
+            { fill: 0xffffff, align: 'center', wordWrap: true, wordWrapWidth: app.screen.width * 0.8 }
+        );
+        errorText.anchor.set(0.5);
+        errorText.x = app.screen.width / 2;
+        errorText.y = app.screen.height / 2;
+        if (app && app.stage) app.stage.addChild(errorText); // Add error to stage if possible
+    }
+}); // End DOMContentLoaded
+
+// --- Handle window resize ---
+window.addEventListener('resize', () => {
+    console.log("Window resize event detected.");
+    // Ensure app is initialized before trying to access renderer
+    if (app && app.renderer) {
+        const newWidth = window.innerWidth;
+        const newHeight = window.innerHeight;
+
+        // Resize renderer
+        app.renderer.resize(newWidth, newHeight);
+        console.log(`Resized renderer to ${newWidth}x${newHeight}`);
+
+        // Update filter resolution if the filter has been created
+        if (crtFilter && crtFilter.uniforms) {
+            crtFilter.uniforms.resolution = [newWidth, newHeight];
+            console.log(`Updated filter resolution to ${newWidth}x${newHeight}`);
+        } else {
+            console.log("Resize: crtFilter not ready yet.");
+        }
+
+        // Recenter/resize sprite using the function if it exists
+        if (currentResizeSprite) {
+            console.log("Calling sprite resize function...");
+            currentResizeSprite();
+        } else {
+            console.log("Resize: Sprite resize function not ready yet.");
+        }
+    } else {
+        console.log("Resize: App or App Renderer not ready yet.");
+    }
+});
+
+console.log("Initial script execution finished. Waiting for DOMContentLoaded.");
+</script>

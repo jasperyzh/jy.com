@@ -2,6 +2,7 @@
 // Contact page
 import Layout from "@/layouts/BaseLayout.astro";
 import { SITE_TITLE } from "../consts";
+import Button from "@/components/starwind/button";
 
 ---
 
@@ -16,6 +17,12 @@ import { SITE_TITLE } from "../consts";
         - Highlight why someone should contact you (services offered).
         - Include Social Media/GitHub icons for additional ways to connect.
       </pre>
+
+      <Button
+          href="/resume"
+          class="bg-transparent text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800"
+          size="sm">Resume</Button
+        >
     </div>
   </main>
 </Layout>

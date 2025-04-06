@@ -1,0 +1,583 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Andromeda-Milky Way Collision">
+  <main>
+    <style is:inline>
+    
+    body { margin: 0; overflow: hidden; background-color: black; }
+        canvas { display: block; } /* Prevent scroll bars */
+    </style>
+
+    <!-- Include Pixi.js (replace with your local path or preferred CDN) -->
+    <script
+      is:inline
+      src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"
+    ></script>
+  </main>
+</BaseLayout>
+
+<script is:inline>
+let milkyWay;
+let andromeda;
+let G = 0.3; // Gravitational constant
+let particleSize = 2;
+let trail = false; // Set to true for trails (can impact performance)
+let collisionOccurred = false; // Changed to false initially
+let timeScale = 0.015; // Further reduced for better stability
+let particleInteractionStrength = 0.2; // Reduced to minimize unwanted interactions
+let centralMassFactor = 30; // Increased central mass influence even more
+let galaxyBindingForce = 3.0; // Much stronger binding to parent galaxy
+let coreFollowingStrength = 4.0; // Much stronger core following effect
+let baseParticlePull = 0.003; // Base strength for direct particle pull to ideal position
+let showDebug = false; // Toggle for debugging visuals
+let showBlackHoles = true; // Show central massive objects
+let showBackgroundStars = true; // Show background stars
+let backgroundStars = []; // Array to hold background stars
+let mergerProgress = 0; // Progress of merger for color blending (0-1)
+
+function setup() {
+    createCanvas(windowWidth, windowHeight);
+    
+    // Initial parameters for the galaxies
+    let mwParticles = 1000; // Number of particles for Milky Way
+    let anParticles = 1200; // Number of particles for Andromeda
+    let mwRadius = min(width, height) * 0.15;
+    let anRadius = min(width, height) * 0.18; // Andromeda is slightly larger
+
+    // Initial positions and velocities
+    // Place them far apart initially, moving towards each other
+    milkyWay = new Galaxy(
+        width * 0.2, height / 2,          // Initial position (left side)
+        0.15 * timeScale, 0,              // Initial velocity (moving right)
+        mwParticles, mwRadius,           
+        color(255, 255, 220, 180),        // Milky Way color (yellowish white)
+        "Milky Way"
+    );
+    
+    andromeda = new Galaxy(
+        width * 0.8, height / 2,          // Initial position (right side)
+        -0.12 * timeScale, 0,             // Initial velocity (moving left)
+        anParticles, anRadius,           
+        color(200, 220, 255, 180),        // Andromeda color (bluish white)
+        "Andromeda"
+    );
+
+    milkyWay.populate();
+    andromeda.populate();
+    
+    // Generate background stars
+    if (showBackgroundStars) {
+        createBackgroundStars(500); // Create 500 background stars
+    }
+
+    // Set a dark background initially if not using trails
+    if (!trail) {
+        background(5, 5, 20); // Dark space blue/black
+    }
+}
+
+function createBackgroundStars(count) {
+    backgroundStars = [];
+    for (let i = 0; i < count; i++) {
+        let x = random(width);
+        let y = random(height);
+        let size = random(0.5, 1.5);
+        let brightness = random(60, 180);
+        backgroundStars.push({
+            x: x, 
+            y: y, 
+            size: size, 
+            brightness: brightness,
+            twinkle: random(0.01, 0.05)
+        });
+    }
+}
+
+function drawBackgroundStars() {
+    for (let star of backgroundStars) {
+        // Add subtle twinkle effect
+        let twinkleAmount = sin(frameCount * star.twinkle) * 30 + 20;
+        let starBrightness = constrain(star.brightness + twinkleAmount, 30, 220);
+        
+        fill(starBrightness);
+        noStroke();
+        ellipse(star.x, star.y, star.size);
+    }
+}
+
+function draw() {
+    // Handle background (for trails or clearing)
+    if (trail) {
+        background(5, 5, 20, 25); // Fading background for trails
+    } else {
+        background(5, 5, 20); // Clear background each frame
+    }
+    
+    // Draw background stars first (behind galaxies)
+    if (showBackgroundStars) {
+        drawBackgroundStars();
+    }
+
+    // --- Simulation Steps ---
+
+    // 1. Calculate Gravitational Force between galaxy centers
+    milkyWay.applyGravity(andromeda);
+    andromeda.applyGravity(milkyWay);
+
+    // 2. Update Galaxy Positions and Particle Positions
+    milkyWay.update(andromeda); // Pass the other galaxy for particle interaction
+    andromeda.update(milkyWay);
+
+    // --- Collision Check & Update Merger Progress ---
+    let distBetweenCenters = dist(milkyWay.pos.x, milkyWay.pos.y, andromeda.pos.x, andromeda.pos.y);
+    let combinedRadius = milkyWay.radius + andromeda.radius;
+
+    if (distBetweenCenters < combinedRadius * 0.8 && !collisionOccurred) { // Increased detection threshold
+        console.log("Collision/Merger initiated!");
+        collisionOccurred = true; 
+        // Apply a small random velocity to both galaxies to simulate disruption
+        milkyWay.vel.add(createVector(random(-0.02, 0.02), random(-0.02, 0.02)).mult(timeScale));
+        andromeda.vel.add(createVector(random(-0.02, 0.02), random(-0.02, 0.02)).mult(timeScale));
+    }
+    
+    // Calculate merger progress for color blending
+    if (collisionOccurred) {
+        // Progress from 0 to 1 as galaxies get closer, saturating at very close distance
+        mergerProgress = constrain(map(distBetweenCenters, combinedRadius * 0.8, combinedRadius * 0.2, 0, 1), 0, 1);
+        mergerProgress = 1 - mergerProgress; // Invert so 1 = fully merged
+    }
+
+    // 3. Display Galaxies
+    milkyWay.display();
+    andromeda.display();
+    
+    // 4. Draw central black holes
+    if (showBlackHoles) {
+        drawBlackHoles();
+    }
+    
+    // Display some info text
+    fill(200);
+    noStroke();
+    textSize(14);
+    text(milkyWay.name, milkyWay.pos.x - 30, milkyWay.pos.y - 20);
+    text(andromeda.name, andromeda.pos.x - 40, andromeda.pos.y - 20);
+    if(collisionOccurred) {
+         text("Galaxies Merging... " + Math.floor(mergerProgress * 100) + "%", width / 2 - 80, 30);
+    } else {
+         text("Approaching...", width / 2 - 50, 30);
+    }
+    text(`FrameRate: ${frameRate().toFixed(1)}`, 10, 20);
+    
+    // Show controls
+    text("Controls: [D]ebug | [+/-]Speed | [R]eset | [S]tar size | [T]rails | [B]lack holes | [K]Background stars", width/2 - 300, height - 20);
+    
+    // Debug visuals if enabled
+    if (showDebug) {
+        // Draw galaxy centers
+        fill(255, 0, 0, 180);
+        ellipse(milkyWay.pos.x, milkyWay.pos.y, 10, 10);
+        fill(0, 0, 255, 180);
+        ellipse(andromeda.pos.x, andromeda.pos.y, 10, 10);
+        
+        // Draw approximate galaxy radii
+        noFill();
+        stroke(255, 255, 220, 50);
+        ellipse(milkyWay.pos.x, milkyWay.pos.y, milkyWay.radius * 2);
+        stroke(200, 220, 255, 50);
+        ellipse(andromeda.pos.x, andromeda.pos.y, andromeda.radius * 2);
+        noStroke();
+    }
+}
+
+function drawBlackHoles() {
+    // Draw Milky Way central black hole
+    let mwBHSize = 8 + (collisionOccurred ? 4 * mergerProgress : 0); // Black hole grows during merger
+    let anBHSize = 10 + (collisionOccurred ? 4 * mergerProgress : 0); // Andromeda's is slightly larger
+    
+    // Central glow effect
+    drawGlow(milkyWay.pos.x, milkyWay.pos.y, mwBHSize * 4, color(255, 255, 180, 30));
+    drawGlow(andromeda.pos.x, andromeda.pos.y, anBHSize * 4, color(180, 200, 255, 30));
+    
+    // Draw black hole core
+    fill(0);
+    stroke(255, 255, 200, 150);
+    strokeWeight(1);
+    ellipse(milkyWay.pos.x, milkyWay.pos.y, mwBHSize);
+    
+    stroke(200, 220, 255, 150);
+    ellipse(andromeda.pos.x, andromeda.pos.y, anBHSize);
+    
+    noStroke();
+    strokeWeight(1);
+}
+
+function drawGlow(x, y, size, glowColor) {
+    // Draw a soft glow around a point
+    noStroke();
+    for (let i = 3; i > 0; i--) {
+        let alpha = map(i, 0, 3, 0, 100);
+        fill(red(glowColor), green(glowColor), blue(glowColor), alpha);
+        ellipse(x, y, size * (i/3));
+    }
+}
+
+// --- Galaxy Class ---
+class Galaxy {
+    constructor(x, y, vx, vy, numParticles, radius, col, name) {
+        this.pos = createVector(x, y); // Position of the galaxy's center
+        this.vel = createVector(vx, vy); // Velocity of the galaxy's center
+        this.acc = createVector(0, 0); // Acceleration (used for gravity)
+        this.numParticles = numParticles;
+        this.radius = radius; // Approximate visual radius
+        this.mass = numParticles * centralMassFactor; // Mass concentrated at the center for galaxy-galaxy interaction
+        this.particleMass = 1; // Mass of individual particles for particle-level gravity
+        this.particles = [];
+        this.color = col;
+        this.name = name;
+        this.prevPos = createVector(x, y); // Store previous position to calculate motion
+    }
+
+    // Create the initial particles distributed within the galaxy
+    populate() {
+        for (let i = 0; i < this.numParticles; i++) {
+            // Distribute particles more densely towards the center
+            let angle = random(TWO_PI);
+            let r = pow(random(0, 1), 1.5) * this.radius; // Power makes it denser center
+            
+            // Calculate initial offset from the galaxy's starting center
+            let offsetX = r * cos(angle);
+            let offsetY = r * sin(angle);
+
+            // Calculate initial tangential velocity for rotation
+            // Speed is higher closer to the center (Kepler-like)
+            // The constant factor (e.g., 0.05) controls the overall rotation speed
+            let tangentialSpeed = sqrt(G * this.mass / (r + 10)) * 0.05; 
+            let velX = -tangentialSpeed * sin(angle) * timeScale; 
+            let velY = tangentialSpeed * cos(angle) * timeScale; 
+            
+            // Store the particle with its offset, initial velocity, and initial orbital properties
+            this.particles.push(new Particle(offsetX, offsetY, velX, velY, this)); 
+        }
+    }
+
+    // Calculate gravitational force from another galaxy and apply it as acceleration
+    applyGravity(otherGalaxy) {
+        let force = p5.Vector.sub(otherGalaxy.pos, this.pos); // Vector pointing from this to other
+        let distanceSq = force.magSq();
+        
+        // Prevent extreme forces when galaxies are very close or overlapping
+        distanceSq = constrain(distanceSq, 100, 100000); 
+        
+        let strength = (G * this.mass * otherGalaxy.mass) / distanceSq;
+        force.setMag(strength);
+        
+        // Apply acceleration ( F = ma => a = F / m )
+        this.acc = force.div(this.mass); 
+    }
+
+    // Update the galaxy's position and all its particles
+    update(otherGalaxy) {
+        // Store previous position for velocity calculation
+        this.prevPos = this.pos.copy();
+        
+        // Update galaxy center velocity and position (Euler integration)
+        this.vel.add(this.acc);
+        this.pos.add(this.vel);
+        
+        // Reset acceleration after applying it
+        this.acc.mult(0); 
+
+        // Update each particle's position
+        for (let p of this.particles) {
+            p.update(this.pos, otherGalaxy, this.vel); // Also pass galaxy velocity
+        }
+    }
+
+    // Draw all particles of the galaxy
+    display() {
+        for (let p of this.particles) {
+            p.display();
+        }
+         // Optional: Draw a marker for the galaxy center (for debugging)
+         // fill(255, 0, 0, 100); noStroke(); ellipse(this.pos.x, this.pos.y, 10, 10); 
+    }
+}
+
+// --- Particle Class ---
+class Particle {
+    constructor(offsetX, offsetY, initialVelX, initialVelY, parentGalaxy) {
+        this.parentGalaxy = parentGalaxy;
+        // Store initial relative position (offset) from the galaxy center
+        this.initialOffset = createVector(offsetX, offsetY); 
+        // Current absolute position (starts relative to the initial galaxy center)
+        this.pos = createVector(parentGalaxy.pos.x + offsetX, parentGalaxy.pos.y + offsetY); 
+        // Particle's own velocity
+        this.vel = createVector(initialVelX, initialVelY);
+        // Particle's acceleration
+        this.acc = createVector(0, 0);
+        
+        // Store initial distance for visual effects and binding force
+        this.initialDist = this.initialOffset.mag();
+        // Calculate max alpha based on initial distance (closer = brighter)
+        this.maxAlpha = map(this.initialDist, 0, this.parentGalaxy.radius, 200, 50, true); // Brighter near center
+        
+        // Record original color for blending during merger
+        this.originalColor = this.parentGalaxy.color;
+    }
+
+    applyForce(force) {
+        // Acceleration = Force / Mass (assuming particle mass is 1 for simplicity here)
+        this.acc.add(force.div(this.parentGalaxy.particleMass));
+    }
+
+    update(galaxyCenter, otherGalaxy, galaxyVel) {
+        // Calculate parent galaxy motion to help particles follow their core
+        let galaxyMovement = galaxyVel ? galaxyVel.copy() : createVector(0, 0);
+        
+        // --- First, directly apply galaxy motion to particles (preemptive movement) ---
+        // This helps particles "inherit" their galaxy's movement directly
+        if (!collisionOccurred) {
+            // Before collision, particles strongly follow galaxy motion
+            this.pos.add(galaxyMovement);
+        } else {
+            // During merger, influence is weaker but still present
+            this.pos.add(galaxyMovement.mult(0.7));
+        }
+        
+        // --- Then calculate gravitational forces as before ---
+        
+        // 1. Force from Parent Galaxy Center
+        let forceToParent = p5.Vector.sub(galaxyCenter, this.pos);
+        let distToParent = forceToParent.mag();
+        let distSqParent = distToParent * distToParent; 
+        distSqParent = constrain(distSqParent, 80, 100000);
+        
+        // Calculate orbital velocity component
+        let idealOrbitVel = sqrt(G * this.parentGalaxy.mass / (distToParent + 50));
+        let currentVelToCenter = p5.Vector.dot(this.vel, forceToParent.copy().normalize());
+        
+        // Apply stronger binding force based on original distance from center
+        let parentBindingFactor = map(this.initialDist, 0, this.parentGalaxy.radius, 2.0, 0.7);
+        
+        // Enhanced binding during merger
+        if (collisionOccurred) {
+            parentBindingFactor *= coreFollowingStrength;
+        }
+        
+        let strengthParent = (G * this.parentGalaxy.mass * this.parentGalaxy.particleMass * parentBindingFactor * galaxyBindingForce) / distSqParent;
+        
+        // Much stronger inward pull for particles too far from original radius
+        if (distToParent > this.initialDist * 1.1) { // Trigger cohesive force even sooner
+            let cohesiveFactor = map(distToParent, this.initialDist * 1.1, this.initialDist * 2.5, 1.0, 4.0, true);
+            strengthParent *= cohesiveFactor;
+        }
+        
+        forceToParent.setMag(strengthParent);
+
+        // 2. Force from Other Galaxy Center - weakened
+        let forceToOther = p5.Vector.sub(otherGalaxy.pos, this.pos);
+        let distToOther = forceToOther.mag();
+        let distSqOther = distToOther * distToOther;
+        distSqOther = constrain(distSqOther, 600, 250000); // Increased minimum distance
+        
+        // Reduced interaction strength based on collision status and distance
+        let galDistance = p5.Vector.dist(galaxyCenter, otherGalaxy.pos);
+        let galaxyRadiusSum = this.parentGalaxy.radius + otherGalaxy.radius;
+        
+        let interactionFactor;
+        if (collisionOccurred) {
+            interactionFactor = map(galDistance, 0, galaxyRadiusSum, 
+                                  particleInteractionStrength * 0.8, // Reduced influence during merger
+                                  particleInteractionStrength * 0.6, true);
+        } else {
+            interactionFactor = map(galDistance, galaxyRadiusSum * 0.8, galaxyRadiusSum * 2.5, 
+                                  particleInteractionStrength * 0.4, // Reduced influence before merger
+                                  particleInteractionStrength * 0.2, true);
+        }
+        
+        let strengthOther = (G * otherGalaxy.mass * this.parentGalaxy.particleMass * interactionFactor) / distSqOther;
+        forceToOther.setMag(strengthOther);
+
+        // --- Apply Forces --- 
+        this.applyForce(forceToParent);
+        this.applyForce(forceToOther);
+
+        // --- ENHANCED Core Following Mechanism ---
+        // Apply stronger direct pull towards ideal position based on original offset from parent
+        // Always apply this pull to maintain galaxy structure, but stronger during merger
+        let idealPositionFactor = collisionOccurred ? 0.85 : 0.95; // How much the particle should maintain its original offset
+        let idealPosition = p5.Vector.add(galaxyCenter, this.initialOffset.copy().mult(idealPositionFactor));
+        let pullToIdeal = p5.Vector.sub(idealPosition, this.pos);
+        
+        // Always apply a base pull for structural integrity 
+        let pullStrength = baseParticlePull;
+        
+        // Enhance pull during merger
+        if (collisionOccurred) {
+            pullStrength *= (1 + mergerProgress * 3);
+        }
+        
+        // Particles farther from ideal position get pulled more strongly
+        let distFromIdeal = pullToIdeal.mag();
+        if (distFromIdeal > this.initialDist * 0.5) {
+            pullStrength *= map(distFromIdeal, this.initialDist * 0.5, this.initialDist * 3, 1, 4, true);
+        }
+        
+        pullToIdeal.setMag(pullStrength);
+        this.vel.add(pullToIdeal);
+        
+        // Rotation maintenance - only if not collided
+        if (!collisionOccurred) {
+            let tangent = createVector(-forceToParent.y, forceToParent.x).normalize();
+            let currentTangentVel = p5.Vector.dot(this.vel, tangent);
+            let targetTangentVel = idealOrbitVel * (this.parentGalaxy === milkyWay ? 1 : -1); 
+            let tangentForce = tangent.mult((targetTangentVel - currentTangentVel) * 0.01);
+            this.applyForce(tangentForce);
+        }
+
+        // --- Update Velocity and Position ---
+        this.vel.add(this.acc.mult(timeScale));
+        
+        // Stronger velocity damping
+        let dampingFactor = map(distToParent, 0, this.parentGalaxy.radius * 2, 0.995, 0.98, true);
+        this.vel.mult(dampingFactor);
+        
+        // Lower speed limit
+        let speedLimit = timeScale * 1.5 * (collisionOccurred ? 1.8 : 1.0);
+        if (this.vel.mag() > speedLimit) {
+            this.vel.setMag(speedLimit);
+        }
+        
+        this.pos.add(this.vel);
+        
+        // Reset acceleration
+        this.acc.mult(0);
+    }
+
+    display() {
+        // Use the calculated maxAlpha
+        let currentAlpha = this.maxAlpha;
+        
+        // Fade particles based on distance from original parent during merger
+        if (collisionOccurred) {
+            let currentDistFromParent = p5.Vector.dist(this.pos, this.parentGalaxy.pos);
+            let fadeFactor = map(currentDistFromParent, 0, this.parentGalaxy.radius * 3, 1.0, 0.5, true);
+            currentAlpha *= fadeFactor;
+        }
+
+        // Get original color
+        let col = this.originalColor;
+        
+        // If merger is happening, blend colors based on merger progress
+        if (collisionOccurred && mergerProgress > 0) {
+            let otherGalaxy = this.parentGalaxy === milkyWay ? andromeda : milkyWay;
+            let otherCol = otherGalaxy.color;
+            
+            // Calculate distance-based blend factor
+            let distToOtherCenter = p5.Vector.dist(this.pos, otherGalaxy.pos);
+            let distToParentCenter = p5.Vector.dist(this.pos, this.parentGalaxy.pos);
+            
+            // More influenced by closer galaxy
+            let blendFactor = map(
+                distToOtherCenter / (distToParentCenter + distToOtherCenter),
+                0, 1, 0.7, 0.3
+            ) * mergerProgress;
+            
+            // Blend the colors
+            let r = lerp(red(col), red(otherCol), blendFactor);
+            let g = lerp(green(col), green(otherCol), blendFactor);
+            let b = lerp(blue(col), blue(otherCol), blendFactor);
+            
+            fill(r, g, b, currentAlpha);
+        } else {
+            fill(red(col), green(col), blue(col), currentAlpha);
+        }
+        
+        noStroke();
+        ellipse(this.pos.x, this.pos.y, particleSize, particleSize);
+    }
+}
+
+// Optional: Resize canvas when window is resized
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  // You might want to reset the simulation or adjust positions on resize
+  // For simplicity, we'll just clear the background here
+   if (!trail) {
+        background(5, 5, 20); 
+    }
+}
+
+// Optional: Toggle trails with mouse press
+function mousePressed() {
+    trail = !trail;
+    if (!trail) {
+         background(5, 5, 20); // Clear background when turning trails off
+    }
+    console.log("Trails:", trail);
+}
+
+// Update keyboard controls
+function keyPressed() {
+    // Speed up/slow down
+    if (key === '=' || key === '+') {
+        timeScale *= 1.2;
+        console.log(`Time Scale: ${timeScale.toFixed(4)}`);
+    } else if (key === '-' || key === '_') {
+        timeScale *= 0.8;
+        console.log(`Time Scale: ${timeScale.toFixed(4)}`);
+    }
+    
+    // Reset simulation
+    else if (key === 'r' || key === 'R') {
+        setup();
+    }
+    
+    // Toggle particle size
+    else if (key === 's' || key === 'S') {
+        particleSize = particleSize === 2 ? 1 : 2;
+    }
+    
+    // Toggle debug visuals
+    else if (key === 'd' || key === 'D') {
+        showDebug = !showDebug;
+        console.log("Debug visuals:", showDebug);
+    }
+    
+    // Toggle trails
+    else if (key === 't' || key === 'T') {
+        trail = !trail;
+        if (!trail) {
+            background(5, 5, 20);
+        }
+    }
+    
+    // Toggle black holes
+    else if (key === 'b' || key === 'B') {
+        showBlackHoles = !showBlackHoles;
+    }
+    
+    // Toggle background stars
+    else if (key === 'k' || key === 'K') {
+        showBackgroundStars = !showBackgroundStars;
+        if (showBackgroundStars && backgroundStars.length === 0) {
+            createBackgroundStars(500);
+        }
+    }
+}
+
+// Fix updateParticleVelocities function - it references properties that no longer exist
+function updateParticleVelocities() {
+    // This function is no longer needed because our particle physics model 
+    // is now based on forces, not angular velocities
+    
+    // Update galaxy velocities based on timeScale
+    milkyWay.vel.x = milkyWay.vel.x > 0 ? 0.15 * timeScale : -0.15 * timeScale;
+    andromeda.vel.x = andromeda.vel.x > 0 ? 0.12 * timeScale : -0.12 * timeScale;
+    
+    console.log("Time scale adjusted to: " + timeScale.toFixed(4));
+}
+</script>
