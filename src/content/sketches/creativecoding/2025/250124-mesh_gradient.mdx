@@ -1,0 +1,35 @@
+---
+layout: "@/layouts/SketchLayout.astro"
+title: "Mesh Gradient"
+description: "A generative mesh gradient created with canvas-sketch"
+date: "2024-01-25"
+category: "creativecoding"
+tags: ["canvas", "gradient", "generative"]
+status: "completed"
+---
+
+import MeshGradientSketch from "./250124-mesh_gradient.astro";
+
+# Mesh Gradient
+
+This sketch creates a smooth, animated mesh gradient using interpolation between control points. The implementation subdivides between color control points to create a continuous color field.
+
+<div class="interactive-component">
+  <MeshGradientSketch />
+</div>
+
+## How It Works
+
+1. The code defines a grid of control points, each with position coordinates and RGB color values
+2. The grid is subdivided into a finer mesh by interpolating between the control points
+3. Animation is applied by slightly shifting the control points with sine waves
+4. Each cell of the subdivided grid is drawn as a rectangle with the interpolated color
+
+## Implementation
+
+The sketch uses canvas-sketch for managing the animation loop and canvas setup. The main algorithm:
+
+1. Define a grid of control points with colors
+2. For each frame, animate the control points with a sine wave
+3. Interpolate the grid into a finer mesh using bilinear interpolation
+4. Draw each cell of the mesh as a colored rectangle    

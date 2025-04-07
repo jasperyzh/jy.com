@@ -1,11 +1,16 @@
-import { a as createComponent, r as renderComponent, b as renderTemplate, m as maybeRenderHead } from '../chunks/astro/server_BuftSjIy.mjs';
+import { a as createComponent, r as renderComponent, b as renderTemplate, m as maybeRenderHead } from '../chunks/astro/server_JhCfhjtA.mjs';
 import 'kleur/colors';
-import { a as $$BaseLayout } from '../chunks/BaseLayout_DEWwRiOq.mjs';
-/* empty css                               */
+import { a as $$BaseLayout } from '../chunks/BaseLayout_B3_U6PTh.mjs';
 export { renderers } from '../renderers.mjs';
 
 const $$404 = createComponent(($$result, $$props, $$slots) => {
-  return renderTemplate`${renderComponent($$result, "Layout", $$BaseLayout, { "title": "404 Page Not Found", "data-astro-cid-zetdm5md": true }, { "default": ($$result2) => renderTemplate` ${maybeRenderHead()}<main class="d-flex flex-column align-items-center justify-content-center" data-astro-cid-zetdm5md> <h1 data-astro-cid-zetdm5md>(╯°□°）╯ ︵ <span data-astro-cid-zetdm5md>404: not_found</span></h1> <a href="/" class="back" data-astro-cid-zetdm5md>go_home</a> </main> ` })} `;
+  return renderTemplate`${renderComponent($$result, "Layout", $$BaseLayout, { "title": "404 Page Not Found" }, { "default": ($$result2) => renderTemplate` ${maybeRenderHead()}<main class="d-flex flex-column align-items-center justify-content-center"> <h1>(╯°□°）╯ ︵ <span>404: not_found</span></h1> <a href="/" class="back">go_home</a> </main> ` })} <style>
+  span {
+    display: inline-block;
+    rotate: 180deg;
+    font-family: monospace;
+  }
+</style>`;
 }, "/home/matsu/Desktop/jy/src/pages/404.astro", void 0);
 
 const $$file = "/home/matsu/Desktop/jy/src/pages/404.astro";

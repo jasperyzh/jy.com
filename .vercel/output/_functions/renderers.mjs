@@ -1,6 +1,6 @@
 import { defineComponent, h, createSSRApp } from 'vue';
 import { renderToString } from 'vue/server-renderer';
-import { o as renderJSX, p as createVNode, q as AstroJSX, t as AstroUserError } from './chunks/astro/server_BuftSjIy.mjs';
+import { o as renderJSX, e as createVNode, p as AstroJSX, q as AstroUserError } from './chunks/astro/server_JhCfhjtA.mjs';
 import 'kleur/colors';
 import 'clsx';
 

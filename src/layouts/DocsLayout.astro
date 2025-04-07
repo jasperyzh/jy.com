@@ -1,19 +1,9 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
-import { getCollection } from "astro:content";
-import { getEntry } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
 
 // Import Starwind components
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/starwind/card";
 import { Button } from "@/components/starwind/button";
-import { Badge } from "@/components/starwind/badge";
 
 const { frontmatter, headings, currentPage } = Astro.props;
 

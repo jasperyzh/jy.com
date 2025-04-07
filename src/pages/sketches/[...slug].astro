@@ -36,21 +36,28 @@ if (entry) {
   const rendered = await render(entry);
   Content = rendered.Content;
 }
+
+// MDX files with their own layout don't need to be wrapped in SketchLayout
+const hasCustomLayout = entry?.data?.layout && typeof entry.data.layout === 'string';
 ---
 
 {entry && Content ? (
-  <SketchLayout
-    title={entry.data.title}
-    description={entry.data.description}
-    date={entry.data.date}
-    category={entry.data.category}
-    tags={entry.data.tags}
-    status={entry.data.status}
-    thumbnail={entry.data.thumbnail}
-    liveUrl={entry.data.liveUrl}
-  >
+  hasCustomLayout ? (
     <Content />
-  </SketchLayout>
+  ) : (
+    <SketchLayout
+      title={entry.data.title}
+      description={entry.data.description}
+      date={entry.data.date}
+      category={entry.data.category}
+      tags={entry.data.tags}
+      status={entry.data.status}
+      thumbnail={entry.data.thumbnail}
+      liveUrl={entry.data.liveUrl}
+    >
+      <Content />
+    </SketchLayout>
+  )
 ) : (
   <BaseLayout title="Sketch Not Found" description="The requested sketch could not be found">
     <div class="container mx-auto px-4 py-16 text-center">

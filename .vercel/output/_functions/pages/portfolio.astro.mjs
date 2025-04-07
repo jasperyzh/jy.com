@@ -1,194 +1,39 @@
-import { c as createAstro, a as createComponent, r as renderComponent, f as renderScript, b as renderTemplate, m as maybeRenderHead, d as addAttribute } from '../chunks/astro/server_BuftSjIy.mjs';
+import { a as createComponent, r as renderComponent, g as renderScript, b as renderTemplate, m as maybeRenderHead, f as addAttribute } from '../chunks/astro/server_JhCfhjtA.mjs';
 import 'kleur/colors';
-import { a as $$BaseLayout, S as SITE_TITLE } from '../chunks/BaseLayout_DEWwRiOq.mjs';
+import { a as $$BaseLayout, $ as $$Button, S as SITE_TITLE } from '../chunks/BaseLayout_B3_U6PTh.mjs';
+import { a as getEntry } from '../chunks/_astro_content_CcvLsTcQ.mjs';
+import { $ as $$Badge } from '../chunks/Badge_B2yX5Z6i.mjs';
+import { $ as $$Card, a as $$CardHeader, b as $$CardTitle, d as $$CardContent, e as $$CardFooter } from '../chunks/CardTitle_CzRtK_xc.mjs';
 /* empty css                                     */
 export { renderers } from '../renderers.mjs';
 
-const $$Astro = createAstro("https://jasperyong.com");
-const $$Portfolio = createComponent(($$result, $$props, $$slots) => {
-  const Astro2 = $$result.createAstro($$Astro, $$props, $$slots);
-  Astro2.self = $$Portfolio;
-  const portfolioItems = [
-    {
-      title: "Paramount Property",
-      category: "Web Development",
-      thumbnail: "https://picsum.photos/id/237/1920/1080",
-      images: [
-        {
-          src: "https://picsum.photos/id/237/1920/1080",
-          width: 1920,
-          height: 1080,
-          caption: "Homepage design showcasing property listings"
-        },
-        {
-          src: "https://picsum.photos/id/238/800/600",
-          width: 800,
-          height: 600,
-          caption: "Interactive property search interface"
-        },
-        {
-          src: "https://picsum.photos/id/239/800/600",
-          width: 800,
-          height: 600,
-          caption: "Mobile responsive design"
-        }
-      ],
-      description: "Corporate website development for Malaysia's leading property developer",
-      tags: ["WordPress", "Custom Theme", "Property Portal"],
-      year: "2023"
-    },
-    {
-      title: "E-commerce Platform",
-      category: "Full Stack Development",
-      thumbnail: "https://picsum.photos/id/240/1920/1080",
-      images: [
-        {
-          src: "https://picsum.photos/id/240/1920/1080",
-          width: 1920,
-          height: 1080,
-          caption: "Product catalog with advanced filtering"
-        },
-        {
-          src: "https://picsum.photos/id/242/800/600",
-          width: 800,
-          height: 600,
-          caption: "Shopping cart and checkout process"
-        },
-        {
-          src: "https://picsum.photos/id/243/800/600",
-          width: 800,
-          height: 600,
-          caption: "Admin dashboard for inventory management"
-        }
-      ],
-      description: "Modern e-commerce platform with real-time inventory management",
-      tags: ["React", "Node.js", "MongoDB"],
-      year: "2023"
-    },
-    {
-      title: "Travel Blog Platform",
-      category: "Web Design",
-      thumbnail: "https://picsum.photos/id/244/1920/1080",
-      images: [
-        {
-          src: "https://picsum.photos/id/244/1920/1080",
-          width: 1920,
-          height: 1080,
-          caption: "Homepage with featured destinations"
-        },
-        {
-          src: "https://picsum.photos/id/216/800/600",
-          width: 800,
-          height: 600,
-          caption: "Blog post layout with rich media"
-        },
-        {
-          src: "https://picsum.photos/id/217/800/600",
-          width: 800,
-          height: 600,
-          caption: "Interactive map integration"
-        }
-      ],
-      description: "Custom blog platform for travel enthusiasts with dynamic content management",
-      tags: ["Astro", "TailwindCSS", "Markdown"],
-      year: "2024"
-    },
-    {
-      title: "Healthcare Dashboard",
-      category: "UI/UX Design",
-      thumbnail: "https://picsum.photos/id/248/1920/1080",
-      images: [
-        {
-          src: "https://picsum.photos/id/248/1920/1080",
-          width: 1920,
-          height: 1080,
-          caption: "Patient monitoring dashboard"
-        },
-        {
-          src: "https://picsum.photos/id/250/800/600",
-          width: 800,
-          height: 600,
-          caption: "Medical records interface"
-        },
-        {
-          src: "https://picsum.photos/id/251/800/600",
-          width: 800,
-          height: 600,
-          caption: "Analytics and reporting tools"
-        }
-      ],
-      description: "Interactive dashboard for healthcare professionals with real-time patient monitoring",
-      tags: ["Vue.js", "D3.js", "Firebase"],
-      year: "2023"
-    },
-    {
-      title: "Mobile Banking App",
-      category: "Mobile Development",
-      thumbnail: "https://picsum.photos/id/252/1920/1080",
-      images: [
-        {
-          src: "https://picsum.photos/id/252/1920/1080",
-          width: 1920,
-          height: 1080,
-          caption: "Mobile banking home screen"
-        },
-        {
-          src: "https://picsum.photos/id/254/800/600",
-          width: 800,
-          height: 600,
-          caption: "Transaction history and analytics"
-        },
-        {
-          src: "https://picsum.photos/id/255/800/600",
-          width: 800,
-          height: 600,
-          caption: "Secure payment interface"
-        }
-      ],
-      description: "Secure and user-friendly mobile banking application",
-      tags: ["React Native", "TypeScript", "AWS"],
-      year: "2024"
-    },
-    {
-      title: "AI Content Platform",
-      category: "Machine Learning",
-      thumbnail: "https://picsum.photos/id/256/1920/1080",
-      images: [
-        {
-          src: "https://picsum.photos/id/256/1920/1080",
-          width: 1920,
-          height: 1080,
-          caption: "AI content generation interface"
-        },
-        {
-          src: "https://picsum.photos/id/258/800/600",
-          width: 800,
-          height: 600,
-          caption: "Content optimization dashboard"
-        },
-        {
-          src: "https://picsum.photos/id/259/800/600",
-          width: 800,
-          height: 600,
-          caption: "Analytics and performance metrics"
-        }
-      ],
-      description: "AI-powered content generation and optimization platform",
-      tags: ["Python", "TensorFlow", "FastAPI"],
-      year: "2024"
-    }
-  ];
-  const projectsByYear = portfolioItems.reduce((acc, project) => {
+const $$Portfolio = createComponent(async ($$result, $$props, $$slots) => {
+  const portfolioEntry = await getEntry("portfolio", "index");
+  if (!portfolioEntry) {
+    throw new Error("Portfolio data not found");
+  }
+  const { items, skills, projects } = portfolioEntry.data;
+  const projectsByYear = items.reduce((acc, project) => {
     acc[project.year] = [...acc[project.year] || [], project];
     return acc;
   }, {});
-  const { exposedPortfolioItems } = Astro2.props;
-  return renderTemplate`${renderComponent($$result, "Layout", $$BaseLayout, { "title": `Portfolio - ${SITE_TITLE}`, "data-astro-cid-hcjuqwdu": true }, { "default": ($$result2) => renderTemplate` ${maybeRenderHead()}<main class="container-fluid py-5 px-4 bg-gray-100 dark:bg-gray-900" data-astro-cid-hcjuqwdu> <div class="container mx-auto gallery-parent" data-astro-cid-hcjuqwdu> <div class="text-center mb-12" data-astro-cid-hcjuqwdu> <p class="text-sm uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2" data-astro-cid-hcjuqwdu>Elements</p> <h1 class="text-4xl md:text-5xl font-bold mb-2 text-gray-900 dark:text-white" data-astro-cid-hcjuqwdu>See the highlights</h1> <p class="text-xl text-gray-600 dark:text-gray-300" data-astro-cid-hcjuqwdu>
-of this website.
-</p> </div> ${Object.entries(projectsByYear).reverse().map(([year, projects]) => renderTemplate`<div class="mb-12" data-astro-cid-hcjuqwdu> <h2 class="text-2xl font-semibold mb-6 text-gray-800 dark:text-gray-200" data-astro-cid-hcjuqwdu>${year}</h2> <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6" data-astro-cid-hcjuqwdu> ${projects.map((item, index) => renderTemplate`<div class="group"${addAttribute(index, "data-index")} data-astro-cid-hcjuqwdu> <div class="bg-gray-800 rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-xl" data-astro-cid-hcjuqwdu> <div class="relative" data-astro-cid-hcjuqwdu> <a${addAttribute(item.images[0].src, "href")} data-pswp-width="1920" data-pswp-height="1080" target="_blank" class="gallery-link block" data-astro-cid-hcjuqwdu> <div class="relative p-4 pt-6 pb-5" data-astro-cid-hcjuqwdu> <div class="absolute top-0 left-0 right-0 flex items-center px-4 py-2 space-x-1" data-astro-cid-hcjuqwdu> <div class="w-3 h-3 bg-red-400 rounded-full" data-astro-cid-hcjuqwdu></div> <div class="w-3 h-3 bg-yellow-400 rounded-full" data-astro-cid-hcjuqwdu></div> <div class="w-3 h-3 bg-green-400 rounded-full" data-astro-cid-hcjuqwdu></div> </div> <div class="border border-gray-600 rounded-md overflow-hidden" data-astro-cid-hcjuqwdu> <img${addAttribute(item.thumbnail, "src")} class="w-full object-cover aspect-video"${addAttribute(item.title, "alt")} loading="lazy" data-astro-cid-hcjuqwdu> </div> </div> </a> ${item.images.map(
-    (image, imgIndex) => imgIndex > 0 ? renderTemplate`<a${addAttribute(imgIndex, "key")}${addAttribute(image.src, "href")}${addAttribute(image.width, "data-pswp-width")}${addAttribute(image.height, "data-pswp-height")} target="_blank" class="gallery-link hidden" data-astro-cid-hcjuqwdu></a>` : null
-  )} ${item.images.length > 1 && renderTemplate`<span class="absolute top-2 right-2 text-xs bg-black bg-opacity-70 text-white px-2 py-1 rounded-full" data-astro-cid-hcjuqwdu> <i class="bi bi-images" data-astro-cid-hcjuqwdu></i> ${item.images.length} </span>`} </div> <div class="p-5 pt-0" data-astro-cid-hcjuqwdu> <div class="flex justify-between items-start mb-3" data-astro-cid-hcjuqwdu> <h3 class="text-lg font-medium text-white" data-astro-cid-hcjuqwdu>${item.title}</h3> <span class="text-xs text-teal-400 font-medium px-2 py-1 rounded bg-teal-400 bg-opacity-10" data-astro-cid-hcjuqwdu> ${item.category} </span> </div> <p class="text-gray-400 text-sm mb-4" data-astro-cid-hcjuqwdu>${item.description}</p> <div class="flex flex-wrap gap-2 mb-4" data-astro-cid-hcjuqwdu> ${item.tags.map((tag) => renderTemplate`<span class="text-xs font-medium text-gray-300 bg-gray-700 px-2 py-1 rounded" data-astro-cid-hcjuqwdu> ${tag} </span>`)} </div> <div class="flex justify-between items-center pt-2 border-t border-gray-700" data-astro-cid-hcjuqwdu> <span class="text-xs text-gray-400" data-astro-cid-hcjuqwdu>${item.year}</span> <button class="text-sm text-white hover:text-teal-400 transition-colors duration-200 flex items-center gap-1" data-astro-cid-hcjuqwdu>
-View Project <i class="bi bi-arrow-right" data-astro-cid-hcjuqwdu></i> </button> </div> </div> </div> </div>`)} </div> </div>`)} </div> </main> ` })} ${renderScript($$result, "/home/matsu/Desktop/jy/src/pages/portfolio.astro?astro&type=script&index=0&lang.ts")}  `;
+  items.flatMap(
+    (project) => project.images.map((img) => ({
+      src: img.src,
+      width: img.width,
+      height: img.height,
+      alt: project.title,
+      caption: img.caption
+    }))
+  );
+  return renderTemplate`${renderComponent($$result, "Layout", $$BaseLayout, { "title": `Portfolio - ${SITE_TITLE}`, "data-astro-cid-hcjuqwdu": true }, { "default": async ($$result2) => renderTemplate` ${maybeRenderHead()}<main class="container mx-auto px-4 py-8 max-w-6xl" data-astro-cid-hcjuqwdu> <!-- Header Section --> <section class="bg-gradient-to-br from-slate-700 to-slate-800 text-white p-8 rounded-lg shadow-lg mb-10" data-astro-cid-hcjuqwdu> <div class="text-center" data-astro-cid-hcjuqwdu> <h1 class="text-3xl md:text-4xl font-bold mb-4" data-astro-cid-hcjuqwdu>Portfolio</h1> <p class="text-lg text-blue-300" data-astro-cid-hcjuqwdu>A collection of my work and projects</p> </div> </section> <!-- Portfolio Items by Year --> <div class="space-y-12 portfolio-gallery" data-astro-cid-hcjuqwdu> ${Object.entries(projectsByYear).sort((a, b) => b[0].localeCompare(a[0])).map(([year, yearProjects]) => renderTemplate`<div data-astro-cid-hcjuqwdu> <h2 class="text-2xl font-bold mb-6 pb-2 border-b border-gray-200" data-astro-cid-hcjuqwdu>${year}</h2> <div class="grid grid-cols-1 md:grid-cols-2 gap-8 gallery-group" data-astro-cid-hcjuqwdu> ${yearProjects.map((project, projectIndex) => renderTemplate`<div class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300" data-astro-cid-hcjuqwdu> <div class="relative" data-astro-cid-hcjuqwdu> <div class="p-4 pt-6 pb-5" data-astro-cid-hcjuqwdu> <div class="absolute top-0 left-0 right-0 flex items-center px-4 py-2 space-x-1" data-astro-cid-hcjuqwdu> <div class="w-3 h-3 bg-red-400 rounded-full" data-astro-cid-hcjuqwdu></div> <div class="w-3 h-3 bg-yellow-400 rounded-full" data-astro-cid-hcjuqwdu></div> <div class="w-3 h-3 bg-green-400 rounded-full" data-astro-cid-hcjuqwdu></div> </div> <div class="border border-gray-200 dark:border-gray-700 rounded-md overflow-hidden" data-astro-cid-hcjuqwdu> <a${addAttribute(project.images[0].src, "href")} class="gallery-item"${addAttribute(projectIndex, "data-project-index")}${addAttribute(0, "data-image-index")} data-astro-cid-hcjuqwdu> <img${addAttribute(project.thumbnail, "src")} class="w-full object-cover aspect-video cursor-pointer"${addAttribute(project.title, "alt")} loading="lazy" data-astro-cid-hcjuqwdu> </a> </div> </div> ${project.images.length > 1 && renderTemplate`<span class="absolute top-2 right-2 text-xs bg-black bg-opacity-70 text-white px-2 py-1 rounded-full cursor-pointer gallery-trigger"${addAttribute(projectIndex, "data-project-index")} data-astro-cid-hcjuqwdu> <i class="bi bi-images" data-astro-cid-hcjuqwdu></i> ${project.images.length} </span>`} </div> <div class="p-5 pt-0" data-astro-cid-hcjuqwdu> <div class="flex justify-between items-start mb-3" data-astro-cid-hcjuqwdu> <h3 class="text-xl font-bold text-gray-900 dark:text-white" data-astro-cid-hcjuqwdu>${project.title}</h3> ${renderComponent($$result2, "Badge", $$Badge, { "variant": "outline", "data-astro-cid-hcjuqwdu": true }, { "default": async ($$result3) => renderTemplate`${project.category}` })} </div> <p class="text-gray-700 dark:text-gray-300 mb-4" data-astro-cid-hcjuqwdu>${project.description}</p> <div class="flex flex-wrap gap-2 mb-4" data-astro-cid-hcjuqwdu> ${project.tags.map((tag) => renderTemplate`${renderComponent($$result2, "Badge", $$Badge, { "data-astro-cid-hcjuqwdu": true }, { "default": async ($$result3) => renderTemplate`${tag}` })}`)} </div> <div class="flex justify-between items-center pt-2 border-t border-gray-200 dark:border-gray-700" data-astro-cid-hcjuqwdu> <span class="text-sm text-gray-500 dark:text-gray-400" data-astro-cid-hcjuqwdu>${project.year}</span> ${renderComponent($$result2, "Button", $$Button, { "variant": "outline", "size": "sm", "class": "gallery-trigger", "data-project-index": projectIndex, "data-astro-cid-hcjuqwdu": true }, { "default": async ($$result3) => renderTemplate` <i class="bi bi-eye mr-1" data-astro-cid-hcjuqwdu></i> View Details
+` })} </div> </div> </div>`)} </div> </div>`)} </div> <!-- Hidden container with all project images for PhotoSwipe --> <div class="hidden" data-astro-cid-hcjuqwdu> <div class="pswp-gallery-all" data-astro-cid-hcjuqwdu> ${items.map(
+    (project, projectIndex) => project.images.map((image, imageIndex) => renderTemplate`<a${addAttribute(image.src, "href")}${addAttribute(image.width, "data-pswp-width")}${addAttribute(image.height, "data-pswp-height")}${addAttribute(imageIndex + projectIndex * 100, "data-global-index")}${addAttribute(projectIndex, "data-project-index")}${addAttribute(imageIndex, "data-image-index")} class="gallery-item-hidden"${addAttribute(`<div class="pswp__title">${project.title}</div><div class="pswp__description">${image.caption}</div>`, "data-pswp-caption")} data-astro-cid-hcjuqwdu> <img${addAttribute(image.src, "src")}${addAttribute(image.caption, "alt")} loading="lazy" class="hidden" data-astro-cid-hcjuqwdu> </a>`)
+  )} </div> </div> <!-- Skills Section --> <section class="mt-16" data-astro-cid-hcjuqwdu> <h2 class="text-2xl font-bold mb-6 pb-2 border-b border-gray-200" data-astro-cid-hcjuqwdu>Technical Skills</h2> <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" data-astro-cid-hcjuqwdu> ${skills.map((skillGroup) => renderTemplate`${renderComponent($$result2, "Card", $$Card, { "data-astro-cid-hcjuqwdu": true }, { "default": async ($$result3) => renderTemplate` ${renderComponent($$result3, "CardHeader", $$CardHeader, { "data-astro-cid-hcjuqwdu": true }, { "default": async ($$result4) => renderTemplate` ${renderComponent($$result4, "CardTitle", $$CardTitle, { "data-astro-cid-hcjuqwdu": true }, { "default": async ($$result5) => renderTemplate`${skillGroup.category}` })} ` })} ${renderComponent($$result3, "CardContent", $$CardContent, { "data-astro-cid-hcjuqwdu": true }, { "default": async ($$result4) => renderTemplate` <div class="flex flex-wrap gap-2" data-astro-cid-hcjuqwdu> ${skillGroup.items.map((skill) => renderTemplate`${renderComponent($$result4, "Badge", $$Badge, { "variant": "secondary", "data-astro-cid-hcjuqwdu": true }, { "default": async ($$result5) => renderTemplate`${skill}` })}`)} </div> ` })} ` })}`)} </div> </section> <!-- Featured Projects Section --> <section class="mt-16" data-astro-cid-hcjuqwdu> <h2 class="text-2xl font-bold mb-6 pb-2 border-b border-gray-200" data-astro-cid-hcjuqwdu>Featured Projects</h2> <div class="grid grid-cols-1 md:grid-cols-3 gap-8" data-astro-cid-hcjuqwdu> ${projects.map((project) => renderTemplate`${renderComponent($$result2, "Card", $$Card, { "data-astro-cid-hcjuqwdu": true }, { "default": async ($$result3) => renderTemplate` <div class="h-48 overflow-hidden" data-astro-cid-hcjuqwdu> <img${addAttribute(project.image, "src")}${addAttribute(project.title, "alt")} class="w-full h-full object-cover" data-astro-cid-hcjuqwdu> </div> ${renderComponent($$result3, "CardHeader", $$CardHeader, { "data-astro-cid-hcjuqwdu": true }, { "default": async ($$result4) => renderTemplate` ${renderComponent($$result4, "CardTitle", $$CardTitle, { "data-astro-cid-hcjuqwdu": true }, { "default": async ($$result5) => renderTemplate`${project.title}` })} ` })} ${renderComponent($$result3, "CardContent", $$CardContent, { "data-astro-cid-hcjuqwdu": true }, { "default": async ($$result4) => renderTemplate` <p class="text-gray-700 dark:text-gray-300 mb-4" data-astro-cid-hcjuqwdu>${project.description}</p> <div class="flex flex-wrap gap-2 mb-4" data-astro-cid-hcjuqwdu> ${project.tags.map((tag) => renderTemplate`${renderComponent($$result4, "Badge", $$Badge, { "variant": "outline", "data-astro-cid-hcjuqwdu": true }, { "default": async ($$result5) => renderTemplate`${tag}` })}`)} </div> ` })} ${renderComponent($$result3, "CardFooter", $$CardFooter, { "data-astro-cid-hcjuqwdu": true }, { "default": async ($$result4) => renderTemplate` <div class="flex justify-between w-full" data-astro-cid-hcjuqwdu> ${renderComponent($$result4, "Button", $$Button, { "variant": "outline", "size": "sm", "data-astro-cid-hcjuqwdu": true }, { "default": async ($$result5) => renderTemplate` <a${addAttribute(project.demoUrl, "href")} target="_blank" rel="noopener noreferrer" data-astro-cid-hcjuqwdu> <i class="bi bi-eye mr-1" data-astro-cid-hcjuqwdu></i> Demo
+</a> ` })} ${renderComponent($$result4, "Button", $$Button, { "variant": "outline", "size": "sm", "data-astro-cid-hcjuqwdu": true }, { "default": async ($$result5) => renderTemplate` <a${addAttribute(project.codeUrl, "href")} target="_blank" rel="noopener noreferrer" data-astro-cid-hcjuqwdu> <i class="bi bi-code-slash mr-1" data-astro-cid-hcjuqwdu></i> Code
+</a> ` })} </div> ` })} ` })}`)} </div> </section> <!-- Contact CTA --> <section class="mt-16 bg-gradient-to-br from-slate-700 to-slate-800 text-white p-8 rounded-lg shadow-lg" data-astro-cid-hcjuqwdu> <div class="text-center" data-astro-cid-hcjuqwdu> <h2 class="text-2xl font-bold mb-4" data-astro-cid-hcjuqwdu>Interested in working together?</h2> <p class="text-lg mb-6 text-blue-300" data-astro-cid-hcjuqwdu>Let's discuss your project and bring your ideas to life.</p> ${renderComponent($$result2, "Button", $$Button, { "data-astro-cid-hcjuqwdu": true }, { "default": async ($$result3) => renderTemplate` <i class="bi bi-envelope-fill mr-2" data-astro-cid-hcjuqwdu></i>
+Get in Touch
+` })} </div> </section> </main> ` })} ${renderScript($$result, "/home/matsu/Desktop/jy/src/pages/portfolio.astro?astro&type=script&index=0&lang.ts")}  `;
 }, "/home/matsu/Desktop/jy/src/pages/portfolio.astro", void 0);
 
 const $$file = "/home/matsu/Desktop/jy/src/pages/portfolio.astro";

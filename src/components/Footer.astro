@@ -59,13 +59,13 @@ const socialLinks = [
 const todayYear = new Date().getFullYear();
 ---
 
-<footer class="bg-white border-t border-gray-200 py-12 mt-24">
+<footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 py-12 mt-auto">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
       <div class="md:col-span-2">
         <div class="flex items-center mb-4">
           <svg
-            class="h-8 w-auto text-indigo-600"
+            class="h-8 w-auto text-primary"
             viewBox="0 0 40 40"
             fill="currentColor"
           >
@@ -73,12 +73,12 @@ const todayYear = new Date().getFullYear();
               d="M20 6.5C14.5 6.5 9.5 9 9.5 15.5C9.5 19.5 11.5 22 14.5 24L12 33.5L20 29L28 33.5L25.5 24C28.5 22 30.5 19.5 30.5 15.5C30.5 9 25.5 6.5 20 6.5Z"
             ></path>
           </svg>
-          <span class="ml-2 text-xl font-bold text-gray-900">JasperYong</span>
+          <span class="ml-2 text-xl font-bold text-gray-900 dark:text-gray-100">JasperYong</span>
         </div>
         <p>
           <strong>Learner, web developer, and blogger.</strong>
         </p>
-        <p class="text-gray-600 max-w-md">
+        <p class="text-gray-600 dark:text-gray-400 max-w-md">
           Thank you for visiting my website! This blog is a collection of my
           learnings, experiments, and personal projects. I hope you find
           something that inspires or resonates with you. Enjoy exploring, and
@@ -91,9 +91,8 @@ const todayYear = new Date().getFullYear();
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                target="_blank"
                 aria-label={`${link.platform} link`}
-                class="text-gray-800 hover:text-gray-500"
+                class="text-gray-800 dark:text-gray-200 hover:text-primary dark:hover:text-primary transition-colors"
               >
                 <i class={`bi bi-${link.platform}`} />
               </a>
@@ -105,7 +104,7 @@ const todayYear = new Date().getFullYear();
       {
         footerLinks.map((section) => (
           <div>
-            <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase">
+            <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 tracking-wider uppercase">
               {section.title}
             </h3>
             <ul class="mt-4 space-y-2">
@@ -113,7 +112,7 @@ const todayYear = new Date().getFullYear();
                 <li>
                   <a
                     href={link.href}
-                    class="text-base text-gray-600 hover:text-gray-900"
+                    class="text-base text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors"
                     {...(link.external
                       ? { target: "_blank", rel: "noopener noreferrer" }
                       : {})}
@@ -128,8 +127,8 @@ const todayYear = new Date().getFullYear();
       }
     </div>
 
-    <div class="mt-12 pt-8 border-t border-gray-200">
-      <p class="text-sm text-gray-500">
+    <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
+      <p class="text-sm text-gray-500 dark:text-gray-400">
         &copy; {currentYear} JasperYong.com.
       </p>
     </div>

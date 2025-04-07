@@ -4,10 +4,9 @@ import { slugifyTag, getAllUniqueTags } from "@/utils/tags";
 
 // Fetch posts from both collections
 const obPosts = await getCollection("ob_blog");
-const microPosts = await getCollection("microblog").catch(() => []);
 
 // Combine all posts
-const allPosts = [...obPosts, ...microPosts];
+const allPosts = [...obPosts];
 
 // Count occurrences of each tag across both collections
 const tagCounts = allPosts
@@ -46,7 +45,7 @@ const getFontSize = (count) => {
       <li key={tag}>
         <a
           class="position-relative"
-          href={`/tags/${slugifyTag(tag)}`}
+          href={`/blog/tag/${slugifyTag(tag)}`}
           style={`font-size: ${getFontSize(tagCounts[tag])};`}
         >
           {tag}

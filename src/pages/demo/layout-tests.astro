@@ -1,0 +1,39 @@
+---
+import Layout from "@/layouts/BaseLayout.astro";
+import { Button } from "@/components/starwind/button";
+---
+
+<Layout title="Layout Tests">
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6">Layout Test Pages</h1>
+    <p class="mb-8">
+      These pages are used to test various aspects of the site layout, including sticky footers and content handling.
+    </p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-card border rounded-lg p-6">
+        <h2 class="text-xl font-semibold mb-2">404 Error Page</h2>
+        <p class="mb-4">
+          A custom 404 page with animated elements and a whimsical design.
+        </p>
+        <Button href="/demo/this-page-does-not-exist">View 404 Page</Button>
+      </div>
+      
+      <div class="bg-card border rounded-lg p-6">
+        <h2 class="text-xl font-semibold mb-2">Short Content</h2>
+        <p class="mb-4">
+          A page with minimal content to test if the footer sticks to the bottom.
+        </p>
+        <Button href="/demo/test-layout-short">View Short Page</Button>
+      </div>
+      
+      <div class="bg-card border rounded-lg p-6">
+        <h2 class="text-xl font-semibold mb-2">Long Content</h2>
+        <p class="mb-4">
+          A page with lots of content to test scrolling behavior.
+        </p>
+        <Button href="/demo/test-layout-long">View Long Page</Button>
+      </div>
+    </div>
+  </div>
+</Layout> 

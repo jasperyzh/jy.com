@@ -2,15 +2,22 @@
 import { Button } from "@/components/starwind/button";
 import { SITE_TITLE } from "@/consts";
 import ThemeToggleButton from "@/components/ThemeToggle.astro";
+
+// Only show demo link in development mode
+const isDevelopment = import.meta.env.DEV;
+
+// Get current path to highlight active page
+const pathname = new URL(Astro.request.url).pathname;
+const currentPath = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
 ---
 
-<nav class="flex items-center justify-between h-16">
+<nav class="flex items-center justify-between h-16" aria-label="Main navigation">
   <div class="flex items-center justify-between w-full">
     <!-- Mobile menu button-->
     <div class="md:hidden">
       <button
         type="button"
-        class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+        class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white transition-colors duration-200"
         aria-controls="mobile-menu"
         aria-expanded="false"
         id="mobile-menu-button"
@@ -35,7 +42,7 @@ import ThemeToggleButton from "@/components/ThemeToggle.astro";
     </div>
 
     <!-- Logo/Brand -->
-    <a href="/" class="flex-shrink-0 flex items-center">
+    <a href="/" class="flex-shrink-0 flex items-center" aria-label="Home">
       <div class="text-xl font-bold">{SITE_TITLE}</div>
     </a>
 
@@ -43,25 +50,47 @@ import ThemeToggleButton from "@/components/ThemeToggle.astro";
     <div class="hidden md:block">
       <div class="ml-10 flex items-center space-x-4">
         <Button
-        href="/sketches"
-        class="bg-transparent text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800"
-        size="sm">Sketches</Button
+          href="/portfolio"
+          class={`bg-transparent ${currentPath === '/portfolio' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
+          size="sm">Portfolio</Button
         >
         <Button
-        href="/blog"
-        class="bg-transparent text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800"
-        size="sm">Blog</Button
+          href="/blog"
+          class={`bg-transparent ${currentPath === '/blog' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
+          size="sm">Blog</Button
         >
         <Button
-        href="/portfolio"
-        class="bg-transparent text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800"
-        size="sm">Portfolio</Button
+          href="/sketches"
+          class={`bg-transparent ${currentPath === '/sketches' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
+          size="sm">Sketches</Button
         >
-        
+        <Button
+          href="/resume"
+          class={`bg-transparent ${currentPath === '/resume' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
+          size="sm">Resume</Button
+        >
+        <Button
+          href="/demo/components"
+          class={`bg-transparent ${currentPath === '/demo/components' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
+          size="sm">Components</Button
+        >
+        <Button
+          href="/demo/layout-tests"
+          class={`bg-transparent ${currentPath === '/demo/layout-tests' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
+          size="sm">Layout Tests</Button
+        >
+
+        {isDevelopment && (
+          <Button
+            href="/demo"
+            class={`bg-warning/20 ${currentPath === '/demo' ? 'bg-warning/30 dark:bg-warning/40 font-medium' : ''} text-warning-foreground hover:bg-warning/30 dark:bg-warning/30 dark:hover:bg-warning/40 transition-colors duration-200`}
+            size="sm">Demo Pages</Button
+          >
+        )}
         
         <Button
           href="/contact"
-          class="bg-transparent text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800"
+          class={`bg-transparent ${currentPath === '/contact' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
           size="sm">Contact</Button
         >
         <div class="flex items-center justify-center">
@@ -73,32 +102,126 @@ import ThemeToggleButton from "@/components/ThemeToggle.astro";
 </nav>
 
 <!-- Mobile menu, show/hide based on menu state -->
-<div class="md:hidden hidden" id="mobile-menu">
-  <div class="flex flex-col">
+<div class="md:hidden hidden transform transition-all duration-300 ease-in-out" id="mobile-menu">
+  <div class="flex flex-col space-y-2 p-4">
     <Button
       href="/portfolio"
-      class="bg-transparent text-gray-800 hover:text-gray-200"
+      class={`bg-transparent ${currentPath === '/portfolio' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
       size="sm">Portfolio</Button
     >
     <Button
       href="/resume"
-      class="bg-transparent text-gray-800 hover:text-gray-200"
+      class={`bg-transparent ${currentPath === '/resume' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
       size="sm">Resume</Button
     >
     <Button
       href="/sketches"
-      class="bg-transparent text-gray-800 hover:text-gray-200"
+      class={`bg-transparent ${currentPath === '/sketches' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
       size="sm">Sketches</Button
     >
     <Button
       href="/blog"
-      class="bg-transparent text-gray-800 hover:text-gray-200"
-      size="sm">blog</Button
+      class={`bg-transparent ${currentPath === '/blog' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
+      size="sm">Blog</Button
     >
     <Button
-      href="/microblog"
-      class="bg-transparent text-gray-800 hover:text-gray-200"
-      size="sm">microblog</Button
+      href="/demo/components"
+      class={`bg-transparent ${currentPath === '/demo/components' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
+      size="sm">Components</Button
     >
+    <Button
+      href="/demo/layout-tests"
+      class={`bg-transparent ${currentPath === '/demo/layout-tests' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
+      size="sm">Layout Tests</Button
+    >
+    {isDevelopment && (
+      <Button
+        href="/demo"
+        class={`bg-warning/20 ${currentPath === '/demo' ? 'bg-warning/30 dark:bg-warning/40 font-medium' : ''} text-warning-foreground hover:bg-warning/30 dark:bg-warning/30 dark:hover:bg-warning/40 transition-colors duration-200`}
+        size="sm">Demo Pages</Button
+      >
+    )}
+    <Button
+      href="/contact"
+      class={`bg-transparent ${currentPath === '/contact' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
+      size="sm">Contact</Button
+    >
+    <div class="flex items-center pt-2">
+      <ThemeToggleButton />
+      <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">Toggle theme</span>
+    </div>
   </div>
 </div>
+
+<script>
+  // Enhanced mobile menu toggle with animation
+  document.addEventListener("DOMContentLoaded", () => {
+    const mobileMenuButton = document.getElementById("mobile-menu-button");
+    const mobileMenu = document.getElementById("mobile-menu");
+
+    if (mobileMenuButton && mobileMenu) {
+      mobileMenuButton.addEventListener("click", () => {
+        const expanded = mobileMenuButton.getAttribute("aria-expanded") === "true";
+        
+        // Toggle aria-expanded
+        mobileMenuButton.setAttribute("aria-expanded", (!expanded).toString());
+        
+        // Toggle menu visibility with animation
+        if (expanded) {
+          // Hide menu
+          mobileMenu.style.maxHeight = `${mobileMenu.scrollHeight}px`;
+          setTimeout(() => {
+            mobileMenu.style.maxHeight = "0px";
+            mobileMenu.style.opacity = "0";
+            setTimeout(() => {
+              mobileMenu.classList.add("hidden");
+            }, 300);
+          }, 10);
+        } else {
+          // Show menu
+          mobileMenu.classList.remove("hidden");
+          mobileMenu.style.maxHeight = "0px";
+          mobileMenu.style.opacity = "0";
+          setTimeout(() => {
+            mobileMenu.style.maxHeight = `${mobileMenu.scrollHeight}px`;
+            mobileMenu.style.opacity = "1";
+          }, 10);
+        }
+      });
+    }
+  });
+</script>
+
+<style>
+  /* Animation styles for mobile menu */
+  #mobile-menu {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  }
+  
+  /* Ensure nav items have consistent height and padding */
+  :global(.navbar-btn) {
+    display: inline-flex;
+    align-items: center;
+    height: 2.5rem;
+  }
+  
+  /* Active page indicator - additional styling */
+  :global(.active-page) {
+    position: relative;
+  }
+  
+  :global(.active-page)::after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 2px;
+    width: 20px;
+    background-color: currentColor;
+    border-radius: 2px;
+  }
+</style>

@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "build:prod": "cross-env NODE_ENV=production node remove-demo-pages.js && astro build",
     "sync": "bash ./scripts/copy-projects-readme-to-obsidian.sh && bash ./scripts/copy-blog-docs-posts.sh",
     "check": "astro check",
     "preview": "astro preview",
@@ -48,6 +49,7 @@
   "devDependencies": {
     "astro-icon": "^1.1.5",
     "autoprefixer": "^10.4.21",
+    "cross-env": "^7.0.3",
     "postcss": "^8.5.3",
     "prettier-plugin-astro": "^0.14.1",
     "sharp": "^0.33.5",

@@ -1,1 +1,0 @@
-import{_ as o}from"./preload-helper.CLcXU_4U.js";import i from"./photoswipe-lightbox.esm.4VpeJUsy.js";const r=new i({gallery:".gallery-parent",children:".gallery-link",pswpModule:()=>o(()=>import("./photoswipe.esm.BxGa2pwP.js"),[])});r.init();

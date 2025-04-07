@@ -113,7 +113,7 @@ If you want to allow user comments on your blog, consider using third-party comm
 
 ### 7. **Pagination and Search**
 
-As your blog grows, you’ll need to implement **pagination** and a **search feature** to improve navigation and user experience.
+As your blog grows, you'll need to implement **pagination** and a **search feature** to improve navigation and user experience.
 
 #### Pagination:
 - Break long lists of blog posts into pages to avoid slow load times and improve readability.
@@ -247,3 +247,51 @@ reference: https://chrispennington.blog/blog/
     - Ensure consistent theming across components
 
   You can now use the semantic classes in your components, reducing Tailwind verbosity in templates while maintaining the full power of both systems.
+
+## Components
+
+### CardComponent
+
+A versatile, reusable card component has been implemented for use throughout the website. This component provides a consistent card design while allowing for extensive customization.
+
+#### Basic Usage
+
+```astro
+import CardComponent from "@/components/CardComponent.astro";
+
+<CardComponent
+  title="Card Title"
+  description="Card description text"
+  actionLink="/some-page"
+  actionText="Read More"
+/>
+```
+
+#### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| title | string | (required) | Card title |
+| description | string | undefined | Card description or subtitle |
+| date | Date | undefined | Date to display |
+| tags | string[] | [] | Array of tags to display as badges |
+| actionLink | string | undefined | URL for the action button |
+| actionText | string | "Read" | Text for the action button |
+| class | string | "" | Custom CSS class for styling |
+| width | string | "w-[400px]" | Width of the card |
+| hasCustomContent | boolean | false | Whether to use custom content instead of default layout |
+| buttonVariant | string | "default" | Button variant (default, primary, secondary, etc.) |
+| showAction | boolean | true | Whether to show the action button |
+
+#### Slots
+
+- Default slot: Used when `hasCustomContent` is true
+- `content`: Slot for adding custom content within the default card layout
+- `footer`: Slot for custom footer content when `showAction` is false
+- `footer-extra`: Slot for additional content in the footer next to the action button
+
+#### Examples
+
+Example pages demonstrating the CardComponent:
+- `/card-examples` - Shows various configurations and customization options
+- `/product-demo` - Real-world example of using cards in a product listing

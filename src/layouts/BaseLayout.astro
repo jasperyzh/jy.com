@@ -27,50 +27,26 @@ import Footer from "../components/Footer.astro";
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <Head title={title} description={description} />
   </head>
-  <body>
-    <div class="wrapper">
-      <header class="mb-4">
-        <div class="container mx-auto">
+  <body class="flex flex-col min-h-screen">
+    <header class="mb-4">
+      <div class="container mx-auto">
+        <Navbar />
+        <hr class="mt-2 border-gray-200" />
+      </div>
+    </header>
 
-          <Navbar />
-          
-
-          <hr class="mt-2 border-gray-200" />
-        </div>
-      </header>
-
-      <script>
-        // Add event listener for mobile menu toggle
-        document.addEventListener("DOMContentLoaded", () => {
-          const mobileMenuButton =
-            document.getElementById("mobile-menu-button");
-          const mobileMenu = document.getElementById("mobile-menu");
-
-          if (mobileMenuButton && mobileMenu) {
-            mobileMenuButton.addEventListener("click", () => {
-              mobileMenu.classList.toggle("hidden");
-            });
-          }
-        });
-      </script>
-
+    <main class="flex-grow">
       <slot />
+    </main>
 
-
-      <!-- new footer component  -->
-      <Footer />
-    </div>
-
-    <!-- Site-wide initialization script -->
-    <script is:inline>
-      // Initialize microblog animations
-      document.addEventListener("DOMContentLoaded", function () {
-        setTimeout(function () {
-          document.querySelectorAll(".microblog-post").forEach(function (post) {
-            post.classList.add("post-visible");
-          });
-        }, 200);
-      });
-    </script>
+    <!-- Footer component -->
+    <Footer />
   </body>
 </html>
+
+<style is:global>
+  /* Add any global styles needed for the layout */
+  .flex-grow {
+    flex: 1 0 auto;
+  }
+</style>

@@ -13,7 +13,6 @@ const { postId, title = "Check out this post!" } = Astro.props;
 
 // Generate the full URL for the post
 const baseUrl = import.meta.env.SITE || 'http://localhost:4321';
-const postUrl = `${baseUrl}/microblog/${postId}`;
 
 // Encode the URL and title for sharing
 const encodedUrl = encodeURIComponent(postUrl);

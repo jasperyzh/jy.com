@@ -33,7 +33,7 @@ const ob_blog = defineCollection({
     category: z.enum([
       "Web Development", 
       "Workflow", 
-      "Curiousity", 
+      "Curiosity", 
       "Generative Art"
     ]), // Required category from preset list
   }),
@@ -184,6 +184,7 @@ const sketches = defineCollection({
     status: z.enum(["idea", "wip", "completed", "archived"]).default("completed"),
     thumbnail: z.string().optional(),
     liveUrl: z.string().optional(),
+    layout: z.string().optional(),
   }),
 });
 

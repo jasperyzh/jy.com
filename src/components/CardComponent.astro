@@ -1,0 +1,119 @@
+---
+/**
+ * Reusable Card Component
+ * 
+ * A versatile card component that can be used across the website
+ * for displaying various types of content with a consistent design.
+ * 
+ * @component
+ */
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/starwind/card";
+import { Button } from "@/components/starwind/button";
+import { Badge } from "@/components/starwind/badge";
+
+export interface CardProps {
+  /** Card title */
+  title: string;
+  /** Card description or subtitle */
+  description?: string;
+  /** Date to display (optional) */
+  date?: Date;
+  /** Array of tags (optional) */
+  tags?: string[];
+  /** URL for the Read/Action button (optional) */
+  actionLink?: string;
+  /** Text for the action button (defaults to "Read") */
+  actionText?: string;
+  /** Custom CSS class for the card */
+  class?: string;
+  /** Width of the card (defaults to w-[400px]) */
+  width?: string;
+  /** Custom content to override default card content */
+  hasCustomContent?: boolean;
+  /** Button variant */
+  buttonVariant?: "default" | "primary" | "secondary" | "outline" | "ghost" | "info" | "success" | "warning" | "error";
+  /** Show/hide action button */
+  showAction?: boolean;
+}
+
+const {
+  title,
+  description,
+  date,
+  tags = [],
+  actionLink,
+  actionText = "Read",
+  class: className = "",
+  width = "w-[400px]",
+  hasCustomContent = false,
+  buttonVariant = "default",
+  showAction = true,
+} = Astro.props;
+---
+
+<Card class={`${width} ${className}`}>
+  <CardHeader>
+    <CardTitle>{title}</CardTitle>
+    {(description || date) && (
+      <CardDescription>
+        {date && (
+          <span class="block text-sm">
+            {date.toLocaleString("default", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}
+          </span>
+        )}
+        {description && <span class="block mt-1">{description}</span>}
+      </CardDescription>
+    )}
+  </CardHeader>
+  
+  {hasCustomContent ? (
+    <slot />
+  ) : (
+    <CardContent class="flex flex-col gap-4">
+      {tags.length > 0 && (
+        <div class="card-tags mb-2">
+          {tags.map((tag) => (
+            <Badge class="mr-1 mb-1" href={`/tag/${tag}`}>{tag}</Badge>
+          ))}
+        </div>
+      )}
+      <slot name="content" />
+    </CardContent>
+  )}
+  
+  {(showAction && actionLink) && (
+    <CardFooter class="flex justify-between">
+      <Button href={actionLink} variant={buttonVariant}>{actionText}</Button>
+      <slot name="footer-extra" />
+    </CardFooter>
+  )}
+  
+  {!showAction && (
+    <CardFooter>
+      <slot name="footer" />
+    </CardFooter>
+  )}
+</Card>
+
+<style>
+  .card-tags {
+    position: relative;
+    z-index: 2;
+  }
+
+  .card-tags :global(a) {
+    pointer-events: auto;
+  }
+</style> 

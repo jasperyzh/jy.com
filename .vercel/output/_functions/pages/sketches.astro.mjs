@@ -1,127 +1,49 @@
-import { _ as __vite_glob_0_0 } from '../chunks/250314-pixijs-filter_BmwQckku.mjs';
-import { _ as __vite_glob_0_1 } from '../chunks/250314-pixijs-videofilter_DjQ3bQTj.mjs';
-import { _ as __vite_glob_0_2 } from '../chunks/250316-quizgame_Ch2zeQhM.mjs';
-import { _ as __vite_glob_0_3 } from '../chunks/250316-survey_form_BTLz1nK1.mjs';
-import { _ as __vite_glob_0_4 } from '../chunks/250316-the-malaysian-clock_oj4TWC9z.mjs';
-import { _ as __vite_glob_0_5 } from '../chunks/250316-wheeloffortune_BfQ035tn.mjs';
-import { _ as __vite_glob_0_6 } from '../chunks/250318-photoswipe_D5A2h4ki.mjs';
-import { _ as __vite_glob_0_7 } from '../chunks/250319-portfolio-tailwindtheme_NFkw78ce.mjs';
-import { _ as __vite_glob_0_8 } from '../chunks/250322-carouselsliders_DJw62XA3.mjs';
-import { _ as __vite_glob_0_9 } from '../chunks/250322-fullpageslides_CQaO9Asd.mjs';
-import { _ as __vite_glob_0_10 } from '../chunks/250322-gsapanimation_B-jQyyHo.mjs';
-import { _ as __vite_glob_0_11 } from '../chunks/250322-invoicegenerator_npHqW0MM.mjs';
-import { _ as __vite_glob_0_12 } from '../chunks/250322-viewtransition_CEIYo3_c.mjs';
-import { _ as __vite_glob_0_13 } from '../chunks/250322-vuejs-todolist_Bb56-YN3.mjs';
-import { _ as __vite_glob_0_14 } from '../chunks/250323-canvas_generate_art_B1EhvkRH.mjs';
-import { _ as __vite_glob_0_15 } from '../chunks/250323-habittracker_DyM8U-OO.mjs';
-import { _ as __vite_glob_0_16 } from '../chunks/250326-bento_grid_processing_DU0wK___.mjs';
-import { _ as __vite_glob_0_17 } from '../chunks/250326-perlin_noise_deepseek_Dzy16OzC.mjs';
-import { _ as __vite_glob_0_18 } from '../chunks/250326-perlin_noise_worldmap_GtIu6-Tq.mjs';
-import { _ as __vite_glob_0_19 } from '../chunks/250326-phaser_dino_BxfvUM0z.mjs';
-import { _ as __vite_glob_0_20 } from '../chunks/250327-cloud_works_bento_DT1WkE0B.mjs';
-import { _ as __vite_glob_0_21 } from '../chunks/250327-cloud_works_bento2_5_AsXh0Wb6.mjs';
-import { _ as __vite_glob_0_22 } from '../chunks/250327-gemini_8bitsfx_SCLNOjzl.mjs';
-import { _ as __vite_glob_0_23 } from '../chunks/250401-again_DT_OSp6a.mjs';
-import { _ as __vite_glob_0_24 } from '../chunks/250401-flowarrow_NTn_F5pc.mjs';
-import { _ as __vite_glob_0_25 } from '../chunks/250404-yantra_6CqHqUKG.mjs';
-import { _ as __vite_glob_0_26 } from '../chunks/250323-sirsandwichmenu1_B3RfMRNJ.mjs';
-import { _ as __vite_glob_0_27 } from '../chunks/250323-sirsandwichmenu2_obYtrT5F.mjs';
-import { _ as __vite_glob_0_28 } from '../chunks/250402-goldenratiocssgrid_DePpUHvB.mjs';
-import { _ as __vite_glob_0_29 } from '../chunks/250402-undo_technique_Qk_FgJUs.mjs';
-import { c as createAstro, a as createComponent, r as renderComponent, b as renderTemplate, m as maybeRenderHead } from '../chunks/astro/server_BuftSjIy.mjs';
+import { a as createComponent, r as renderComponent, b as renderTemplate, m as maybeRenderHead, f as addAttribute } from '../chunks/astro/server_JhCfhjtA.mjs';
 import 'kleur/colors';
-import { a as $$BaseLayout, $ as $$Button } from '../chunks/BaseLayout_DEWwRiOq.mjs';
-import { $ as $$Card, a as $$CardHeader, b as $$CardTitle, d as $$CardContent } from '../chunks/CardTitle_Dw3GL5XI.mjs';
+import { g as getCollection } from '../chunks/_astro_content_CcvLsTcQ.mjs';
+import { a as $$BaseLayout } from '../chunks/BaseLayout_B3_U6PTh.mjs';
+import { f as formatYymmddDate } from '../chunks/formatDate_BXD4vEtI.mjs';
 export { renderers } from '../renderers.mjs';
 
-const $$Astro = createAstro("https://jasperyong.com");
+const SKETCHES_PER_PAGE = 12;
 const $$Index = createComponent(async ($$result, $$props, $$slots) => {
-  const Astro2 = $$result.createAstro($$Astro, $$props, $$slots);
-  Astro2.self = $$Index;
-  const paths = await /* #__PURE__ */ Object.assign({"./2025/250314-pixijs-filter.astro": __vite_glob_0_0,"./2025/250314-pixijs-videofilter.astro": __vite_glob_0_1,"./2025/250316-quizgame.astro": __vite_glob_0_2,"./2025/250316-survey_form.astro": __vite_glob_0_3,"./2025/250316-the-malaysian-clock.astro": __vite_glob_0_4,"./2025/250316-wheeloffortune.astro": __vite_glob_0_5,"./2025/250318-photoswipe.astro": __vite_glob_0_6,"./2025/250319-portfolio-tailwindtheme.astro": __vite_glob_0_7,"./2025/250322-carouselsliders.astro": __vite_glob_0_8,"./2025/250322-fullpageslides.astro": __vite_glob_0_9,"./2025/250322-gsapanimation.astro": __vite_glob_0_10,"./2025/250322-invoicegenerator.astro": __vite_glob_0_11,"./2025/250322-viewtransition.astro": __vite_glob_0_12,"./2025/250322-vuejs-todolist.astro": __vite_glob_0_13,"./2025/250323-canvas_generate_art.astro": __vite_glob_0_14,"./2025/250323-habittracker.astro": __vite_glob_0_15,"./2025/250326-bento_grid_processing.astro": __vite_glob_0_16,"./2025/250326-perlin_noise_deepseek.astro": __vite_glob_0_17,"./2025/250326-perlin_noise_worldmap.astro": __vite_glob_0_18,"./2025/250326-phaser_dino.astro": __vite_glob_0_19,"./2025/250327-cloud_works_bento.astro": __vite_glob_0_20,"./2025/250327-cloud_works_bento2_5.astro": __vite_glob_0_21,"./2025/250327-gemini_8bitsfx.astro": __vite_glob_0_22,"./250401-again.astro": __vite_glob_0_23,"./250401-flowarrow.astro": __vite_glob_0_24,"./250404-yantra.astro": __vite_glob_0_25,"./webdev/250323-sirsandwichmenu1.astro": __vite_glob_0_26,"./webdev/250323-sirsandwichmenu2.astro": __vite_glob_0_27,"./webdev/250402-goldenratiocssgrid.astro": __vite_glob_0_28,"./webdev/250402-undo_technique.astro": __vite_glob_0_29});
-  const sketchesLinks = Object.keys(paths).filter((path) => {
-    const pathSegments = path.split("/");
-    const hasHiddenSegment = pathSegments.some((segment, index) => {
-      if (index === 0 && segment === ".") return false;
-      return segment.startsWith(".");
-    });
-    const isExcludedFile = path.endsWith("index.astro") || path.endsWith("photoswipe.astro");
-    const filename = path.split("/").pop() || "";
-    return filename.includes("-") && !isExcludedFile && !hasHiddenSegment;
-  }).map((path) => {
-    const filename = path.split("/").pop()?.replace(/\.astro$/, "") || "";
-    let displayName = filename;
-    if (/^\d{6}-/.test(filename)) {
-      const datePart = filename.substring(0, 6);
-      const titlePart = filename.substring(7).replace(/-/g, " ");
-      const year = "20" + datePart.substring(0, 2);
-      const month = datePart.substring(2, 4);
-      const day = datePart.substring(4, 6);
-      displayName = `${titlePart} (${year}-${month}-${day})`;
-    }
-    const urlPath = path.slice(2).replace(/\.astro$/, "");
-    const pathParts = path.slice(2).split("/");
-    const hasSubdir = pathParts.length > 1;
-    const subdir = hasSubdir ? pathParts.slice(0, -1).join("/") : "";
-    return {
-      name: displayName,
-      originalName: filename,
-      url: `/sketches/${urlPath}`,
-      subdir,
-      fullPath: path
-    };
-  }).sort((a, b) => {
-    if (a.subdir !== b.subdir) {
-      return a.subdir.localeCompare(b.subdir);
-    }
-    return a.originalName.localeCompare(b.originalName);
+  const allSketches = await getCollection("sketches");
+  const sortedSketches = allSketches.sort((a, b) => {
+    const dateA = a.data.date instanceof Date ? a.data.date : new Date(a.data.date);
+    const dateB = b.data.date instanceof Date ? b.data.date : new Date(b.data.date);
+    return dateB.getTime() - dateA.getTime();
   });
-  const showDebug = Astro2.url.searchParams.get("debug") === "true";
-  console.log("Found sketches:", sketchesLinks);
-  return renderTemplate`${renderComponent($$result, "BaseLayout", $$BaseLayout, { "title": "My Past Sketches", "description": "A collection of my past sketches" }, { "default": async ($$result2) => renderTemplate` ${maybeRenderHead()}<main class="container mx-auto"> <div class="row"> <div class="col-lg-8 mx-auto"> <h2 class="mb-4">My Past Sketches</h2> <p class="lead mb-4">
-This page lists all the sketches I have done in the past. It's a
-          collection of experiments and learning projects.
-</p> <hr> <h3>My Creative Practice / Artist Statement</h3> <p>
-My creative practice explores the intersection of coding, generative
-          art, and mathematics. Through algorithms and computational processes,
-          I create dynamic, evolving visual compositions that bridge technology
-          and art. Inspired by mathematical principles like fractals, geometry,
-          and the golden ratio, I aim to express my curiosity about patterns and
-          structures that shape our reality.
-</p> <p>
-A key aspect of my work is bringing digital creations into the
-          physical world. Using pen plotters, I transform algorithmically
-          generated designs into tangible, hand-drawn artifacts. Each piece is a
-          unique iteration of my code, capturing a moment in time and space that
-          can never be replicated exactly.
-</p> <p>
-My art is a form of self-expression and exploration. It allows me to
-          engage with the world and share my fascination with the connections
-          between art, science, and technology. Through my work, I hope to
-          inspire others to see the beauty that emerges when these disciplines
-          converge.
-</p> <div class="mt-4"> ${sketchesLinks.length === 0 ? renderTemplate`<div class="alert alert-info">
-No sketches found. Try adding some files with the naming pattern
-                [YYMMDD]-[name].astro
-</div>` : (() => {
-    const sketchesBySubdir = {};
-    sketchesLinks.forEach((link) => {
-      const category = link.subdir || "Root";
-      if (!sketchesBySubdir[category]) {
-        sketchesBySubdir[category] = [];
-      }
-      sketchesBySubdir[category].push(link);
-    });
-    return Object.entries(sketchesBySubdir).map(
-      ([category, links]) => renderTemplate`${renderComponent($$result2, "Card", $$Card, { "class": "w-[460px]" }, { "default": async ($$result3) => renderTemplate` ${renderComponent($$result3, "CardHeader", $$CardHeader, {}, { "default": async ($$result4) => renderTemplate` ${renderComponent($$result4, "CardTitle", $$CardTitle, {}, { "default": async ($$result5) => renderTemplate`${category === "Root" ? "Main Sketches" : category}` })} ` })} ${renderComponent($$result3, "CardContent", $$CardContent, { "class": "flex flex-col gap-2" }, { "default": async ($$result4) => renderTemplate`${links.map((link) => renderTemplate`${renderComponent($$result4, "Button", $$Button, { "href": link.url }, { "default": async ($$result5) => renderTemplate`${link.name}` })}`)}` })} ` })}`
-    );
-  })()} </div> </div> ${showDebug && renderTemplate`<div class="col-lg-8 mx-auto mt-5"> <div class="card"> <div class="card-header bg-dark text-white">
-Debug Information
-</div> <div class="card-body"> <h5 class="card-title">
-Found ${sketchesLinks.length} sketches
-</h5> <pre class="bg-light p-3 mt-3" style="max-height: 400px; overflow: auto;">                  ${JSON.stringify(sketchesLinks, null, 2)}
-                </pre> <h5 class="card-title mt-4">All Paths</h5> <pre class="bg-light p-3 mt-3" style="max-height: 400px; overflow: auto;">                  ${JSON.stringify(Object.keys(paths), null, 2)}
-                </pre> </div> </div> </div>`} </div> </main> ` })}`;
+  const totalPages = Math.ceil(sortedSketches.length / SKETCHES_PER_PAGE);
+  const currentPage = 1;
+  const start = 0;
+  const end = start + SKETCHES_PER_PAGE;
+  const paginatedSketches = sortedSketches.slice(start, end);
+  const categories = [...new Set(sortedSketches.map((sketch) => sketch.data.category))];
+  const allTags = sortedSketches.flatMap((sketch) => sketch.data.tags || []);
+  const tags = [...new Set(allTags)].sort();
+  const categoryCounts = {};
+  categories.forEach((category) => {
+    categoryCounts[category] = sortedSketches.filter(
+      (sketch) => sketch.data.category === category
+    ).length;
+  });
+  const tagCounts = {};
+  tags.forEach((tag) => {
+    tagCounts[tag] = sortedSketches.filter(
+      (sketch) => sketch.data.tags && sketch.data.tags.includes(tag)
+    ).length;
+  });
+  return renderTemplate`${renderComponent($$result, "Layout", $$BaseLayout, { "title": "Sketches - Code & Design Ideas", "description": "A collection of code sketches, design experiments, and interactive demos" }, { "default": async ($$result2) => renderTemplate` ${maybeRenderHead()}<main class="max-w-7xl mx-auto px-4 py-8"> <header class="mb-12 text-center"> <h1 class="text-4xl font-bold mb-4">Code Sketches</h1> <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+A collection of code snippets, design experiments, interactive demos, and learning resources
+</p> </header> <div class="grid grid-cols-1 lg:grid-cols-4 gap-8"> <!-- Filters sidebar --> <aside class="lg:col-span-1"> <div class="sticky top-24 bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md border border-slate-200 dark:border-slate-700"> <h2 class="text-xl font-semibold mb-4">Filters</h2> <!-- Categories --> <div class="mb-6"> <h3 class="font-medium mb-2 text-gray-700 dark:text-gray-300">Categories</h3> <ul class="space-y-2"> ${categories.map((category) => renderTemplate`<li> <a${addAttribute(`/sketches/category/${category}`, "href")} class="flex items-center justify-between group hover:text-blue-600 dark:hover:text-blue-400"> <span>${category}</span> <span class="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full"> ${categoryCounts[category]} </span> </a> </li>`)} </ul> </div> <!-- Tags --> <div> <h3 class="font-medium mb-2 text-gray-700 dark:text-gray-300">Popular Tags</h3> <div class="flex flex-wrap gap-2"> ${tags.slice(0, 15).map((tag) => renderTemplate`<a${addAttribute(`/sketches/tag/${tag}`, "href")} class="inline-flex items-center text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 px-3 py-1 rounded-full"> <span>${tag}</span> <span class="ml-1 text-xs text-gray-500 dark:text-gray-400">(${tagCounts[tag]})</span> </a>`)} ${tags.length > 15 && renderTemplate`<a href="/sketches/tags" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+View all tags...
+</a>`} </div> </div> </div> </aside> <!-- Sketches grid --> <div class="lg:col-span-3"> <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"> ${paginatedSketches.map((sketch) => renderTemplate`<a${addAttribute(`/sketches/${sketch.id}`, "href")} class="group bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-md border border-slate-200 dark:border-slate-700 hover:shadow-lg transition-shadow"> ${sketch.data.thumbnail ? renderTemplate`<div class="relative h-48 overflow-hidden"> <img${addAttribute(sketch.data.thumbnail, "src")}${addAttribute(sketch.data.title, "alt")} class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"> ${sketch.data.status && renderTemplate`<span${addAttribute(`absolute top-2 right-2 text-xs px-2 py-1 rounded-full ${sketch.data.status === "completed" ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300" : sketch.data.status === "wip" ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300" : sketch.data.status === "idea" ? "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300" : "bg-gray-100 text-gray-800 dark:bg-gray-800/50 dark:text-gray-400"}`, "class")}> ${sketch.data.status.charAt(0).toUpperCase() + sketch.data.status.slice(1)} </span>`} </div>` : renderTemplate`<div class="h-48 flex items-center justify-center bg-gradient-to-br from-blue-500/20 to-purple-500/20 dark:from-blue-900/30 dark:to-purple-900/30"> <span class="text-4xl opacity-40">✨</span> ${sketch.data.status && renderTemplate`<span${addAttribute(`absolute top-2 right-2 text-xs px-2 py-1 rounded-full ${sketch.data.status === "completed" ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300" : sketch.data.status === "wip" ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300" : sketch.data.status === "idea" ? "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300" : "bg-gray-100 text-gray-800 dark:bg-gray-800/50 dark:text-gray-400"}`, "class")}> ${sketch.data.status.charAt(0).toUpperCase() + sketch.data.status.slice(1)} </span>`} </div>`} <div class="p-4"> <h3 class="font-bold text-lg mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"> ${sketch.data.title} </h3> <div class="text-sm text-gray-500 dark:text-gray-400 mb-2 flex items-center"> <i class="bi bi-calendar-event mr-1"></i> <time${addAttribute(sketch.data.date instanceof Date ? sketch.data.date.toISOString() : "", "datetime")}> ${formatYymmddDate(sketch.data.date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric"
+  })} </time> </div> <p class="text-sm text-gray-600 dark:text-gray-300 mb-3 line-clamp-2"> ${sketch.data.description} </p> <div class="flex flex-wrap gap-1 mt-auto"> ${sketch.data.tags && sketch.data.tags.slice(0, 3).map((tag) => renderTemplate`<span class="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded"> ${tag} </span>`)} ${sketch.data.tags && sketch.data.tags.length > 3 && renderTemplate`<span class="text-xs text-gray-500 dark:text-gray-400">
++${sketch.data.tags.length - 3} more
+</span>`} </div> </div> </a>`)} </div>  ${totalPages > 1 && renderTemplate`<div class="mt-12 flex justify-center"> <nav class="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination"> ${currentPage > 1} ${Array.from({ length: Math.min(totalPages, 5) }).map((_, i) => renderTemplate`<a${addAttribute(i + 1 === 1 ? "/sketches" : `/sketches/page/${i + 1}`, "href")}${addAttribute(`relative inline-flex items-center px-4 py-2 border ${i + 1 === currentPage ? "z-10 bg-blue-50 dark:bg-blue-900/30 border-blue-500 dark:border-blue-500 text-blue-600 dark:text-blue-400" : "bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"} text-sm font-medium`, "class")}> ${i + 1} </a>`)} ${currentPage < totalPages && renderTemplate`<a${addAttribute(`/sketches/page/${currentPage + 1}`, "href")} class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"> <span class="sr-only">Next</span> <i class="bi bi-chevron-right"></i> </a>`} </nav> </div>`} </div> </div> </main> ` })}`;
 }, "/home/matsu/Desktop/jy/src/pages/sketches/index.astro", void 0);
 
 const $$file = "/home/matsu/Desktop/jy/src/pages/sketches/index.astro";
@@ -129,6 +51,7 @@ const $$url = "/sketches";
 
 const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
+  SKETCHES_PER_PAGE,
   default: $$Index,
   file: $$file,
   url: $$url
