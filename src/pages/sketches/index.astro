@@ -1,210 +1,226 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
-
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/BaseLayout.astro";
+import { formatYymmddDate } from "@/utils/formatDate";
 import { Button } from "@/components/starwind/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/starwind/card";
+import { Badge } from "@/components/starwind/badge";
 
-// Get all sketch files using simple glob pattern without importing content
-const paths = await import.meta.glob(["./**/*.astro"], { eager: true });
+// Pagination configuration
+export const SKETCHES_PER_PAGE = 12;
 
-// Convert file paths to links
-const sketchesLinks = Object.keys(paths)
-  .filter((path) => {
-    // Skip files/directories that start with a dot, except for the leading './' in glob paths
-    const pathSegments = path.split("/");
-    const hasHiddenSegment = pathSegments.some((segment, index) => {
-      // Skip the first segment which is just '.' from the './' prefix
-      if (index === 0 && segment === ".") return false;
-      // Check if this segment starts with a dot (hidden file/directory)
-      return segment.startsWith(".");
-    });
+// Get all sketches
+const allSketches = await getCollection("sketches");
 
-    // Skip index.astro and photoswipe.astro (our utility pages)
-    const isExcludedFile =
-      path.endsWith("index.astro") || path.endsWith("photoswipe.astro");
+// Sort sketches by date (newest first)
+const sortedSketches = allSketches.sort((a, b) => {
+  const dateA = a.data.date instanceof Date ? a.data.date : new Date(a.data.date);
+  const dateB = b.data.date instanceof Date ? b.data.date : new Date(b.data.date);
+  return dateB.getTime() - dateA.getTime();
+});
 
-    // Get the filename for checking patterns
-    const filename = path.split("/").pop() || "";
+// Calculate pagination for first page
+const totalPages = Math.ceil(sortedSketches.length / SKETCHES_PER_PAGE);
+const currentPage = 1;
+const start = 0;
+const end = start + SKETCHES_PER_PAGE;
+const paginatedSketches = sortedSketches.slice(start, end);
 
-    // Include files with hyphens in their name that aren't excluded or hidden
-    return filename.includes("-") && !isExcludedFile && !hasHiddenSegment;
-  })
-  .map((path) => {
-    // Extract the filename without extension
-    const filename =
-      path
-        .split("/")
-        .pop()
-        ?.replace(/\.astro$/, "") || "";
+// Extract all categories and tags for filtering
+const categories = [...new Set(sortedSketches.map(sketch => sketch.data.category))];
+const allTags = sortedSketches.flatMap(sketch => sketch.data.tags || []);
+const tags = [...new Set(allTags)].sort();
 
-    // Get a display name that's more readable
-    let displayName = filename;
-    // If it has a date pattern (YYMMDD-), format it nicely
-    if (/^\d{6}-/.test(filename)) {
-      const datePart = filename.substring(0, 6);
-      const titlePart = filename.substring(7).replace(/-/g, " ");
-      const year = "20" + datePart.substring(0, 2);
-      const month = datePart.substring(2, 4);
-      const day = datePart.substring(4, 6);
-      displayName = `${titlePart} (${year}-${month}-${day})`;
-    }
+// Calculate count for each category
+const categoryCounts = {};
+categories.forEach(category => {
+  categoryCounts[category] = sortedSketches.filter(sketch => 
+    sketch.data.category === category
+  ).length;
+});
 
-    // Create the URL path, preserving subdirectory structure
-    // Remove the leading './' and the '.astro' extension
-    const urlPath = path.slice(2).replace(/\.astro$/, "");
-
-    // Extract subdirectory if present
-    const pathParts = path.slice(2).split("/");
-    const hasSubdir = pathParts.length > 1;
-    const subdir = hasSubdir ? pathParts.slice(0, -1).join("/") : "";
-
-    return {
-      name: displayName,
-      originalName: filename,
-      url: `/sketches/${urlPath}`,
-      subdir: subdir,
-      fullPath: path,
-    };
-  })
-  .sort((a, b) => {
-    // First sort by subdirectory
-    if (a.subdir !== b.subdir) {
-      return a.subdir.localeCompare(b.subdir);
-    }
-
-    // Then by filename (which may have date prefixes)
-    return a.originalName.localeCompare(b.originalName);
-  });
-
-// Enable debug mode with ?debug=true in URL
-const showDebug = Astro.url.searchParams.get("debug") === "true";
-
-// Log sketches to console for server-side debugging
-console.log("Found sketches:", sketchesLinks);
+// Calculate count for each tag
+const tagCounts = {};
+tags.forEach(tag => {
+  tagCounts[tag] = sortedSketches.filter(sketch => 
+    sketch.data.tags && sketch.data.tags.includes(tag)
+  ).length;
+});
 ---
 
-<BaseLayout
-  title="My Past Sketches"
-  description="A collection of my past sketches"
->
-  <main class="container mx-auto">
-    <div class="row">
-      <div class="col-lg-8 mx-auto">
-        <h2 class="mb-4">My Past Sketches</h2>
-        <p class="lead mb-4">
-          This page lists all the sketches I have done in the past. It's a
-          collection of experiments and learning projects.
-        </p>
-        <hr />
+<Layout title="Sketches - Code & Design Ideas" description="A collection of code sketches, design experiments, and interactive demos">
+  <main class="max-w-7xl mx-auto px-4 py-8">
+    <header class="mb-12 text-center">
+      <h1 class="text-4xl font-bold mb-4">Code Sketches</h1>
+      <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+        A collection of code snippets, design experiments, interactive demos, and learning resources
+      </p>
+    </header>
 
-        <h3>My Creative Practice / Artist Statement</h3>
-        <p>
-          My creative practice explores the intersection of coding, generative
-          art, and mathematics. Through algorithms and computational processes,
-          I create dynamic, evolving visual compositions that bridge technology
-          and art. Inspired by mathematical principles like fractals, geometry,
-          and the golden ratio, I aim to express my curiosity about patterns and
-          structures that shape our reality.
-        </p>
-
-        <p>
-          A key aspect of my work is bringing digital creations into the
-          physical world. Using pen plotters, I transform algorithmically
-          generated designs into tangible, hand-drawn artifacts. Each piece is a
-          unique iteration of my code, capturing a moment in time and space that
-          can never be replicated exactly.
-        </p>
-
-        <p>
-          My art is a form of self-expression and exploration. It allows me to
-          engage with the world and share my fascination with the connections
-          between art, science, and technology. Through my work, I hope to
-          inspire others to see the beauty that emerges when these disciplines
-          converge.
-        </p>
-        <div class="mt-4">
-          {
-            sketchesLinks.length === 0 ? (
-              <div class="alert alert-info">
-                No sketches found. Try adding some files with the naming pattern
-                [YYMMDD]-[name].astro
-              </div>
-            ) : (
-              (() => {
-                // Group sketches by subdirectory
-                const sketchesBySubdir = {};
-
-                sketchesLinks.forEach((link) => {
-                  const category = link.subdir || "Root";
-                  if (!sketchesBySubdir[category]) {
-                    sketchesBySubdir[category] = [];
-                  }
-                  sketchesBySubdir[category].push(link);
-                });
-
-                // Render each group
-                return Object.entries(sketchesBySubdir).map(
-                  ([category, links]: [string, typeof sketchesLinks]) => (
-                    <Card class="w-[460px]">
-                      <CardHeader>
-                        <CardTitle>
-                          {category === "Root" ? "Main Sketches" : category}
-                        </CardTitle>
-                        {/* <CardDescription>
-                            Deploy your new project in one-click.
-                          </CardDescription> */}
-                      </CardHeader>
-                      <CardContent class="flex flex-col gap-2">
-                        {links.map((link) => (
-                          <Button href={link.url}>{link.name}</Button>
-                        ))}
-                      </CardContent>
-                      {/* <CardFooter></CardFooter> */}
-                    </Card>
-                  )
-                );
-              })()
-            )
-          }
-        </div>
-      </div>
-
-      {
-        showDebug && (
-          <div class="col-lg-8 mx-auto mt-5">
-            <div class="card">
-              <div class="card-header bg-dark text-white">
-                Debug Information
-              </div>
-              <div class="card-body">
-                <h5 class="card-title">
-                  Found {sketchesLinks.length} sketches
-                </h5>
-                <pre
-                  class="bg-light p-3 mt-3"
-                  style="max-height: 400px; overflow: auto;"
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <!-- Filters sidebar -->
+      <aside class="lg:col-span-1">
+        <div class="sticky top-24 bg-white dark:bg-slate-800 p-6 rounded-lg shadow-md border border-slate-200 dark:border-slate-700">
+          <h2 class="text-xl font-semibold mb-4">Filters</h2>
+          
+          <!-- Categories -->
+          <div class="mb-6">
+            <h3 class="font-medium mb-2 text-gray-700 dark:text-gray-300">Categories</h3>
+            <ul class="space-y-2">
+              {categories.map(category => (
+                <li>
+                  <a 
+                    href={`/sketches/category/${category}`}
+                    class="flex items-center justify-between group hover:text-blue-600 dark:hover:text-blue-400"
+                  >
+                    <span>{category}</span>
+                    <span class="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
+                      {categoryCounts[category]}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          
+          <!-- Tags -->
+          <div>
+            <h3 class="font-medium mb-2 text-gray-700 dark:text-gray-300">Popular Tags</h3>
+            <div class="flex flex-wrap gap-2">
+              {tags.slice(0, 15).map(tag => (
+                <a 
+                  href={`/sketches/tag/${tag}`}
+                  class="inline-flex items-center text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 px-3 py-1 rounded-full"
                 >
-                  {JSON.stringify(sketchesLinks, null, 2)}
-                </pre>
-                <h5 class="card-title mt-4">All Paths</h5>
-                <pre
-                  class="bg-light p-3 mt-3"
-                  style="max-height: 400px; overflow: auto;"
-                >
-                  {JSON.stringify(Object.keys(paths), null, 2)}
-                </pre>
-              </div>
+                  <span>{tag}</span>
+                  <span class="ml-1 text-xs text-gray-500 dark:text-gray-400">({tagCounts[tag]})</span>
+                </a>
+              ))}
+              {tags.length > 15 && (
+                <a href="/sketches/tags" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+                  View all tags...
+                </a>
+              )}
             </div>
           </div>
-        )
-      }
+        </div>
+      </aside>
+      
+      <!-- Sketches grid -->
+      <div class="lg:col-span-3">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {paginatedSketches.map(sketch => (
+            <a 
+              href={`/sketches/${sketch.id}`}
+              class="group bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-md border border-slate-200 dark:border-slate-700 hover:shadow-lg transition-shadow"
+            >
+              {sketch.data.thumbnail ? (
+                <div class="relative h-48 overflow-hidden">
+                  <img 
+                    src={sketch.data.thumbnail} 
+                    alt={sketch.data.title}
+                    class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
+                  />
+                  {sketch.data.status && (
+                    <span class={`absolute top-2 right-2 text-xs px-2 py-1 rounded-full ${
+                      sketch.data.status === 'completed' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
+                      sketch.data.status === 'wip' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' :
+                      sketch.data.status === 'idea' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300' :
+                      'bg-gray-100 text-gray-800 dark:bg-gray-800/50 dark:text-gray-400'
+                    }`}>
+                      {sketch.data.status.charAt(0).toUpperCase() + sketch.data.status.slice(1)}
+                    </span>
+                  )}
+                </div>
+              ) : (
+                <div class="h-48 flex items-center justify-center bg-gradient-to-br from-blue-500/20 to-purple-500/20 dark:from-blue-900/30 dark:to-purple-900/30">
+                  <span class="text-4xl opacity-40">✨</span>
+                  {sketch.data.status && (
+                    <span class={`absolute top-2 right-2 text-xs px-2 py-1 rounded-full ${
+                      sketch.data.status === 'completed' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
+                      sketch.data.status === 'wip' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' :
+                      sketch.data.status === 'idea' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300' :
+                      'bg-gray-100 text-gray-800 dark:bg-gray-800/50 dark:text-gray-400'
+                    }`}>
+                      {sketch.data.status.charAt(0).toUpperCase() + sketch.data.status.slice(1)}
+                    </span>
+                  )}
+                </div>
+              )}
+              
+              <div class="p-4">
+                <h3 class="font-bold text-lg mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                  {sketch.data.title}
+                </h3>
+                <div class="text-sm text-gray-500 dark:text-gray-400 mb-2 flex items-center">
+                  <i class="bi bi-calendar-event mr-1"></i>
+                  <time datetime={sketch.data.date instanceof Date ? sketch.data.date.toISOString() : ''}>
+                    {formatYymmddDate(sketch.data.date).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric'
+                    })}
+                  </time>
+                </div>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-3 line-clamp-2">
+                  {sketch.data.description}
+                </p>
+                <div class="flex flex-wrap gap-1 mt-auto">
+                  {sketch.data.tags && sketch.data.tags.slice(0, 3).map(tag => (
+                    <span class="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">
+                      {tag}
+                    </span>
+                  ))}
+                  {sketch.data.tags && sketch.data.tags.length > 3 && (
+                    <span class="text-xs text-gray-500 dark:text-gray-400">
+                      +{sketch.data.tags.length - 3} more
+                    </span>
+                  )}
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+        
+        {/* Pagination controls */}
+        {totalPages > 1 && (
+          <div class="mt-12 flex justify-center">
+            <nav class="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+              {currentPage > 1 && (
+                <a
+                  href={`/sketches/page/${currentPage - 1}`}
+                  class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  <span class="sr-only">Previous</span>
+                  <i class="bi bi-chevron-left"></i>
+                </a>
+              )}
+              
+              {Array.from({ length: Math.min(totalPages, 5) }).map((_, i) => (
+                <a
+                  href={i + 1 === 1 ? '/sketches' : `/sketches/page/${i + 1}`}
+                  class={`relative inline-flex items-center px-4 py-2 border ${
+                    i + 1 === currentPage 
+                      ? 'z-10 bg-blue-50 dark:bg-blue-900/30 border-blue-500 dark:border-blue-500 text-blue-600 dark:text-blue-400' 
+                      : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
+                  } text-sm font-medium`}
+                >
+                  {i + 1}
+                </a>
+              ))}
+              
+              {currentPage < totalPages && (
+                <a
+                  href={`/sketches/page/${currentPage + 1}`}
+                  class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  <span class="sr-only">Next</span>
+                  <i class="bi bi-chevron-right"></i>
+                </a>
+              )}
+            </nav>
+          </div>
+        )}
+      </div>
     </div>
   </main>
-</BaseLayout>
+</Layout>

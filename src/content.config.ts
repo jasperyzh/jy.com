@@ -161,4 +161,30 @@ const portfolio = defineCollection({
   })
 });
 
-export const collections = { ob_blog, docs, resume, portfolio };
+// Define sketches collection
+const sketches = defineCollection({
+  loader: glob({
+    pattern: "**/*.mdx",
+    base: "./src/content/sketches",
+  }),
+  schema: z.object({
+    title: z.string(),
+    description: z
+      .string()
+      .max(
+        160,
+        "For best SEO results, please keep the description under 160 characters."
+      ),
+    date: z.preprocess(
+      (arg) => formatYymmddDate(arg as string | number | Date),
+      z.date()
+    ),
+    category: z.string(),
+    tags: z.array(z.string()),
+    status: z.enum(["idea", "wip", "completed", "archived"]).default("completed"),
+    thumbnail: z.string().optional(),
+    liveUrl: z.string().optional(),
+  }),
+});
+
+export const collections = { ob_blog, docs, resume, portfolio, sketches };

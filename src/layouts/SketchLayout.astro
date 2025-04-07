@@ -1,0 +1,165 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import { formatYymmddDate } from "@/utils/formatDate";
+import { Button } from "@/components/starwind/button";
+import { Badge } from "@/components/starwind/badge";
+
+const { title, description, date, category, tags, status, thumbnail, liveUrl } = Astro.props;
+
+// Format the date
+const formattedDate = date 
+  ? formatYymmddDate(date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
+  : '';
+
+// Status badge color mapping
+const statusColors = {
+  idea: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
+  wip: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
+  completed: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
+  archived: "bg-gray-100 text-gray-800 dark:bg-gray-800/50 dark:text-gray-400"
+};
+---
+
+<BaseLayout {title} {description}>
+  <main class="max-w-4xl mx-auto px-4 py-8">
+    <article class="bg-white dark:bg-slate-800 shadow-xl rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700">
+      <header class="p-6 bg-gradient-to-r from-emerald-500 to-blue-600 text-white">
+        <!-- Back Button -->
+        <div class="mb-4">
+          <Button variant="outline" size="sm" class="bg-white/20 hover:bg-white/30 text-white" onclick="history.back()">
+            <i class="bi bi-arrow-left mr-2"></i> Back
+          </Button>
+        </div>
+
+        <h1 class="text-4xl font-extrabold mb-3 leading-tight">{title}</h1>
+        <p class="text-xl opacity-90 mb-6 leading-relaxed">{description}</p>
+        
+        <div class="flex flex-wrap items-center gap-4 text-sm opacity-80">
+          {status && (
+            <span class={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[status] || ''}`}>
+              {status.charAt(0).toUpperCase() + status.slice(1)}
+            </span>
+          )}
+          
+          <div class="flex items-center">
+            <i class="bi bi-calendar-event mr-2"></i>
+            <time datetime={date instanceof Date ? date.toISOString() : ''}>{formattedDate}</time>
+          </div>
+          
+          {category && (
+            <div class="flex items-center">
+              <i class="bi bi-folder mr-2"></i>
+              <a href={`/sketches/category/${category}`} class="hover:underline">{category}</a>
+            </div>
+          )}
+          
+          {liveUrl && (
+            <a href={liveUrl} target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-white hover:underline">
+              <i class="bi bi-box-arrow-up-right mr-2"></i>
+              Live Demo
+            </a>
+          )}
+        </div>
+        
+        {tags && tags.length > 0 && (
+          <div class="mt-4 flex flex-wrap gap-2">
+            {tags.map((tag: string) => (
+              <Badge variant="secondary" class="bg-white/20 hover:bg-white/30">
+                <a href={`/sketches/tag/${tag}`} class="hover:underline">{tag}</a>
+              </Badge>
+            ))}
+          </div>
+        )}
+      </header>
+
+      {thumbnail && (
+        <div class="w-full relative">
+          <img 
+            src={thumbnail} 
+            alt={`Thumbnail for ${title}`} 
+            class="w-full h-64 object-cover object-center" 
+          />
+        </div>
+      )}
+      
+      <div class="px-8 py-10 prose prose-lg dark:prose-invert max-w-none">
+        <slot />
+      </div>
+      
+      <footer class="p-6 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-700">
+        <div class="flex justify-between items-center">
+          <Button variant="outline" onclick="history.back()">
+            <i class="bi bi-arrow-left mr-2"></i> Back to Sketches
+          </Button>
+          
+          <div class="flex gap-2">
+            <Button size="sm" variant="ghost" aria-label="Share on Twitter" 
+              onclick={`window.open('https://twitter.com/intent/tweet?url=${encodeURIComponent(Astro.url.href)}&text=${encodeURIComponent(title)}', '_blank')`}>
+              <i class="bi bi-twitter text-lg"></i>
+            </Button>
+            <Button size="sm" variant="ghost" aria-label="Share on Facebook"
+              onclick={`window.open('https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(Astro.url.href)}', '_blank')`}>
+              <i class="bi bi-facebook text-lg"></i>
+            </Button>
+            <Button size="sm" variant="ghost" aria-label="Share on LinkedIn"
+              onclick={`window.open('https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.href)}', '_blank')`}>
+              <i class="bi bi-linkedin text-lg"></i>
+            </Button>
+            <Button size="sm" variant="ghost" aria-label="More sharing options"
+              title="More sharing options"
+              onclick={`window.open('https://www.addtoany.com/share?url=${encodeURIComponent(Astro.url.href)}&title=${encodeURIComponent(title)}', '_blank')`}>
+              <i class="bi bi-share text-lg"></i>
+            </Button>
+          </div>
+        </div>
+      </footer>
+    </article>
+  </main>
+</BaseLayout>
+
+<style is:global>
+  /* This ensures MDX content is properly styled */
+  .prose pre {
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    background: #1a1a1a !important;
+    border: 1px solid #2d2d2d;
+  }
+
+  .prose code {
+    font-family: "Fira Code", Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .prose :not(pre) > code {
+    padding: 0.2em 0.4em;
+    margin: 0;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 0.25em;
+  }
+
+  .dark .prose :not(pre) > code {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Interactive component styling */
+  .interactive-component {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .dark .interactive-component {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+</style> 

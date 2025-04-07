@@ -1,0 +1,166 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/BaseLayout.astro";
+import { formatYymmddDate } from "@/utils/formatDate";
+import { Badge } from "@/components/starwind/badge";
+
+// Generate static paths for all categories
+export async function getStaticPaths() {
+  const allSketches = await getCollection("sketches");
+  
+  // Extract all unique categories
+  const categories = [...new Set(allSketches.map(sketch => sketch.data.category))];
+  
+  // Generate a path for each category
+  return categories.map(category => {
+    const filteredSketches = allSketches.filter(sketch => 
+      sketch.data.category === category
+    );
+    
+    // Sort sketches by date (newest first)
+    const sortedSketches = filteredSketches.sort((a, b) => {
+      const dateA = a.data.date instanceof Date ? a.data.date : new Date(a.data.date);
+      const dateB = b.data.date instanceof Date ? b.data.date : new Date(b.data.date);
+      return dateB.getTime() - dateA.getTime();
+    });
+    
+    return {
+      params: { category },
+      props: { sketches: sortedSketches, category }
+    };
+  });
+}
+
+// Get props from getStaticPaths
+const { sketches, category } = Astro.props;
+
+// Format the category for display
+const formattedCategory = category.charAt(0).toUpperCase() + category.slice(1);
+
+// Extract all tags for this category for filtering
+const allCategoryTags = sketches.flatMap(sketch => sketch.data.tags || []);
+const uniqueTags = [...new Set(allCategoryTags)].sort();
+
+export const prerender = true;
+---
+
+<Layout 
+  title={`${formattedCategory} Sketches`} 
+  description={`Browse all sketches in the ${category} category`}
+>
+  <main class="max-w-7xl mx-auto px-4 py-8">
+    <header class="mb-12">
+      <div class="flex items-center mb-4">
+        <a href="/sketches" class="text-blue-600 dark:text-blue-400 hover:underline flex items-center">
+          <i class="bi bi-arrow-left mr-2"></i> All Sketches
+        </a>
+      </div>
+      <h1 class="text-4xl font-bold mb-4">{formattedCategory} Sketches</h1>
+      <p class="text-xl text-gray-600 dark:text-gray-300">
+        Browse all {sketches.length} sketches in the {formattedCategory} category
+      </p>
+    </header>
+
+    {uniqueTags.length > 0 && (
+      <div class="mb-8">
+        <h2 class="text-lg font-semibold mb-2">Filter by Tag</h2>
+        <div class="flex flex-wrap gap-2">
+          {uniqueTags.map(tag => (
+            <a href={`/sketches/tag/${tag}`} class="inline-flex items-center text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 px-3 py-1 rounded-full">
+              {tag}
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {sketches.map(sketch => (
+        <a 
+          href={`/sketches/${sketch.id}`}
+          class="group bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-md border border-slate-200 dark:border-slate-700 hover:shadow-lg transition-shadow"
+        >
+          {sketch.data.thumbnail ? (
+            <div class="relative h-48 overflow-hidden">
+              <img 
+                src={sketch.data.thumbnail} 
+                alt={sketch.data.title}
+                class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
+              />
+              {sketch.data.status && (
+                <span class={`absolute top-2 right-2 text-xs px-2 py-1 rounded-full ${
+                  sketch.data.status === 'completed' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
+                  sketch.data.status === 'wip' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' :
+                  sketch.data.status === 'idea' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300' :
+                  'bg-gray-100 text-gray-800 dark:bg-gray-800/50 dark:text-gray-400'
+                }`}>
+                  {sketch.data.status.charAt(0).toUpperCase() + sketch.data.status.slice(1)}
+                </span>
+              )}
+            </div>
+          ) : (
+            <div class="h-48 flex items-center justify-center bg-gradient-to-br from-blue-500/20 to-purple-500/20 dark:from-blue-900/30 dark:to-purple-900/30">
+              <span class="text-4xl opacity-40">✨</span>
+              {sketch.data.status && (
+                <span class={`absolute top-2 right-2 text-xs px-2 py-1 rounded-full ${
+                  sketch.data.status === 'completed' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
+                  sketch.data.status === 'wip' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' :
+                  sketch.data.status === 'idea' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300' :
+                  'bg-gray-100 text-gray-800 dark:bg-gray-800/50 dark:text-gray-400'
+                }`}>
+                  {sketch.data.status.charAt(0).toUpperCase() + sketch.data.status.slice(1)}
+                </span>
+              )}
+            </div>
+          )}
+          
+          <div class="p-4">
+            <h3 class="font-bold text-lg mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+              {sketch.data.title}
+            </h3>
+            <div class="text-sm text-gray-500 dark:text-gray-400 mb-2 flex items-center">
+              <i class="bi bi-calendar-event mr-1"></i>
+              <time datetime={sketch.data.date instanceof Date ? sketch.data.date.toISOString() : ''}>
+                {formatYymmddDate(sketch.data.date).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric'
+                })}
+              </time>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-3 line-clamp-2">
+              {sketch.data.description}
+            </p>
+            <div class="flex flex-wrap gap-1 mt-auto">
+              {sketch.data.tags && sketch.data.tags.slice(0, 3).map(tag => (
+                <span class="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">
+                  {tag}
+                </span>
+              ))}
+              {sketch.data.tags && sketch.data.tags.length > 3 && (
+                <span class="text-xs text-gray-500 dark:text-gray-400">
+                  +{sketch.data.tags.length - 3} more
+                </span>
+              )}
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    {sketches.length === 0 && (
+      <div class="bg-white dark:bg-slate-800 shadow-md rounded-lg p-8 text-center">
+        <div class="text-amber-500 text-5xl mb-4">
+          <i class="bi bi-exclamation-triangle"></i>
+        </div>
+        <h2 class="text-2xl font-bold mb-2">No Sketches Found</h2>
+        <p class="text-gray-600 dark:text-gray-300 mb-6">
+          There are no sketches available in the {formattedCategory} category yet.
+        </p>
+        <a href="/sketches" class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline">
+          <i class="bi bi-arrow-left mr-1"></i> Back to all sketches
+        </a>
+      </div>
+    )}
+  </main>
+</Layout> 
