@@ -18,10 +18,17 @@ export async function getStaticPaths() {
     // Get the path parts
     const pathParts = entry.id.split('/');
     
-    // Create a slug that preserves the folder structure
-    const slug = pathParts.length > 1 
-      ? pathParts.join('/') 
-      : entry.id;
+    // Process path parts to remove digit prefixes
+    const cleanPathParts = pathParts.map(part => {
+      // Remove digit prefix from directory/file names (e.g., "0-introduction" -> "introduction")
+      return part.replace(/^\d+-/, '');
+    });
+    
+    console.log(cleanPathParts)
+    // Create a slug that preserves the folder structure but without digits
+    const slug = cleanPathParts.length > 1 
+      ? cleanPathParts.join('/') 
+      : cleanPathParts[0];
     
     return {
       params: { slug },
@@ -55,37 +62,80 @@ allDocs.forEach(doc => {
   const parts = doc.id.split('/');
   const docSection = parts.length > 1 ? parts[0] : 'root';
   
-  if (!docsBySection[docSection]) {
-    docsBySection[docSection] = [];
+  // Extract the clean section name without digit prefix
+  const cleanSection = docSection.replace(/^\d+-/, '');
+  
+  if (!docsBySection[cleanSection]) {
+    docsBySection[cleanSection] = [];
   }
   
-  docsBySection[docSection].push(doc);
+  docsBySection[cleanSection].push(doc);
 });
 
-// Sort documents within each section by filename
+// Sort documents within each section by their original order (using digit prefixes)
 Object.keys(docsBySection).forEach(sectionKey => {
   docsBySection[sectionKey].sort((a, b) => {
-    const filenameA = a.id.split('/').pop();
-    const filenameB = b.id.split('/').pop();
-    return filenameA.localeCompare(filenameB);
+    const partsA = a.id.split('/');
+    const partsB = b.id.split('/');
+    
+    // For multi-level paths, compare each level
+    for (let i = 0; i < Math.min(partsA.length, partsB.length); i++) {
+      // Extract numbers if they exist at the start of part names
+      const numA = partsA[i].match(/^(\d+)-/) ? parseInt(partsA[i].match(/^(\d+)-/)[1]) : 0;
+      const numB = partsB[i].match(/^(\d+)-/) ? parseInt(partsB[i].match(/^(\d+)-/)[1]) : 0;
+      
+      if (numA !== numB) {
+        return numA - numB;
+      }
+    }
+    
+    // If all matching parts have the same number, compare by length
+    return partsA.length - partsB.length;
   });
 });
 
-// Sort sections (put 'introduction' first)
+// Sort sections based on their numeric prefixes
 const sortedSections = Object.keys(docsBySection).sort((a, b) => {
-  if (a === 'introduction') return -1;
-  if (b === 'introduction') return 1;
-  return a.localeCompare(b);
+  // Create a mapping of clean section names to their original names with prefixes
+  const sectionMapping = {};
+  
+  allDocs.forEach(doc => {
+    const parts = doc.id.split('/');
+    if (parts.length > 0) {
+      const originalSection = parts[0];
+      const cleanSection = originalSection.replace(/^\d+-/, '');
+      sectionMapping[cleanSection] = originalSection;
+    }
+  });
+  
+  // Get the original sections with prefixes
+  const originalA = sectionMapping[a] || '';
+  const originalB = sectionMapping[b] || '';
+  
+  // Extract prefix numbers for sorting
+  const getPrefix = (section) => {
+    const match = section.match(/^(\d+)-/);
+    return match ? parseInt(match[1], 10) : 999;
+  };
+  
+  const prefixA = getPrefix(originalA);
+  const prefixB = getPrefix(originalB);
+  
+  return prefixA - prefixB;
 });
 
-// Function to get section title
+// Function to get section title (now using clean section names)
 function getSectionTitle(sectionName) {
+  // Remove any remaining digit prefixes (should be clean already but just in case)
+  const cleanName = sectionName.replace(/^\d+-/, '');
+  
   const titles = {
     'introduction': 'Introduction',
     'reference': 'Reference',
     'root': 'Documentation'
   };
-  return titles[sectionName] || sectionName.charAt(0).toUpperCase() + sectionName.slice(1);
+  
+  return titles[cleanName] || cleanName.charAt(0).toUpperCase() + cleanName.slice(1).replace(/-/g, ' ');
 }
 
 // Function to extract the display title from a document
@@ -96,7 +146,7 @@ function getDisplayTitle(doc) {
   if (match) {
     const [_, number, slug] = match;
     return {
-      number,
+      number, // Keep the number for ordering if needed
       title: doc.data.title || slug.replace(/-/g, ' ')
     };
   }
@@ -109,7 +159,14 @@ function getDisplayTitle(doc) {
 
 // Function to generate URL for a document
 function getDocUrl(doc) {
-  return `/docs/${doc.id.replace(/\.md$/, '')}`;
+  // Split the ID into parts
+  const parts = doc.id.split('/');
+  
+  // Remove digit prefixes from each part
+  const cleanParts = parts.map(part => part.replace(/^\d+-/, ''));
+  
+  // Join back and create the URL
+  return `/docs/${cleanParts.join('/').replace(/\.md$/, '')}`;
 }
 ---
 
