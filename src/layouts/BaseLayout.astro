@@ -1,5 +1,5 @@
 ---
-import "@/styles/starwind.css";
+import "@/styles/global.css";
 
 import { SITE_TITLE, SITE_DESCRIPTION } from "@/consts";
 
@@ -40,11 +40,11 @@ import Footer from "../components/Footer.astro";
     </main>
 
     <!-- Footer component -->
-    <Footer />
+    <Footer email="hello@jasperyong.com" phone="+1 555.123.4567" />
   </body>
 </html>
 
-<style is:global>
+<style>
   /* Add any global styles needed for the layout */
   .flex-grow {
     flex: 1 0 auto;

@@ -139,12 +139,13 @@
   }
 
   * {
-    @apply border-border;
+    @apply border-border outline-ring/50;
   }
   *:focus-visible {
     @apply outline-outline;
   }
   html {
+    scroll-behavior: smooth;
     @apply bg-background text-foreground scheme-light dark:scheme-dark;
   }
   button {
@@ -177,6 +178,9 @@
 
       margin: 1rem auto;
     }
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }
 

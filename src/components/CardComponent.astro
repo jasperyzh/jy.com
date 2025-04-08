@@ -6,6 +6,15 @@
  * for displaying various types of content with a consistent design.
  * 
  * @component
+ * @example
+ * ```astro
+ * <CardComponent
+ *   title="Card Title"
+ *   description="Card description text"
+ *   actionLink="/some-page"
+ *   actionText="Read More"
+ * />
+ * ```
  */
 
 import {
@@ -18,8 +27,13 @@ import {
 } from "@/components/starwind/card";
 import { Button } from "@/components/starwind/button";
 import { Badge } from "@/components/starwind/badge";
+import type { HTMLAttributes } from 'astro/types';
 
-export interface CardProps {
+// Button variants from our design system
+type ButtonVariant = "default" | "primary" | "secondary" | "outline" | "ghost" | 
+                     "info" | "success" | "warning" | "error";
+
+export interface CardProps extends HTMLAttributes<'div'> {
   /** Card title */
   title: string;
   /** Card description or subtitle */
@@ -38,10 +52,14 @@ export interface CardProps {
   width?: string;
   /** Custom content to override default card content */
   hasCustomContent?: boolean;
-  /** Button variant */
-  buttonVariant?: "default" | "primary" | "secondary" | "outline" | "ghost" | "info" | "success" | "warning" | "error";
+  /** Button variant from our design system */
+  buttonVariant?: ButtonVariant;
   /** Show/hide action button */
   showAction?: boolean;
+  /** Elevation/shadow level (0-3) */
+  elevation?: 0 | 1 | 2 | 3;
+  /** Tag URL prefix (e.g. "/tag/" for tag links) */
+  tagUrlPrefix?: string;
 }
 
 const {
@@ -56,22 +74,39 @@ const {
   hasCustomContent = false,
   buttonVariant = "default",
   showAction = true,
+  elevation = 1,
+  tagUrlPrefix = "/tag/",
+  ...restProps
 } = Astro.props;
+
+// Generate elevation classes based on level
+const elevationClasses = [
+  "", 
+  "shadow-sm", 
+  "shadow", 
+  "shadow-md"
+];
 ---
 
-<Card class={`${width} ${className}`}>
+<Card 
+  class={`${width} ${elevationClasses[elevation]} hover:shadow-md transition-shadow duration-200 ${className}`}
+  {...restProps}
+>
   <CardHeader>
     <CardTitle>{title}</CardTitle>
     {(description || date) && (
       <CardDescription>
         {date && (
-          <span class="block text-sm">
-            {date.toLocaleString("default", {
+          <time 
+            datetime={date.toISOString()} 
+            class="block text-sm"
+          >
+            {date.toLocaleString("en-US", {
               year: "numeric",
               month: "short",
               day: "numeric",
             })}
-          </span>
+          </time>
         )}
         {description && <span class="block mt-1">{description}</span>}
       </CardDescription>
@@ -83,9 +118,14 @@ const {
   ) : (
     <CardContent class="flex flex-col gap-4">
       {tags.length > 0 && (
-        <div class="card-tags mb-2">
+        <div class="card-tags mb-2 flex flex-wrap gap-1">
           {tags.map((tag) => (
-            <Badge class="mr-1 mb-1" href={`/tag/${tag}`}>{tag}</Badge>
+            <Badge 
+              class="hover:bg-primary/10 transition-colors" 
+              href={`${tagUrlPrefix}${tag}`}
+            >
+              {tag}
+            </Badge>
           ))}
         </div>
       )}
@@ -94,8 +134,15 @@ const {
   )}
   
   {(showAction && actionLink) && (
-    <CardFooter class="flex justify-between">
-      <Button href={actionLink} variant={buttonVariant}>{actionText}</Button>
+    <CardFooter class="flex justify-between items-center">
+      <Button 
+        href={actionLink} 
+        variant={buttonVariant}
+        class="transition-all duration-200 hover:translate-x-0.5"
+      >
+        {actionText}
+        <span class="sr-only">Read more about {title}</span>
+      </Button>
       <slot name="footer-extra" />
     </CardFooter>
   )}
@@ -108,11 +155,13 @@ const {
 </Card>
 
 <style>
+  /* Ensure proper z-index for tags to maintain clickability */
   .card-tags {
     position: relative;
     z-index: 2;
   }
 
+  /* Ensure links inside badges are clickable */
   .card-tags :global(a) {
     pointer-events: auto;
   }

@@ -1,24 +1,81 @@
 ---
 import Layout from "@/layouts/BaseLayout.astro";
 import { SITE_DESCRIPTION } from "../consts";
-import HelloGreeting from "@/components/HelloGreeting.astro";
+import HeroSection from "@/components/HeroSection.astro";
+import AboutSection from "@/components/AboutSection.astro";
+import ServicesSection from "@/components/ServicesSection.astro";
+import CircleFeature from "@/components/CircleFeature.astro";
 
-// import ComponentSketchHomepage from "../pages/sketches/component-sketch-homepage.astro";
-
-import IconifyComponent from "@/components/IconifyComponent.astro";
-import TeamSection from "@/components/TeamSection.astro";
+// Define services
+const services = [
+  { title: "DIGITAL PRODUCT DESIGN", href: "/services/product-design", isActive: true },
+  { title: "USER RESEARCH", href: "/services/user-research" },
+  { title: "BRAND DESIGN", href: "/services/brand-design" },
+  { title: "CONSULTING", href: "/services/consulting" },
+  { title: "DEVELOPMENT", href: "/services/development" },
+  { title: "STRATEGY", href: "/services/strategy" },
+];
 ---
 
 <Layout title="Homepage" description={SITE_DESCRIPTION}>
-  <main>
-    <div class="grid align-items self-center text-center py-16">
-      <div>
-        <HelloGreeting />
-        <!-- <IconifyComponent /> -->
-        <!-- <TeamSection /> -->
-
-        <!-- hero section -->
-      </div>
-    </div>
-  </main>
+  
+  <!-- Hero Section -->
+  <HeroSection
+    headline="We create digital experiences that elevate products, strengthen brands, and fuel business impact."
+    subheadline="Let's partner to create user experiences that bridge your goals and your users' needs."
+  >
+    <a href="#services" class="inline-block mt-8 bg-teal-500 text-white px-8 py-4 text-lg uppercase tracking-wider hover:bg-teal-600 transition-colors">
+      Explore Our Services
+    </a>
+  </HeroSection>
+  
+  <!-- About Section -->
+  <AboutSection
+    title="Who We Are"
+    imagePath="/images/team-photo.jpg"
+    imageAlt="Team photo"
+  >
+    <p>
+      We are a digital product design and research studio based in the San Francisco Bay area.
+      With over 30 years of combined experience at companies like Google, Facebook, PayPal,
+      Amazon Lab126, Intuit, and eBay, we leverage our expertise in design and research to
+      create user-centered digital experiences that help your business connect with its users
+      and drive growth.
+    </p>
+    <p class="mt-4">
+      Partnering with us means working directly with the founders to ensure tailored solutions
+      that align with your unique business needs and goals.
+    </p>
+    
+    <a 
+      slot="cta" 
+      href="/about" 
+      class="inline-block mt-4 border border-white px-6 py-3 text-white hover:bg-white hover:text-slate-900 transition-colors"
+    >
+      More About Us
+    </a>
+  </AboutSection>
+  
+  <!-- Services Section -->
+  <ServicesSection
+    id="services"
+    title="What We Do"
+    services={services}
+  >
+    <p>
+      Let's partner to create user experiences that bridge your goals and your users' needs.
+      We offer comprehensive design and research services tailored to your specific requirements.
+    </p>
+    
+    <a 
+      slot="cta" 
+      href="/services" 
+      class="inline-block border border-slate-900 px-6 py-3 text-slate-900 hover:bg-slate-900 hover:text-white transition-colors"
+    >
+      Explore Our Services
+    </a>
+  </ServicesSection>
+  
+  
+  <!-- Contact Section -->
 </Layout>

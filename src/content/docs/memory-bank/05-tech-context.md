@@ -18,6 +18,17 @@ draft: 0
 - Analytics: Google Analytics (G-LQ2S4M9E6S)
 ```
 
+## CSS Architecture
+```css-architecture
+- Base: TailwindCSS with custom theme extension
+- Global Variables: CSS custom properties for typography, spacing, colors
+- Theme Configuration: Extended theme in tailwind.config.js
+- Base Elements: Styled via global.css with CSS variables
+- Components: Focus on layout and component-specific styling
+- Dark Mode: Class-based strategy with CSS variables
+- Utility Class Strategy: Use Tailwind utilities → semantic classes → custom CSS (in that order)
+```
+
 ## Additional Libraries
 ```libraries
 - tone.js: Audio processing for interactive demos

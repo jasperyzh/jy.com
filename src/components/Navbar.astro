@@ -8,10 +8,13 @@ const isDevelopment = import.meta.env.DEV;
 
 // Get current path to highlight active page
 const pathname = new URL(Astro.request.url).pathname;
-const currentPath = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
+const currentPath = pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
 ---
 
-<nav class="flex items-center justify-between h-16" aria-label="Main navigation">
+<nav
+  class="flex items-center justify-between h-16"
+  aria-label="Main navigation"
+>
   <div class="flex items-center justify-between w-full">
     <!-- Mobile menu button-->
     <div class="md:hidden">
@@ -49,48 +52,35 @@ const currentPath = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
     <!-- Desktop Navigation -->
     <div class="hidden md:block">
       <div class="ml-10 flex items-center space-x-4">
-        <Button
-          href="/portfolio"
-          class={`bg-transparent ${currentPath === '/portfolio' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
-          size="sm">Portfolio</Button
-        >
-        <Button
-          href="/blog"
-          class={`bg-transparent ${currentPath === '/blog' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
-          size="sm">Blog</Button
-        >
+        {
+          isDevelopment && (
+            <Button
+              href="/demo"
+              class={`bg-warning/20 ${currentPath === "/demo" ? "bg-warning/30 dark:bg-warning/40 font-medium" : ""} text-warning-foreground hover:bg-warning/30 dark:bg-warning/30 dark:hover:bg-warning/40 transition-colors duration-200`}
+              size="sm"
+            >
+              Demo Pages
+            </Button>
+          )
+        }
         <Button
           href="/sketches"
-          class={`bg-transparent ${currentPath === '/sketches' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
+          class={`bg-transparent ${currentPath === "/sketches" ? "bg-gray-100 dark:bg-gray-800 font-medium" : ""} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
           size="sm">Sketches</Button
         >
         <Button
-          href="/resume"
-          class={`bg-transparent ${currentPath === '/resume' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
-          size="sm">Resume</Button
+          href="/blog"
+          class={`bg-transparent ${currentPath === "/blog" ? "bg-gray-100 dark:bg-gray-800 font-medium" : ""} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
+          size="sm">Blog</Button
         >
         <Button
-          href="/demo/components"
-          class={`bg-transparent ${currentPath === '/demo/components' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
-          size="sm">Components</Button
+          href="/portfolio"
+          class={`bg-transparent ${currentPath === "/portfolio" ? "bg-gray-100 dark:bg-gray-800 font-medium" : ""} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
+          size="sm">Portfolio</Button
         >
         <Button
-          href="/demo/layout-tests"
-          class={`bg-transparent ${currentPath === '/demo/layout-tests' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
-          size="sm">Layout Tests</Button
-        >
-
-        {isDevelopment && (
-          <Button
-            href="/demo"
-            class={`bg-warning/20 ${currentPath === '/demo' ? 'bg-warning/30 dark:bg-warning/40 font-medium' : ''} text-warning-foreground hover:bg-warning/30 dark:bg-warning/30 dark:hover:bg-warning/40 transition-colors duration-200`}
-            size="sm">Demo Pages</Button
-          >
-        )}
-        
-        <Button
-          href="/contact"
-          class={`bg-transparent ${currentPath === '/contact' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
+          href="/#contact"
+          class={`bg-transparent ${currentPath === "/contact" ? "bg-gray-100 dark:bg-gray-800 font-medium" : ""} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
           size="sm">Contact</Button
         >
         <div class="flex items-center justify-center">
@@ -102,53 +92,47 @@ const currentPath = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
 </nav>
 
 <!-- Mobile menu, show/hide based on menu state -->
-<div class="md:hidden hidden transform transition-all duration-300 ease-in-out" id="mobile-menu">
+<div
+  class="md:hidden hidden transform transition-all duration-300 ease-in-out"
+  id="mobile-menu"
+>
   <div class="flex flex-col space-y-2 p-4">
-    <Button
-      href="/portfolio"
-      class={`bg-transparent ${currentPath === '/portfolio' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
-      size="sm">Portfolio</Button
-    >
-    <Button
-      href="/resume"
-      class={`bg-transparent ${currentPath === '/resume' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
-      size="sm">Resume</Button
-    >
+    {
+      isDevelopment && (
+        <Button
+          href="/demo"
+          class={`bg-warning/20 ${currentPath === "/demo" ? "bg-warning/30 dark:bg-warning/40 font-medium" : ""} text-warning-foreground hover:bg-warning/30 dark:bg-warning/30 dark:hover:bg-warning/40 transition-colors duration-200`}
+          size="sm"
+        >
+          Demo Pages
+        </Button>
+      )
+    }
     <Button
       href="/sketches"
-      class={`bg-transparent ${currentPath === '/sketches' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
+      class={`bg-transparent ${currentPath === "/sketches" ? "bg-gray-100 dark:bg-gray-800 font-medium" : ""} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
       size="sm">Sketches</Button
     >
     <Button
       href="/blog"
-      class={`bg-transparent ${currentPath === '/blog' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
+      class={`bg-transparent ${currentPath === "/blog" ? "bg-gray-100 dark:bg-gray-800 font-medium" : ""} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
       size="sm">Blog</Button
     >
     <Button
-      href="/demo/components"
-      class={`bg-transparent ${currentPath === '/demo/components' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
-      size="sm">Components</Button
+      href="/portfolio"
+      class={`bg-transparent ${currentPath === "/portfolio" ? "bg-gray-100 dark:bg-gray-800 font-medium" : ""} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
+      size="sm">Portfolio</Button
     >
     <Button
-      href="/demo/layout-tests"
-      class={`bg-transparent ${currentPath === '/demo/layout-tests' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
-      size="sm">Layout Tests</Button
-    >
-    {isDevelopment && (
-      <Button
-        href="/demo"
-        class={`bg-warning/20 ${currentPath === '/demo' ? 'bg-warning/30 dark:bg-warning/40 font-medium' : ''} text-warning-foreground hover:bg-warning/30 dark:bg-warning/30 dark:hover:bg-warning/40 transition-colors duration-200`}
-        size="sm">Demo Pages</Button
-      >
-    )}
-    <Button
-      href="/contact"
-      class={`bg-transparent ${currentPath === '/contact' ? 'bg-gray-100 dark:bg-gray-800 font-medium' : ''} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
+      href="/#contact"
+      class={`bg-transparent ${currentPath === "/contact" ? "bg-gray-100 dark:bg-gray-800 font-medium" : ""} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
       size="sm">Contact</Button
     >
     <div class="flex items-center pt-2">
       <ThemeToggleButton />
-      <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">Toggle theme</span>
+      <span class="ml-2 text-sm text-gray-600 dark:text-gray-400"
+        >Toggle theme</span
+      >
     </div>
   </div>
 </div>
@@ -161,11 +145,12 @@ const currentPath = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
 
     if (mobileMenuButton && mobileMenu) {
       mobileMenuButton.addEventListener("click", () => {
-        const expanded = mobileMenuButton.getAttribute("aria-expanded") === "true";
-        
+        const expanded =
+          mobileMenuButton.getAttribute("aria-expanded") === "true";
+
         // Toggle aria-expanded
         mobileMenuButton.setAttribute("aria-expanded", (!expanded).toString());
-        
+
         // Toggle menu visibility with animation
         if (expanded) {
           // Hide menu
@@ -198,21 +183,23 @@ const currentPath = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
     max-height: 0;
     opacity: 0;
     overflow: hidden;
-    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    transition:
+      max-height 0.3s ease-in-out,
+      opacity 0.3s ease-in-out;
   }
-  
+
   /* Ensure nav items have consistent height and padding */
   :global(.navbar-btn) {
     display: inline-flex;
     align-items: center;
     height: 2.5rem;
   }
-  
+
   /* Active page indicator - additional styling */
   :global(.active-page) {
     position: relative;
   }
-  
+
   :global(.active-page)::after {
     content: "";
     position: absolute;

@@ -1,0 +1,71 @@
+---
+/**
+ * About Section Component
+ * 
+ * An about section with photo and concise company description,
+ * inspired by Circora's design.
+ * 
+ * @component
+ */
+
+export interface AboutSectionProps {
+  /** The section title (usually "Who We Are" or similar) */
+  title?: string;
+  /** The image path */
+  imagePath?: string;
+  /** Image alt text */
+  imageAlt?: string;
+  /** Background color class */
+  bgColor?: string;
+  /** Text color class */
+  textColor?: string;
+  /** Custom CSS class */
+  class?: string;
+}
+
+const {
+  title = "Who We Are",
+  imagePath,
+  imageAlt = "Team photo",
+  bgColor = "bg-slate-900",
+  textColor = "text-white",
+  class: className = "",
+} = Astro.props;
+---
+
+<section class={`${bgColor} ${className} w-full py-24 px-6 lg:px-16`}>
+  <div class="max-w-6xl mx-auto">
+    <!-- Section title -->
+    <h2 class={`${textColor} text-sm uppercase tracking-widest mb-16 opacity-70`}>
+      {title}
+    </h2>
+    
+    <div class="grid md:grid-cols-2 gap-12 lg:gap-24">
+      <!-- Text content -->
+      <div>
+        <div class={`${textColor} text-lg md:text-xl leading-relaxed mb-12`}>
+          <slot />
+        </div>
+        
+        <!-- Call to action button (optional) -->
+        <div>
+          <slot name="cta" />
+        </div>
+      </div>
+      
+      <!-- Image -->
+      {imagePath && (
+        <div class="relative h-full">
+          <img 
+            src={imagePath} 
+            alt={imageAlt}
+            width="600"
+            height="450"
+            class="w-full h-auto object-cover"
+            loading="lazy"
+          />
+        </div>
+      )}
+    </div>
+  </div>
+</section> 

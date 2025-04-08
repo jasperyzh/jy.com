@@ -8,9 +8,8 @@
 
 <!-- Load libraries from CDN -->
 <script is:inline src="https://cdn.jsdelivr.net/npm/canvas-sketch@0.7.7/dist/canvas-sketch.umd.min.js"></script>
-<script is:inline src="https://cdn.jsdelivr.net/npm/canvas-sketch-util@1.10.0/math.min.js"></script>
 
-<script>
+<script is:inline>
     /**
      * Mesh Gradient in canvas-sketch
      * ---------------------------------------
@@ -19,13 +18,8 @@
 
     // Access libraries from global scope
     const canvasSketch = window.canvasSketch;
-    const lerp = (a, b, t) => {
-        // Fallback implementation if library isn't loaded
-        if (window.canvasSketchUtil?.math?.lerp) {
-            return window.canvasSketchUtil.math.lerp(a, b, t);
-        }
-        return a + (b - a) * t;
-    };
+    // Simple lerp implementation to avoid require() issues
+    const lerp = (a, b, t) => a + (b - a) * t;
 
     // ----- Settings -----
     const settings = {
@@ -252,7 +246,4 @@
             runSketch(container);
         }
     });
-    
-    // Export the function for external use
-    export { runSketch };
 </script>

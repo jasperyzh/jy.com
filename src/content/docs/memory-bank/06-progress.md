@@ -14,7 +14,12 @@ draft: 0
 - Updated: README.md (Major restructuring for improved organization) @matsu
 - Updated: Memory Bank system documentation and structure
 - Updated: All Memory Bank files with project-specific context
-- Pending: Tech stack validation, component documentation
+- Updated: Reorganized AI Agent Memory Bank guide for better clarity and structure
+- Updated: Established component strategy (.astro by default, .vue for specific cases) @matsu
+- Updated: Established styling strategy (base HTML elements via CSS variables, components focus on layout) @matsu
+- Updated: Improved CardComponent and BlogPostCard with better composition, accessibility and documentation @matsu
+- Updated: Added design style guide based on Circora reference while maintaining our color scheme @matsu
+- Pending: Tech stack validation, component documentation, landing page implementation
 
 ## Current State (2024-04-08)
 ```system-health

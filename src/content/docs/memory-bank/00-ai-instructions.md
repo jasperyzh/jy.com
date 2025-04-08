@@ -29,6 +29,7 @@ I rely on the Memory Bank files for persistent context about this project. Befor
 ### Development Guidelines
 - Follow component-based architecture
 - Reuse existing components when possible
+- Use `.astro` components by default; `.vue` components ONLY for interactive features
 - Maintain responsive design principles
 - Consider performance implications of additions
 
@@ -37,6 +38,8 @@ I rely on the Memory Bank files for persistent context about this project. Befor
 - Follow existing naming conventions (PascalCase for components)
 - Organize imports with third-party imports first, then internal
 - Keep components focused and single-purpose
+- Style base HTML elements (p, h1-h6, a, etc.) via CSS variables, not in components
+- Keep component styling focused on layout, positioning, and component-specific visuals
 
 ## When Suggesting Changes
 

@@ -2,16 +2,106 @@
 import { Switch } from "@/components/starwind/switch";
 ---
 
-<Switch id="theme-switch" variant="secondary" label="☀️🌒" />
+<div class="theme-toggle-wrapper">
+  <Switch id="theme-switch" variant="secondary" />
+  <div class="custom-toggle">
+    <div class="toggle-track">
+      <div class="sun-icon">☀️</div>
+      <div class="moon-icon">🌒</div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .theme-toggle-wrapper {
+    position: relative;
+    display: inline-block;
+
+    user-select: none;
+  }
+
+  /* Custom toggle overlay that completely hides the original switch */
+  .custom-toggle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    cursor: pointer;
+    overflow: hidden;
+    filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.3));
+  }
+
+  .toggle-track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-muted);
+    border-radius: 9999px;
+    border: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    padding: 0 3px;
+  }
+
+  .sun-icon, .moon-icon {
+    position: absolute;
+    transition: all 0.3s ease;
+    height: 20px;
+    width: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Light mode styles (moon visible) */
+  .sun-icon {
+    left: 3px;
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+
+  .moon-icon {
+    right: 3px;
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* Dark mode styles (sun visible) */
+  html.dark .sun-icon {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  html.dark .moon-icon {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+
+  /* Dark mode toggle track */
+  html.dark .toggle-track {
+    background-color: var(--color-accent);
+  }
+</style>
 
 <script>
   // https://starwind.dev/docs/components/switch/
   import type { SwitchChangeEvent } from "@/components/starwind/switch";
 
   const themeSwitch = document.querySelector("#theme-switch") as HTMLElement;
+  const customToggle = document.querySelector(".custom-toggle") as HTMLElement;
 
   const isDark = document.documentElement.classList.contains("dark");
-  themeSwitch.setAttribute("aria-checked", isDark);
+  themeSwitch.setAttribute("aria-checked", isDark ? "true" : "false");
+
+  // Add click handler to our custom toggle
+  customToggle.addEventListener("click", () => {
+    // Programmatically click the actual switch
+    themeSwitch.click();
+  });
 
   themeSwitch.addEventListener("starwind-switch:change", (e: Event) => {
     // Get current theme
