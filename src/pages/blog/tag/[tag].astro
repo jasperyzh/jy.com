@@ -3,6 +3,8 @@ import { getCollection } from "astro:content";
 import Layout from "@/layouts/BaseLayout.astro";
 import { slugifyTag, unslugifyTag, getAllUniqueTags } from "@/utils/tags";
 import ReturnButton from '@/components/ReturnButton.astro';
+import BlogPostCard from "@/components/BlogPostCard.astro";
+import { formatYymmddDate } from "@/utils/formatDate";
 
 // Generate static paths for all tags
 export async function getStaticPaths() {
@@ -34,52 +36,49 @@ export const prerender = true;
 ---
 
 <Layout title={title}>
-  <main class="container py-4">
-    <div class="d-flex gap-2 mb-4">
-      <ReturnButton href="/blog" label="Return to Blog" />
-    </div>
-    
-    <h1 class="mb-4">Content tagged with "{tag}"</h1>
-    
-    {/* Blog Posts Section */}
-    {hasBlogPosts && (
-      <section class="mb-5">
-        <h2 class="h3 mb-3">Blog Posts</h2>
-        <div class="row row-cols-1 row-cols-md-2 g-4">
+  <main class="container mx-auto px-4 py-8">
+    <div class="max-w-7xl mx-auto">
+      <!-- Header -->
+      <div class="mb-8">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
+          <h1 class="text-3xl font-bold bg-gradient-to-r from-primary to-purple-700 text-transparent bg-clip-text">
+            Posts tagged with <span class="font-extrabold">"{tag}"</span>
+          </h1>
+          <ReturnButton href="/blog" label="Return to Blog" />
+        </div>
+        <p class="text-slate-600 dark:text-slate-300">
+          Found {posts.length} post{posts.length !== 1 ? 's' : ''} with this tag.
+        </p>
+      </div>
+      
+      {/* Blog Posts Section */}
+      {hasBlogPosts && (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {posts.map((post) => (
-            <div class="col">
-              <div class="card h-100">
-                <div class="card-body">
-                  <h5 class="card-title">
-                    <a href={`/blog/${post.id}`} class="text-decoration-none">
-                      {post.data.title}
-                    </a>
-                  </h5>
-                  <p class="card-text">{post.data.description}</p>
-                  <div class="d-flex gap-2">
-                    {post.data.tags?.map((postTag) => (
-                      <a 
-                        href={`/blog/tag/${slugifyTag(postTag)}`} 
-                        class="badge text-bg-secondary text-decoration-none"
-                      >
-                        {postTag}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <BlogPostCard
+              title={post.data.title}
+              description={post.data.description || "No description available"}
+              date={formatYymmddDate(post.data.pubDate || new Date())}
+              tags={post.data.tags || []}
+              category={post.data.category}
+              url={`/blog/${post.id}`}
+              thumbnail={post.data.thumbnail || "/img/placeholder.png"}
+            />
           ))}
         </div>
-      </section>
-    )}
-    
-    
-    {/* No Content Message */}
-    {!hasBlogPosts && (
-      <div class="alert alert-info">
-        <p>No content found with tag "{tag}".</p>
-      </div>
-    )}
+      )}
+      
+      {/* No Content Message */}
+      {!hasBlogPosts && (
+        <div class="text-center py-12 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
+          <div class="text-6xl mb-4">🔍</div>
+          <h3 class="text-2xl font-bold mb-2">No posts found</h3>
+          <p class="text-slate-600 dark:text-slate-300 mb-4">
+            We couldn't find any blog posts with the tag "{tag}".
+          </p>
+          <ReturnButton href="/blog" label="Browse All Posts" />
+        </div>
+      )}
+    </div>
   </main>
 </Layout>
