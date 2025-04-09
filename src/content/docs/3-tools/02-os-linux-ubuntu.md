@@ -1,6 +1,6 @@
 ---
-title: Linux / Ubuntu
-description: 
+title: Linux-Ubuntu
+description: why I choose linux?
 pubDate: 250409
 draft: 0
 ---

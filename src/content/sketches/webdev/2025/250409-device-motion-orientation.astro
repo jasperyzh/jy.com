@@ -1,0 +1,526 @@
+---
+// Snowglobe component that uses deviceorientation and devicemotion
+---
+
+<div id="snowglobe-container" class="w-full h-full min-h-[500px] relative">
+  <!-- Canvas will be inserted here by p5.js -->
+</div>
+
+<div id="interaction-controls" class="flex justify-center mb-4">
+  <button id="play-button" class="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg text-lg shadow-lg hover:bg-blue-700 active:bg-blue-800 transition-colors">
+    Play with Snowglobe
+  </button>
+  <div id="status-message" class="mt-2 text-center text-sm"></div>
+</div>
+
+<div id="debug-panel" class="bg-slate-800 text-white p-4 mt-4 rounded-lg text-sm font-mono overflow-x-auto">
+  <h3 class="text-lg font-semibold mb-2">Sensor Debug Data</h3>
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <h4 class="font-bold">Orientation</h4>
+      <p>X-axis (β): <span id="orientX">0</span>°</p>
+      <p>Y-axis (γ): <span id="orientY">0</span>°</p>
+      <p>Z-axis (α): <span id="orientZ">0</span>°</p>
+    </div>
+    <div>
+      <h4 class="font-bold">Accelerometer</h4>
+      <p>X-axis: <span id="accelX">0</span> m/s²</p>
+      <p>Y-axis: <span id="accelY">0</span> m/s²</p>
+      <p>Z-axis: <span id="accelZ">0</span> m/s²</p>
+    </div>
+    <div>
+      <h4 class="font-bold">Accelerometer with gravity</h4>
+      <p>X-axis: <span id="accelGravX">0</span> m/s²</p>
+      <p>Y-axis: <span id="accelGravY">0</span> m/s²</p>
+      <p>Z-axis: <span id="accelGravZ">0</span> m/s²</p>
+    </div>
+    <div>
+      <h4 class="font-bold">Gyroscope</h4>
+      <p>X-axis: <span id="gyroX">0</span>°/s</p>
+      <p>Y-axis: <span id="gyroY">0</span>°/s</p>
+      <p>Z-axis: <span id="gyroZ">0</span>°/s</p>
+    </div>
+  </div>
+  <p class="mt-2">Data points collected: <span id="dataPoints">0</span></p>
+  <p>Data Interval: <span id="dataInterval">0</span> ms</p>
+</div>
+
+<!-- Load p5.js from CDN -->
+<script is:inline src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.min.js"></script>
+
+<script is:inline>
+  /**
+   * Snowglobe Sketch with Device Motion and Orientation
+   * -------------------------------------------------
+   * A p5.js sketch that simulates a snowglobe. 
+   * The snow particles respond to device orientation and motion.
+   */
+
+  // Configuration
+  const config = {
+    particleCount: 200,
+    globeRadius: 160,
+    shakeThreshold: 15, // Acceleration threshold to add particles
+    particleLifespan: 60000, // Increase lifespan to 60 seconds instead of 1 second
+    debugEnabled: true
+  };
+
+  // Sensor data
+  const sensorData = {
+    orientation: {
+      x: 0, // beta (tilt front-to-back)
+      y: 0, // gamma (tilt left-to-right)
+      z: 0, // alpha (compass direction)
+    },
+    acceleration: {
+      x: 0,
+      y: 0,
+      z: 0,
+    },
+    accelerationWithGravity: {
+      x: 0,
+      y: 0,
+      z: 0,
+    },
+    rotationRate: {
+      x: 0,
+      y: 0,
+      z: 0,
+    },
+    dataPoints: 0,
+    lastTimestamp: 0,
+    dataInterval: 0,
+    hasReceivedData: false
+  };
+
+  let snowParticles = [];
+  let lastShakeTime = 0;
+  let permissionGranted = false;
+  let sensorsActive = false;
+  let p5Instance;
+
+  // Sketch setup
+  const sketch = (p) => {
+    // Setup function
+    p.setup = () => {
+      const parentElement = document.getElementById('snowglobe-container');
+      const width = parentElement.clientWidth;
+      const height = parentElement.clientHeight < 500 ? 500 : parentElement.clientHeight;
+      
+      p.createCanvas(width, height);
+      
+      // Initialize snow particles
+      for (let i = 0; i < config.particleCount; i++) {
+        createSnowParticle(p);
+      }
+
+      // Hide the play button that's handled outside p5
+      checkSensorSupport();
+    };
+
+    // Draw function
+    p.draw = () => {
+      p.background(20, 30, 40);
+      
+      // Draw the glass globe
+      drawGlobe(p);
+      
+      // Update and display all snow particles
+      updateSnowParticles(p);
+      
+      // Draw debug info
+      if (config.debugEnabled) {
+        updateDebugPanel();
+      }
+      
+      // Display permission message if not granted
+      if (!permissionGranted) {
+        p.fill(255);
+        p.textAlign(p.CENTER, p.CENTER);
+        p.textSize(16);
+        p.text('Click "Play with Snowglobe" to enable motion sensors', p.width/2, p.height/2 - 30);
+      }
+    };
+
+    // Handle window resize
+    p.windowResized = () => {
+      const parentElement = document.getElementById('snowglobe-container');
+      p.resizeCanvas(parentElement.clientWidth, parentElement.clientHeight);
+    };
+  };
+
+  function checkSensorSupport() {
+    const statusElement = document.getElementById('status-message');
+    
+    // Check if DeviceMotionEvent is supported
+    if (!window.DeviceMotionEvent) {
+      statusElement.innerHTML = 'Device Motion not supported on this device/browser.';
+      statusElement.classList.add('text-red-500');
+      return false;
+    }
+    
+    // Check if DeviceOrientationEvent is supported
+    if (!window.DeviceOrientationEvent) {
+      statusElement.innerHTML = 'Device Orientation not supported on this device/browser.';
+      statusElement.classList.add('text-red-500');
+      return false;
+    }
+    
+    return true;
+  }
+
+  function setupMotionListeners() {
+    const statusElement = document.getElementById('status-message');
+    statusElement.innerHTML = 'Setting up sensor listeners...';
+    
+    // Device orientation event
+    window.addEventListener('deviceorientation', handleOrientation);
+
+    // Device motion event
+    window.addEventListener('devicemotion', handleMotion);
+    
+    // Check if we're receiving data after a short delay
+    setTimeout(() => {
+      if (!sensorData.hasReceivedData) {
+        statusElement.innerHTML = 'No sensor data received. Try again or check browser settings.';
+        statusElement.classList.add('text-yellow-500');
+      }
+    }, 1000);
+  }
+  
+  function handleOrientation(event) {
+    sensorData.hasReceivedData = true;
+    sensorsActive = true;
+    
+    sensorData.orientation.x = event.beta || 0;  // -180 to 180 (tilt front/back)
+    sensorData.orientation.y = event.gamma || 0; // -90 to 90 (tilt left/right)
+    sensorData.orientation.z = event.alpha || 0; // 0 to 360 (compass direction)
+    
+    sensorData.dataPoints++;
+    updateDebugPanel();
+    updateStatus();
+  }
+  
+  function handleMotion(event) {
+    sensorData.hasReceivedData = true;
+    sensorsActive = true;
+    
+    // Regular acceleration (without gravity)
+    if (event.acceleration) {
+      sensorData.acceleration.x = event.acceleration.x || 0;
+      sensorData.acceleration.y = event.acceleration.y || 0;
+      sensorData.acceleration.z = event.acceleration.z || 0;
+    }
+    
+    // Acceleration including gravity
+    if (event.accelerationIncludingGravity) {
+      sensorData.accelerationWithGravity.x = event.accelerationIncludingGravity.x || 0;
+      sensorData.accelerationWithGravity.y = event.accelerationIncludingGravity.y || 0;
+      sensorData.accelerationWithGravity.z = event.accelerationIncludingGravity.z || 0;
+    }
+    
+    // Rotation rate
+    if (event.rotationRate) {
+      sensorData.rotationRate.x = event.rotationRate.beta || 0;
+      sensorData.rotationRate.y = event.rotationRate.gamma || 0;
+      sensorData.rotationRate.z = event.rotationRate.alpha || 0;
+    }
+    
+    // Calculate data interval
+    const now = Date.now();
+    if (sensorData.lastTimestamp) {
+      sensorData.dataInterval = now - sensorData.lastTimestamp;
+    }
+    sensorData.lastTimestamp = now;
+    
+    // Check for shake events
+    detectShake();
+    
+    sensorData.dataPoints++;
+    updateDebugPanel();
+    updateStatus();
+  }
+  
+  function updateStatus() {
+    if (sensorsActive) {
+      const statusElement = document.getElementById('status-message');
+      statusElement.innerHTML = 'Sensors active! Tilt or shake your device.';
+      statusElement.classList.remove('text-red-500', 'text-yellow-500');
+      statusElement.classList.add('text-green-500');
+      
+      // Hide play button once sensors are active
+      const playButton = document.getElementById('play-button');
+      playButton.style.display = 'none';
+    }
+  }
+
+  function requestMotionPermission() {
+    const statusElement = document.getElementById('status-message');
+    
+    // For iOS 13+ devices that require permission
+    if (typeof DeviceOrientationEvent !== 'undefined' && 
+        typeof DeviceOrientationEvent.requestPermission === 'function') {
+      
+      statusElement.innerHTML = 'Requesting sensor permissions...';
+      
+      DeviceOrientationEvent.requestPermission()
+        .then(response => {
+          if (response === 'granted') {
+            // Also need to request motion permission separately
+            if (typeof DeviceMotionEvent !== 'undefined' && 
+                typeof DeviceMotionEvent.requestPermission === 'function') {
+              DeviceMotionEvent.requestPermission()
+                .then(motionResponse => {
+                  if (motionResponse === 'granted') {
+                    permissionGranted = true;
+                    setupMotionListeners();
+                    statusElement.innerHTML = 'Permission granted! Tilt or shake your device.';
+                    statusElement.classList.add('text-green-500');
+                  } else {
+                    statusElement.innerHTML = 'Motion permission denied.';
+                    statusElement.classList.add('text-red-500');
+                  }
+                })
+                .catch(error => {
+                  console.error('Motion permission error:', error);
+                  statusElement.innerHTML = `Motion permission error: ${error.message}`;
+                  statusElement.classList.add('text-red-500');
+                });
+            } else {
+              permissionGranted = true;
+              setupMotionListeners();
+            }
+          } else {
+            statusElement.innerHTML = 'Orientation permission denied.';
+            statusElement.classList.add('text-red-500');
+          }
+        })
+        .catch(error => {
+          console.error('Orientation permission error:', error);
+          statusElement.innerHTML = `Orientation permission error: ${error.message}`;
+          statusElement.classList.add('text-red-500');
+          
+          // Fall back to direct listener setup on error (might work on some devices)
+          setupMotionListeners();
+        });
+    } else {
+      // For devices that don't require explicit permission (Android, etc.)
+      permissionGranted = true;
+      setupMotionListeners();
+    }
+  }
+
+  function detectShake() {
+    // Get acceleration magnitude
+    const accel = sensorData.acceleration;
+    const magnitude = Math.sqrt(accel.x * accel.x + accel.y * accel.y + accel.z * accel.z);
+    
+    // Add snow particles on shake
+    if (magnitude > config.shakeThreshold) {
+      const now = Date.now();
+      // Limit the rate of new particles
+      if (now - lastShakeTime > 100) {
+        lastShakeTime = now;
+        
+        // Add more particles based on shake intensity
+        const particlesToAdd = Math.min(20, Math.floor(magnitude / 5));
+        for (let i = 0; i < particlesToAdd; i++) {
+          createSnowParticle(p5Instance);
+        }
+      }
+    }
+  }
+
+  function createSnowParticle(p) {
+    // Create particle inside the globe with better initial positioning
+    const angle = p.random(p.TWO_PI);
+    const radius = p.random(config.globeRadius * 0.9);
+    
+    snowParticles.push({
+      x: p.width / 2 + radius * p.cos(angle),
+      y: p.height / 2 + radius * p.sin(angle),
+      size: p.random(2, 5),
+      opacity: p.random(150, 255),
+      vx: p.random(-0.2, 0.2), // Add some initial velocity
+      vy: p.random(-0.2, 0.2), // Add some initial velocity
+      lifespan: config.particleLifespan + p.random(-10000, 10000), // Randomize lifespan
+      birthTime: Date.now()
+    });
+  }
+
+  function updateSnowParticles(p) {
+    const centerX = p.width / 2;
+    const centerY = p.height / 2;
+    const now = Date.now();
+    
+    // Apply device orientation to gravity
+    let gravityX = 0;
+    let gravityY = 0;
+    
+    if (permissionGranted) {
+      // Convert orientation in degrees to radians for calculations
+      const betaRad = p.radians(sensorData.orientation.x);
+      const gammaRad = p.radians(sensorData.orientation.y);
+      
+      // Improved gravity calculation based on device orientation
+      // Use sin for smoother transitions and stronger effect
+      gravityX = p.sin(gammaRad) * 0.2;
+      gravityY = p.sin(betaRad) * 0.2;
+    } else {
+      // Default gravity when no orientation data - slightly stronger
+      gravityY = 0.1; 
+    }
+    
+    for (let i = snowParticles.length - 1; i >= 0; i--) {
+      const particle = snowParticles[i];
+      
+      // Apply gravity and a bit of randomness
+      particle.vx += gravityX;
+      particle.vy += gravityY;
+      
+      // Add tiny random movement for more natural snow effect
+      if (p.random() < 0.3) {
+        particle.vx += p.random(-0.01, 0.01);
+        particle.vy += p.random(-0.01, 0.01);
+      }
+      
+      // Apply damping (slightly reduced to maintain momentum)
+      particle.vx *= 0.99;
+      particle.vy *= 0.99;
+      
+      // Limit max velocity to prevent excessive speed
+      const maxVel = 3;
+      particle.vx = p.constrain(particle.vx, -maxVel, maxVel);
+      particle.vy = p.constrain(particle.vy, -maxVel, maxVel);
+      
+      // Update position
+      particle.x += particle.vx;
+      particle.y += particle.vy;
+      
+      // Calculate distance from center
+      const dx = particle.x - centerX;
+      const dy = particle.y - centerY;
+      const distance = p.sqrt(dx * dx + dy * dy);
+      
+      // Contain within globe and bounce
+      if (distance > config.globeRadius - particle.size) {
+        // Calculate normal vector
+        const nx = dx / distance;
+        const ny = dy / distance;
+        
+        // Position at boundary
+        particle.x = centerX + nx * (config.globeRadius - particle.size);
+        particle.y = centerY + ny * (config.globeRadius - particle.size);
+        
+        // Reflect velocity with some damping
+        const dotProduct = particle.vx * nx + particle.vy * ny;
+        particle.vx = particle.vx - 2 * dotProduct * nx * 0.8; // Increased bounce factor
+        particle.vy = particle.vy - 2 * dotProduct * ny * 0.8;
+      }
+      
+      // Only replace particles after their lifespan, not continuously
+      const age = now - particle.birthTime;
+      if (age > particle.lifespan) {
+        // Replace old particles (much less frequently now with 60s lifespan)
+        snowParticles.splice(i, 1);
+        createSnowParticle(p);
+        continue;
+      }
+      
+      // Draw particle
+      p.noStroke();
+      p.fill(255, 255, 255, particle.opacity);
+      p.circle(particle.x, particle.y, particle.size);
+    }
+  }
+
+  function drawGlobe(p) {
+    const centerX = p.width / 2;
+    const centerY = p.height / 2;
+    
+    // Draw base
+    p.fill(100, 80, 60);
+    p.noStroke();
+    p.rectMode(p.CENTER);
+    p.rect(centerX, centerY + config.globeRadius + 20, config.globeRadius * 1.2, 40, 10);
+    
+    // Draw globe outline
+    p.noFill();
+    p.stroke(255, 255, 255, 100);
+    p.strokeWeight(2);
+    p.circle(centerX, centerY, config.globeRadius * 2);
+    
+    // Add some light reflections
+    p.noFill();
+    p.stroke(255, 255, 255, 50);
+    p.arc(centerX - 20, centerY - 20, config.globeRadius * 1.5, config.globeRadius * 0.8, p.PI + 0.5, p.TWO_PI - 0.5);
+  }
+
+  function updateDebugPanel() {
+    if (!config.debugEnabled) return;
+    
+    // Update orientation values
+    document.getElementById('orientX').textContent = sensorData.orientation.x.toFixed(2);
+    document.getElementById('orientY').textContent = sensorData.orientation.y.toFixed(2);
+    document.getElementById('orientZ').textContent = sensorData.orientation.z.toFixed(2);
+    
+    // Update acceleration values
+    document.getElementById('accelX').textContent = sensorData.acceleration.x.toFixed(2);
+    document.getElementById('accelY').textContent = sensorData.acceleration.y.toFixed(2);
+    document.getElementById('accelZ').textContent = sensorData.acceleration.z.toFixed(2);
+    
+    // Update acceleration with gravity values
+    document.getElementById('accelGravX').textContent = sensorData.accelerationWithGravity.x.toFixed(2);
+    document.getElementById('accelGravY').textContent = sensorData.accelerationWithGravity.y.toFixed(2);
+    document.getElementById('accelGravZ').textContent = sensorData.accelerationWithGravity.z.toFixed(2);
+    
+    // Update gyroscope values
+    document.getElementById('gyroX').textContent = sensorData.rotationRate.x.toFixed(2);
+    document.getElementById('gyroY').textContent = sensorData.rotationRate.y.toFixed(2);
+    document.getElementById('gyroZ').textContent = sensorData.rotationRate.z.toFixed(2);
+    
+    // Update data points and interval
+    document.getElementById('dataPoints').textContent = sensorData.dataPoints;
+    document.getElementById('dataInterval').textContent = sensorData.dataInterval.toFixed(2);
+  }
+
+  // Initialize the sketch when the document is loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('snowglobe-container');
+    if (container) {
+      p5Instance = new p5(sketch, container);
+    }
+    
+    // Add event listener for the play button
+    const playButton = document.getElementById('play-button');
+    if (playButton) {
+      playButton.addEventListener('click', () => {
+        requestMotionPermission();
+      });
+    }
+  });
+</script>
+
+<!-- Add script to explicitly test on mobile devices -->
+<script is:inline>
+  // This helps with debugging connection issues on mobile
+  document.addEventListener('DOMContentLoaded', () => {
+    const statusElement = document.getElementById('status-message');
+    
+    // Show device info in status
+    const userAgent = navigator.userAgent;
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(userAgent);
+    
+    if (isMobile) {
+      statusElement.innerHTML = `Mobile device detected: ${userAgent.substring(0, 50)}...`;
+    } else {
+      statusElement.innerHTML = 'Not a mobile device. Motion sensors may not be available.';
+    }
+    
+    // Check for HTTPS (required for sensors)
+    if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      statusElement.innerHTML += '<br>WARNING: Secure context (HTTPS) is required for motion sensors!';
+      statusElement.classList.add('text-red-500');
+    }
+  });
+</script>

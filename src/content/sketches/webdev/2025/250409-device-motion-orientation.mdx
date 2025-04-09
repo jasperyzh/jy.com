@@ -1,0 +1,62 @@
+---
+layout: "@/layouts/SketchLayout.astro"
+title: "Interactive Snowglobe"
+description: "A p5.js snowglobe that responds to device orientation and motion"
+date: "2024-04-09"
+category: "webdev"
+tags: ["p5js", "devicemotion", "deviceorientation", "mobile", "interaction"]
+status: "completed"
+---
+
+import DeviceMotionOrientationSketch from "./250409-device-motion-orientation.astro";
+
+# Interactive Snowglobe
+
+This sketch creates a virtual snowglobe that responds to your mobile device's sensors. Tilt your phone to control gravity direction, and shake it to create more snow particles!
+
+<div className="interactive-component">
+  <DeviceMotionOrientationSketch />
+</div>
+
+## How It Works
+
+This snowglobe uses two Web APIs to access your device's motion sensors:
+
+1. **Device Orientation API** - Determines the orientation of your device (tilt angles)
+2. **Device Motion API** - Detects acceleration changes, including shaking
+
+The snow particles are affected by a simulated gravity that changes direction based on how you tilt your phone. When you shake the device, the sketch detects the acceleration spike and generates more particles.
+
+## Sensor Data Types
+
+The debug panel displays real-time data from your device's sensors:
+
+### Orientation Values
+- **X-axis (β)** - Front-to-back tilt (-180° to 180°)
+- **Y-axis (γ)** - Left-to-right tilt (-90° to 90°)
+- **Z-axis (α)** - Compass direction (0° to 360°)
+
+### Acceleration Values
+- **Acceleration** - Linear acceleration without gravity
+- **Acceleration with gravity** - Includes the force of gravity
+- **Gyroscope** - Angular velocity (rotation rate)
+
+## Browser Compatibility
+
+Device motion and orientation APIs require permission on iOS 13+ devices. Android and other devices usually allow access automatically. The sketch handles permission requests appropriately for different platforms.
+
+## Implementation Details
+
+The implementation uses p5.js with instance mode and handles:
+
+1. Permissions for different platforms
+2. Physics simulation for particle movement
+3. Collision detection with the globe boundary
+4. Acceleration thresholds for shake detection
+5. Real-time sensor data display
+
+Try different intensities of shaking and tilting to see how the snow particles respond! 
+
+---
+
+sources: https://sensor-js.xyz/
