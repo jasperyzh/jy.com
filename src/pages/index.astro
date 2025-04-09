@@ -15,9 +15,17 @@ const services = [
   { title: "DEVELOPMENT", href: "/services/development" },
   { title: "STRATEGY", href: "/services/strategy" },
 ];
+
+// Redirect to coming-soon page in production
+const isProduction = import.meta.env.PROD;
 ---
 
 <Layout title="Homepage" description={SITE_DESCRIPTION}>
+  {isProduction && (
+    <script>
+      window.location.href = "/coming-soon";
+    </script>
+  )}
   
   <!-- Hero Section -->
   <HeroSection

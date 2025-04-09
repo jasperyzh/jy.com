@@ -46,18 +46,5 @@ export default defineConfig({
         photoswipe: resolve(__dirname, "node_modules/photoswipe"),
       },
     },
-  },
-  // Add middleware to redirect to coming soon page in production
-  server: {
-    middleware: [
-      (req, res, next) => {
-        if (process.env.NODE_ENV === 'production' && req.url !== '/coming-soon') {
-          res.writeHead(302, { Location: '/coming-soon' });
-          res.end();
-        } else {
-          next();
-        }
-      }
-    ]
   }
 });

@@ -11,16 +11,11 @@
   "github": {
     "silent": true
   },
-  "rewrites": [
+  "redirects": [
     {
       "source": "/((?!coming-soon).*)",
       "destination": "/coming-soon",
-      "has": [
-        {
-          "type": "host",
-          "value": "jasperyong.com"
-        }
-      ]
+      "permanent": false
     }
   ]
 } 
