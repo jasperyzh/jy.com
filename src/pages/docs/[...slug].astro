@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { initPrism } from "@/utils/prism"; // Import PrismJS initialization function
 
 // Add prerender directive to fix the warning
 export const prerender = true;
@@ -24,7 +25,8 @@ export async function getStaticPaths() {
       return part.replace(/^\d+-/, '');
     });
     
-    console.log(cleanPathParts)
+    // console.log(cleanPathParts)
+    
     // Create a slug that preserves the folder structure but without digits
     const slug = cleanPathParts.length > 1 
       ? cleanPathParts.join('/') 
@@ -168,6 +170,9 @@ function getDocUrl(doc) {
   // Join back and create the URL
   return `/docs/${cleanParts.join('/').replace(/\.md$/, '')}`;
 }
+
+// Find the section that contains the current page
+const currentSection = pathParts.length > 1 ? pathParts[0].replace(/^\d+-/, '') : 'root';
 ---
 
 <BaseLayout title={entry?.data.title || 'Documentation Not Found'} description={entry?.data.description || 'The requested documentation page could not be found'}>
@@ -182,11 +187,22 @@ function getDocUrl(doc) {
 
         <nav>
           {sortedSections.map(sectionKey => (
-            <div class="mb-6">
-              <h3 class="font-semibold text-sm uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-3">
-                {getSectionTitle(sectionKey)}
-              </h3>
-              <ul class="space-y-2">
+            <div class="mb-6 section-container" data-section={sectionKey}>
+              <button 
+                class="section-toggle flex justify-between items-center w-full font-semibold text-sm uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-3" 
+                aria-expanded={sectionKey === 'introduction' ? 'true' : 'false'}
+                aria-controls={`section-${sectionKey}`}
+              >
+                <span>{getSectionTitle(sectionKey)}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <ul 
+                id={`section-${sectionKey}`} 
+                class="space-y-2 section-content overflow-hidden transition-all" 
+                style={sectionKey !== 'introduction' ? "max-height: 0px;" : ""}
+              >
                 {docsBySection[sectionKey].map(doc => {
                   const { number, title } = getDisplayTitle(doc);
                   const isActive = currentPage === doc.id;
@@ -252,4 +268,132 @@ function getDocUrl(doc) {
       </article>
     </main>
   </div>
+
+  <script>
+    // Initialize PrismJS when the document loads
+    import { initPrism } from '@/utils/prism';
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize PrismJS for syntax highlighting
+      initPrism();
+      
+      // Ensure code blocks have proper language labels
+      document.querySelectorAll('pre[class*="language-"]').forEach(block => {
+        // Extract language class (e.g., "language-js" -> "js")
+        const langClass = [...block.classList].find(cls => cls.startsWith('language-'));
+        if (langClass) {
+          const language = langClass.replace('language-', '');
+          block.setAttribute('data-language', language);
+        }
+      });
+      
+      // Fix code blocks that might not have language classes
+      document.querySelectorAll('pre:not([class*="language-"])').forEach(block => {
+        // Check if it contains a code element with language class
+        const codeElement = block.querySelector('code[class*="language-"]');
+        if (codeElement) {
+          const langClass = [...codeElement.classList].find(cls => cls.startsWith('language-'));
+          if (langClass) {
+            const language = langClass.replace('language-', '');
+            block.classList.add(langClass);
+            block.setAttribute('data-language', language);
+          }
+        }
+      });
+    });
+    
+    // Initialize collapsible sections
+    const STORAGE_KEY = 'docSectionStates';
+    const sectionContainers = document.querySelectorAll('.section-container');
+    
+    // Get stored section states from localStorage
+    let storedStates = {};
+    try {
+      const savedStates = localStorage.getItem(STORAGE_KEY);
+      if (savedStates) {
+        storedStates = JSON.parse(savedStates);
+      }
+    } catch (e) {
+      console.error('Error loading section states from localStorage:', e);
+    }
+    
+    // Setup each section
+    sectionContainers.forEach(container => {
+      const section = (container as HTMLElement).dataset.section;
+      const toggle = container.querySelector('.section-toggle');
+      const content = container.querySelector('.section-content');
+      const icon = toggle?.querySelector('svg');
+      
+      if (!toggle || !content || !icon || !section) return;
+      
+      // Set initial state based on localStorage or default (only introduction expanded)
+      let isExpanded = section === 'introduction';
+      
+      // If we have a stored state for this section, use it
+      if (section in storedStates) {
+        isExpanded = storedStates[section];
+      }
+      
+      // Set initial state
+      toggle.setAttribute('aria-expanded', isExpanded.toString());
+      if (isExpanded) {
+        (content as HTMLElement).style.maxHeight = `${content.scrollHeight}px`;
+        icon.classList.add('rotate-180');
+      } else {
+        (content as HTMLElement).style.maxHeight = '0px';
+      }
+      
+      // Toggle functionality
+      toggle.addEventListener('click', () => {
+        isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+        const newState = !isExpanded;
+        
+        toggle.setAttribute('aria-expanded', newState.toString());
+        
+        if (newState) {
+          (content as HTMLElement).style.maxHeight = `${content.scrollHeight}px`;
+          icon.classList.add('rotate-180');
+        } else {
+          (content as HTMLElement).style.maxHeight = '0px';
+          icon.classList.remove('rotate-180');
+        }
+        
+        // Save to localStorage
+        try {
+          storedStates[section] = newState;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(storedStates));
+        } catch (e) {
+          console.error('Error saving section states to localStorage:', e);
+        }
+      });
+    });
+    
+    // Auto-expand the section that contains the current document
+    const currentSection = '{currentSection}';
+    if (currentSection) {
+      const currentSectionContainer = document.querySelector(`[data-section="${currentSection}"]`);
+      if (currentSectionContainer) {
+        const currentSectionToggle = currentSectionContainer.querySelector('.section-toggle');
+        const currentSectionContent = currentSectionContainer.querySelector('.section-content');
+        const currentSectionIcon = currentSectionToggle?.querySelector('svg');
+        
+        if (!currentSectionToggle || !currentSectionContent || !currentSectionIcon) return;
+        
+        // Only expand if not already expanded
+        if (currentSectionToggle.getAttribute('aria-expanded') === 'false') {
+          currentSectionToggle.setAttribute('aria-expanded', 'true');
+          (currentSectionContent as HTMLElement).style.maxHeight = `${currentSectionContent.scrollHeight}px`;
+          currentSectionIcon.classList.add('rotate-180');
+          
+          // Save to localStorage
+          try {
+            storedStates[currentSection] = true;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(storedStates));
+          } catch (e) {
+            console.error('Error saving section states to localStorage:', e);
+          }
+        }
+      }
+    }
+  </script>
 </BaseLayout> 

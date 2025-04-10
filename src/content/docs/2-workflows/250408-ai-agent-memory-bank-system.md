@@ -5,6 +5,9 @@ pubDate: 250408
 draft: 0
 ---
 
+### notes
+- [[250408-Cursor Memory Bank - Persistent Context for AI Coding Assistants]]
+- [[250408-Guide -- Implementing the Memory Bank System in Cursor for Persistent AI Context]]
 # AI Agent Memory Bank System
 
 ## Overview

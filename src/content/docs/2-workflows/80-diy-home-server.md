@@ -2,11 +2,14 @@
 title: DIY Home Server
 description: Why you need this?
 pubDate: 250406
-draft: 1
+draft: 0
 ---
 
 # DIY Home Server
 
+### my challenge: use windows, and remote access via linux (practice cross-platform usage)
+
+---
 ## Why you need one?
 ### 1. Back-up your digital assets
 

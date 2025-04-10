@@ -45,5 +45,8 @@
     },
     "[css]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[mdx]": {
+        "editor.defaultFormatter": "unifiedjs.vscode-mdx"
     }
 }
