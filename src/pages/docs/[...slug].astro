@@ -300,100 +300,100 @@ const currentSection = pathParts.length > 1 ? pathParts[0].replace(/^\d+-/, '') 
           }
         }
       });
-    });
-    
-    // Initialize collapsible sections
-    const STORAGE_KEY = 'docSectionStates';
-    const sectionContainers = document.querySelectorAll('.section-container');
-    
-    // Get stored section states from localStorage
-    let storedStates = {};
-    try {
-      const savedStates = localStorage.getItem(STORAGE_KEY);
-      if (savedStates) {
-        storedStates = JSON.parse(savedStates);
-      }
-    } catch (e) {
-      console.error('Error loading section states from localStorage:', e);
-    }
-    
-    // Setup each section
-    sectionContainers.forEach(container => {
-      const section = (container as HTMLElement).dataset.section;
-      const toggle = container.querySelector('.section-toggle');
-      const content = container.querySelector('.section-content');
-      const icon = toggle?.querySelector('svg');
       
-      if (!toggle || !content || !icon || !section) return;
+      // Initialize collapsible sections
+      const STORAGE_KEY = 'docSectionStates';
+      const sectionContainers = document.querySelectorAll('.section-container');
       
-      // Set initial state based on localStorage or default (only introduction expanded)
-      let isExpanded = section === 'introduction';
-      
-      // If we have a stored state for this section, use it
-      if (section in storedStates) {
-        isExpanded = storedStates[section];
+      // Get stored section states from localStorage
+      let storedStates = {};
+      try {
+        const savedStates = localStorage.getItem(STORAGE_KEY);
+        if (savedStates) {
+          storedStates = JSON.parse(savedStates);
+        }
+      } catch (e) {
+        console.error('Error loading section states from localStorage:', e);
       }
       
-      // Set initial state
-      toggle.setAttribute('aria-expanded', isExpanded.toString());
-      if (isExpanded) {
-        (content as HTMLElement).style.maxHeight = `${content.scrollHeight}px`;
-        icon.classList.add('rotate-180');
-      } else {
-        (content as HTMLElement).style.maxHeight = '0px';
-      }
-      
-      // Toggle functionality
-      toggle.addEventListener('click', () => {
-        isExpanded = toggle.getAttribute('aria-expanded') === 'true';
-        const newState = !isExpanded;
+      // Setup each section
+      sectionContainers.forEach(container => {
+        const section = (container as HTMLElement).dataset.section;
+        const toggle = container.querySelector('.section-toggle');
+        const content = container.querySelector('.section-content');
+        const icon = toggle?.querySelector('svg');
         
-        toggle.setAttribute('aria-expanded', newState.toString());
+        if (!toggle || !content || !icon || !section) return;
         
-        if (newState) {
+        // Set initial state based on localStorage or default (only introduction expanded)
+        let isExpanded = section === 'introduction';
+        
+        // If we have a stored state for this section, use it
+        if (section in storedStates) {
+          isExpanded = storedStates[section];
+        }
+        
+        // Set initial state
+        toggle.setAttribute('aria-expanded', isExpanded.toString());
+        if (isExpanded) {
           (content as HTMLElement).style.maxHeight = `${content.scrollHeight}px`;
           icon.classList.add('rotate-180');
         } else {
           (content as HTMLElement).style.maxHeight = '0px';
-          icon.classList.remove('rotate-180');
         }
         
-        // Save to localStorage
-        try {
-          storedStates[section] = newState;
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(storedStates));
-        } catch (e) {
-          console.error('Error saving section states to localStorage:', e);
-        }
-      });
-    });
-    
-    // Auto-expand the section that contains the current document
-    const currentSection = '{currentSection}';
-    if (currentSection) {
-      const currentSectionContainer = document.querySelector(`[data-section="${currentSection}"]`);
-      if (currentSectionContainer) {
-        const currentSectionToggle = currentSectionContainer.querySelector('.section-toggle');
-        const currentSectionContent = currentSectionContainer.querySelector('.section-content');
-        const currentSectionIcon = currentSectionToggle?.querySelector('svg');
-        
-        if (!currentSectionToggle || !currentSectionContent || !currentSectionIcon) return;
-        
-        // Only expand if not already expanded
-        if (currentSectionToggle.getAttribute('aria-expanded') === 'false') {
-          currentSectionToggle.setAttribute('aria-expanded', 'true');
-          (currentSectionContent as HTMLElement).style.maxHeight = `${currentSectionContent.scrollHeight}px`;
-          currentSectionIcon.classList.add('rotate-180');
+        // Toggle functionality
+        toggle.addEventListener('click', () => {
+          isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+          const newState = !isExpanded;
+          
+          toggle.setAttribute('aria-expanded', newState.toString());
+          
+          if (newState) {
+            (content as HTMLElement).style.maxHeight = `${content.scrollHeight}px`;
+            icon.classList.add('rotate-180');
+          } else {
+            (content as HTMLElement).style.maxHeight = '0px';
+            icon.classList.remove('rotate-180');
+          }
           
           // Save to localStorage
           try {
-            storedStates[currentSection] = true;
+            storedStates[section] = newState;
             localStorage.setItem(STORAGE_KEY, JSON.stringify(storedStates));
           } catch (e) {
             console.error('Error saving section states to localStorage:', e);
           }
+        });
+      });
+      
+      // Auto-expand the section that contains the current document
+      const currentSection = '{currentSection}';
+      if (currentSection) {
+        const currentSectionContainer = document.querySelector(`[data-section="${currentSection}"]`);
+        if (currentSectionContainer) {
+          const currentSectionToggle = currentSectionContainer.querySelector('.section-toggle');
+          const currentSectionContent = currentSectionContainer.querySelector('.section-content');
+          const currentSectionIcon = currentSectionToggle?.querySelector('svg');
+          
+          if (!currentSectionToggle || !currentSectionContent || !currentSectionIcon) return;
+          
+          // Only expand if not already expanded
+          if (currentSectionToggle.getAttribute('aria-expanded') === 'false') {
+            currentSectionToggle.setAttribute('aria-expanded', 'true');
+            (currentSectionContent as HTMLElement).style.maxHeight = `${currentSectionContent.scrollHeight}px`;
+            currentSectionIcon.classList.add('rotate-180');
+            
+            // Save to localStorage
+            try {
+              storedStates[currentSection] = true;
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(storedStates));
+            } catch (e) {
+              console.error('Error saving section states to localStorage:', e);
+            }
+          }
         }
       }
-    }
+    });
   </script>
 </BaseLayout> 

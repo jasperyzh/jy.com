@@ -2,24 +2,19 @@
 import { getCollection, render } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import SketchLayout from "@/layouts/SketchLayout.astro";
+import { getSketchFilename } from "@/utils/sketchUtils";
 
 // Fetch all sketches and generate paths for each
 export async function getStaticPaths() {
   const allSketches = await getCollection("sketches");
 
-  // Log all sketch IDs for debugging
-  const sketchIds = allSketches.map(sketch => sketch.id);
-  // console.log('All sketch IDs:', sketchIds);
-  
-  // Generate paths for each sketch
+  // Generate paths for each sketch using the utility function
   const paths = allSketches.map((entry) => {
     return {
-      params: { slug: entry.id },
+      params: { slug: getSketchFilename(entry) },
       props: { entry },
     };
   });
-  
-  // console.log('Generated sketch paths:', paths.map(p => p.params.slug));
   
   return paths;
 }

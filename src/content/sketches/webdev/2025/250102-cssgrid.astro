@@ -1,863 +1,736 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
-    </head>
-    <body>
-        <h1>Frontend Masters - Ultimate CSS Grid & Layout Techniques</h1>
-
-        <article id="ch2">
-            <h1>Galilean Moons of Jupiter</h1>
-
-            <div class="grid-container">
-                <figure>
-                    <img
-                        src="https://assets.codepen.io/296057/fem-io.jpg"
-                        alt="A pizza-looking moon. The outline of an erupting volcano is on the left."
-                    />
-                    <figcaption>
-                        Volcanic Activity on Io via
-                        <cite
-                            ><p>
-                                NASA - https://images.nasa.gov/details/PIA01530
-                            </p>
-                        </cite>
-                    </figcaption>
-                </figure>
-                <figure>
-                    <img
-                        src="https://assets.codepen.io/296057/fem-callisto.jpg"
-                        alt="A moon with green, brown, and blue patches and many white craters."
-                    />
-                    <figcaption>
-                        Bright scars on a darker surface testify to a long
-                        history of impacts on Jupiter moon Callisto in this
-                        image of Callisto from NASA Galileo spacecraft.
-                        <cite
-                            ><a
-                                href="https://images.nasa.gov/details/PIA03456"
-                                target="_blank">NASA</a
-                            ></cite
-                        >
-                    </figcaption>
-                </figure>
-                <figure>
-                    <img
-                        src="https://assets.codepen.io/296057/fem-europa.jpg"
-                        alt="A white moon with orange cracks all over the surface."
-                    />
-                    <figcaption>
-                        The scene shows the stunning diversity of Europa's
-                        surface geology. Long, linear cracks and ridges
-                        crisscross the surface, interrupted by regions of
-                        disrupted terrain where the surface ice crust has been
-                        broken up and re-frozen into new patterns.
-                        <cite
-                            ><a
-                                href="https://images.nasa.gov/details/PIA19048"
-                                target="_blank">NASA</a
-                            ></cite
-                        >
-                    </figcaption>
-                </figure>
-                <figure>
-                    <img
-                        src="https://assets.codepen.io/296057/fem-ganymede.jpg"
-                        alt="A moon that looks similar to our own, with a giant crater in the upper right."
-                    />
-                    <figcaption>
-                        This enhanced image of the Jovian moon Ganymede was
-                        obtained by the JunoCam imager aboard NASA's Juno
-                        spacecraft during the mission's June 7, 2021, flyby of
-                        the icy moon on Juno's 34th pass close to Jupiter.
-                        <cite
-                            ><a
-                                href="https://images.nasa.gov/details/PIA25028"
-                                target="_blank">NASA</a
-                            ></cite
-                        >
-                    </figcaption>
-                </figure>
-            </div>
-        </article>
-        <article id="ch3">
-            <div class="grid-container">
-                <img
-                    src="https://images-assets.nasa.gov/image/PIA01546/PIA01546~orig.jpg"
-                    class="one"
-                    alt="True Color of Mars - Pathfinder Sol 10 at Noon"
-                />
-                <img
-                    src="https://images-assets.nasa.gov/image/PIA00407/PIA00407~small.jpg"
-                    class="two"
-                    alt="Global Color Views of Mars"
-                />
-                <img
-                    src="https://images-assets.nasa.gov/image/PIA13593/PIA13593~orig.jpg"
-                    class="three"
-                    alt="Intrepid Crater on Mars"
-                />
-                <img
-                    src="https://images-assets.nasa.gov/image/PIA08528/PIA08528~orig.jpg"
-                    class="four"
-                    alt="Possible Meteorite in Columbia Hills on Mars False Color"
-                />
-                <img
-                    src="https://images-assets.nasa.gov/image/PIA05208/PIA05208~small.jpg"
-                    class="five"
-                    alt="Mars Under the Microscope color"
-                />
-            </div>
-        </article>
-        <article id="ch4">
-            <div class="row">
-                <figure>
-                    <img
-                        src="https://assets.codepen.io/296057/fem-jupiter.jpg"
-                        alt="Jupiter and its Galilean moons."
-                    />
-                    <figcaption>
-                        <h2>Jupiter</h2>
-                        <p>Lorem ipsum dolor sit amet.</p>
-                    </figcaption>
-                </figure>
-                <figure>
-                    <img
-                        src="https://assets.codepen.io/296057/fem-saturn.jpg"
-                        alt="Saturn and its moons."
-                    />
-
-                    <figcaption>
-                        <h2>Saturn and its moons</h2>
-                        <p>Lorem ipsum dolor sit amet.</p>
-                    </figcaption>
-                </figure>
-                <figure>
-                    <img
-                        src="https://assets.codepen.io/296057/fem-neptune.jpg"
-                        alt="Triton, Neptune's main moon, in front of Neptune."
-                    />
-
-                    <figcaption>
-                        <h2>Triton and Neptune</h2>
-                        <p>Lorem ipsum dolor sit amet.</p>
-                    </figcaption>
-                </figure>
-                <figure>
-                    <img
-                        src="https://assets.codepen.io/296057/fem-pluto.jpg"
-                        alt="Pluto and Charon."
-                    />
-
-                    <figcaption>
-                        <h2>Pluto and Charon</h2>
-                        <p>Still a planet... in our hearts.</p>
-                    </figcaption>
-                </figure>
-            </div>
-        </article>
-        <article id="ch5">
-            <div>
-                <img
-                    src="https://assets.codepen.io/296057/fem-jupiter.jpg"
-                    alt="Jupiter and the Galilean moons."
-                />
-            </div>
-            <div>
-                <img
-                    src="https://assets.codepen.io/296057/fem-pluto.jpg"
-                    alt="Pluto and its moon, Charon."
-                />
-            </div>
-            <div>
-                <img
-                    src="https://assets.codepen.io/296057/fem-saturn.jpg"
-                    alt="Saturn and its moons."
-                />
-            </div>
-            <div>
-                <img
-                    src="https://assets.codepen.io/296057/fem-neptune.jpg"
-                    alt="Triton, Neptune's largest moon, and Neptune."
-                />
-            </div>
-            <div>
-                <img
-                    src="https://assets.codepen.io/296057/fem-earth2.jpg"
-                    alt="Earth from orbit, with the moon crossing in between the camera and Earth."
-                />
-            </div>
-        </article>
-        <article id="minmax">
-            <div class="container">
-                <p class="one">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                    Vitae aliquid suscipit dolores explicabo animi numquam
-                    voluptatem officiis ad porro et.
-                </p>
-                <p class="two">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                    Vitae aliquid suscipit dolores explicabo animi numquam
-                    voluptatem officiis ad porro et.
-                </p>
-                <p class="three">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                    Vitae aliquid suscipit dolores explicabo animi numquam
-                    voluptatem officiis ad porro et.
-                </p>
-                <p class="four">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                    Vitae aliquid suscipit dolores explicabo animi numquam
-                    voluptatem officiis ad porro et.
-                </p>
-                <p class="five">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                    Vitae aliquid suscipit dolores explicabo animi numquam
-                    voluptatem officiis ad porro et.
-                </p>
-                <p class="six">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                    Vitae aliquid suscipit dolores explicabo animi numquam
-                    voluptatem officiis ad porro et.
-                </p>
-            </div>
-        </article>
-        <article id="subgrid">
-            <div class="container">
-                <div class="one card">
-                    <h2>Venus, Earth, Moon, and Mars</h2>
-                    <img
-                        src="https://assets.codepen.io/296057/fem-venus.jpg"
-                        alt="Graphic showing the relative sizes of Venus, Earth, Moon, and Mars. Earth and Venus are nearly the same size. Mars is roughly 1/2 the size of Earth, while the Moon is 1/4 the size of Earth."
-                    />
-                    <p>
-                        Lorem ipsum, dolor sit amet consectetur adipisicing
-                        elit. Impedit esse fuga exercitationem veritatis error
-                        autem provident dolorem ipsum illum praesentium deleniti
-                        quidem distinctio sed odio, necessitatibus et facere.
-                        Iusto blanditiis nemo voluptatibus esse deleniti? Nisi,
-                        architecto hic aperiam, asperiores qui fugit possimus
-                        perspiciatis numquam cum, et dolor. Magni, dolore
-                        obcaecati.
-                    </p>
-                    <p><a href="" class="button">Read more</a></p>
-                </div>
-                <div class="two card">
-                    <h2>Lorem Ipsum Dolor Dolor</h2>
-                    <p>
-                        Lorem ipsum dolor sit, amet consectetur adipisicing
-                        elit. Vitae aliquid suscipit dolores explicabo animi
-                        numquam voluptatem officiis ad porro et.
-                    </p>
-                    <p><a href="" class="button">Read more</a></p>
-                </div>
-                <div class="three card">
-                    <h2>Lorem</h2>
-                    <p>
-                        Lorem ipsum dolor sit, amet consectetur adipisicing
-                        elit. Vitae aliquid suscipit dolores explicabo.
-                    </p>
-                    <p><a href="" class="button">Read more</a></p>
-                </div>
-                <div class="four card">
-                    <h2>Lorem Ipsum Dolor</h2>
-                    <p>
-                        Lorem ipsum dolor sit, amet consectetur adipisicing
-                        elit. Vitae aliquid suscipit dolores explicabo animi
-                        numquam voluptatem officiis ad porro et.
-                    </p>
-                    <p><a href="" class="button">Read more</a></p>
-                </div>
-                <div class="five card">
-                    <h2>Lorem Dolor</h2>
-                    <p>
-                        Lorem ipsum dolor sit, amet consectetur adipisicing
-                        elit. Vitae aliquid suscipit dolores explicabo animi
-                        numquam voluptatem officiis ad porro et.
-                    </p>
-                    <p><a href="" class="button">Read more</a></p>
-                </div>
-            </div>
-        </article>
-
-        <article id="moon">
-            <h1>The Moons of Saturn</h1>
-            <article class="card">
-                <img
-                    src="https://assets.codepen.io/296057/fem-mimas.jpg"
-                    alt="Death Star vs. Mimas, with similar looking craters in the upper right."
-                />
-                <h2>That's No Moon. It's a Space Station.</h2>
-                <p class="text">
-                    At 198km diameter, Mimas is bigger than the first Death Star
-                    (120km) but smaller than the second (800km).
-                </p>
-                <p class="link">
-                    <a
-                        href="https://science.nasa.gov/saturn/moons/mimas/"
-                        target="_blank"
-                        class="button">More about Mimas</a
-                    >
-                </p>
-            </article>
-            <article class="card">
-                <img
-                    src="https://assets.codepen.io/296057/fem-titan-mosaic.jpg"
-                    alt="A fuzzy looking world, with darker patches on a mostly light surface."
-                />
-                <h2>Titan's Ethane Lake</h2>
-                <p class="text">
-                    Titan is the only world besides Earth that has standing
-                    bodies of liquid, including rivers, lakes and seas, on its
-                    surface. Titan is bigger than Earth's moon, and larger than
-                    even the planet Mercury.
-                </p>
-                <p class="link">
-                    <a
-                        href="https://science.nasa.gov/saturn/moons/titan/"
-                        target="_blank"
-                        class="button">More about Titan</a
-                    >
-                </p>
-            </article>
-            <article class="card">
-                <img
-                    src="https://assets.codepen.io/296057/fem-enceladus.jpg"
-                    alt="Enceladus is a water world."
-                />
-                <h2>Enceladus: Geyser World</h2>
-                <p class="text">
-                    Geysers venting from this ocean world add material to
-                    Saturn's E ring, and give clues that its subsurface
-                    saltwater ocean could be a possible habitat for life.
-                </p>
-                <p class="link">
-                    <a
-                        href="https://science.nasa.gov/saturn/moons/enceladus/"
-                        target="_blank"
-                        class="button">More about Enceladus</a
-                    >
-                </p>
-            </article>
-            <article class="card">
-                <img
-                    src="https://assets.codepen.io/296057/fem-iapetus.jpg"
-                    alt="A white moon that looks like it has mold growing on one side of it."
-                />
-                <h2>Iapetus: Yin and Yang</h2>
-                <p class="text">
-                    Saturn has tidally locked Iapetus. The moon always presents
-                    the same face toward Saturn. With its distant, inclined
-                    orbit, Iapetus is the only large moon from which there is a
-                    nice view of the rings of Saturn.
-                </p>
-                <p class="link">
-                    <a
-                        href="https://science.nasa.gov/saturn/moons/iapetus/"
-                        target="_blank"
-                        class="button">More about Iapetus</a
-                    >
-                </p>
-            </article>
-            <article class="card">
-                <img
-                    src="https://assets.codepen.io/296057/fem-phoebe.jpg"
-                    alt="A moon with heavy cratering, making it look more like an asteroid."
-                />
-                <h2>Phoebe</h2>
-                <p class="text">
-                    Unlike most major moons orbiting Saturn, Phoebe is very dark
-                    and reflects only 6 percent of the sunlight it receives. Its
-                    darkness and irregular, retrograde orbit suggest Phoebe is
-                    most likely a captured object. A captured object is a
-                    celestial body that is trapped by the gravitational pull of
-                    a much bigger body, generally a planet. Phoebe's darkness,
-                    in particular, suggests that the small moon comes from the
-                    outer solar system, an area where there is plenty of dark
-                    material.
-                </p>
-                <p class="link">
-                    <a
-                        href="https://science.nasa.gov/saturn/moons/phoebe/"
-                        target="_blank"
-                        class="button">More about Phoebe</a
-                    >
-                </p>
-            </article>
-
-            <ul>
-                <li>
-                    <a
-                        href="https://science.nasa.gov/saturn/moons/dione/"
-                        target="_blank">Dione: Cratered on the Wrong Side</a
-                    >
-                </li>
-                <li>
-                    <a
-                        href="https://science.nasa.gov/saturn/moons/tethys/"
-                        target="_blank">Tethys: 40% is the Odysseus Crater</a
-                    >
-                </li>
-                <li>
-                    <a
-                        href="https://science.nasa.gov/saturn/moons/rhea/"
-                        target="_blank">Rhea: A Moon with Rings?</a
-                    >
-                </li>
-            </ul>
-        </article>
-    </body>
-</html>
+---
+import { Image } from 'astro:assets';
+---
 
 <style>
-    html {
-        box-sizing: border-box;
-    }
-    *,
-    *::before,
-    *::after {
-        box-sizing: inherit;
-    }
-    html,
-    body {
-        margin: 0;
-        padding: 0;
-    }
-    /* extremely basic formatting */
-    body {
-        font-family: "Libre Franklin", sans-serif;
-        line-height: 1.5;
-    }
-    /* make image flex with container */
-    img {
-        max-width: 100%;
-    }
-    /* remove default margin/padding */
-    figure {
-        margin: 0;
-        padding: 0;
-    }
+  /* Base styles */
+  html {
+    box-sizing: border-box;
+  }
+  *,
+  *::before,
+  *::after {
+    box-sizing: inherit;
+  }
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: "Libre Franklin", sans-serif;
+    line-height: 1.5;
+  }
+  h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  figure {
+    margin: 0;
+    padding: 0;
+  }
 
-    body > article {
-        margin: 5rem auto;
-        padding-block: 3rem;
+  /* Chapter 2 styles */
+  #ch2 .grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  #ch2 figure {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    align-items: center;
+    border: 3px double #ffcccc;
+  }
+  #ch2 figcaption {
+    border: 3px double #ccaacc;
+  }
+  #ch2 figure:nth-child(2) {
+    grid-column: 1/2;
+    grid-row: 1 / span 2;
+    display: block;
+  }
+  #ch2 figure:last-child {
+    grid-column: 1/-1;
+  }
+  #ch2 figure figcaption:has(a) {
+    background: #ccaacc;
+  }
+  #ch2 figure figcaption:not(:has(a)) {
+    background: red;
+  }
+
+  /* Chapter 3 styles */
+  #ch3 {
+    background: #000;
+  }
+  #ch3 .grid-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1rem;
+    max-width: 980px;
+    margin: 0 auto;
+  }
+  #ch3 .one {
+    grid-column: 1/3;
+  }
+  #ch3 .two {
+    grid-column: 1/2;
+    grid-row: 2/4;
+  }
+  #ch3 .three {
+    grid-column: 1/3;
+  }
+  #ch3 .four {
+    grid-column: 2/3;
+    grid-row: 2/3;
+  }
+  #ch3 .five {
+    grid-column: 2/3;
+    grid-row: 3/4;
+  }
+
+  /* Chapter 4 styles */
+  #ch4 {
+    background: #aaa;
+  }
+  #ch4 .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1vw;
+  }
+  #ch4 figure {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 7fr auto;
+  }
+  #ch4 img {
+    grid-row: 1/3;
+    grid-column: 1/2;
+  }
+  #ch4 figcaption {
+    background-color: rgba(13, 13, 13, 0.4);
+    color: #fff;
+    padding: 1rem;
+    grid-column: 1/-1;
+    grid-row: 2/3;
+  }
+
+  /* Chapter 5 styles */
+  #ch5 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(5, auto);
+    gap: 1vw;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  #ch5 img,
+  #ch5 div {
+    display: block;
+  }
+  #ch5 div:nth-child(1) {
+    grid-column: 1/3;
+    grid-row: 1/3;
+  }
+  #ch5 div:nth-child(2) {
+    grid-column: 3/5;
+    grid-row: 1/3;
+  }
+  #ch5 div:nth-child(3) {
+    grid-column: 1/3;
+    grid-row: 3/5;
+  }
+  #ch5 div:nth-child(4) {
+    grid-column: 3/5;
+    grid-row: 3/5;
+  }
+  #ch5 div:nth-child(5) {
+    grid-column: 2/4;
+    grid-row: 2/4;
+    border: 1vw solid #fff;
+    transform: rotate(45deg);
+    overflow: hidden;
+    background: #000;
+  }
+  #ch5 div:nth-child(5) img {
+    transform: rotate(-45deg) scale(1);
+  }
+
+  /* Minmax styles */
+  #minmax .container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+    max-width: 992px;
+    margin: 0 auto;
+    border: 1px solid lime;
+    padding: 3rem 1rem;
+  }
+  #minmax .container > * {
+    padding: 1rem;
+    margin: 0;
+  }
+  #minmax .one,
+  #minmax .four {
+    border: 2px solid #26547c;
+    background-color: #26547c33;
+  }
+  #minmax .two,
+  #minmax .five {
+    border: 2px solid #ef476f;
+    background-color: #ef476f33;
+  }
+  #minmax .three,
+  #minmax .six {
+    border: 2px solid #ffd166;
+    background-color: #ffd16633;
+  }
+
+  /* Subgrid styles */
+  #subgrid .container {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(200px, 1fr));
+    grid-template-rows: 0.2fr 1fr 0.1fr;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  #subgrid .container > * {
+    padding: 1rem;
+    margin: 0;
+  }
+  #subgrid .one {
+    grid-column: 1/3;
+    grid-row: 1/3;
+    border: 2px solid #26547c;
+    background-color: #26547c33;
+  }
+  #subgrid .two,
+  #subgrid .five {
+    border: 2px solid #ef476f;
+    background-color: #ef476f33;
+  }
+  #subgrid .three,
+  #subgrid .four {
+    border: 2px solid #ffd166;
+    background-color: #ffd16633;
+  }
+  #subgrid .button {
+    background-color: black;
+    padding: 0.5rem;
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+  }
+  #subgrid .button:hover {
+    background-color: #333;
+  }
+  #subgrid .card {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: subgrid;
+    grid-row: span 3;
+    gap: 1rem;
+  }
+  #subgrid .one {
+    grid-column: 1/3;
+    grid-row: 1/5;
+  }
+  #subgrid .card > * {
+    margin: 0;
+  }
+
+  /* Moon styles */
+  #moon {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  #moon img {
+    max-width: 100%;
+    border-radius: 5px;
+  }
+  #moon .button {
+    background-color: #2d697c;
+    padding: 0.5rem;
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+    font-size: 0.8rem;
+  }
+  #moon .button:hover {
+    background-color: #327c94;
+  }
+  #moon .card {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    border-bottom: 1px solid #ccc;
+    padding: 3rem 1rem;
+    row-gap: 0.5rem;
+    column-gap: 1rem;
+  }
+  #moon .card img {
+    grid-column: 2/3;
+    grid-row: 1/3;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+  }
+  #moon .card:first-of-type {
+    display: block;
+  }
+  #moon p {
+    margin: 0;
+    margin-bottom: 1rem;
+  }
+  #moon ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  #moon ul li {
+    font-size: 1.4rem;
+    font-weight: bold;
+    border-bottom: 1px solid #ccc;
+    padding: 3rem 1rem;
+  }
+  #moon ul a {
+    color: #2d697c;
+  }
+
+  /* Responsive styles */
+  @media (max-width: 767.98px) {
+    #ch2 .grid-container {
+      grid-template-columns: 1fr;
     }
-
-    #ch2 {
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-        }
-
-        figure {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            align-items: center;
-            border: 3px double #ffcccc;
-            /* place-items: center; */
-        }
-        figcaption {
-            border: 3px double #ccaacc;
-        }
-
-        figure:nth-child(2) {
-            grid-column: 1/2;
-            grid-row: 1 / span 2;
-            display: block;
-        }
-        figure:last-child {
-            grid-column: 1/-1;
-        }
-
-        /* :has selector */
-        figure figcaption:has(a) {
-            background: #ccaacc;
-        }
-        figure figcaption:not(:has(a)) {
-            background: red;
-        }
+    #ch3 .grid-container {
+      grid-template-columns: 1fr;
+      gap: 1rem 0;
+      place-items: center;
     }
-    #ch3 {
-        background: #000;
-        .grid-container {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 1rem;
-            max-width: 980px;
-            margin: 0 auto;
-        }
-        .one {
-            grid-column: 1/3;
-        }
-        .two {
-            grid-column: 1/2;
-            grid-row: 2/4;
-        }
-        .three {
-            grid-column: 1/3;
-        }
-        .four {
-            grid-column: 2/3;
-            grid-row: 2/3;
-        }
-        .five {
-            grid-column: 2/3;
-            grid-row: 3/4;
-        }
+    #ch3 .one,
+    #ch3 .two,
+    #ch3 .three,
+    #ch3 .four,
+    #ch3 .five {
+      grid-column: auto;
+      grid-row: auto;
     }
-    @media (max-width: 767.98px) {
-        #ch2 {
-            .grid-container {
-                grid-template-columns: 1fr;
-            }
-        }
-        #ch3 {
-            .grid-container {
-                grid-template-columns: 1fr;
-                gap: 1rem 0;
-                place-items: center;
-            }
+  }
 
-            .one,
-            .two,
-            .three,
-            .four,
-            .five {
-                grid-column: auto;
-                grid-row: auto;
-            }
-        }
+  @media (max-width: 575.98px) {
+    #ch2 figure {
+      grid-template-columns: 1fr;
     }
-    @media (max-width: 575.98px) {
-        #ch2 {
-            figure {
-                grid-template-columns: 1fr;
-            }
-            figcaption {
-                margin: 1rem;
-            }
-        }
+    #ch2 figcaption {
+      margin: 1rem;
     }
+  }
 
-    #ch4 {
-        background: #aaa;
-
-        /* sets us up with a 2x2 layout of images */
-        @media (min-width: 600px) {
-            .row {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 1vw;
-            }
-            figure {
-                display: grid;
-                grid-template-columns: 1fr;
-                grid-template-rows: 7fr auto;
-            }
-            img {
-                grid-row: 1/3;
-                grid-column: 1/2;
-            }
-            figcaption {
-                background-color: rgba(13, 13, 13, 0.4);
-                color: #fff;
-                padding: 1rem;
-                grid-column: 1/-1;
-                grid-row: 2/3;
-            }
-        }
-    }
-
-    #ch5 {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        grid-template-rows: repeat(5, auto);
-        gap: 1vw;
-        max-width: 720px;
-        margin: 0 auto;
-        img,
-        div {
-            display: block;
-        }
-        div:nth-child(1) {
-            grid-column: 1/3;
-            grid-row: 1/3;
-        }
-        div:nth-child(2) {
-            grid-column: 3/5;
-            grid-row: 1/3;
-        }
-        div:nth-child(3) {
-            grid-column: 1/3;
-            grid-row: 3/5;
-        }
-        div:nth-child(4) {
-            grid-column: 3/5;
-            grid-row: 3/5;
-        }
-        div:nth-child(5) {
-            grid-column: 2/4;
-            grid-row: 2/4;
-            border: 1vw solid #fff;
-            transform: rotate(45deg);
-            overflow: hidden;
-            background: #000;
-        }
-
-        div:nth-child(5) img {
-            transform: rotate(-45deg) scale(1);
-        }
-    }
-    #minmax {
-        .container {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(180px, 1fr));
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
-            gap: 2rem;
-            max-width: 992px;
-            margin: 0 auto;
-            border: 1px solid lime;
-            padding: 3rem 1rem;
-        }
-        .container > * {
-            padding: 1rem;
-            margin: 0;
-        }
-
-        .one,
-        .four {
-            border: 2px solid #26547c;
-            background-color: #26547c33;
-        }
-        .two,
-        .five {
-            border: 2px solid #ef476f;
-            background-color: #ef476f33;
-        }
-        .three,
-        .six {
-            border: 2px solid #ffd166;
-            background-color: #ffd16633;
-        }
-    }
-    #subgrid {
-        .container {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(200px, 1fr));
-            grid-template-rows: 0.2fr 1fr 0.1fr;
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .container > * {
-            padding: 1rem;
-            margin: 0;
-        }
-        .one {
-            grid-column: 1/3;
-            grid-row: 1/3;
-        }
-
-        .one {
-            border: 2px solid #26547c;
-            background-color: #26547c33;
-        }
-        .two,
-        .five {
-            border: 2px solid #ef476f;
-            background-color: #ef476f33;
-        }
-        .three,
-        .four {
-            border: 2px solid #ffd166;
-            background-color: #ffd16633;
-        }
-        .button {
-            background-color: black;
-            padding: 0.5rem;
-            border-radius: 5px;
-            color: white;
-            text-decoration: none;
-        }
-        .button:hover {
-            background-color: #333;
-        }
-        img {
-            max-width: 100%;
-        }
-
-        .card {
-            display: grid;
-            /* grid-template-rows: auto 1fr auto; */
-            grid-template-columns: 1fr;
-            grid-template-rows: subgrid;
-            grid-row: span 3;
-            gap: 1rem;
-        }
-        .one {
-            grid-column: 1/3;
-            grid-row: 1/5;
-        }
-        .card > * {
-            margin: 0;
-        }
-    }
+  @media (min-width: 768px) {
     #moon {
-        img {
-            max-width: 100%;
-            border-radius: 5px;
-        }
-        .button {
-            background-color: #2d697c;
-            padding: 0.5rem;
-            border-radius: 5px;
-            color: white;
-            text-decoration: none;
-            font-size: 0.8rem;
-        }
-        .button:hover {
-            background-color: #327c94;
-        }
-
-        display: grid;
-        grid-template-columns: 1fr;
-
-        .card {
-            display: grid;
-            grid-template-columns: 3fr 1fr;
-            border-bottom: 1px solid #ccc;
-            padding: 3rem 1rem;
-            row-gap: 0.5rem;
-            column-gap: 1rem;
-            /* grid-template-rows: ; */
-            /* margin: 1rem; */
-        }
-
-        .card img {
-            grid-column: 2/3;
-            grid-row: 1/3;
-            aspect-ratio: 1/1;
-            object-fit: cover;
-        }
-
-        .card:first-of-type {
-            display: block;
-        }
-        p {
-            margin: 0;
-            margin-bottom: 1rem;
-        }
-
-        ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
-        ul li {
-            font-size: 1.4rem;
-            font-weight: bold;
-            border-bottom: 1px solid #ccc;
-            padding: 3rem 1rem;
-        }
-        ul a {
-            color: #2d697c;
-        }
-
-        @media (min-width: 768px) {
-            grid-template-columns: 1fr 1fr;
-            .card {
-                grid-template-rows: subgrid;
-                grid-row: span 3;
-                padding: 1rem 1rem;
-            }
-            .card:first-of-type {
-                grid-column: 1/-1;
-            }
-            .card img {
-                aspect-ratio: unset;
-            }
-
-            ul {
-                grid-column: span 2;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            grid-template-columns: repeat(auto-fill, minmax(2fr, 3fr));
-            grid-template-rows: auto;
-            h1 {
-                grid-column: 1 / -1;
-                grid-row: 1/1;
-            }
-            .card {
-                /* grid-template-columns: repeat(2, minmax(300px, 1fr)); */
-                /* grid-template-rows: subgrid; */
-            }
-
-            .card:first-of-type {
-                grid-column: 1 / -1;
-                grid-row: 2/ 3;
-            }
-            .card {
-                grid-template-columns: 1fr auto auto;
-                grid-row: span 4;
-            }
-            .card img {
-                grid-column: 2 / span 2;
-                max-width: 200px;
-            }
-            .card h2 {
-                grid-column: span 1;
-            }
-            .card .link,
-            .card .text {
-                grid-column: 1/ -1;
-            }
-
-            .card:first-of-type img {
-                max-width: 100%;
-            }
-        }
-
-        @media (min-width: 1400px) {
-            grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: auto auto;
-            .card:first-of-type {
-                grid-template-rows: auto;
-                grid-column: 1 / span 2;
-                grid-row: 2 / span 2;
-            }
-            .card {
-            }
-            .card:not(:first-of-type) {
-                grid-row: span 1;
-                /* grid-template-columns: 1fr 1fr; */
-                /* display: grid; */
-                /* grid-template-rows: auto; */
-                display: grid;
-                grid-template-rows: auto;
-
-                .text {
-                    display: none;
-                }
-                img {
-                    order: -1;
-                    grid-row: 1/2;
-                    grid-column: 1;
-                }
-                h2 {
-                    grid-column: 2;
-                }
-                .link {
-                    grid-column: span 2;
-                    grid-row: 3;
-                }
-            }
-        }
+      grid-template-columns: 1fr 1fr;
     }
+    #moon .card {
+      grid-template-rows: subgrid;
+      grid-row: span 3;
+      padding: 1rem 1rem;
+    }
+    #moon .card:first-of-type {
+      grid-column: 1/-1;
+    }
+    #moon .card img {
+      aspect-ratio: unset;
+    }
+    #moon ul {
+      grid-column: span 2;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    #moon {
+      grid-template-columns: repeat(auto-fill, minmax(2fr, 3fr));
+      grid-template-rows: auto;
+    }
+    #moon h1 {
+      grid-column: 1 / -1;
+      grid-row: 1/1;
+    }
+    #moon .card:first-of-type {
+      grid-column: 1 / -1;
+      grid-row: 2/ 3;
+    }
+    #moon .card {
+      grid-template-columns: 1fr auto auto;
+      grid-row: span 4;
+    }
+    #moon .card img {
+      grid-column: 2 / span 2;
+      max-width: 200px;
+    }
+    #moon .card h2 {
+      grid-column: span 1;
+    }
+    #moon .card .link,
+    #moon .card .text {
+      grid-column: 1/ -1;
+    }
+    #moon .card:first-of-type img {
+      max-width: 100%;
+    }
+  }
+
+  @media (min-width: 1400px) {
+    #moon {
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: auto auto;
+    }
+    #moon .card:first-of-type {
+      grid-template-rows: auto;
+      grid-column: 1 / span 2;
+      grid-row: 2 / span 2;
+    }
+    #moon .card:not(:first-of-type) {
+      grid-row: span 1;
+      display: grid;
+      grid-template-rows: auto;
+    }
+    #moon .card:not(:first-of-type) .text {
+      display: none;
+    }
+    #moon .card:not(:first-of-type) img {
+      order: -1;
+      grid-row: 1/2;
+      grid-column: 1;
+    }
+    #moon .card:not(:first-of-type) h2 {
+      grid-column: 2;
+    }
+    #moon .card:not(:first-of-type) .link {
+      grid-column: span 2;
+      grid-row: 3;
+    }
+  }
 </style>
+
+<main>
+  <h1>Frontend Masters - Ultimate CSS Grid & Layout Techniques</h1>
+
+  <article id="ch2">
+    <h1>Galilean Moons of Jupiter</h1>
+
+    <div class="grid-container">
+      <figure>
+        <img src="https://assets.codepen.io/296057/fem-io.jpg"
+          alt="A pizza-looking moon. The outline of an erupting volcano is on the left." />
+        <figcaption>
+          Volcanic Activity on Io via
+          <cite>
+            <p>NASA - https://images.nasa.gov/details/PIA01530</p>
+          </cite>
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="https://assets.codepen.io/296057/fem-callisto.jpg"
+          alt="A moon with green, brown, and blue patches and many white craters." />
+        <figcaption>
+          Bright scars on a darker surface testify to a long history of impacts
+          on Jupiter moon Callisto in this image of Callisto from NASA Galileo
+          spacecraft.
+          <cite>
+            <a href="https://images.nasa.gov/details/PIA03456" target="_blank">NASA</a>
+          </cite>
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="https://assets.codepen.io/296057/fem-europa.jpg"
+          alt="A white moon with orange cracks all over the surface." />
+        <figcaption>
+          The scene shows the stunning diversity of Europa's surface geology.
+          Long, linear cracks and ridges crisscross the surface, interrupted by
+          regions of disrupted terrain where the surface ice crust has been
+          broken up and re-frozen into new patterns.
+          <cite>
+            <a href="https://images.nasa.gov/details/PIA19048" target="_blank">NASA</a>
+          </cite>
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="https://assets.codepen.io/296057/fem-ganymede.jpg"
+          alt="A moon that looks similar to our own, with a giant crater in the upper right." />
+        <figcaption>
+          This enhanced image of the Jovian moon Ganymede was obtained by the
+          JunoCam imager aboard NASA's Juno spacecraft during the mission's June
+          7, 2021, flyby of the icy moon on Juno's 34th pass close to Jupiter.
+          <cite>
+            <a href="https://images.nasa.gov/details/PIA25028" target="_blank">NASA</a>
+          </cite>
+        </figcaption>
+      </figure>
+    </div>
+  </article>
+
+  <article id="ch3">
+    <div class="grid-container">
+      <img src="https://images-assets.nasa.gov/image/PIA01546/PIA01546~orig.jpg" class="one"
+        alt="True Color of Mars - Pathfinder Sol 10 at Noon" />
+      <img src="https://images-assets.nasa.gov/image/PIA00407/PIA00407~small.jpg" class="two"
+        alt="Global Color Views of Mars" />
+      <img src="https://images-assets.nasa.gov/image/PIA13593/PIA13593~orig.jpg" class="three"
+        alt="Intrepid Crater on Mars" />
+      <img src="https://images-assets.nasa.gov/image/PIA08528/PIA08528~orig.jpg" class="four"
+        alt="Possible Meteorite in Columbia Hills on Mars False Color" />
+      <img src="https://images-assets.nasa.gov/image/PIA05208/PIA05208~small.jpg" class="five"
+        alt="Mars Under the Microscope color" />
+    </div>
+  </article>
+
+  <article id="ch4">
+    <div class="row">
+      <figure>
+        <img src="https://assets.codepen.io/296057/fem-jupiter.jpg" alt="Jupiter and its Galilean moons." />
+        <figcaption>
+          <h2>Jupiter</h2>
+          <p>Lorem ipsum dolor sit amet.</p>
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="https://assets.codepen.io/296057/fem-saturn.jpg" alt="Saturn and its moons." />
+        <figcaption>
+          <h2>Saturn and its moons</h2>
+          <p>Lorem ipsum dolor sit amet.</p>
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="https://assets.codepen.io/296057/fem-neptune.jpg"
+          alt="Triton, Neptune's main moon, in front of Neptune." />
+        <figcaption>
+          <h2>Triton and Neptune</h2>
+          <p>Lorem ipsum dolor sit amet.</p>
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="https://assets.codepen.io/296057/fem-pluto.jpg" alt="Pluto and Charon." />
+        <figcaption>
+          <h2>Pluto and Charon</h2>
+          <p>Still a planet... in our hearts.</p>
+        </figcaption>
+      </figure>
+    </div>
+  </article>
+
+  <article id="ch5">
+    <div>
+      <img src="https://assets.codepen.io/296057/fem-jupiter.jpg" alt="Jupiter and the Galilean moons." />
+    </div>
+    <div>
+      <img src="https://assets.codepen.io/296057/fem-pluto.jpg" alt="Pluto and its moon, Charon." />
+    </div>
+    <div>
+      <img src="https://assets.codepen.io/296057/fem-saturn.jpg" alt="Saturn and its moons." />
+    </div>
+    <div>
+      <img src="https://assets.codepen.io/296057/fem-neptune.jpg"
+        alt="Triton, Neptune's largest moon, and Neptune." />
+    </div>
+    <div>
+      <img src="https://assets.codepen.io/296057/fem-earth2.jpg"
+        alt="Earth from orbit, with the moon crossing in between the camera and Earth." />
+    </div>
+  </article>
+
+  <article id="minmax">
+    <div class="container">
+      <p class="one">
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vitae aliquid
+        suscipit dolores explicabo animi numquam voluptatem officiis ad porro
+        et.
+      </p>
+      <p class="two">
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vitae aliquid
+        suscipit dolores explicabo animi numquam voluptatem officiis ad porro
+        et.
+      </p>
+      <p class="three">
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vitae aliquid
+        suscipit dolores explicabo animi numquam voluptatem officiis ad porro
+        et.
+      </p>
+      <p class="four">
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vitae aliquid
+        suscipit dolores explicabo animi numquam voluptatem officiis ad porro
+        et.
+      </p>
+      <p class="five">
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vitae aliquid
+        suscipit dolores explicabo animi numquam voluptatem officiis ad porro
+        et.
+      </p>
+      <p class="six">
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vitae aliquid
+        suscipit dolores explicabo animi numquam voluptatem officiis ad porro
+        et.
+      </p>
+    </div>
+  </article>
+
+  <article id="subgrid">
+    <div class="container">
+      <div class="one card">
+        <h2>Venus, Earth, Moon, and Mars</h2>
+        <img src="https://assets.codepen.io/296057/fem-venus.jpg"
+          alt="Graphic showing the relative sizes of Venus, Earth, Moon, and Mars. Earth and Venus are nearly the same size. Mars is roughly 1/2 the size of Earth, while the Moon is 1/4 the size of Earth." />
+        <p>
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Impedit esse
+          fuga exercitationem veritatis error autem provident dolorem ipsum
+          illum praesentium deleniti quidem distinctio sed odio, necessitatibus
+          et facere. Iusto blanditiis nemo voluptatibus esse deleniti? Nisi,
+          architecto hic aperiam, asperiores qui fugit possimus perspiciatis
+          numquam cum, et dolor. Magni, dolore obcaecati.
+        </p>
+        <p>
+          <a href="" class="button">Read more</a>
+        </p>
+      </div>
+      <div class="two card">
+        <h2>Lorem Ipsum Dolor Dolor</h2>
+        <p>
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vitae
+          aliquid suscipit dolores explicabo animi numquam voluptatem officiis
+          ad porro et.
+        </p>
+        <p>
+          <a href="" class="button">Read more</a>
+        </p>
+      </div>
+      <div class="three card">
+        <h2>Lorem</h2>
+        <p>
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vitae
+          aliquid suscipit dolores explicabo.
+        </p>
+        <p>
+          <a href="" class="button">Read more</a>
+        </p>
+      </div>
+      <div class="four card">
+        <h2>Lorem Ipsum Dolor</h2>
+        <p>
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vitae
+          aliquid suscipit dolores explicabo animi numquam voluptatem officiis
+          ad porro et.
+        </p>
+        <p>
+          <a href="" class="button">Read more</a>
+        </p>
+      </div>
+      <div class="five card">
+        <h2>Lorem Dolor</h2>
+        <p>
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vitae
+          aliquid suscipit dolores explicabo animi numquam voluptatem officiis
+          ad porro et.
+        </p>
+        <p>
+          <a href="" class="button">Read more</a>
+        </p>
+      </div>
+    </div>
+  </article>
+
+  <article id="moon">
+    <h1>The Moons of Saturn</h1>
+    <article class="card">
+      <img src="https://assets.codepen.io/296057/fem-mimas.jpg"
+        alt="Death Star vs. Mimas, with similar looking craters in the upper right." />
+      <h2>That's No Moon. It's a Space Station.</h2>
+      <p class="text">
+        At 198km diameter, Mimas is bigger than the first Death Star (120km) but
+        smaller than the second (800km).
+      </p>
+      <p class="link">
+        <a href="https://science.nasa.gov/saturn/moons/mimas/" target="_blank" class="button">More about
+          Mimas</a>
+      </p>
+    </article>
+    <article class="card">
+      <img src="https://assets.codepen.io/296057/fem-titan-mosaic.jpg"
+        alt="A fuzzy looking world, with darker patches on a mostly light surface." />
+      <h2>Titan's Ethane Lake</h2>
+      <p class="text">
+        Titan is the only world besides Earth that has standing bodies of
+        liquid, including rivers, lakes and seas, on its surface. Titan is
+        bigger than Earth's moon, and larger than even the planet Mercury.
+      </p>
+      <p class="link">
+        <a href="https://science.nasa.gov/saturn/moons/titan/" target="_blank" class="button">More about
+          Titan</a>
+      </p>
+    </article>
+    <article class="card">
+      <img src="https://assets.codepen.io/296057/fem-enceladus.jpg" alt="Enceladus is a water world." />
+      <h2>Enceladus: Geyser World</h2>
+      <p class="text">
+        Geysers venting from this ocean world add material to Saturn's E ring,
+        and give clues that its subsurface saltwater ocean could be a possible
+        habitat for life.
+      </p>
+      <p class="link">
+        <a href="https://science.nasa.gov/saturn/moons/enceladus/" target="_blank" class="button">More about
+          Enceladus</a>
+      </p>
+    </article>
+    <article class="card">
+      <img src="https://assets.codepen.io/296057/fem-iapetus.jpg"
+        alt="A white moon that looks like it has mold growing on one side of it." />
+      <h2>Iapetus: Yin and Yang</h2>
+      <p class="text">
+        Saturn has tidally locked Iapetus. The moon always presents the same
+        face toward Saturn. With its distant, inclined orbit, Iapetus is the
+        only large moon from which there is a nice view of the rings of Saturn.
+      </p>
+      <p class="link">
+        <a href="https://science.nasa.gov/saturn/moons/iapetus/" target="_blank" class="button">More about
+          Iapetus</a>
+      </p>
+    </article>
+    <article class="card">
+      <img src="https://assets.codepen.io/296057/fem-phoebe.jpg"
+        alt="A moon with heavy cratering, making it look more like an asteroid." />
+      <h2>Phoebe</h2>
+      <p class="text">
+        Unlike most major moons orbiting Saturn, Phoebe is very dark and
+        reflects only 6 percent of the sunlight it receives. Its darkness and
+        irregular, retrograde orbit suggest Phoebe is most likely a captured
+        object. A captured object is a celestial body that is trapped by the
+        gravitational pull of a much bigger body, generally a planet. Phoebe's
+        darkness, in particular, suggests that the small moon comes from the
+        outer solar system, an area where there is plenty of dark material.
+      </p>
+      <p class="link">
+        <a href="https://science.nasa.gov/saturn/moons/phoebe/" target="_blank" class="button">More about
+          Phoebe</a>
+      </p>
+    </article>
+
+    <ul>
+      <li>
+        <a href="https://science.nasa.gov/saturn/moons/dione/" target="_blank">Dione: Cratered on the Wrong
+          Side</a>
+      </li>
+      <li>
+        <a href="https://science.nasa.gov/saturn/moons/tethys/" target="_blank">Tethys: 40% is the Odysseus
+          Crater</a>
+      </li>
+      <li>
+        <a href="https://science.nasa.gov/saturn/moons/rhea/" target="_blank">Rhea: A Moon with Rings?</a>
+      </li>
+    </ul>
+  </article>
+</main> 

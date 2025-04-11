@@ -12,7 +12,7 @@ import 'prismjs/components/prism-bash';
 import 'prismjs/components/prism-json';
 import 'prismjs/components/prism-yaml';
 import 'prismjs/components/prism-markdown';
-import 'prismjs/components/prism-astro';  // Import Astro language if available
+// import 'prismjs/components/prism-astro';  // Import Astro language if available
 
 // Initialize Prism
 export function initPrism() {

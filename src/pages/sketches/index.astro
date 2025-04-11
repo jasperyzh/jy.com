@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import Layout from "@/layouts/BaseLayout.astro";
 import { formatYymmddDate } from "@/utils/formatDate";
+import { getSketchFullUrl } from "@/utils/sketchUtils";
 import { Button } from "@/components/starwind/button";
 import { Badge } from "@/components/starwind/badge";
 
@@ -110,7 +111,7 @@ tags.forEach(tag => {
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {paginatedSketches.map(sketch => (
             <a 
-              href={`/sketches/${sketch.id}`}
+              href={getSketchFullUrl(sketch)}
               class="group bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-md border border-slate-200 dark:border-slate-700 hover:shadow-lg transition-shadow"
             >
               {sketch.data.thumbnail ? (

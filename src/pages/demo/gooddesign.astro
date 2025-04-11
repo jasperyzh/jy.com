@@ -1,0 +1,1281 @@
+---
+// "inspired" by https://startupsthisishowdesignworks.com/
+
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+// Define products data directly in the frontmatter
+const products = [
+  { id: "p1", name: "Product 1" },
+  { id: "p2", name: "Product 2" },
+  { id: "p3", name: "Product 3" },
+  { id: "p4", name: "Product 4" },
+  { id: "p5", name: "Product 5" },
+  { id: "p6", name: "Product 6" },
+];
+---
+
+<BaseLayout>
+    <main class="min-h-screen bg-white">
+        <div class="max-w-5xl mx-auto px-4 py-8">
+          <header class="pt-12 pb-4">
+            <h1 class="text-4xl sm:text-5xl font-light text-gray-800 mb-2"> {/* Adjusted color */}
+              Startups, this is how design works.
+            </h1>
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
+              <p class="text-gray-600 mb-4 sm:mb-0">
+                A guide for non-designers by{" "}
+                <a href="https://wells.ee" class="text-blue-600 hover:underline"> {/* Adjusted color */}
+                  Wells Riley
+                </a>
+                .<br />
+                Format inspired by{" "}
+                <a href="http://jessicahische.is" class="text-blue-600 hover:underline"> {/* Adjusted color */}
+                  Jessica Hische
+                </a>
+                .<br />
+                Originally published in 2012.
+              </p>
+            </div>
+            <div class="prose max-w-none text-gray-700 my-8">
+              <p class="text-lg">
+                Companies like Apple are making design impossible for startups to ignore.
+                Startups like{" "}
+                <a href="https://github.com" class="text-blue-600 hover:underline"> {/* Adjusted color */}
+                  GitHub
+                </a>
+                ,{" "}
+                <a href="https://airbnb.com" class="text-blue-600 hover:underline"> {/* Adjusted color */}
+                  Airbnb
+                </a>
+                ,{" "}
+                <a href="https://squareup.com" class="text-blue-600 hover:underline"> {/* Adjusted color */}
+                  Square
+                </a>
+                , and{" "}
+                <a href="https://fitbit.com" class="text-blue-600 hover:underline"> {/* Adjusted color */}
+                  Fitbit
+                </a>{" "}
+                have design at the core of their business, and they're doing phenomenal work.
+                But what is design actually? Is it a logo? A Wordpress theme? An innovative UI?
+              </p>
+              <p class="text-lg mt-4">
+                It's so much more than that. It's a state of mind. It's an approach to a problem.
+                It's how you're going to kick your competitors' ass. This handy guide will help
+                you understand design and provide resources to help you find awesome design talent.
+              </p>
+            </div>
+          </header>
+
+          <div class="mt-4 p-4 bg-gray-50 rounded-md">
+            <h2 class="text-lg font-medium mb-4">Table of Contents</h2>
+            {/* Replace ScrollArea with a simple div with overflow */}
+            <div class="h-64 rounded-md overflow-y-auto border border-gray-200">
+              <div class="space-y-2 p-4"> {/* Added padding */}
+                <div class="mb-2">
+                  <div class="font-medium">1. Definitions</div>
+                  <ul class="ml-4 space-y-1">
+                    <li>
+                      <a href="#sec11" class="text-blue-600 hover:underline text-sm"> {/* Adjusted color */}
+                        1.1. What is design?
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#sec12" class="text-blue-600 hover:underline text-sm"> {/* Adjusted color */}
+                        1.2. What is good design?
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#sec13" class="text-blue-600 hover:underline text-sm"> {/* Adjusted color */}
+                        1.3. Ten principles of good design
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#sec14" class="text-blue-600 hover:underline text-sm"> {/* Adjusted color */}
+                        1.4. An example
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#sec15" class="text-blue-600 hover:underline text-sm"> {/* Adjusted color */}
+                        1.5. Video: Objectified trailer
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#sec16" class="text-blue-600 hover:underline text-sm"> {/* Adjusted color */}
+                        1.6. Is your product well-designed?
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="mb-2">
+                  <div class="font-medium">2. Different kinds of design</div>
+                  <ul class="ml-4 space-y-1">
+                    <li>
+                      <a href="#sec21" class="text-blue-600 hover:underline text-sm"> {/* Adjusted color */}
+                        2.1. Graphic Design
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#sec22" class="text-blue-600 hover:underline text-sm"> {/* Adjusted color */}
+                        2.2. Interaction Design
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#sec23" class="text-blue-600 hover:underline text-sm"> {/* Adjusted color */}
+                        2.3. Industrial Design
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="mb-2">
+                  <div class="font-medium">3. Data: what does the industry think?</div>
+                  <ul class="ml-4 space-y-1">
+                    <li>
+                      <a href="#sec31" class="text-blue-600 hover:underline text-sm"> {/* Adjusted color */}
+                        3.1. What qualities of design do startups consider most important?
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#sec32" class="text-blue-600 hover:underline text-sm"> {/* Adjusted color */}
+                        3.2. How important is product design?
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#sec33" class="text-blue-600 hover:underline text-sm"> {/* Adjusted color */}
+                        3.3. How deep does design go?
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="mb-2">
+                  <div class="font-medium">4. Designer Founders: the missing link</div>
+                  <ul class="ml-4 space-y-1">
+                    <li>
+                      <a href="#sec41" class="text-blue-600 hover:underline text-sm"> {/* Adjusted color */}
+                        4.1. Startups + designers = ?
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#sec42" class="text-blue-600 hover:underline text-sm"> {/* Adjusted color */}
+                        4.2. Meet the Designer Founders
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#sec48" class="text-blue-600 hover:underline text-sm"> {/* Adjusted color */}
+                        4.8. Changing the world
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="mb-2">
+                  <div class="font-medium">5. Finding great talent</div>
+                  <ul class="ml-4 space-y-1">
+                    <li>
+                      <a href="#sec51" class="text-blue-600 hover:underline text-sm"> {/* Adjusted color */}
+                        5.1. Okay, I need a designer.
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#sec52" class="text-blue-600 hover:underline text-sm"> {/* Adjusted color */}
+                        5.2. Go Where the designers are
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#sec53" class="text-blue-600 hover:underline text-sm"> {/* Adjusted color */}
+                        5.3. A note about Unicorns by Sacha Greif
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#sec54" class="text-blue-600 hover:underline text-sm"> {/* Adjusted color */}
+                        5.4. Resources
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="mb-2">
+                  <div class="font-medium">About me & Acknowledgements</div>
+                  <ul class="ml-4 space-y-1">
+                    <li>
+                      <a href="#section6" class="text-blue-600 hover:underline text-sm"> {/* Adjusted color */}
+                        6. About me
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#section7" class="text-blue-600 hover:underline text-sm"> {/* Adjusted color */}
+                        7. Acknowledgements
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-16">
+            {/* Integrate Definition section directly */}
+            <section class="my-16">
+                <div id="sec11" class="mb-12">
+                    <h2 class="text-3xl font-light text-gray-800 mb-6"> {/* Adjusted color */}
+                      <span class="text-blue-600">1.1</span> Design [dzajn] is a method of problem solving. {/* Adjusted color */}
+                    </h2>
+                    <p class="text-lg text-gray-700 mb-6">
+                      The simplest definition. Design is so many things, executed in many different ways, but
+                      the function is always the same. Whether it's blueprints, a clever UI, a brochure, or a chair —
+                      design can help solve a visual or physical problem.
+                    </p>
+                  </div>
+
+                  <div id="sec12" class="mb-12">
+                    <h2 class="text-3xl font-light text-gray-800 mb-6"> {/* Adjusted color */}
+                      <span class="text-blue-600">1.2</span> So what is good design? {/* Adjusted color */}
+                    </h2>
+                    <p class="text-lg text-gray-700 mb-6">
+                      This definition is not so simple. The best designs are notorious for seeming not designed
+                      at all — or{" "}
+                      {/* Replace HoverCard with a simple span and maybe a title attribute or data-* for JS later */}
+                      <span class="cursor-help text-blue-600 relative group"> {/* Adjusted color */}
+                        undesigned
+                        <span class="absolute hidden group-hover:block bg-black text-white text-xs rounded py-1 px-2 bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-80 z-10">
+                            <strong class="font-semibold">Undesigned</strong><br/>
+                            An object that appears to be simple and not deliberately styled, yet is actually the result of thoughtful design decisions.
+                        </span>
+                      </span>.
+                    </p>
+                    <p class="text-lg text-gray-700 mb-6">
+                      It's easier if we break things down a bit. If you know what to look for, it's easier to
+                      identify good design when you see it; or perhaps <strong>when you can't see it at all.</strong>
+                    </p>
+                  </div>
+
+                  <div id="sec13" class="mb-12">
+                    <h2 class="text-3xl font-light text-gray-800 mb-6"> {/* Adjusted color */}
+                      <span class="text-blue-600">1.3</span> Dieter Rams' Ten Principles of Good Design {/* Adjusted color */}
+                    </h2>
+                    <div class="flex flex-col md:flex-row gap-4 mb-6">
+                      <div class="md:w-1/3">
+                        <p class="mb-4">
+                          <strong>Dieter Rams</strong> is a German
+                          {/* Replace HoverCard */}
+                          <span class="cursor-help text-blue-600 relative group"> {/* Adjusted color */}
+                            industrial designer
+                            <span class="absolute hidden group-hover:block bg-black text-white text-xs rounded py-1 px-2 bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-80 z-10">
+                                <strong class="font-semibold">Industrial Designer</strong><br/>
+                                A professional who designs products for mass production, with a focus on both form and function.
+                            </span>
+                          </span>
+                          closely associated with the consumer products company Braun and functionalist industrial design.
+                        </p>
+                        <p>
+                          According to Vitsoe: Back in the early 1980s, aware that his design was a significant contributor
+                          to the world, he asked himself an important question: "Is my design good design?"
+                        </p>
+                      </div>
+                      <div class="md:w-2/3">
+                        <p class="mb-4">
+                          Since good design can't be measured in a finite way, he set about expressing the ten most important
+                          principles for what he considered was good design. (Sometimes they are referred as the Ten commandments.)
+                          Here they are.
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                          <div class="bg-gray-50 p-4 rounded-md">
+                            <h4 class="font-medium mb-2">Good design is innovative</h4>
+                            <p class="text-sm text-gray-600">Technological advancement always offers new opportunities for design.</p> {/* Adjusted color */}
+                          </div>
+                          <div class="bg-gray-50 p-4 rounded-md">
+                            <h4 class="font-medium mb-2">Good design makes a product useful</h4>
+                            <p class="text-sm text-gray-600">Products are bought to be used. Design should enhance function.</p> {/* Adjusted color */}
+                          </div>
+                          <div class="bg-gray-50 p-4 rounded-md">
+                            <h4 class="font-medium mb-2">Good design is aesthetic</h4>
+                            <p class="text-sm text-gray-600">The aesthetic quality is integral to usefulness.</p> {/* Adjusted color */}
+                          </div>
+                          <div class="bg-gray-50 p-4 rounded-md">
+                            <h4 class="font-medium mb-2">Good design makes a product understandable</h4>
+                            <p class="text-sm text-gray-600">Products should communicate their function.</p> {/* Adjusted color */}
+                          </div>
+                          <div class="bg-gray-50 p-4 rounded-md">
+                            <h4 class="font-medium mb-2">Good design is unobtrusive</h4>
+                            <p class="text-sm text-gray-600">Products should be neutral and allow users to express themselves.</p> {/* Adjusted color */}
+                          </div>
+                          <div class="bg-gray-50 p-4 rounded-md">
+                            <h4 class="font-medium mb-2">Good design is honest</h4>
+                            <p class="text-sm text-gray-600">Design should not manipulate users with false promises.</p> {/* Adjusted color */}
+                          </div>
+                          <div class="bg-gray-50 p-4 rounded-md">
+                            <h4 class="font-medium mb-2">Good design is long-lasting</h4>
+                            <p class="text-sm text-gray-600">It avoids being fashionable and therefore never appears antiquated.</p> {/* Adjusted color */}
+                          </div>
+                          <div class="bg-gray-50 p-4 rounded-md">
+                            <h4 class="font-medium mb-2">Good design is thorough</h4>
+                            <p class="text-sm text-gray-600">Nothing must be arbitrary or left to chance. Every detail matters.</p> {/* Adjusted color */}
+                          </div>
+                          <div class="bg-gray-50 p-4 rounded-md">
+                            <h4 class="font-medium mb-2">Good design is environmentally friendly</h4>
+                            <p class="text-sm text-gray-600">Design should conserve resources and minimize pollution.</p> {/* Adjusted color */}
+                          </div>
+                          <div class="bg-gray-50 p-4 rounded-md">
+                            <h4 class="font-medium mb-2">Good design is as little design as possible</h4>
+                            <p class="text-sm text-gray-600">Less, but better – because it concentrates on the essential aspects.</p> {/* Adjusted color */}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <blockquote class="border-l-4 border-blue-600 pl-4 my-8 italic text-gray-700"> {/* Adjusted color */}
+                      We designers, we don't work in a vacuum. We need business people. We are not the fine artists we are
+                      often confused with. Today you find few companies that take design seriously, as I see it.
+                      <footer class="mt-2 font-medium not-italic">Dieter Rams</footer> {/* Make footer not italic */}
+                    </blockquote>
+                  </div>
+
+                  <div id="sec14" class="mb-12">
+                     {/* Removed extra h2 */}
+                    <p class="text-lg text-gray-700 mb-6 mt-6"> {/* Added mt-6 for spacing */}
+                      <span class="text-blue-600 font-medium">1.4</span> Good design can't be achieved with glossy buttons or masterful wireframes alone. It's a merger of all
+                      these principles into something that is meaningful and deliberate. {/* Added section number inline */}
+                    </p>
+                    <p class="text-lg text-gray-700 mb-6">
+                      Just like a great business plan is nothing without expert execution, a great Photoshop mockup is nothing,
+                      for example, without careful consideration to UI or the user's needs.
+                    </p>
+                    <div class="flex justify-center my-8">
+                      <figure class="text-center">
+                        {/* Placeholder for image */}
+                        <div class="w-24 h-24 mx-auto bg-gray-100 mb-2 flex items-center justify-center rounded-md text-gray-400">
+                          <span>Icon Placeholder</span>
+                        </div>
+                        <figcaption class="text-sm text-gray-600">
+                          Fill Can icon 1983 <a href="http://www.kareprints.com/" class="text-blue-600 hover:underline">Susan Kare</a> {/* Adjusted color */}
+                        </figcaption>
+                      </figure>
+                    </div>
+                  </div>
+
+                  <div id="sec15" class="mb-12">
+                    <h3 class="text-2xl font-light text-gray-800 mb-6"> {/* Adjusted color */}
+                      <span class="text-blue-600">1.5</span> Objectified {/* Adjusted color */}
+                    </h3>
+                    <p class="text-gray-700 mb-6">
+                      A documentary film that provides a look at the creativity behind everything from toothbrushes to tech gadgets.
+                      Watch the complete film <a href="https://objectifiedfilm.com" class="text-blue-600 hover:underline">here</a>. {/* Adjusted color */}
+                    </p>
+                    <div class="aspect-video bg-gray-100 rounded-md flex items-center justify-center my-8">
+                      {/* Placeholder for video */}
+                      <div class="text-gray-500">Video player placeholder</div>
+                    </div>
+                  </div>
+
+                  <div id="sec16" class="mb-12">
+                     {/* Removed extra h2 */}
+                    <p class="text-lg text-gray-700 mb-6 mt-6"> {/* Added mt-6 for spacing */}
+                         <span class="text-blue-600 font-medium">1.6</span> Is your product well-designed? {/* Added section number inline and styling */}
+                    </p>
+                    {/* Use Astro map syntax */}
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 mb-8">
+                      {products.map((product) => (
+                        <div class="bg-gray-100 p-4 rounded-md h-32 flex items-center justify-center">
+                          <span class="text-gray-500">{product.name}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div class="mt-6">
+                      <p class="text-lg text-gray-700 mb-6">
+                        Take a look at your current product — is design contributing in an innovative way? Does it make the product
+                        useful, understandable, and aesthetic? Is it long-lasting, or will it look outdated or break in a few years?
+                      </p>
+                      <p class="text-lg text-gray-700 mb-6">
+                        These are really hard questions to answer. Designers enable you to work within these constraints to create a
+                        product customers will fall in love with. <em>Love is a really strong emotion</em>.
+                      </p>
+                      <p class="text-lg text-gray-700">
+                        Dieter Rams and his
+                        {/* Replace HoverCard */}
+                        <span class="cursor-help text-blue-600 relative group"> {/* Adjusted color */}
+                           contemporaries
+                            <span class="absolute hidden group-hover:block bg-black text-white text-xs rounded py-1 px-2 bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-80 z-10">
+                                <strong class="font-semibold">Contemporaries</strong><br/>
+                                People living or working during the same time period. In this context, other industrial designers of the mid-20th century.
+                            </span>
+                        </span>
+                        started a movement in 20th Century towards simple and beautiful products. Design was a strongly valued
+                        aspect of business, even 60 years ago. It totally has a place in business today — it's a proven method.
+                      </p>
+                    </div>
+                  </div>
+                </section>
+
+            {/* Placeholder for the rest of the content */}
+            {/* <!-- Other sections (DifferentDesign, IndustryData, DesignerFounders, etc.) need similar conversion --> */}
+            {/* Integrate DifferentDesign section directly */}
+            <section class="my-16">
+              <h2 class="text-3xl font-light text-gray-800 mb-8"> {/* Adjusted color */}
+                There are different kinds of design.
+              </h2>
+
+              <div id="sec21" class="mb-16">
+                <h3 class="text-2xl font-light text-gray-800 mb-6"> {/* Adjusted color */}
+                  <span class="text-blue-600">2.1</span> Graphic Design {/* Adjusted color */}
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                  <div class="md:col-span-1">
+                    <div class="bg-gray-100 h-60 rounded-md flex items-center justify-center mb-4">
+                      <span class="text-gray-500">Bob Dylan Poster Image</span>
+                    </div>
+                    <p class="text-sm text-gray-600 text-center">
+                      Poster for Bob Dylan's Greatest Hits<br />
+                      1975 <a href="http://www.miltonglaser.com/the-work/444/columbia-records-poster-for-bob-dylans-greatest-hits-1975/" class="text-blue-600 hover:underline">Milton Glaser</a> {/* Adjusted color */}
+                    </p>
+                  </div>
+                  <div class="md:col-span-2">
+                    <p class="text-gray-700 mb-4">
+                      This is a term that describes an array of different kinds of designers. Think of it like the term entrepreneur.
+                      It describes a wide variety of businesspeople - from founders to VC's to
+                      {/* Replace HoverCard */}
+                      <span class="cursor-help text-blue-600 relative group"> {/* Adjusted color */}
+                         Chief Ninjas
+                        <span class="absolute hidden group-hover:block bg-black text-white text-xs rounded py-1 px-2 bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-80 z-10">
+                            <strong class="font-semibold">Chief Ninjas</strong><br/>
+                            A playful job title often used in startups for versatile employees who handle multiple responsibilities.
+                        </span>
+                      </span> - but isn't all-inclusive.
+                    </p>
+                    <p class="text-gray-700 mb-4">
+                      Graphic designers work with graphical images, whether they be illustrations,
+                      {/* Replace HoverCard */}
+                      <span class="cursor-help text-blue-600 relative group"> {/* Adjusted color */}
+                         typography
+                        <span class="absolute hidden group-hover:block bg-black text-white text-xs rounded py-1 px-2 bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-80 z-10">
+                            <strong class="font-semibold">Typography</strong><br/>
+                            The art and technique of arranging type to make written language legible, readable, and appealing.
+                        </span>
+                      </span>, or images, and on a variety of media including print and web.
+                      Graphic design is typically rendered in 2D — printed on a physical surface or displayed on a screen.
+                    </p>
+
+                    <div class="bg-gray-50 p-4 rounded-md mt-8">
+                      <h4 class="font-medium mb-2">Print Design</h4>
+                      <p class="text-gray-700 text-sm">
+                        A type of graphic designer that works exclusively with print media. Before the widespread adoption of computers,
+                        software, and the web, virtually all graphic designers worked on print media such as posters, magazines, billboards,
+                        and books. Print designers are typically masters of typography, illustration, and traditional printing processes
+                        like the
+                        {/* Replace HoverCard */}
+                        <span class="cursor-help text-blue-600 relative group"> {/* Adjusted color */}
+                           Linotype machine
+                          <span class="absolute hidden group-hover:block bg-black text-white text-xs rounded py-1 px-2 bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-80 z-10">
+                              <strong class="font-semibold">Linotype Machine</strong><br/>
+                              A typesetting machine that cast entire lines of metal type at once, revolutionizing printing in the late 19th century.
+                          </span>
+                        </span> or the
+                        {/* Replace HoverCard */}
+                        <span class="cursor-help text-blue-600 relative group"> {/* Adjusted color */}
+                           letterpress machine
+                          <span class="absolute hidden group-hover:block bg-black text-white text-xs rounded py-1 px-2 bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-80 z-10">
+                              <strong class="font-semibold">Letterpress Machine</strong><br/>
+                              A printing technique where a surface with raised letters is inked and pressed onto paper.
+                          </span>
+                        </span>, a 500-year-old printing method that has regained popularity in recent years for its handmade and traditional feel.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div id="sec22" class="mb-16">
+                <h3 class="text-2xl font-light text-gray-800 mb-6"> {/* Adjusted color */}
+                  <span class="text-blue-600">2.2</span> Interaction Design {/* Adjusted color */}
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                  <div class="md:col-span-2">
+                    <p class="text-gray-700 mb-4">
+                      Interaction designers, on the other hand, focus on digital products and interactive software design. Some examples include web apps like
+                      <a href="http://facebook.com" class="text-blue-600 hover:underline"> Facebook</a> and {/* Adjusted color */}
+                      <a href="http://pinterest.com" class="text-blue-600 hover:underline"> Pinterest</a>, mobile apps like {/* Adjusted color */}
+                      <a href="http://tapbots.com" class="text-blue-600 hover:underline"> Tweetbot</a>, and operating systems like OS X. {/* Adjusted color */}
+                    </p>
+                    <p class="text-gray-700 mb-4">
+                      While graphic design is meant to be observed, interaction design helps humans experience or manipulate software or interface
+                      with screen-based hardware in order to <em>achieve specific goals</em> — checking email,
+                      {/* Replace HoverCard */}
+                      <span class="cursor-help text-blue-600 relative group"> {/* Adjusted color */}
+                         withdrawing money from an ATM
+                        <span class="absolute hidden group-hover:block bg-black text-white text-xs rounded py-1 px-2 bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-80 z-10">
+                            <strong class="font-semibold">ATM</strong><br/>
+                            Automated Teller Machine - a computerized device that provides bank customers with access to financial transactions.
+                        </span>
+                      </span>, or "Liking" a webpage (such as this one!)
+                    </p>
+                    <p class="text-gray-700 mb-4 italic">
+                      "Interaction design is heavily focused on satisfying the needs and desires of the people who will use the product."
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                      <div class="bg-gray-50 p-4 rounded-md">
+                        <h4 class="font-medium mb-2">User Interface Design</h4>
+                        <p class="text-gray-700 text-sm">
+                          User Interface (UI) design is the design of software or websites with the focus on the user's experience
+                          and interaction. <em>The goal of user interface design is to make the user's interaction as simple and
+                          efficient as possible</em>. Good user interface design puts emphasis on goals and completing tasks, and
+                          good UI design never
+                          {/* Replace HoverCard */}
+                          <span class="cursor-help text-blue-600 relative group"> {/* Adjusted color */}
+                             draws more attention to itself
+                            <span class="absolute hidden group-hover:block bg-black text-white text-xs rounded py-1 px-2 bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-80 z-10">
+                                <strong class="font-semibold">Skeuomorphism</strong><br/>
+                                A design element that mimics the appearance of physical objects in digital interfaces.
+                            </span>
+                          </span> than enforcing user goals.
+                        </p>
+                        <p class="text-gray-700 text-sm mt-2">
+                          "The design process must balance technical functionality and visual elements to create a system that is not only
+                          operational but also <em>usable and
+                          {/* Replace HoverCard */}
+                          <span class="cursor-help text-blue-600 relative group"> {/* Adjusted color */}
+                             adaptable
+                            <span class="absolute hidden group-hover:block bg-black text-white text-xs rounded py-1 px-2 bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-80 z-10">
+                                <strong class="font-semibold">Interfaces</strong><br/>
+                                The point of interaction between a user and a software application or hardware device.
+                            </span>
+                          </span> to changing user needs</em>.
+                        </p>
+                      </div>
+                      <div class="bg-gray-50 p-4 rounded-md">
+                        <h4 class="font-medium mb-2">User Experience Design</h4>
+                        <p class="text-gray-700 text-sm">
+                          User Experience (UX) design "incorporates aspects of <em>psychology, anthropology, sociology, computer science,
+                          graphic design, industrial design and cognitive science</em>. Depending on the purpose of the product, UX may
+                          also involve content design disciplines such as communication design, instructional design, or game design."
+                        </p>
+                        <p class="text-gray-700 text-sm mt-2">
+                          The goal of UX design is to create a seamless, simple, and useful interaction between a user and a product,
+                          whether it be hardware or software. As with UI design, user experience design focuses on creating interactions
+                          <em>designed to meet or assist a user's goals and needs</em>.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="md:col-span-1">
+                    <div class="mb-8">
+                      <div class="bg-gray-100 h-40 rounded-md flex items-center justify-center mb-4">
+                        <span class="text-gray-500">Framework Diagram</span>
+                      </div>
+                      <p class="text-sm text-gray-600 text-center">
+                        Framework by Bill Verplank<br />
+                        2000 <a href="http://www.billverplank.com/IxDSketchBook.pdf" class="text-blue-600 hover:underline">Bill Verplank</a> {/* Adjusted color */}
+                      </p>
+                    </div>
+                    <div>
+                      <div class="bg-gray-100 h-40 rounded-md flex items-center justify-center mb-4">
+                        <span class="text-gray-500">Tapbots UI</span>
+                      </div>
+                      <p class="text-sm text-gray-600 text-center">
+                        ConvertBot and Weightbot UI<br />
+                        2008-2012 <a href="http://tapbots.com" class="text-blue-600 hover:underline">Tapbots, LLC</a> {/* Adjusted color */}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div id="sec23" class="mb-16">
+                <h3 class="text-2xl font-light text-gray-800 mb-6"> {/* Adjusted color */}
+                  <span class="text-blue-600">2.3</span> Industrial Design {/* Adjusted color */}
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                  <div class="md:col-span-1">
+                    <div class="bg-gray-100 h-60 rounded-md flex items-center justify-center mb-4">
+                      <span class="text-gray-500">Panton Chair Image</span>
+                    </div>
+                    <p class="text-sm text-gray-600 text-center">
+                      Panton Stacking Chair<br />
+                      1967 <a href="http://www.vitra.com/en-us/home/products/panton-chair-classic/overview/" class="text-blue-600 hover:underline">Verner Panton</a> {/* Adjusted color */}
+                    </p>
+                  </div>
+                  <div class="md:col-span-2">
+                    <p class="text-gray-700 mb-4">
+                      Industrial designers create physical products designated for mass-consumption by <em>millions of people</em>.
+                      Motorcycles, iPods, toothbrushes, and nightstands are all designed by industrial designers. These people are
+                      masters of physical goods and innovation within the constraints of production lines and machines.
+                    </p>
+                    <p class="text-gray-700 mb-4">
+                      "The objective is to study both function and form, and the connection between product, the user, and the environment."
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+            {/* Placeholder for IndustryData section */}
+            {/* <!-- <IndustryData /> --> Removed component wrapper */}
+            {/* Integrate IndustryData section directly */}
+            <section class="my-16">
+              <h2 class="text-3xl font-light text-gray-800 mb-8"> {/* Adjusted color */}
+                Data: what does the industry think?
+              </h2>
+
+              <div id="sec31" class="mb-16">
+                <h3 class="text-2xl font-light text-gray-800 mb-6"> {/* Adjusted color */}
+                  <span class="text-blue-600">3.1</span> What qualities of design do startups consider most important? {/* Adjusted color */}
+                </h3>
+                <p class="text-gray-700 mb-8">
+                  I asked 78 CEOs, marketers, engineers, and designers about their opinions and definitions of design.
+                  Before I could come up with anything for this project, I had to check my assumptions at the door and
+                  get some legit data. <em>It seems that entrepreneurs / engineers and designers are thinking about the same things.</em>
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                  <div>
+                    <div class="flex items-center justify-center h-60 bg-gray-50 rounded-md mb-4">
+                      <div class="h-40 w-40 rounded-full border-8 border-blue-600 flex items-center justify-center text-2xl font-light"> {/* Adjusted color */}
+                        78%
+                      </div>
+                    </div>
+                    <p class="text-center text-gray-600 text-sm">Entrepreneurs & Engineers who value usability most</p>
+                  </div>
+                  <div>
+                    <div class="flex items-center justify-center h-60 bg-gray-50 rounded-md mb-4">
+                      {/* Assuming custom-blue maps to something like Tailwind's blue-500 */}
+                      <div class="h-40 w-40 rounded-full border-8 border-blue-500 flex items-center justify-center text-2xl font-light"> {/* Adjusted color */}
+                        89%
+                      </div>
+                    </div>
+                    <p class="text-center text-gray-600 text-sm">Designers who value usability most</p>
+                  </div>
+                  <div>
+                    <div class="flex items-center justify-center h-60 bg-gray-50 rounded-md mb-4">
+                       {/* Assuming custom-yellow maps to something like Tailwind's yellow-400 */}
+                      <div class="h-40 w-40 rounded-full border-8 border-yellow-400 flex items-center justify-center text-2xl font-light"> {/* Adjusted color */}
+                        8%
+                      </div>
+                    </div>
+                    <p class="text-center text-gray-600 text-sm">Entrepreneurs & Engineers who value aesthetics most</p>
+                  </div>
+                </div>
+              </div>
+
+              <div id="sec32" class="mb-16">
+                <h3 class="text-2xl font-light text-gray-800 mb-6"> {/* Adjusted color */}
+                  <span class="text-blue-600">3.2</span> How important is product design? {/* Adjusted color */}
+                </h3>
+                <p class="text-gray-700 mb-8">
+                  Product design includes both digital and physical products. It represents not only the aesthetic qualities,
+                  but <em>what it does, how well a user thinks it's going to do it, and how easily & quickly they can complete a task.</em>
+                </p>
+                <p class="text-gray-700 mb-8">
+                  Think for a moment. How important is product design to <em>you?</em> How important do you think aesthetics
+                  and ease-of-use are to <em>your</em> customers?
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                  <div>
+                    <div class="flex items-center justify-center h-60 bg-gray-50 rounded-md mb-4">
+                      <div class="relative h-40 w-40">
+                        {/* Using Tailwind for the circle chart effect */}
+                        <div class="absolute inset-0 rounded-full border-8 border-gray-200"></div>
+                        <div class="absolute inset-0 rounded-full border-8 border-blue-600"></div> {/* Adjusted color */}
+                        <div class="absolute inset-0 flex items-center justify-center text-2xl font-light">
+                          100%
+                        </div>
+                      </div>
+                    </div>
+                    <p class="text-center text-gray-600 text-sm">Entrepreneurs & Engineers who say design is "somewhat important" or "very important"</p>
+                  </div>
+                  <div>
+                    <div class="flex items-center justify-center h-60 bg-gray-50 rounded-md mb-4">
+                      <div class="relative h-40 w-40">
+                         {/* Using Tailwind for the partial circle chart effect - approximate with rotation */}
+                        <div class="absolute inset-0 rounded-full border-8 border-gray-200"></div>
+                        <div class="absolute inset-0 rounded-full border-8 border-blue-500 overflow-hidden"> {/* Adjusted color */} 
+                           {/* Approximating 70% fill. Exact clip-path is hard with just Tailwind */}
+                           <div class="absolute w-1/2 h-full bg-blue-500 left-0 top-0 origin-right" style="transform: rotate(252deg);"></div> {/* 360 * 0.7 = 252 */}
+                            <div class="absolute w-1/2 h-full bg-gray-200 right-0 top-0"></div> {/* Cover the rest */} 
+                        </div>
+                        <div class="absolute inset-0 flex items-center justify-center text-2xl font-light">
+                          70%
+                        </div>
+                      </div>
+                    </div>
+                    <p class="text-center text-gray-600 text-sm">Entrepreneurs & Engineers who say design is "very important" to the success of their business</p>
+                  </div>
+                </div>
+              </div>
+
+              <div id="sec33" class="mb-16">
+                <h3 class="text-2xl font-light text-gray-800 mb-6"> {/* Adjusted color */}
+                  <span class="text-blue-600">3.3</span> How deep does design go? {/* Adjusted color */}
+                </h3>
+                <p class="text-gray-700 mb-8">
+                  Now we're getting somewhere. Great design is taking root in startup culture, and it seems like many people are open to change.
+                  Not only do many entrepreneurs, devs, and engineers see substantial room to improve their own products,
+                  <em>they overwhelmingly believe that designers belong on a founding team.</em>
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                  <div>
+                    <div class="flex items-center justify-center h-60 bg-gray-50 rounded-md mb-4 p-4"> {/* Added padding */}
+                      <div class="flex flex-col items-center w-full max-w-xs"> {/* Constrained width */}
+                        {/* Using Tailwind width classes instead of inline styles */}
+                        <div class="h-8 w-full bg-gray-200 mb-2 relative rounded overflow-hidden"> {/* Added rounding/overflow */}
+                          <div class="h-full bg-blue-600 absolute left-0 top-0 w-[80%]"></div> {/* Adjusted color & width class */}
+                          <div class="absolute top-0 right-0 bottom-0 flex items-center pr-2 text-xs text-white font-medium z-10">80%</div> {/* Adjusted text style */}
+                        </div>
+                        <div class="h-8 w-full bg-gray-200 mb-2 relative rounded overflow-hidden"> {/* Added rounding/overflow */}
+                           {/* Adjusted color & width class */}
+                          <div class="h-full bg-blue-500 absolute left-0 top-0 w-[15%]"></div>
+                          <div class="absolute top-0 right-0 bottom-0 flex items-center pr-2 text-xs text-white font-medium z-10">15%</div> {/* Adjusted text style */}
+                        </div>
+                        <div class="h-8 w-full bg-gray-200 relative rounded overflow-hidden"> {/* Added rounding/overflow */}
+                          {/* Adjusted color & width class */}
+                          <div class="h-full bg-yellow-400 absolute left-0 top-0 w-[5%]"></div>
+                          <div class="absolute top-0 right-0 bottom-0 flex items-center pr-2 text-xs text-black font-medium z-10">5%</div> {/* Adjusted text style */}
+                        </div>
+                      </div>
+                    </div>
+                    <p class="text-center text-gray-600 text-sm">Non-designer assessment of design quality in their products:<br />
+                    <span class="text-blue-600 font-semibold">Needs improvement</span> | {/* Adjusted color */}
+                    <span class="text-blue-500 font-semibold"> Good enough</span> | {/* Adjusted color */}
+                    <span class="text-yellow-400 font-semibold"> Industry-leading</span></p> {/* Adjusted color */}
+                  </div>
+                  <div>
+                    <div class="flex items-center justify-center h-60 bg-gray-50 rounded-md mb-4">
+                      <div class="relative h-40 w-40">
+                        {/* Approximate 80% fill for circle chart */}
+                        <div class="absolute inset-0 rounded-full border-8 border-gray-200"></div>
+                        <div class="absolute inset-0 rounded-full border-8 border-blue-600 overflow-hidden"> {/* Adjusted color */} 
+                            {/* Approximating 80% fill. */}
+                           <div class="absolute w-1/2 h-full bg-blue-600 left-0 top-0 origin-right" style="transform: rotate(288deg);"></div> {/* 360 * 0.8 = 288 */}
+                            <div class="absolute w-1/2 h-full bg-gray-200 right-0 top-0"></div> {/* Cover the rest */} 
+                        </div>
+                        <div class="absolute inset-0 flex items-center justify-center text-2xl font-light">
+                          80%
+                        </div>
+                      </div>
+                    </div>
+                    <p class="text-center text-gray-600 text-sm">Entrepreneurs & Engineers who believe designers belong on the founding team</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Placeholder for DesignerFounders section */}
+            {/* <!-- <DesignerFounders /> --> */}
+            {/* Integrate DesignerFounders section directly */}
+            <section class="my-16">
+              <h2 class="text-3xl font-light text-gray-800 mb-8"> {/* Adjusted color */}
+                Designer Founders: the missing link
+              </h2>
+
+              <div id="sec41" class="mb-12">
+                <h3 class="text-2xl font-light text-gray-800 mb-6"> {/* Adjusted color */}
+                  <span class="text-blue-600">4.1</span> Startups + designers = ? {/* Adjusted color */}
+                </h3>
+                <p class="text-gray-700 mb-4">
+                  For a long time, a pair of co-founders consisted of an executive and an engineer. <strong>It worked for
+                  Facebook, Microsoft, and
+                  {/* Replace HoverCard */}
+                  <span class="cursor-help text-blue-600 relative group"> {/* Adjusted color */}
+                     Apple
+                    <span class="absolute hidden group-hover:block bg-black text-white text-xs rounded py-1 px-2 bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-80 z-10">
+                        <strong class="font-semibold">Apple</strong><br/>
+                        Apple was co-founded by Steve Jobs, who had a strong design sensibility and later worked closely with designer Jony Ive.
+                    </span>
+                  </span></strong>, just to name a few. These companies have excellent designers today, <em>because it's a necessity
+                  they can't afford to ignore</em>. It seems like design is becoming more and more prevalent in new startups as well —
+                  <a href="http://squareup.com" class="text-blue-600 hover:underline">Square</a>, {/* Adjusted color */}
+                  <a href="http://fitbit.com" class="text-blue-600 hover:underline">Fitbit</a>, {/* Adjusted color */}
+                  <a href="http://tapbots.com" class="text-blue-600 hover:underline">Tapbots</a>, and more are pushing the envelope. {/* Adjusted color */}
+                </p>
+                <p class="text-gray-700 mb-8">
+                  <em>Design is becoming a key differentiator</em> for companies to acquire funding, press coverage, and loyal users.
+                </p>
+
+                <div class="bg-gray-50 p-6 rounded-md my-8">
+                  <h3 class="text-2xl font-light text-center mb-6 text-gray-800"> {/* Adjusted color */}
+                    I think it's time to shake things up a bit.<br />
+                    Let's add designers into the mix.
+                  </h3>
+
+                  <div class="flex flex-col md:flex-row justify-center items-center gap-8 mt-8"> {/* Added items-center */}
+                    <div class="bg-white p-4 rounded-md text-center shadow-sm flex-1 max-w-xs"> {/* Added max-w-xs */}
+                      <div class="w-16 h-16 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+                        <span class="text-3xl">💼</span> {/* Increased emoji size */}
+                      </div>
+                      <div class="font-medium text-gray-700">Business Peeps</div>
+                    </div>
+                    <div class="text-4xl font-light text-gray-400 hidden md:block">+</div> {/* Added plus sign */}
+                    <div class="bg-white p-4 rounded-md text-center shadow-sm flex-1 max-w-xs"> {/* Added max-w-xs */}
+                      <div class="w-16 h-16 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+                        <span class="text-3xl">🎨</span> {/* Increased emoji size */}
+                      </div>
+                      <div class="font-medium text-gray-700">Designers</div>
+                    </div>
+                     <div class="text-4xl font-light text-gray-400 hidden md:block">+</div> {/* Added plus sign */}
+                    <div class="bg-white p-4 rounded-md text-center shadow-sm flex-1 max-w-xs"> {/* Added max-w-xs */}
+                      <div class="w-16 h-16 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+                        <span class="text-3xl">🧠</span> {/* Increased emoji size */}
+                      </div>
+                      <div class="font-medium text-gray-700">Engineers</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div id="sec42" class="mb-12">
+                <h3 class="text-2xl font-light text-gray-800 mb-6"> {/* Adjusted color */}
+                  <span class="text-blue-600">4.2</span> Meet some Designer Founders {/* Adjusted color */}
+                </h3>
+                <p class="text-gray-700 mb-8">
+                  According to <a href="http://designerfund.com" class="text-blue-600 hover:underline">The Designer Fund</a>, {/* Adjusted color */}
+                  startups with designer founders are generating <em>billions of dollars in growth</em>. Below are profiles on five of
+                  the most influential designer founders and their incredibly hot startups.
+                </p>
+
+                {/* Replace Tabs component with stacked divs */}
+                <div class="space-y-8"> {/* Add spacing between stacked sections */}
+                  {/* Joe Gebbia Section */}
+                  <div class="p-6 bg-gray-50 rounded-md border border-gray-200"> {/* Add border for separation */}
+                    <div class="flex flex-col md:flex-row gap-8">
+                      <div class="md:w-1/3 flex-shrink-0"> {/* Added flex-shrink-0 */}
+                        <div class="bg-gray-100 h-60 rounded-md mb-4 flex items-center justify-center">
+                          <span class="text-gray-500">Joe Gebbia Photo Placeholder</span>
+                        </div>
+                      </div>
+                      <div class="md:w-2/3">
+                        <h4 class="text-xl font-medium mb-2 text-gray-800">Joe Gebbia, Airbnb</h4> {/* Adjusted color */}
+                        <p class="text-gray-700 mb-4">
+                          Joe defines the <a href="http://airbnb.com" class="text-blue-600 hover:underline">Airbnb</a> experience. {/* Adjusted color */}
+                          He is dedicated to creating an inspiring and effortless user experience through sharp, intuitive design,
+                          and crafts the product roadmap to make it so. Joe values products that simplify life and have a positive
+                          impact on the environment, and ensures that the company adheres to these tenets.
+                        </p>
+                        <p class="text-gray-700 mb-4">
+                          Prior to Airbnb, Joe was employed by Chronicle Books, co-founded a green design website, and developed
+                          several consumer products. An alumni of the
+                          <a href="http://risd.edu" class="text-blue-600 hover:underline"> Rhode Island School of Design</a>, {/* Adjusted color */}
+                          Joe earned dual degrees in Graphic Design and Industrial Design.
+                        </p>
+                        <div class="flex flex-wrap gap-x-4 gap-y-2 mt-6"> {/* Added flex-wrap and gap-y */}
+                          <a href="http://twitter.com/jgebbia" class="text-blue-600 hover:underline text-sm">Twitter</a> {/* Adjusted color & size */}
+                          <a href="http://joegebbia.com/" class="text-blue-600 hover:underline text-sm">Website</a> {/* Adjusted color & size */}
+                          <a href="http://airbnb.com/" class="text-blue-600 hover:underline text-sm">Airbnb</a> {/* Adjusted color & size */}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Alexa Andrzejewski Section */}
+                  <div class="p-6 bg-gray-50 rounded-md border border-gray-200"> {/* Add border for separation */}
+                    <div class="flex flex-col md:flex-row gap-8">
+                      <div class="md:w-1/3 flex-shrink-0"> {/* Added flex-shrink-0 */}
+                        <div class="bg-gray-100 h-60 rounded-md mb-4 flex items-center justify-center">
+                          <span class="text-gray-500">Alexa Andrzejewski Photo Placeholder</span>
+                        </div>
+                      </div>
+                      <div class="md:w-2/3">
+                        <h4 class="text-xl font-medium mb-2 text-gray-800">Alexa Andrzejewski, Foodspotting</h4> {/* Adjusted color */}
+                        <p class="text-gray-700 mb-4">
+                          Alexa Andrzejewski is the Founder and CEO of
+                          <a href="http://www.foodspotting.com" class="text-blue-600 hover:underline"> Foodspotting</a>, {/* Adjusted color */}
+                          a website and mobile app for finding and recommending dishes, not just restaurants. As the UX designer behind
+                          Foodspotting, Alexa sees herself as the \"chief storyteller,\" responsible for capturing the imagination of her
+                          team, partners and investors through metaphors, mantras, user stories, sketches and detailed designs.
+                        </p>
+                        <p class="text-gray-700 mb-4">
+                          Foodspotting has received attention from
+                          <a href="http://video.today.msnbc.msn.com/today/47229496#47229496" class="text-blue-600 hover:underline"> The Today Show</a>, {/* Adjusted color */}
+                          <a href="http://blog.cookingchanneltv.com/2011/03/17/one-mega-bite-food-gets-hi-tech" class="text-blue-600 hover:underline"> The Cooking Channel</a>, {/* Adjusted color */}
+                          and many other media outlets.
+                        </p>
+                        <div class="flex flex-wrap gap-x-4 gap-y-2 mt-6"> {/* Added flex-wrap and gap-y */}
+                          <a href="https://twitter.com/ladylexy" class="text-blue-600 hover:underline text-sm">Twitter</a> {/* Found Twitter link, adjusted color & size */}
+                          <a href="https://www.alexaland.com/" class="text-blue-600 hover:underline text-sm">Website</a> {/* Found Website link, adjusted color & size */}
+                          <a href="http://www.foodspotting.com" class="text-blue-600 hover:underline text-sm">Foodspotting</a> {/* Adjusted color & size */}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Jessica Hische Section */}
+                  <div class="p-6 bg-gray-50 rounded-md border border-gray-200"> {/* Add border for separation */}
+                    <div class="flex flex-col md:flex-row gap-8">
+                      <div class="md:w-1/3 flex-shrink-0"> {/* Added flex-shrink-0 */}
+                        <div class="bg-gray-100 h-60 rounded-md mb-4 flex items-center justify-center">
+                          <span class="text-gray-500">Jessica Hische Photo Placeholder</span>
+                        </div>
+                      </div>
+                      <div class="md:w-2/3">
+                        <h4 class="text-xl font-medium mb-2 text-gray-800">Jessica Hische, Freelance Illustrator</h4> {/* Adjusted color */}
+                        <p class="text-gray-700 mb-4">
+                          Jessica Hische is a lettering artist and illustrator who has built a successful independent career
+                          through her distinctive style and professional approach to design work. Known for her \"Daily Drop Cap\"
+                          project and work with major clients like Wes Anderson (Moonrise Kingdom), Penguin Books, and The New York Times.
+                        </p>
+                        <p class="text-gray-700 mb-4">
+                          Jessica demonstrates how designers can thrive in entrepreneurial roles without necessarily founding
+                          traditional startups. Her business acumen combined with her creative talents have made her one of the
+                          most recognized and respected independent designers.
+                        </p>
+                        <div class="flex flex-wrap gap-x-4 gap-y-2 mt-6"> {/* Added flex-wrap and gap-y */}
+                          <a href="http://twitter.com/jessicahische" class="text-blue-600 hover:underline text-sm">Twitter</a> {/* Adjusted color & size */}
+                          <a href="http://jessicahische.is" class="text-blue-600 hover:underline text-sm">Website</a> {/* Adjusted color & size */}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                   {/* Mike Matas Section */}
+                  <div class="p-6 bg-gray-50 rounded-md border border-gray-200"> {/* Add border for separation */}
+                    <div class="flex flex-col md:flex-row gap-8">
+                      <div class="md:w-1/3 flex-shrink-0"> {/* Added flex-shrink-0 */}
+                        <div class="bg-gray-100 h-60 rounded-md mb-4 flex items-center justify-center">
+                          <span class="text-gray-500">Mike Matas Photo Placeholder</span>
+                        </div>
+                      </div>
+                      <div class="md:w-2/3">
+                        <h4 class="text-xl font-medium mb-2 text-gray-800">Mike Matas, Push Pop Press</h4> {/* Adjusted color */}
+                        <p class="text-gray-700 mb-4">
+                          Mike Matas is a designer and co-founder of Push Pop Press, a digital publishing platform that was
+                          acquired by Facebook in 2011. Prior to founding Push Pop Press, Mike worked at Apple where he designed
+                          user interfaces for many Mac OS X and iOS applications including Maps, iPhoto, and GarageBand.
+                        </p>
+                        <p class="text-gray-700 mb-4">
+                          Push Pop Press was a breakthrough digital publishing platform that turned books into interactive touchscreen experiences.
+                          Their flagship project was the interactive version of Al Gore's book \"Our Choice.\"
+                        </p>
+                        <div class="flex flex-wrap gap-x-4 gap-y-2 mt-6"> {/* Added flex-wrap and gap-y */}
+                          <a href="http://twitter.com/mike_matas" class="text-blue-600 hover:underline text-sm">Twitter</a> {/* Adjusted color & size */}
+                          <a href="http://www.mikematas.com/" class="text-blue-600 hover:underline text-sm">Website</a> {/* Adjusted color & size */}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Jeffrey Veen Section */}
+                  <div class="p-6 bg-gray-50 rounded-md border border-gray-200"> {/* Add border for separation */}
+                    <div class="flex flex-col md:flex-row gap-8">
+                      <div class="md:w-1/3 flex-shrink-0"> {/* Added flex-shrink-0 */}
+                        <div class="bg-gray-100 h-60 rounded-md mb-4 flex items-center justify-center">
+                          <span class="text-gray-500">Jeffrey Veen Photo Placeholder</span>
+                        </div>
+                      </div>
+                      <div class="md:w-2/3">
+                        <h4 class="text-xl font-medium mb-2 text-gray-800">Jeffrey Veen, TypeKit</h4> {/* Adjusted color */}
+                        <p class="text-gray-700 mb-4">
+                          Jeffrey Veen is a design partner at True Ventures, where he helps portfolio companies build and grow
+                          amazing design teams. Previously, he was the co-founder and CEO of Typekit, which was acquired by Adobe in 2011.
+                          Jeffrey also co-founded and was the CEO of Adaptive Path, a pioneering UX design firm.
+                        </p>
+                        <p class="text-gray-700 mb-4">
+                          Typekit revolutionized web typography by providing a simple, subscription-based service for accessing
+                          high-quality fonts on websites. This solved a major problem for designers who previously had very limited
+                          typographic options on the web.
+                        </p>
+                        <div class="flex flex-wrap gap-x-4 gap-y-2 mt-6"> {/* Added flex-wrap and gap-y */}
+                          <a href="http://twitter.com/veen" class="text-blue-600 hover:underline text-sm">Twitter</a> {/* Adjusted color & size */}
+                          <a href="http://veen.com/" class="text-blue-600 hover:underline text-sm">Website</a> {/* Adjusted color & size */}
+                          <a href="https://fonts.adobe.com/" class="text-blue-600 hover:underline text-sm">Adobe Fonts (formerly TypeKit)</a> {/* Adjusted color & size */}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Placeholder for FindingTalent section */}
+            {/* <!-- <FindingTalent /> --> Removed component wrapper */}
+            {/* Integrate FindingTalent section directly */}
+            <section class="my-16">
+              <h2 class="text-3xl font-light text-gray-800 mb-8"> {/* Adjusted color */}
+                Finding Great Talent
+              </h2>
+
+              <div id="sec51" class="mb-12">
+                <h3 class="text-2xl font-light text-gray-800 mb-6"> {/* Adjusted color */}
+                  <span class="text-blue-600">5.1</span> Okay, I need a designer. {/* Adjusted color */}
+                </h3>
+                <p class="text-gray-700 mb-4">
+                  Now that you understand the importance of design, you might be wondering how to find good design talent.
+                  It's not as simple as posting on a job board — the best designers are in high demand and often have multiple
+                  opportunities to choose from.
+                </p>
+                <p class="text-gray-700 mb-8">
+                  Here are some strategies to find great designers for your startup:
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                  <div class="bg-gray-50 p-6 rounded-md">
+                    <h4 class="font-medium mb-2 text-gray-800">Make design a priority from day one</h4> {/* Adjusted color */}
+                    <p class="text-gray-700">
+                      The best startups don't treat design as an afterthought. They integrate it into their core development
+                      process from the beginning. This sends a strong signal to designers that you value their contribution.
+                    </p>
+                  </div>
+                  <div class="bg-gray-50 p-6 rounded-md">
+                    <h4 class="font-medium mb-2 text-gray-800">Build relationships with designers</h4> {/* Adjusted color */}
+                    <p class="text-gray-700">
+                      Don't wait until you need to hire someone to start building relationships. Engage with the design community,
+                      attend design events, and get to know designers before you need to hire them.
+                    </p>
+                  </div>
+                  <div class="bg-gray-50 p-6 rounded-md">
+                    <h4 class="font-medium mb-2 text-gray-800">Showcase your design-focused culture</h4> {/* Adjusted color */}
+                    <p class="text-gray-700">
+                      Make it clear in your communications, product, and company culture that you value design. Designers want
+                      to work at companies where their expertise is respected and their work can make an impact.
+                    </p>
+                  </div>
+                  <div class="bg-gray-50 p-6 rounded-md">
+                    <h4 class="font-medium mb-2 text-gray-800">Be prepared to pay for quality</h4> {/* Adjusted color */}
+                    <p class="text-gray-700">
+                      Great designers are worth their weight in gold. Be prepared to offer competitive compensation, which might
+                      mean equity in addition to salary. Remember, good design can dramatically increase your product's success.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div id="sec52" class="mb-12">
+                <h3 class="text-2xl font-light text-gray-800 mb-6"> {/* Adjusted color */}
+                  <span class="text-blue-600">5.2</span> Go Where the designers are {/* Adjusted color */}
+                </h3>
+                <p class="text-gray-700 mb-8">
+                  Here are some of the best places to find talented designers:
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                  <div class="bg-gray-50 p-6 rounded-md">
+                    <h4 class="font-medium mb-2 text-gray-800">Dribbble</h4> {/* Adjusted color */}
+                    <p class="text-gray-700 mb-4">
+                      <a href="https://dribbble.com" class="text-blue-600 hover:underline">Dribbble</a> is a community {/* Adjusted color */}
+                      where designers showcase their work. It's an excellent place to discover talented designers and reach out
+                      to them directly about opportunities.
+                    </p>
+                  </div>
+                  <div class="bg-gray-50 p-6 rounded-md">
+                    <h4 class="font-medium mb-2 text-gray-800">Behance</h4> {/* Adjusted color */}
+                    <p class="text-gray-700 mb-4">
+                      <a href="https://www.behance.net" class="text-blue-600 hover:underline">Behance</a> is Adobe's {/* Adjusted color */}
+                      platform for creatives to showcase and discover creative work. The quality of work is generally very high.
+                    </p>
+                  </div>
+                  <div class="bg-gray-50 p-6 rounded-md">
+                    <h4 class="font-medium mb-2 text-gray-800">Design Communities</h4> {/* Adjusted color */}
+                    <p class="text-gray-700 mb-4">
+                      Communities like <a href="https://designernews.co" class="text-blue-600 hover:underline">Designer News</a>, {/* Adjusted color */}
+                      <a href="https://spectrum.chat/design" class="text-blue-600 hover:underline"> Spectrum Design</a>, {/* Adjusted color */}
+                      and various Slack groups are where designers gather to discuss industry trends and share resources.
+                    </p>
+                  </div>
+                  <div class="bg-gray-50 p-6 rounded-md">
+                    <h4 class="font-medium mb-2 text-gray-800">Design Schools</h4> {/* Adjusted color */}
+                    <p class="text-gray-700 mb-4">
+                      Reach out to top design schools like RISD, Art Center, Parsons, and others. Many have job boards and alumni
+                      networks that can connect you with talented recent graduates or experienced alumni.
+                    </p>
+                  </div>
+                  <div class="bg-gray-50 p-6 rounded-md">
+                    <h4 class="font-medium mb-2 text-gray-800">Design Conferences</h4> {/* Adjusted color */}
+                    <p class="text-gray-700 mb-4">
+                      Attend design conferences like SXSW, HOW Design Live, and Interaction. These are great places to meet designers
+                      in person and learn about the latest industry trends.
+                    </p>
+                  </div>
+                  <div class="bg-gray-50 p-6 rounded-md">
+                    <h4 class="font-medium mb-2 text-gray-800">Specialized Job Boards</h4> {/* Adjusted color */}
+                    <p class="text-gray-700 mb-4">
+                      Sites like <a href="https://www.coroflot.com/jobs" class="text-blue-600 hover:underline">Coroflot</a>, {/* Adjusted color */}
+                      <a href="https://www.krop.com" class="text-blue-600 hover:underline"> Krop</a>, {/* Adjusted color */}
+                      and <a href="https://www.authenticjobs.com" class="text-blue-600 hover:underline">Authentic Jobs</a> {/* Adjusted color */}
+                      cater specifically to design professionals.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div id="sec53" class="mb-12">
+                <h3 class="text-2xl font-light text-gray-800 mb-6"> {/* Adjusted color */}
+                  <span class="text-blue-600">5.3</span> A note about Unicorns by Sacha Greif {/* Adjusted color */}
+                </h3>
+                <div class="bg-gray-50 p-6 rounded-md mb-8">
+                  <blockquote class="border-l-4 border-blue-600 pl-4 italic text-gray-700"> {/* Adjusted color */}
+                    <p class="mb-4">
+                      In the startup world, a "unicorn" is a designer who can also code. They are highly sought after but extremely
+                      rare. While it's great if you can find someone with both design and technical skills, it's often more practical
+                      to build a team that includes both designers and developers who work well together.
+                    </p>
+                    <p class="mb-4">
+                      Don't get caught up in finding the mythical unicorn. Instead, focus on building a collaborative environment
+                      where designers and developers can work together effectively.
+                    </p>
+                    <footer class="mt-2 font-medium not-italic">
+                      — Sacha Greif, Designer & Developer
+                    </footer>
+                  </blockquote>
+                </div>
+              </div>
+
+              <div id="sec54" class="mb-12">
+                <h3 class="text-2xl font-light text-gray-800 mb-6"> {/* Adjusted color */}
+                  <span class="text-blue-600">5.4</span> Resources {/* Adjusted color */}
+                </h3>
+                <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4 mb-8">
+                  {/* Placeholder divs for resources */}
+                  {products.map((product, i) => (
+                    <div class="bg-gray-100 aspect-square rounded-md flex items-center justify-center">
+                      <span class="text-gray-500">Resource {i + 1}</span>
+                    </div>
+                  ))}
+                </div>
+                <p class="text-gray-700">
+                  These are just some of the many resources available to help you learn more about design and connect with
+                  talented designers. The design community is vast and welcoming, so don't hesitate to reach out and engage.
+                </p>
+              </div>
+            </section>
+
+            {/* Placeholder for Resources/About section */}
+            {/* <!-- <Resources /> --> Removed component wrapper */}
+            {/* Integrate About/Acknowledgements section directly */}
+            <section class="my-16">
+              <h2 class="text-3xl font-light text-gray-800 mb-8" id="section6"> {/* Adjusted color */}
+                About me & Acknowledgements
+              </h2>
+
+              <div class="mb-12">
+                <h3 class="text-2xl font-light text-gray-800 mb-6"> {/* Adjusted color */}
+                  <span class="text-blue-600">6.</span> About me {/* Adjusted color */}
+                </h3>
+                <div class="flex flex-col md:flex-row gap-8">
+                  <div class="md:w-1/3 flex-shrink-0"> {/* Added flex-shrink-0 */}
+                    <div class="bg-gray-100 h-60 rounded-md flex items-center justify-center mb-4">
+                      <span class="text-gray-500">Author Photo Placeholder</span>
+                    </div>
+                  </div>
+                  <div class="md:w-2/3">
+                    <p class="text-gray-700 mb-4">
+                      I'm a designer and entrepreneur with a passion for creating intuitive, beautiful products that solve real problems.
+                      With experience spanning both digital and physical product design, I've worked with startups and established companies
+                      to develop design strategies that drive business growth.
+                    </p>
+                    <p class="text-gray-700 mb-4">
+                      I created this guide to help entrepreneurs and engineers better understand the value of design and how to
+                      incorporate it into their businesses. I believe that great design is not just about aesthetics; it's about
+                      solving problems in a way that feels intuitive and natural to users.
+                    </p>
+                    <p class="text-gray-700 mb-4">
+                      Feel free to connect with me on social media or reach out via email if you have questions or would like to discuss design
+                      opportunities.
+                    </p>
+                    <div class="flex flex-wrap gap-x-4 gap-y-2 mt-6"> {/* Added flex-wrap and gap-y */}
+                      {/* Placeholder links */}
+                      <a href="#" class="text-blue-600 hover:underline text-sm">Twitter</a> {/* Adjusted color & size */}
+                      <a href="#" class="text-blue-600 hover:underline text-sm">LinkedIn</a> {/* Adjusted color & size */}
+                      <a href="#" class="text-blue-600 hover:underline text-sm">GitHub</a> {/* Adjusted color & size */}
+                      <a href="mailto:placeholder@example.com" class="text-blue-600 hover:underline text-sm">Email</a> {/* Added mailto, adjusted color & size */}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-12" id="section7">
+                <h3 class="text-2xl font-light text-gray-800 mb-6"> {/* Adjusted color */}
+                  <span class="text-blue-600">7.</span> Acknowledgements {/* Adjusted color */}
+                </h3>
+                <p class="text-gray-700 mb-8">
+                  This project would not have been possible without the support and contributions of many people in the design and
+                  startup communities. I'd like to thank:
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                  <div>
+                    <h4 class="font-medium mb-2 text-gray-800">Contributors</h4> {/* Adjusted color */}
+                    <ul class="list-disc list-inside space-y-1 text-gray-700">
+                      <li>Jessica Hische for inspiring the format of this guide</li>
+                      <li>Dieter Rams for his timeless design principles</li>
+                      <li>All the designer founders who shared their stories</li>
+                      <li>The 78 CEOs, marketers, engineers, and designers who participated in our survey</li>
+                      <li>The open source community for their incredible tools and resources</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 class="font-medium mb-2 text-gray-800">Special Thanks</h4> {/* Adjusted color */}
+                    <ul class="list-disc list-inside space-y-1 text-gray-700">
+                      <li>The Designer Fund for their research on designer founders</li>
+                      <li>Sacha Greif for his insights on "unicorn" designers</li>
+                      <li>All the readers who have shared this guide with others</li>
+                      <li>My family and friends for their unwavering support</li>
+                      <li>The many mentors who have shaped my understanding of design</li>
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Moved copyright/update info to footer */}
+              </div>
+            </section>
+
+            {/* <!-- <Footer /> --> Removed component wrapper */}
+            {/* Integrate Footer directly */}
+            <footer class="mt-20 pt-8 pb-16 border-t border-gray-200 text-gray-600">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  <div>
+                    <h3 class="text-sm font-medium uppercase tracking-wide mb-4 text-gray-700">Links</h3> {/* Adjusted style */}
+                    <ul class="space-y-2 text-sm">
+                      {/* Placeholder links */}
+                      <li><a href="#" class="hover:text-blue-600">Twitter</a></li> {/* Adjusted color */}
+                      <li><a href="#" class="hover:text-blue-600">GitHub</a></li> {/* Adjusted color */}
+                      <li><a href="#" class="hover:text-blue-600">LinkedIn</a></li> {/* Adjusted color */}
+                      <li><a href="#" class="hover:text-blue-600">Dribbble</a></li> {/* Adjusted color */}
+                      <li><a href="#" class="hover:text-blue-600">Behance</a></li> {/* Adjusted color */}
+                    </ul>
+                  </div>
+                  <div>
+                    <h3 class="text-sm font-medium uppercase tracking-wide mb-4 text-gray-700">Resources</h3> {/* Adjusted style */}
+                    <ul class="space-y-2 text-sm">
+                      {/* Placeholder links */}
+                      <li><a href="#" class="hover:text-blue-600">Designer News</a></li> {/* Adjusted color */}
+                      <li><a href="#" class="hover:text-blue-600">Sidebar.io</a></li> {/* Adjusted color */}
+                      <li><a href="#" class="hover:text-blue-600">Smashing Magazine</a></li> {/* Adjusted color */}
+                      <li><a href="#" class="hover:text-blue-600">A List Apart</a></li> {/* Adjusted color */}
+                      <li><a href="#" class="hover:text-blue-600">UX Movement</a></li> {/* Adjusted color */}
+                    </ul>
+                  </div>
+                  <div>
+                    <h3 class="text-sm font-medium uppercase tracking-wide mb-4 text-gray-700">About</h3> {/* Adjusted style */}
+                    <p class="text-sm">
+                      This site was created as an educational resource for startups to better understand
+                      design and its importance in building successful products.
+                    </p>
+                     {/* Moved copyright/update info here */}
+                     <div class="mt-12 pt-8 border-t border-gray-200">
+                        <p class="text-sm text-gray-600 text-center">
+                            © 2012–<span id="current-year">{new Date().getFullYear()}</span> Wells Riley. All rights reserved.<br />
+                            Originally published in 2012. Last updated: April 2023.
+                        </p>
+                    </div>
+                  </div>
+                </div>
+            </footer>
+
+           </div>
+         </div>
+     </main>
+  </BaseLayout>
+
+<script>
+  // Simple script to ensure year updates if needed, though Astro handles it above.
+  // document.getElementById('current-year').textContent = new Date().getFullYear();
+
+  // Basic hover effect for tooltips (replace HoverCard functionality)
+  document.querySelectorAll('.group').forEach((el) => {
+    const tooltip = el.querySelector('.absolute');
+    if (tooltip) {
+        // Basic positioning, might need adjustments
+        el.addEventListener('mouseenter', () => { tooltip.classList.remove('hidden'); });
+        el.addEventListener('mouseleave', () => { tooltip.classList.add('hidden'); });
+    }
+  });
+
+</script>
