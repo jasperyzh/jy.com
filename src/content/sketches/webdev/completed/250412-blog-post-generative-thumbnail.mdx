@@ -1,54 +1,305 @@
 ---
-title: "Sample Web Development Sketch"
+title: "Generating Blog Post Thumbnails with SVG in Astro"
 date: "240417"
-description: "A demonstration of the sketches feature using a simple web component"
+description: "Learn how to automatically generate beautiful OG images for your blog posts using SVG and Astro"
 category: "Web Development"
-tags: ["javascript", "html", "css", "demo"]
+tags: ["javascript", "svg", "astro", "images", "ssg"]
 status: "completed"
-thumbnail: "/images/sketches/sample-sketch-thumb.png"
-liveUrl: "https://example.com/demo"
+thumbnail: "/thumbnails/sketches/250412-blog-post-generative-thumbnail.svg"
+liveUrl: ""
 ---
 
-const sketch = (p) => {
-  p.setup = () => {
-    p.createCanvas(1200, 630);
-    p.colorMode(p.HSB, 100);
-    p.background(10, 10, 20);
-    
-    // Create a dynamic pattern based on the title
-    const title = Astro.params.title || 'Default Title';
-    const seed = title.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    p.randomSeed(seed);
-    
-    // Generate background pattern
-    for (let i = 0; i < 50; i++) {
-      const x = p.random(p.width);
-      const y = p.random(p.height);
-      const size = p.random(100, 300);
-      
-      p.noFill();
-      p.stroke(p.random(100), 70, 90, 0.2);
-      p.strokeWeight(2);
-      p.circle(x, y, size);
-    }
-    
-    // Add gradient overlay
-    for (let y = 0; y < p.height; y += 4) {
-      p.stroke(30 + y/20, 80, 90, 0.1);
-      p.line(0, y, p.width, y);
-    }
-    
-    // Add title
-    p.fill(255);
-    p.noStroke();
-    p.textSize(70);
-    p.textAlign(p.CENTER, p.CENTER);
-    p.textStyle(p.BOLD);
-    p.text(title, p.width/2, p.height/2);
-    
-    // Add subtitle
-    p.textSize(30);
-    p.fill(255, 200);
-    p.text('JasperYong.com', p.width/2, p.height/2 + 60);
+# Generating OG Images with SVG in Astro
+
+Creating eye-catching social media thumbnails (OG images) for every blog post can be time-consuming. Instead of manually designing each image, we can automate the process using SVG to generate unique, programmatic artwork for each post during the Astro build process.
+
+## Why Generative Thumbnails?
+
+- **Consistency**: Maintain a unified visual style across all your content
+- **Automation**: Generate images during build time with no manual design work
+- **Uniqueness**: Each image can be unique based on post metadata
+- **Performance**: Pre-generated images are fast to serve (no runtime generation)
+- **Zero Dependencies**: No need for external packages like Canvas or p5.js
+
+## Implementation Overview
+
+This technique leverages Astro's build process to generate OG images using SVG. Here's how it works:
+
+1. Create a utility that generates SVG images
+2. Build a script that processes content during build time using Astro's content collections
+3. Generate unique images based on post metadata
+4. Save the images to your public directory
+5. Optimize for build performance by only regenerating when content changes
+
+## Creating the OG Image Generator
+
+First, let's implement the utility that will generate our SVG images:
+
+```js
+// src/utils/og-image-generator.js
+import fs from 'fs/promises';
+import path from 'path';
+
+export async function generateOGImage(options) {
+  const {
+    title,
+    slug,
+    category = 'Blog Post',
+    outputDir = 'public/blog/thumbnail-image',
+    width = 1200,
+    height = 630,
+  } = options;
+
+  // Generate a seed based on the title for consistent random patterns
+  const seed = title.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  
+  // Create a pseudorandom function based on the seed
+  const random = (min, max) => {
+    const x = Math.sin(seed + 1) * 10000;
+    const r = (x - Math.floor(x)) * (max - min) + min;
+    return r;
   };
-};
+
+  // Generate circle elements for the background pattern
+  let circles = '';
+  for (let i = 0; i < 50; i++) {
+    const x = random(0, width);
+    const y = random(0, height);
+    const size = random(100, 300);
+    const hue = random(0, 360);
+    const opacity = 0.2;
+    
+    circles += `<circle cx="${x}" cy="${y}" r="${size}" fill="none" 
+                 stroke="hsla(${hue}, 70%, 90%, ${opacity})" stroke-width="2" />`;
+  }
+
+  // Generate gradient lines
+  let gradientLines = '';
+  for (let y = 0; y < height; y += 8) {
+    const hue = 30 + (y / height) * 60;
+    gradientLines += `<line x1="0" y1="${y}" x2="${width}" y2="${y}" 
+                       stroke="hsla(${hue}, 80%, 90%, 0.1)" stroke-width="4" />`;
+  }
+
+  // Handle long titles
+  const displayTitle = title.length > 60 
+    ? title.substring(0, 57) + '...' 
+    : title;
+
+  // Create the SVG
+  const svg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" 
+     xmlns="http://www.w3.org/2000/svg">
+  <rect width="${width}" height="${height}" fill="#101820" />
+  
+  <!-- Background patterns -->
+  ${circles}
+  
+  <!-- Gradient overlay -->
+  ${gradientLines}
+  
+  <!-- Category label -->
+  <text x="60" y="60" fill="#F2AA4C" font-size="24" font-weight="bold" font-family="system-ui, sans-serif">
+    ${category.toUpperCase()}
+  </text>
+  
+  <!-- Title -->
+  <text x="${width/2}" y="${height/2}" fill="white" font-size="60" font-weight="bold" 
+        text-anchor="middle" dominant-baseline="middle" font-family="system-ui, sans-serif">
+    <tspan x="${width/2}" dy="-40">${displayTitle.length > 30 ? displayTitle.substring(0, 30) : displayTitle}</tspan>
+    ${displayTitle.length > 30 ? `<tspan x="${width/2}" dy="70">${displayTitle.substring(30)}</tspan>` : ''}
+  </text>
+  
+  <!-- Website URL -->
+  <text x="${width - 60}" y="${height - 60}" fill="rgba(255,255,255,0.7)" font-size="24" 
+        text-anchor="end" font-family="system-ui, sans-serif">
+    jasperyong.com
+  </text>
+</svg>`;
+
+  // Ensure the output directory exists
+  await fs.mkdir(outputDir, { recursive: true });
+  
+  // Save the SVG
+  const outputPath = path.join(outputDir, `${slug}.svg`);
+  await fs.writeFile(outputPath, svg, 'utf-8');
+  
+  return outputPath;
+}
+```
+
+## Build Script for Content Processing
+
+Next, we'll create a script that processes our content and generates OG images during the build. This uses Astro's content collections instead of external packages:
+
+```js
+// scripts/generate-og-images.mjs
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import fs from 'fs/promises';
+import { stat } from 'fs/promises';
+
+// Import the OG image generator
+import { generateOGImage } from '../src/utils/og-image-generator.js';
+
+// Get the content collection data
+import { getCollection } from 'astro:content';
+
+// Constants
+const CACHE_FILE = '.og-image-cache.json';
+
+async function loadCache() {
+  try {
+    const cacheData = await fs.readFile(CACHE_FILE, 'utf-8');
+    return JSON.parse(cacheData);
+  } catch (error) {
+    console.log('No existing cache found, creating new cache');
+    return {};
+  }
+}
+
+async function saveCache(cache) {
+  await fs.writeFile(CACHE_FILE, JSON.stringify(cache, null, 2), 'utf-8');
+}
+
+async function generateOGImages() {
+  console.log('🖼️ Generating OG images...');
+  
+  // Load cache of previously generated images
+  const cache = await loadCache();
+  
+  // Get all sketch content using Astro's content collections
+  const sketches = await getCollection('sketches');
+  
+  const newCache = {};
+  
+  // Track how many images we generate
+  let generated = 0;
+  let skipped = 0;
+  
+  for (const sketch of sketches) {
+    try {
+      const file = sketch.id; // The relative path within the collection
+      const fullPath = join(process.cwd(), 'src/content/sketches', file);
+      
+      // Get file stats for modification time checking
+      const stats = await stat(fullPath);
+      const lastModified = stats.mtimeMs;
+      
+      // Extract slug from file path
+      const slug = file.split('/').pop().replace(/\.(md|mdx)$/, '');
+      
+      // Check if we need to regenerate this image
+      const cacheEntry = cache[file];
+      if (cacheEntry && cacheEntry.lastModified === lastModified) {
+        // Image is already up to date
+        newCache[file] = cacheEntry;
+        skipped++;
+        console.log(`⏩ Skipped: ${file} (unchanged)`);
+        continue;
+      }
+      
+      // Skip if this content doesn't need an OG image
+      if (sketch.data.skipOgImage === true) {
+        console.log(`⏩ Skipped: ${file} (marked to skip)`);
+        continue;
+      }
+
+      // Generate the OG image
+      console.log(`🔄 Generating for: ${sketch.data.title || slug}`);
+      const outputPath = await generateOGImage({
+        title: sketch.data.title || slug,
+        slug,
+        category: sketch.data.category || 'Blog Post',
+      });
+      
+      // Update cache
+      newCache[file] = {
+        lastModified,
+        outputPath,
+        title: sketch.data.title,
+      };
+      
+      console.log(`✅ Generated: ${outputPath}`);
+      generated++;
+      
+    } catch (error) {
+      console.error(`❌ Error generating OG image for ${sketch.id}:`, error.message);
+    }
+  }
+  
+  // Save the new cache
+  await saveCache(newCache);
+  
+  console.log(`✨ OG image generation complete!`);
+  console.log(`   Generated: ${generated}, Skipped: ${skipped}`);
+}
+
+generateOGImages().catch(console.error);
+```
+
+## Integration with Astro
+
+To integrate this with your Astro build process, add these scripts to your package.json:
+
+```json
+"scripts": {
+  "generate-og": "node scripts/generate-og-images.mjs",
+  "build": "npm run generate-og && astro build"
+}
+```
+
+## Using the Generated Images
+
+The generated SVG images will be available at `/blog/thumbnail-image/{slug}.svg`. You can reference them in your layout components for OpenGraph and Twitter meta tags:
+
+```astro
+---
+// In your layout component
+const { frontmatter } = Astro.props;
+const ogImageUrl = `/blog/thumbnail-image/${frontmatter.slug || Astro.url.pathname.split('/').pop()}.svg`;
+---
+
+<head>
+  <!-- Other head content -->
+  <meta property="og:image" content={new URL(ogImageUrl, Astro.site).href} />
+  <meta name="twitter:image" content={new URL(ogImageUrl, Astro.site).href} />
+</head>
+```
+
+## Performance Optimizations
+
+The implementation includes several performance optimizations:
+
+1. **Change Detection**: Images are only regenerated when the source content file has changed
+2. **Caching**: A cache file tracks the last modified timestamps of content files
+3. **Zero External Dependencies**: Uses only built-in Node.js modules and Astro features
+4. **Selective Generation**: Only processes files that actually need thumbnails
+
+## Advantages of SVG Over Canvas
+
+Using SVG for OG image generation has several advantages:
+
+1. **No Native Dependencies**: No need for troublesome native modules like `canvas`
+2. **Smaller File Sizes**: SVGs are typically smaller than raster images
+3. **Perfect Scaling**: Looks crisp at any resolution
+4. **Easier to Debug**: You can open and edit the SVG files directly
+5. **No External Packages**: Works with Astro's built-in capabilities
+
+## Next Steps and Variations
+
+- [ ] [[250228-Creating Multiple User-Generated Pages with Vercel and AstroJS]] via SSR
+
+
+You can customize the SVG generator in many ways:
+
+- Create different themes based on content categories
+- Add custom graphics or icons for different post types
+- Incorporate data visualization elements for technical posts
+- Generate dynamic gradients based on post tags
+
+## Implementation Results
+
+This implementation has been successfully added to the site! The utility now automatically generates unique SVG OG images for each blog post during the build process, with optimizations to only regenerate images when content changes.
+
+The result is a system that creates visually appealing, consistent thumbnails across the site with zero manual design work required for new posts. The build process remains efficient thanks to the caching mechanism that tracks content changes and requires no external dependencies.

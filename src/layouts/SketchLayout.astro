@@ -3,6 +3,7 @@ import BaseLayout from "./BaseLayout.astro";
 import { formatYymmddDate } from "@/utils/formatDate";
 import { Button } from "@/components/starwind/button";
 import { Badge } from "@/components/starwind/badge";
+import { getCategoryUrl, slugify } from "@/utils/sketchUtils";
 
 const { title, description, date, category, tags, status, thumbnail, liveUrl } = Astro.props;
 
@@ -53,7 +54,7 @@ const statusColors = {
           {category && (
             <div class="flex items-center">
               <i class="bi bi-folder mr-2"></i>
-              <a href={`/sketches/category/${category}`} class="hover:underline">{category}</a>
+              <a href={getCategoryUrl(category)} class="hover:underline">{category}</a>
             </div>
           )}
           
@@ -69,7 +70,7 @@ const statusColors = {
           <div class="mt-4 flex flex-wrap gap-2">
             {tags.map((tag: string) => (
               <Badge variant="secondary" class="bg-white/20 hover:bg-white/30">
-                <a href={`/sketches/tag/${tag}`} class="hover:underline">{tag}</a>
+                <a href={`/sketches/tag/${slugify(tag)}`} class="hover:underline">{tag}</a>
               </Badge>
             ))}
           </div>
@@ -86,8 +87,10 @@ const statusColors = {
         </div>
       )}
       
-      <div class="px-8 py-10 prose prose-lg dark:prose-invert max-w-none">
-        <slot />
+      <div class="px-8 py-10">
+        <div class="prose dark:prose-invert prose-lg mx-auto">
+          <slot />
+        </div>
       </div>
       
       <footer class="p-6 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-700">
@@ -121,33 +124,100 @@ const statusColors = {
   </main>
 </BaseLayout>
 
+<script>
+  // Initialize PrismJS
+  import { initPrism } from '@/utils/prism';
+  
+  document.addEventListener('DOMContentLoaded', () => {
+    // Initialize syntax highlighting
+    initPrism();
+  });
+</script>
+
 <style is:global>
   /* This ensures MDX content is properly styled */
-  .prose pre {
-    padding: 1.5rem;
+  .prose {
+    max-width: 100%;
+  }
+  
+  .prose h1 {
+    color: #2d3748;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  
+  .prose h2 {
+    color: #2d3748;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.875rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  
+  .prose h3 {
+    color: #2d3748;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  
+  .prose p {
+    margin: 1.25rem 0;
+    line-height: 1.7;
+  }
+  
+  .prose ul, .prose ol {
+    margin: 1.25rem 0;
+    padding-left: 1.5rem;
+  }
+  
+  .prose li {
+    margin: 0.5rem 0;
+  }
+  
+  .prose a {
+    color: #3182ce;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+  
+  .prose a:hover {
+    color: #2c5282;
+  }
+  
+  .prose blockquote {
+    border-left: 4px solid #e2e8f0;
+    padding-left: 1rem;
     margin: 1.5rem 0;
-    border-radius: 0.5rem;
-    overflow-x: auto;
-    background: #1a1a1a !important;
-    border: 1px solid #2d2d2d;
+    color: #4a5568;
+    font-style: italic;
   }
-
-  .prose code {
-    font-family: "Fira Code", Menlo, Monaco, Consolas, "Courier New", monospace;
-    font-size: 0.9rem;
-    line-height: 1.5;
+  
+  .dark .prose h1, 
+  .dark .prose h2, 
+  .dark .prose h3 {
+    color: #e2e8f0;
   }
-
-  .prose :not(pre) > code {
-    padding: 0.2em 0.4em;
-    margin: 0;
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 0.25em;
+  
+  .dark .prose a {
+    color: #63b3ed;
   }
-
-  .dark .prose :not(pre) > code {
-    background-color: rgba(255, 255, 255, 0.1);
+  
+  .dark .prose a:hover {
+    color: #90cdf4;
   }
+  
+  .dark .prose blockquote {
+    border-left-color: #4a5568;
+    color: #a0aec0;
+  }
+ 
 
   /* Interactive component styling */
   .interactive-component {

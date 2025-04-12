@@ -18,7 +18,16 @@ import 'prismjs/components/prism-markdown';
 export function initPrism() {
   // Check if we're in the browser
   if (typeof window !== 'undefined') {
-    // Optional: Configure any Prism plugins or settings here
+    // Add language labels to code blocks
+    document.querySelectorAll('pre[class*="language-"]').forEach(pre => {
+      const classes = Array.from(pre.classList);
+      const languageClass = classes.find(c => c.startsWith('language-'));
+      
+      if (languageClass) {
+        const language = languageClass.replace('language-', '');
+        pre.setAttribute('data-language', language);
+      }
+    });
     
     // Manually trigger highlighting for any existing code blocks
     Prism.highlightAll();

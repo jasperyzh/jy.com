@@ -1,0 +1,125 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { generateOGImage, determineFormat } from "../utils/og-image-generator.js";
+
+// This is a server-side only component that generates an OG image
+// and displays a preview
+
+// Demo parameters for the image
+const title = "This is a Demo OG Image";
+const slug = "demo-og-image";
+const category = "Preview";
+const collection = "demo";
+
+// In a production environment with SSR, you could generate images on demand
+// For this static demo, we're generating it at build time
+let imagePath;
+
+try {
+  // Generate the image (in a real app, this might be in an API endpoint)
+  const format = "svg"; // Could be svg, jpg, png, webp depending on priority
+  imagePath = await generateOGImage({
+    title,
+    slug,
+    collection,
+    category,
+    format,
+    // For demo purposes, let's put it in a different directory
+    outputDir: "public/og-preview"
+  });
+  
+  // Convert from absolute path to public URL
+  imagePath = `/og-preview/${collection}/${slug}.${format}`;
+} catch (error) {
+  console.error("Error generating OG image:", error);
+  imagePath = "/img/placeholder.png";
+}
+
+// Generate additional format examples
+const formats = ["svg", "jpg", "png", "webp"];
+const formatExamples = formats.map(format => `/thumbnails/${format}-example.${format}`);
+---
+
+<BaseLayout title="OG Image Generator Preview">
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6">OG Image Generator Preview</h1>
+    
+    <div class="mb-8">
+      <h2 class="text-xl font-semibold mb-3">Generated Image Preview</h2>
+      
+      <div class="border border-gray-200 rounded-lg overflow-hidden mb-4">
+        <img 
+          src={imagePath} 
+          alt="Generated OG Image" 
+          class="w-full h-auto"
+          width="1200"
+          height="630"
+        />
+      </div>
+      
+      <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+        <h3 class="text-lg font-medium mb-2">Parameters Used</h3>
+        <ul class="list-disc pl-5 space-y-1">
+          <li><strong>Title:</strong> {title}</li>
+          <li><strong>Slug:</strong> {slug}</li>
+          <li><strong>Category:</strong> {category}</li>
+          <li><strong>Collection:</strong> {collection}</li>
+          <li><strong>Output Path:</strong> {imagePath}</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="prose dark:prose-invert max-w-none">
+      <h2>How It Works</h2>
+      <p>
+        This page demonstrates the OG image generator in action. The image above was generated
+        using SVG at build time. In a production environment with SSR,
+        you could generate these images on demand.
+      </p>
+      
+      <h3>Format Priority</h3>
+      <p>
+        The system uses a format priority system:
+        <code>svg (default) &lt; jpg &lt; jpeg &lt; webp &lt; png</code>
+      </p>
+      <p>
+        This means that SVG is the default format, but if a content item has a thumbnail with
+        a higher priority format (like PNG), that format will be used instead.
+      </p>
+      
+      <h3>Path Structure</h3>
+      <p>
+        All generated thumbnails are stored in a path structure that follows the content:
+      </p>
+      <pre class="bg-gray-100 dark:bg-gray-800 p-3 rounded">
+/thumbnails/[collection]/[slug].[format]
+
+Examples:
+/thumbnails/blog/my-blog-post.svg
+/thumbnails/sketches/creative-code-sketch.png
+      </pre>
+      
+      <h3>Key Features</h3>
+      <ul>
+        <li>Unique images based on content metadata</li>
+        <li>Consistent branding and style</li>
+        <li>Optimized for social sharing</li>
+        <li>Dynamically generated elements</li>
+        <li>No external dependencies required</li>
+        <li>Multiple format support</li>
+      </ul>
+      
+      <h3>Implementation</h3>
+      <p>
+        The implementation uses SVG to create beautiful, generative
+        graphics based on your content. Each image is unique, determined by a seed
+        generated from the content title.
+      </p>
+      
+      <p>
+        See the blog post <a href="/sketches/webdev/completed/250412-blog-post-generative-thumbnail">
+        Generating Blog Post Thumbnails with SVG in Astro</a> for more details on implementation.
+      </p>
+    </div>
+  </div>
+</BaseLayout> 

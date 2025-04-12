@@ -1,7 +1,7 @@
 ---
 title: Active Context
 description: Current focus, recent decisions, and immediate tasks.
-pubDate: 250408
+pubDate: 250413
 draft: 0
 ---
 
@@ -10,7 +10,7 @@ draft: 0
 # ACTIVE CONTEXT
 <!-- DAILY UPDATES REQUIRED -->
 
-## Current Focus (2024-04-08)
+## Current Focus (2024-04-13)
 ```focus-area
 - Sprint Goal: Implement Memory Bank system and redesign landing page based on Circora reference
 - Blockers: 
@@ -18,12 +18,26 @@ draft: 0
   - [x] Created initial Memory Bank structure
   - [ ] Integrate Memory Bank with AI tools workflow
   - [ ] Create responsive landing page based on new design style guide
+
+- Sprint Goal: Enhance content presentation with automated OG images and improve documentation
+- Blockers: None
+- Progress:
+  - [x] Implemented SVG-based generative thumbnail system
+  - [x] Added multi-collection support (blog, sketches)
+  - [x] Created comprehensive documentation
+  - [x] Optimized build process with caching
+  - [ ] Add theme variations based on content categories
+  - [ ] Explore raster conversion options for platforms that don't support SVG
 ```
 
 ## Recent Decisions
 ```decision-log
 | Date | Decision | Impact | Owner |
 |------|----------|--------|-------|
+| 2024-04-13 | Use SVG for thumbnail generation instead of Canvas/p5.js | Eliminated native dependencies, simplified build process | @matsu |
+| 2024-04-13 | Implement format priority system (svg < jpg < jpeg < webp < png) | More flexible image format handling | @matsu |
+| 2024-04-13 | Organize thumbnails by collection (/thumbnails/[collection]/[slug]) | Better organization, follows content structure | @matsu |
+| 2024-04-13 | Use build-time generation with caching | Faster builds, only regenerates when content changes | @matsu |
 | 2024-04-08 | Use starwind components for styling whenever possible | Consistent component style and reduced duplication | @matsu |
 | 2024-04-08 | New component demos will be placed under the demo index.astro page | Centralized component demos for easier testing and discovery | @matsu |
 | 2024-04-08 | Established design style guide based on Circora reference | Consistent design language, improved UX | @matsu |
@@ -37,19 +51,27 @@ draft: 0
 
 ## Immediate Todos
 ```hotlist
-1. [High] Complete Memory Bank documentation → ETA: 2024-04-10
+1. [High] Add theme variations to OG image generator → ETA: 2024-04-15
+2. [Med] Explore raster conversion options for SVG thumbnails → ETA: 2024-04-17
 2. [Med] Create validation script for tech context → Depends On: Final structure
-3. [Med] Add dark mode toggle → Depends On: CSS refactoring
-4. [Low] Implement comments system → Evaluating options: Disqus, Staticman, GitHub Issues
+3. [Med] Add docs collection to thumbnail generation → ETA: 2024-04-16
+4. [Med] Add dark mode toggle → Depends On: CSS refactoring
+5. [Low] Implement comments system → Evaluating options: Disqus, Staticman, GitHub Issues
 ```
 
 ## Current Development Branch
 ```git-context
-- Branch: feature/memory-bank-system
+- Branch: feature/generative-thumbnails
 - Base: main
-- Key Files:
+- Key Files:  
   - src/content/docs/memory-bank/*.md
   - README.md (updated)
+  - src/utils/og-image-generator.js
+  - scripts/generate-og-images.mjs
+  - src/layouts/BlogLayout.astro
+  - src/pages/generate-og-preview.astro
+  - src/content/docs/8-memory-bank/07-generative-thumbnails.md
+  - src/content/docs/8-memory-bank/08-thumbnail-howto.md
 ```
 
 ## Recent Learnings
@@ -57,11 +79,15 @@ draft: 0
 - Memory Bank structure improves AI context retention
 - Static site generation with Astro provides excellent performance
 - Content syncing from Obsidian streamlines workflow
-```
+- SVG generation is more portable than Canvas for server-side image creation
+- Deterministic randomness can be created using content-based seeds
+- Collection-based organization improves content management
+- Format priority system allows flexibility while maintaining backward compatibility
 ```
 
 ## Archive
 ```archive
+- [2024-04-08] Completed Memory Bank system implementation
 - [2024-04-04] Referenced [[250220-Personal Website & Blog - Organization#Blog]] for blog structure
 - [2024-04-02] Updated global.css with modern CSS structure
 ```

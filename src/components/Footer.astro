@@ -8,6 +8,8 @@
  * @component
  */
 
+import { Icon } from "astro-icon/components";
+
 export interface ContactSectionProps {
   /** Email address */
   email?: string;
@@ -102,7 +104,7 @@ const todayYear = new Date().getFullYear();
                 aria-label={`${link.platform} link`}
                 class="text-gray-100 dark:text-gray-200 hover:text-primary dark:hover:text-primary transition-colors text-2xl"
               >
-                <i class={`bi bi-${link.platform}`} />
+                <Icon name={`bi:${link.platform}`} class="inline-block mb-2" />
               </a>
             ))
           }

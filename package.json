@@ -4,14 +4,15 @@
   "version": "1.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
-    "build:prod": "cross-env NODE_ENV=production node remove-demo-pages.js && astro build",
+    "build": "npm run generate-og && astro build",
+    "build:prod": "cross-env NODE_ENV=production node remove-demo-pages.js && npm run generate-og && astro build",
     "sync": "bash ./scripts/copy-projects-readme-to-obsidian.sh && bash ./scripts/copy-blog-docs-posts.sh",
     "check": "astro check",
     "preview": "astro preview",
     "astro": "astro",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "generate-og": "node scripts/generate-og-images.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",

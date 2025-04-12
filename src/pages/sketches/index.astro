@@ -2,13 +2,13 @@
 import { getCollection } from "astro:content";
 import Layout from "@/layouts/BaseLayout.astro";
 import { formatYymmddDate } from "@/utils/formatDate";
-import { getSketchFullUrl } from "@/utils/sketchUtils";
+import { getSketchFullUrl, getCategoryUrl } from "@/utils/sketchUtils";
 import { Button } from "@/components/starwind/button";
 import { Badge } from "@/components/starwind/badge";
 
 // Pagination configuration
 export const SKETCHES_PER_PAGE = 12;
-
+  
 // Get all sketches
 const allSketches = await getCollection("sketches");
 
@@ -70,7 +70,7 @@ tags.forEach(tag => {
               {categories.map(category => (
                 <li>
                   <a 
-                    href={`/sketches/category/${category}`}
+                    href={getCategoryUrl(category)}
                     class="flex items-center justify-between group hover:text-blue-600 dark:hover:text-blue-400"
                   >
                     <span>{category}</span>
