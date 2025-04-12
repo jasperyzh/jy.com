@@ -1,181 +1,69 @@
 ---
 import { getCollection } from "astro:content";
-import Layout from "@/layouts/BaseLayout.astro";
-import { formatYymmddDate } from "@/utils/formatDate";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getAllTags, unslugify, getSketchFullUrl, slugify, getTagUrl, getCategoryUrl } from "@/utils/sketchUtils";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/starwind/card";
 import { Badge } from "@/components/starwind/badge";
 
 // Generate static paths for all tags
 export async function getStaticPaths() {
-  const allSketches = await getCollection("sketches");
-  
-  // Extract all unique tags from all sketches
-  const allTags = allSketches.flatMap(sketch => sketch.data.tags || []);
-  const uniqueTags = [...new Set(allTags)];
-console.log('uniqueTags',uniqueTags)
-  
-  // Generate a path for each tag
-  return uniqueTags.map(tag => {
-    const filteredSketches = allSketches.filter(sketch => 
-      sketch.data.tags && sketch.data.tags.includes(tag)
-    );
-    
-    // Sort sketches by date (newest first)
-    const sortedSketches = filteredSketches.sort((a, b) => {
-      const dateA = a.data.date instanceof Date ? a.data.date : new Date(a.data.date);
-      const dateB = b.data.date instanceof Date ? b.data.date : new Date(b.data.date);
-      return dateB.getTime() - dateA.getTime();
-    });
-    return {
-      params: { tag },
-      props: { sketches: sortedSketches, tag }
-    };
-  });
+  const sketches = await getCollection("sketches");
+  const tags = getAllTags(sketches);
+
+  return tags.map(tag => ({
+    params: { tag: slugify(tag) },
+    props: { 
+      tag,
+      sketches: sketches.filter(sketch => sketch.data.tags?.includes(tag))
+    }
+  }));
 }
 
-// Get props from getStaticPaths
-const { sketches, tag } = Astro.props;
+const { tag, sketches } = Astro.props;
+const title = `Sketches tagged with "${tag}"`;
 
-
-// Extract all categories for sketches with this tag for filtering
-const categories = [...new Set(sketches.map(sketch => sketch.data.category))];
-
-// Count sketches in each category with this tag
-const categoryCounts = {};
-categories.forEach(category => {
-  categoryCounts[category] = sketches.filter(sketch => 
-    sketch.data.category === category
-  ).length;
-});
-
+// Add prerender directive
 export const prerender = true;
 ---
 
-<Layout 
-  title={`Sketches Tagged "${tag}"`} 
-  description={`Browse all sketches tagged with "${tag}"`}
->
-  <main class="max-w-7xl mx-auto px-4 py-8">
-    <header class="mb-12">
-      <div class="flex items-center mb-4">
-        <a href="/sketches" class="text-blue-600 dark:text-blue-400 hover:underline flex items-center">
-          <i class="bi bi-arrow-left mr-2"></i> All Sketches
-        </a>
-      </div>
-      <h1 class="text-4xl font-bold mb-4">Sketches Tagged "{tag}"</h1>
-      <p class="text-xl text-gray-600 dark:text-gray-300">
-        Found {sketches.length} sketch{sketches.length === 1 ? '' : 'es'} with this tag
-      </p>
-    </header>
-
-    {categories.length > 0 && (
-      <div class="mb-8">
-        <h2 class="text-lg font-semibold mb-2">Filter by Category</h2>
-        <div class="flex flex-wrap gap-2">
-          {categories.map(category => (
-            <a 
-              href={`/sketches/category/${category}`}
-              class="inline-flex items-center justify-between text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 px-3 py-1 rounded-full"
-            >
-              <span>{category}</span>
-              <span class="ml-2 text-xs text-gray-500 dark:text-gray-400">({categoryCounts[category]})</span>
-            </a>
-          ))}
-        </div>
-      </div>
-    )}
-
+<BaseLayout title={title}>
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold mb-8">{title}</h1>
+    
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {sketches.map(sketch => (
-        <a 
-          href={`/sketches/${sketch.id}`}
-          class="group bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-md border border-slate-200 dark:border-slate-700 hover:shadow-lg transition-shadow"
-        >
-          {sketch.data.thumbnail ? (
-            <div class="relative h-48 overflow-hidden">
-              <img 
-                src={sketch.data.thumbnail} 
-                alt={sketch.data.title}
-                class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
-              />
-              {sketch.data.status && (
-                <span class={`absolute top-2 right-2 text-xs px-2 py-1 rounded-full ${
-                  sketch.data.status === 'completed' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
-                  sketch.data.status === 'wip' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' :
-                  sketch.data.status === 'idea' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300' :
-                  'bg-gray-100 text-gray-800 dark:bg-gray-800/50 dark:text-gray-400'
-                }`}>
-                  {sketch.data.status.charAt(0).toUpperCase() + sketch.data.status.slice(1)}
-                </span>
-              )}
-            </div>
-          ) : (
-            <div class="h-48 flex items-center justify-center bg-gradient-to-br from-blue-500/20 to-purple-500/20 dark:from-blue-900/30 dark:to-purple-900/30">
-              <span class="text-4xl opacity-40">✨</span>
-              {sketch.data.status && (
-                <span class={`absolute top-2 right-2 text-xs px-2 py-1 rounded-full ${
-                  sketch.data.status === 'completed' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
-                  sketch.data.status === 'wip' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' :
-                  sketch.data.status === 'idea' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300' :
-                  'bg-gray-100 text-gray-800 dark:bg-gray-800/50 dark:text-gray-400'
-                }`}>
-                  {sketch.data.status.charAt(0).toUpperCase() + sketch.data.status.slice(1)}
-                </span>
-              )}
-            </div>
-          )}
-          
-          <div class="p-4">
-            <h3 class="font-bold text-lg mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-              {sketch.data.title}
-            </h3>
-            <div class="text-sm text-gray-500 dark:text-gray-400 mb-2 flex items-center">
-              <i class="bi bi-calendar-event mr-1"></i>
-              <time datetime={sketch.data.date instanceof Date ? sketch.data.date.toISOString() : ''}>
-                {formatYymmddDate(sketch.data.date).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric'
-                })}
-              </time>
-              <span class="mx-2">•</span>
-              <span>{sketch.data.category}</span>
-            </div>
-            <p class="text-sm text-gray-600 dark:text-gray-300 mb-3 line-clamp-2">
-              {sketch.data.description}
-            </p>
-            <div class="flex flex-wrap gap-1 mt-auto">
-              {sketch.data.tags && sketch.data.tags.filter(t => t !== tag).slice(0, 3).map(otherTag => (
-                <a 
-                  href={`/sketches/tag/${otherTag}`}
-                  class="text-xs bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 px-2 py-0.5 rounded"
-                >
-                  {otherTag}
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <a href={getSketchFullUrl(sketch)} class="hover:text-primary">
+                {sketch.data.title}
+              </a>
+            </CardTitle>
+            <CardDescription>{sketch.data.description}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div class="flex flex-wrap gap-2">
+              <Badge variant="outline">
+                <a href={getCategoryUrl(sketch.data.category)} class="hover:text-primary">
+                  {sketch.data.category}
                 </a>
+              </Badge>
+              {sketch.data.tags?.map(t => (
+                <Badge variant="secondary">
+                  <a href={getTagUrl(t)} class="hover:text-primary">
+                    {t}
+                  </a>
+                </Badge>
               ))}
-              {sketch.data.tags && sketch.data.tags.filter(t => t !== tag).length > 3 && (
-                <span class="text-xs text-gray-500 dark:text-gray-400">
-                  +{sketch.data.tags.filter(t => t !== tag).length - 3} more
-                </span>
-              )}
             </div>
-          </div>
-        </a>
+          </CardContent>
+          <CardFooter>
+            <time datetime={sketch.data.date.toISOString()}>
+              {sketch.data.date.toLocaleDateString()}
+            </time>
+          </CardFooter>
+        </Card>
       ))}
     </div>
-
-    {sketches.length === 0 && (
-      <div class="bg-white dark:bg-slate-800 shadow-md rounded-lg p-8 text-center">
-        <div class="text-amber-500 text-5xl mb-4">
-          <i class="bi bi-exclamation-triangle"></i>
-        </div>
-        <h2 class="text-2xl font-bold mb-2">No Sketches Found</h2>
-        <p class="text-gray-600 dark:text-gray-300 mb-6">
-          There are no sketches tagged with "{tag}" yet.
-        </p>
-        <a href="/sketches" class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline">
-          <i class="bi bi-arrow-left mr-1"></i> Back to all sketches
-        </a>
-      </div>
-    )}
-  </main>
-</Layout> 
+  </div>
+</BaseLayout> 

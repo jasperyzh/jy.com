@@ -1,0 +1,54 @@
+---
+title: "Sample Web Development Sketch"
+date: "240417"
+description: "A demonstration of the sketches feature using a simple web component"
+category: "Web Development"
+tags: ["javascript", "html", "css", "demo"]
+status: "completed"
+thumbnail: "/images/sketches/sample-sketch-thumb.png"
+liveUrl: "https://example.com/demo"
+---
+
+const sketch = (p) => {
+  p.setup = () => {
+    p.createCanvas(1200, 630);
+    p.colorMode(p.HSB, 100);
+    p.background(10, 10, 20);
+    
+    // Create a dynamic pattern based on the title
+    const title = Astro.params.title || 'Default Title';
+    const seed = title.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    p.randomSeed(seed);
+    
+    // Generate background pattern
+    for (let i = 0; i < 50; i++) {
+      const x = p.random(p.width);
+      const y = p.random(p.height);
+      const size = p.random(100, 300);
+      
+      p.noFill();
+      p.stroke(p.random(100), 70, 90, 0.2);
+      p.strokeWeight(2);
+      p.circle(x, y, size);
+    }
+    
+    // Add gradient overlay
+    for (let y = 0; y < p.height; y += 4) {
+      p.stroke(30 + y/20, 80, 90, 0.1);
+      p.line(0, y, p.width, y);
+    }
+    
+    // Add title
+    p.fill(255);
+    p.noStroke();
+    p.textSize(70);
+    p.textAlign(p.CENTER, p.CENTER);
+    p.textStyle(p.BOLD);
+    p.text(title, p.width/2, p.height/2);
+    
+    // Add subtitle
+    p.textSize(30);
+    p.fill(255, 200);
+    p.text('JasperYong.com', p.width/2, p.height/2 + 60);
+  };
+};

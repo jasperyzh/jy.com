@@ -1,25 +1,21 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "@/layouts/BaseLayout.astro";
-import { slugifyTag, unslugifyTag, getAllUniqueTags } from "@/utils/tags";
 import ReturnButton from '@/components/ReturnButton.astro';
 import BlogPostCard from "@/components/BlogPostCard.astro";
 import { formatYymmddDate } from "@/utils/formatDate";
+import { formatForUrl, getBlogFilename } from "@/utils/blogUtils";
 
 // Generate static paths for all tags
 export async function getStaticPaths() {
   // Get posts from both collections
   const blogPosts = await getCollection("ob_blog");
   
-  // Combine all posts
-  const allPosts = [...blogPosts];
-  
   // Get all unique tags
-  const tags = getAllUniqueTags(allPosts);
-
+  const tags = [...new Set(blogPosts.flatMap(post => post.data.tags || []))].sort();
 
   return tags.map(tag => ({
-    params: { tag: slugifyTag(tag) },
+    params: { tag: formatForUrl(tag) },
     props: { 
       tag, 
       posts: blogPosts.filter(post => post.data.tags?.includes(tag)),
@@ -61,7 +57,7 @@ export const prerender = true;
               date={formatYymmddDate(post.data.pubDate || new Date())}
               tags={post.data.tags || []}
               category={post.data.category}
-              url={`/blog/${post.id}`}
+              url={`/blog/${getBlogFilename(post)}`}
               thumbnail={post.data.thumbnail || "/img/placeholder.png"}
             />
           ))}

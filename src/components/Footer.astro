@@ -48,15 +48,23 @@ const socialLinks = [
 const todayYear = new Date().getFullYear();
 ---
 
-<section class={`${bgColor} ${className} w-full py-16 px-6 lg:px-16`}>
+<footer class={`${bgColor} ${className} w-full py-16 px-6 lg:px-16`}>
   <div class="max-w-6xl mx-auto">
     <div
       class="flex flex-col md:flex-row justify-between items-start md:items-center"
     >
       <!-- Say Hello heading -->
-      <h2 class={`${textColor} text-4xl md:text-5xl font-bold mb-8 md:mb-0`}>
-        Say<br />Hello!
-      </h2>
+      <div>
+        <h2 class={`${textColor} text-4xl md:text-5xl font-bold mb-2`}>
+          Say Hello!
+        </h2>
+        <p
+          class="text-balance text-lg text-gray-200 dark:text-gray-400"
+        >
+          I'm currently available for select projects.
+          <br />If you're interested in collaborating, please reach out.
+        </p>
+      </div>
 
       <!-- Contact information -->
       <div id="contact" class="flex flex-col space-y-2">
@@ -104,12 +112,12 @@ const todayYear = new Date().getFullYear();
 
     <!-- Copyright and additional info -->
     <div
-      class={`${textColor} opacity-60 text-sm mt-24 pt-8 border-t border-white/20`}
+      class={`${textColor} opacity-60 text-sm my-6 pt-8 border-t border-white/20`}
     >
       <!-- <slot name="footer" /> -->
 
       <div class="flex justify-between items-center">
-        <span>© 2025 jasperyong.com, All rights reserved</span>
+        <span>© 2025 jasperyong.com</span>
         <div class="flex space-x-6">
           <a href="/docs" class="hover:underline">My Documentations</a>
           <a href="/portfolio" class="hover:underline">Portfolio</a>
@@ -118,4 +126,4 @@ const todayYear = new Date().getFullYear();
       </div>
     </div>
   </div>
-</section>
+</footer>

@@ -19,8 +19,9 @@
     "tailwindCSS.includeLanguages": {
         "astro": "html",
         "javascript": "javascript",
-        "typescript": "javascript",
-        "vue": "html"
+        "typescript": "typescript",
+        "jsx": "javascriptreact",
+        "tsx": "typescriptreact"
     },
     "tailwindCSS.experimental.classRegex": [
         ["class=\"([^\"]*)", "\"([^\"]*)"],

@@ -179,13 +179,13 @@ const currentSection = pathParts.length > 1 ? pathParts[0].replace(/^\d+-/, '') 
   <div class="flex flex-col md:flex-row max-w-7xl mx-auto px-4 py-8 gap-8">
     <!-- Sidebar -->
     <aside class="md:w-64 flex-shrink-0 pb-4 md:pb-0">
-      <div class="sticky top-24 overflow-y-auto pr-4 pb-12 max-h-[calc(100vh-6rem)]">
+      <div class="sticky top-24 overflow-y-auto pr-4 pb-12 max-h-[calc(100vh-6rem)] hover:pr-2">
         <div class="mb-8">
           <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-2">Documentation</h2>
           <p class="text-slate-600 dark:text-slate-300 text-sm">Everything you need to know</p>
         </div>
 
-        <nav>
+        <nav class="overflow-hidden">
           {sortedSections.map(sectionKey => (
             <div class="mb-6 section-container" data-section={sectionKey}>
               <button 
@@ -194,14 +194,17 @@ const currentSection = pathParts.length > 1 ? pathParts[0].replace(/^\d+-/, '') 
                 aria-controls={`section-${sectionKey}`}
               >
                 <span>{getSectionTitle(sectionKey)}</span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class:list={[
+                  "h-4 w-4 transform transition-transform duration-300",
+                  sectionKey === 'introduction' && "rotate-180"
+                ]} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
               <ul 
                 id={`section-${sectionKey}`} 
-                class="space-y-2 section-content overflow-hidden transition-all" 
-                style={sectionKey !== 'introduction' ? "max-height: 0px;" : ""}
+                class="space-y-2 section-content overflow-hidden transition-all duration-300 ease-in-out"
+                style={`max-height: ${sectionKey === 'introduction' ? '1000px' : '0'}`}
               >
                 {docsBySection[sectionKey].map(doc => {
                   const { number, title } = getDisplayTitle(doc);
@@ -320,15 +323,13 @@ const currentSection = pathParts.length > 1 ? pathParts[0].replace(/^\d+-/, '') 
       sectionContainers.forEach(container => {
         const section = (container as HTMLElement).dataset.section;
         const toggle = container.querySelector('.section-toggle');
-        const content = container.querySelector('.section-content');
+        const content = container.querySelector('.section-content') as HTMLElement;
         const icon = toggle?.querySelector('svg');
         
         if (!toggle || !content || !icon || !section) return;
         
-        // Set initial state based on localStorage or default (only introduction expanded)
+        // Set initial state based on localStorage or default
         let isExpanded = section === 'introduction';
-        
-        // If we have a stored state for this section, use it
         if (section in storedStates) {
           isExpanded = storedStates[section];
         }
@@ -336,10 +337,13 @@ const currentSection = pathParts.length > 1 ? pathParts[0].replace(/^\d+-/, '') 
         // Set initial state
         toggle.setAttribute('aria-expanded', isExpanded.toString());
         if (isExpanded) {
-          (content as HTMLElement).style.maxHeight = `${content.scrollHeight}px`;
-          icon.classList.add('rotate-180');
+          // Wait for next frame to ensure content height is calculated correctly
+          requestAnimationFrame(() => {
+            content.style.maxHeight = `${content.scrollHeight}px`;
+            icon.classList.add('rotate-180');
+          });
         } else {
-          (content as HTMLElement).style.maxHeight = '0px';
+          content.style.maxHeight = '0px';
         }
         
         // Toggle functionality
@@ -350,10 +354,11 @@ const currentSection = pathParts.length > 1 ? pathParts[0].replace(/^\d+-/, '') 
           toggle.setAttribute('aria-expanded', newState.toString());
           
           if (newState) {
-            (content as HTMLElement).style.maxHeight = `${content.scrollHeight}px`;
+            // Use scrollHeight to determine the full height
+            content.style.maxHeight = `${content.scrollHeight}px`;
             icon.classList.add('rotate-180');
           } else {
-            (content as HTMLElement).style.maxHeight = '0px';
+            content.style.maxHeight = '0px';
             icon.classList.remove('rotate-180');
           }
           
@@ -363,6 +368,13 @@ const currentSection = pathParts.length > 1 ? pathParts[0].replace(/^\d+-/, '') 
             localStorage.setItem(STORAGE_KEY, JSON.stringify(storedStates));
           } catch (e) {
             console.error('Error saving section states to localStorage:', e);
+          }
+        });
+        
+        // Update maxHeight when window resizes
+        window.addEventListener('resize', () => {
+          if (toggle.getAttribute('aria-expanded') === 'true') {
+            content.style.maxHeight = `${content.scrollHeight}px`;
           }
         });
       });
@@ -396,4 +408,51 @@ const currentSection = pathParts.length > 1 ? pathParts[0].replace(/^\d+-/, '') 
       }
     });
   </script>
+
+  <style>
+    .sticky {
+      /* Hide scrollbar by default */
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+      
+      /* Show scrollbar on hover */
+      &:hover {
+        scrollbar-width: thin;
+        -ms-overflow-style: auto;
+        &::-webkit-scrollbar {
+          display: block;
+          width: 6px;
+        }
+        &::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        &::-webkit-scrollbar-thumb {
+          background-color: rgba(0, 0, 0, 0.2);
+          border-radius: 3px;
+        }
+      }
+    }
+
+    /* Dark mode scrollbar */
+    @media (prefers-color-scheme: dark) {
+      .sticky:hover::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+    }
+
+    /* Ensure smooth height transitions for accordion */
+    .section-content {
+      will-change: max-height;
+      transition-property: max-height;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Prevent text selection on toggle */
+    .section-toggle {
+      user-select: none;
+    }
+  </style>
 </BaseLayout> 

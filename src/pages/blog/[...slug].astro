@@ -3,6 +3,7 @@ import { getCollection, render } from "astro:content";
 import Layout from "@/layouts/BaseLayout.astro";
 import ReturnButton from "@/components/ReturnButton.astro";
 import { formatYymmddDate } from "@/utils/formatDate";
+import { getBlogFilename } from "@/utils/blogUtils";
 
 // Import Starwind components
 import {
@@ -31,12 +32,13 @@ export async function getStaticPaths() {
     ? allPosts
     : allPosts.filter((post) => !post.data.draft);
 
-  // Generate paths for each post
+  // Generate paths for each post using clean URLs
   const paths = publishedPosts.map((entry) => {
-    // For clean URLs, normalize the slug
-    // Remove file extension if present
+    // Use just the filename for the URL, ignoring the directory structure
+    const cleanSlug = getBlogFilename(entry);
+    
     return {
-      params: { slug: entry.id },
+      params: { slug: cleanSlug },
       props: { entry },
     };
   });

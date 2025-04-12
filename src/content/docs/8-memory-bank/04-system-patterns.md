@@ -153,3 +153,200 @@ draft: 0
 - Creating new components for minor variations → Breaks: Maintainability
   - Correct Approach: Extend existing components with props
 ```
+
+## Sketch Utilities Pattern
+
+### Category and Tag Handling
+
+The sketch system uses a set of utility functions to handle categories and tags consistently across the application. These utilities are defined in `src/utils/sketchUtils.ts`.
+
+#### Core Functions:
+
+1. **Category Management**:
+   ```typescript
+   getAllCategories(sketches: CollectionEntry<'sketches'>[]): string[]
+   getCategoryUrl(category: string): string
+   ```
+   - Gets unique categories from sketches
+   - Generates consistent category URLs
+
+2. **Tag Management**:
+   ```typescript
+   getAllTags(sketches: CollectionEntry<'sketches'>[]): string[]
+   getTagUrl(tag: string): string
+   ```
+   - Extracts unique tags from sketches
+   - Generates consistent tag URLs
+
+3. **URL Handling**:
+   ```typescript
+   slugify(name: string): string
+   unslugify(slug: string): string
+   ```
+   - Converts names to URL-safe slugs
+   - Restores original names from slugs
+
+#### Implementation Details:
+
+- Uses `encodeURIComponent/decodeURIComponent` for reliable URL encoding
+- Maintains consistent URL structure: `/sketches/category/[category]` and `/sketches/tag/[tag]`
+- Handles spaces and special characters in category/tag names
+- Sorts categories and tags alphabetically for consistent display
+
+#### Usage Example:
+
+```typescript
+import { getAllCategories, getCategoryUrl, getAllTags, getTagUrl } from '@/utils/sketchUtils';
+
+// Get all categories
+const categories = getAllCategories(sketches);
+
+// Generate category URL
+const categoryUrl = getCategoryUrl("Creative Coding");  // "/sketches/category/Creative%20Coding"
+
+// Get all tags
+const tags = getAllTags(sketches);
+
+// Generate tag URL
+const tagUrl = getTagUrl("generative");  // "/sketches/tag/generative"
+```
+
+This pattern ensures consistent handling of categories and tags throughout the application, making it easier to maintain and extend the sketch organization system.
+
+## Sketch Category and Tag Pages Pattern
+
+### Overview
+
+The sketch system includes dedicated pages for browsing sketches by category and tag. These pages use consistent URL structures and share common components for displaying sketch cards.
+
+### URL Structure
+
+- Categories: `/sketches/category/[category]`
+- Tags: `/sketches/tag/[tag]`
+
+### Implementation Details
+
+1. **Static Path Generation**:
+   ```typescript
+   // For categories
+   export async function getStaticPaths() {
+     const sketches = await getCollection("sketches");
+     const categories = getAllCategories(sketches);
+     
+     return categories.map(category => ({
+       params: { category: encodeURIComponent(category) },
+       props: { 
+         category,
+         sketches: sketches.filter(sketch => sketch.data.category === category)
+       }
+     }));
+   }
+
+   // For tags
+   export async function getStaticPaths() {
+     const sketches = await getCollection("sketches");
+     const tags = getAllTags(sketches);
+     
+     return tags.map(tag => ({
+       params: { tag: encodeURIComponent(tag) },
+       props: { 
+         tag,
+         sketches: sketches.filter(sketch => sketch.data.tags?.includes(tag))
+       }
+     }));
+   }
+   ```
+
+2. **Common Components**:
+   - Uses `Card` components from Starwind UI
+   - Consistent layout with title, description, tags, and date
+   - Proper URL encoding for special characters
+
+3. **URL Handling**:
+   - Uses `encodeURIComponent` for URL parameters
+   - Consistent URL generation with utility functions
+   - Proper linking between related content
+
+### Key Features
+
+- Consistent URL structure across category and tag pages
+- Proper handling of special characters in URLs
+- Reusable components for sketch display
+- Type-safe implementation with TypeScript
+- Static generation for optimal performance
+
+### Usage Example
+
+```astro
+<Card>
+  <CardHeader>
+    <CardTitle>
+      <a href={getSketchFullUrl(sketch)} class="hover:text-primary">
+        {sketch.data.title}
+      </a>
+    </CardTitle>
+    <CardDescription>{sketch.data.description}</CardDescription>
+  </CardHeader>
+  <CardContent>
+    <div class="flex flex-wrap gap-2">
+      {sketch.data.tags?.map(tag => (
+        <Badge variant="secondary">
+          <a href={`/sketches/tag/${encodeURIComponent(tag)}`}>
+            {tag}
+          </a>
+        </Badge>
+      ))}
+    </div>
+  </CardContent>
+</Card>
+```
+
+This pattern ensures consistent handling of sketch categorization and tagging throughout the application.
+
+### URL Formatting
+
+The sketch system uses a consistent URL formatting approach for categories and tags:
+
+1. **URL Format Rules**:
+   - Convert to lowercase
+   - Replace spaces with dashes
+   - Remove special characters
+   - Handle multiple consecutive spaces/dashes
+   - Ensure URL-safe encoding
+
+2. **Core Functions**:
+   ```typescript
+   // Format text for URLs (e.g., "Web Development" -> "web-development")
+   formatForUrl(text: string): string
+
+   // Slugify with URL encoding (e.g., "Web Development" -> "web-development")
+   slugify(name: string): string
+
+   // Un-slugify (e.g., "web-development" -> "Web Development")
+   unslugify(slug: string): string
+   ```
+
+3. **URL Generation**:
+   ```typescript
+   // Get category URL
+   getCategoryUrl(category: string): string  // "/sketches/category/web-development"
+
+   // Get tag URL
+   getTagUrl(tag: string): string  // "/sketches/tag/javascript"
+   ```
+
+4. **Implementation Example**:
+   ```typescript
+   // In [category].astro
+   export async function getStaticPaths() {
+     const sketches = await getCollection("sketches");
+     const categories = getAllCategories(sketches);
+     
+     return categories.map(category => ({
+       params: { category: slugify(category) },  // URL-safe, lowercase with dashes
+       props: { category }  // Original category name preserved
+     }));
+   }
+   ```
+
+This ensures consistent URL formatting across the application while maintaining readable original names in the UI.

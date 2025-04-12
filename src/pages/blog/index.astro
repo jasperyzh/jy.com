@@ -10,6 +10,7 @@ import TagCloud from "@/components/TagCloud.astro";
 import Pagination from "@/components/Pagination.astro";
 import { formatYymmddDate } from "@/utils/formatDate";
 import BlogPostCard from "@/components/BlogPostCard.astro";
+import { getBlogFilename } from "@/utils/blogUtils";
 
 
 // Pagination configuration
@@ -77,7 +78,7 @@ const nextUrl =
               date={formatYymmddDate(post.data.pubDate || new Date())}
               tags={post.data.tags || []}
               category={post.data.category}
-              url={`/blog/${post.id}`}
+              url={`/blog/${getBlogFilename(post)}`}
               thumbnail={post.data.thumbnail || "/img/placeholder.png"}
             />
           ))

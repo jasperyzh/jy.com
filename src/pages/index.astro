@@ -7,53 +7,63 @@ const principles = [
   {
     number: "01",
     title: "Innovative",
-    description: "Good design is innovative. Technological development is always offering new opportunities for innovative design. But innovative design always develops in tandem with innovative technology, and can never be an end in itself."
+    description:
+      "Good design is innovative. Technological development is always offering new opportunities for innovative design. But innovative design always develops in tandem with innovative technology, and can never be an end in itself.",
   },
   {
     number: "02",
     title: "Useful",
-    description: "Good design makes a product useful. Products are bought to be used. A product meets its purpose not only in functional, but also in psychological and aesthetic terms."
+    description:
+      "Good design makes a product useful. Products are bought to be used. A product meets its purpose not only in functional, but also in psychological and aesthetic terms.",
   },
   {
     number: "03",
     title: "Aesthetic",
-    description: "Good design is aesthetic. The aesthetic quality of a product is integral to its usefulness because products we use every day affect our person and our well-being."
+    description:
+      "Good design is aesthetic. The aesthetic quality of a product is integral to its usefulness because products we use every day affect our person and our well-being.",
   },
   {
     number: "04",
     title: "Understandable",
-    description: "Good design makes a product understandable. It clarifies the product's structure. Better still, it can make the product talk. At best, it is self-explanatory."
+    description:
+      "Good design makes a product understandable. It clarifies the product's structure. Better still, it can make the product talk. At best, it is self-explanatory.",
   },
   {
     number: "05",
     title: "Unobtrusive",
-    description: "Good design is unobtrusive. Products fulfilling a purpose are like tools. They are neither decorative objects nor works of art. Their design should therefore be both neutral and restrained."
+    description:
+      "Good design is unobtrusive. Products fulfilling a purpose are like tools. They are neither decorative objects nor works of art. Their design should therefore be both neutral and restrained.",
   },
   {
     number: "06",
     title: "Honest",
-    description: "Good design is honest. It does not make a product more innovative, powerful or valuable than it really is. It does not attempt to manipulate the consumer with promises that cannot be kept."
+    description:
+      "Good design is honest. It does not make a product more innovative, powerful or valuable than it really is. It does not attempt to manipulate the consumer with promises that cannot be kept.",
   },
   {
     number: "07",
     title: "Long-lasting",
-    description: "Good design is long-lasting. It avoids being fashionable and therefore never appears antiquated. Unlike fashionable design, it lasts many years – even in today's throwaway society."
+    description:
+      "Good design is long-lasting. It avoids being fashionable and therefore never appears antiquated. Unlike fashionable design, it lasts many years – even in today's throwaway society.",
   },
   {
     number: "08",
     title: "Thorough",
-    description: "Good design is thorough down to the last detail. Nothing must be arbitrary or left to chance. Care and accuracy in the design process show respect towards the user."
+    description:
+      "Good design is thorough down to the last detail. Nothing must be arbitrary or left to chance. Care and accuracy in the design process show respect towards the user.",
   },
   {
     number: "09",
     title: "Environmentally-friendly",
-    description: "Good design is environmentally-friendly. Design makes an important contribution to the preservation of the environment. It conserves resources and minimizes physical and visual pollution throughout the lifecycle of the product."
+    description:
+      "Good design is environmentally-friendly. Design makes an important contribution to the preservation of the environment. It conserves resources and minimizes physical and visual pollution throughout the lifecycle of the product.",
   },
   {
     number: "10",
     title: "As little design as possible",
-    description: "Good design is as little design as possible. Less, but better – because it concentrates on the essential aspects, and the products are not burdened with non-essentials. Back to purity, back to simplicity."
-  }
+    description:
+      "Good design is as little design as possible. Less, but better – because it concentrates on the essential aspects, and the products are not burdened with non-essentials. Back to purity, back to simplicity.",
+  },
 ];
 
 // Define projects/work examples
@@ -61,7 +71,7 @@ const projects = [
   { title: "Digital Design", href: "/work/digital-design" },
   { title: "Product Design", href: "/work/product-design" },
   { title: "Research", href: "/work/research" },
-  { title: "Typography", href: "/work/typography" }
+  { title: "Typography", href: "/work/typography" },
 ];
 
 // Redirect to coming-soon page in production
@@ -74,32 +84,42 @@ const isProduction = import.meta.env.PROD;
   <!-- Header Section -->
   <header class="bg-white dark:bg-gray-900 py-8 px-4">
     <div class="max-w-4xl mx-auto">
-      <h1 class="text-4xl font-normal text-gray-900 dark:text-white">
-        Good design is as little design as possible.
+      <h1 class="text-6xl font-normal leading-16">
+        An attempt to understand <span class="block">web development, design</span> and everything in between
       </h1>
       <div class="mt-4 text-gray-600 dark:text-gray-400">
         <span>A collection of work and thoughts by</span>
-        <a href="/about" class="border-b border-gray-400 ml-1 hover:text-gray-900 dark:hover:text-white">Jasper Yong</a>
+        <a
+          href="/about"
+          class="border-b border-gray-400 ml-1 dark:hover:text-white"
+          >Jasper Yong</a
+        >
       </div>
     </div>
   </header>
 
-  <pre>trying to get my head around on how to position the sketches, webdev-experiments, portfolio, etc.</pre>
-
   <!-- Introduction Section -->
-  <section class="bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-8 px-4">
+  <section
+    class="bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-8 px-4"
+  >
     <div class="max-w-4xl mx-auto">
       <div class="md:grid md:grid-cols-6 md:gap-8">
         <div class="md:col-span-4 mb-6 md:mb-0">
           <p class="text-lg text-gray-800 dark:text-gray-200">
-            Design is a method of problem-solving. Whether it's blueprints, a clever UI, a brochure, or a chair – design can help solve a visual or physical problem.
+            Design is a method of problem-solving. Whether it's blueprints, a
+            clever UI, a brochure, or a chair – design can help solve a visual
+            or physical problem.
           </p>
           <p class="mt-4 text-lg text-gray-800 dark:text-gray-200">
-            The best designs are notorious for seeming not designed at all – or 'undesigned'. This is the essence of good design according to Dieter Rams.
+            The best designs are notorious for seeming not designed at all – or
+            'undesigned'. This is the essence of good design according to Dieter
+            Rams.
           </p>
         </div>
         <div class="md:col-span-2">
-          <div class="aspect-square bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+          <div
+            class="aspect-square bg-gray-200 dark:bg-gray-700 flex items-center justify-center"
+          >
             <span class="text-gray-400 dark:text-gray-500">Portrait</span>
           </div>
         </div>
@@ -108,110 +128,103 @@ const isProduction = import.meta.env.PROD;
   </section>
 
   <!-- Principles Section -->
-  <section class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 py-8 px-4">
+  <!-- <section
+    class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 py-8 px-4"
+  >
     <div class="max-w-4xl mx-auto">
       <div class="mb-8">
-        <h2 class="text-2xl font-normal text-gray-900 dark:text-white mb-2">Dieter Rams' Ten Principles</h2>
+        <h2 class="text-2xl font-normal dark:text-white mb-2">
+          Dieter Rams' Ten Principles
+        </h2>
         <p class="text-gray-600 dark:text-gray-400">
-          Back in the early 1980s, Dieter Rams asked himself an important question: "Is my design good design?" 
-          Since good design can't be measured in a finite way, he set about expressing the ten most important 
-          principles for what he considered was good design.
+          Back in the early 1980s, Dieter Rams asked himself an important
+          question: "Is my design good design?" Since good design can't be
+          measured in a finite way, he set about expressing the ten most
+          important principles for what he considered was good design.
         </p>
       </div>
 
       <div class="md:grid md:grid-cols-2 md:gap-6 mb-8">
-        <div class="mb-6 md:mb-0 aspect-square bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-          <span class="text-gray-400 dark:text-gray-500">Dieter Rams Portrait</span>
+        <div
+          class="mb-6 md:mb-0 aspect-square bg-gray-100 dark:bg-gray-800 flex items-center justify-center"
+        >
+          <span class="text-gray-400 dark:text-gray-500"
+            >Dieter Rams Portrait</span
+          >
         </div>
-        <div class="aspect-square bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+        <div
+          class="aspect-square bg-gray-100 dark:bg-gray-800 flex items-center justify-center"
+        >
           <span class="text-gray-400 dark:text-gray-500">Braun Products</span>
         </div>
       </div>
 
-      <h3 class="text-xl font-normal text-gray-900 dark:text-white mb-6">Good design is...</h3>
+      <h3 class="text-xl font-normal dark:text-white mb-6">
+        Good design is...
+      </h3>
 
       <div>
-        {principles.map((principle) => (
-          <div class="border-t border-gray-200 dark:border-gray-700 py-6">
-            <div class="flex">
-              <span class="text-sm text-gray-400 dark:text-gray-500 w-12">{principle.number}</span>
-              <div>
-                <h3 class="text-lg text-gray-900 dark:text-white mb-2">{principle.title}</h3>
-                <p class="text-gray-600 dark:text-gray-300">{principle.description}</p>
+        {
+          principles.map((principle) => (
+            <div class="border-t border-gray-200 dark:border-gray-700 py-6">
+              <div class="flex">
+                <span class="text-sm text-gray-400 dark:text-gray-500 w-12">
+                  {principle.number}
+                </span>
+                <div>
+                  <h3 class="text-lg  dark:text-white mb-2">
+                    {principle.title}
+                  </h3>
+                  <p class="text-gray-600 dark:text-gray-300">
+                    {principle.description}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        }
       </div>
     </div>
-  </section>
+  </section> -->
 
   <!-- Work Section -->
-  <section id="work" class="bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-8 px-4">
+  <!-- <section
+    id="work"
+    class="bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-8 px-4"
+  >
     <div class="max-w-4xl mx-auto">
-      <h2 class="text-2xl font-normal text-gray-900 dark:text-white mb-8">Selected Work</h2>
+      <h2 class="text-2xl font-normal dark:text-white mb-8">Selected Work</h2>
       <div class="md:grid md:grid-cols-2 md:gap-6">
-        {projects.map((project) => (
-          <a href={project.href} class="block mb-8 group">
-            <div class="aspect-video bg-white dark:bg-gray-700 mb-2"></div>
-            <h3 class="text-lg text-gray-900 dark:text-white group-hover:underline">{project.title}</h3>
-          </a>
-        ))}
+        {
+          projects.map((project) => (
+            <a href={project.href} class="block mb-8 group">
+              <div class="aspect-video bg-white dark:bg-gray-700 mb-2" />
+              <h3 class="text-lg  dark:text-white group-hover:underline">
+                {project.title}
+              </h3>
+            </a>
+          ))
+        }
       </div>
     </div>
-  </section>
+  </section> -->
 
   <!-- Quote Section -->
-  <section class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 py-8 px-4">
+  <!-- <section
+    class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 py-8 px-4"
+  >
     <div class="max-w-4xl mx-auto">
       <blockquote class="text-xl font-normal text-gray-800 dark:text-gray-200">
-        "We designers, we don't work in a vacuum. We need business people. We are not the fine artists we are often confused with. Today you find few companies that take design seriously, as I see it."
-        <footer class="mt-4 text-lg text-gray-600 dark:text-gray-400">— Dieter Rams</footer>
+        "We designers, we don't work in a vacuum. We need business people. We
+        are not the fine artists we are often confused with. Today you find few
+        companies that take design seriously, as I see it."
+        <footer class="mt-4 text-lg text-gray-600 dark:text-gray-400">
+          — Dieter Rams
+        </footer>
       </blockquote>
     </div>
-  </section>
+  </section> -->
 
-  <!-- Contact Section -->
-  <section class="bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-8 px-4">
-    <div class="max-w-4xl mx-auto">
-      <div class="md:grid md:grid-cols-2 md:gap-8">
-        <div class="mb-8 md:mb-0">
-          <h2 class="text-2xl font-normal text-gray-900 dark:text-white mb-4">Let's work together</h2>
-          <p class="text-gray-600 dark:text-gray-300 mb-6">
-            I'm currently available for select projects. If you're interested in collaborating, please reach out.
-          </p>
-          <a href="/contact" class="inline-block border border-gray-900 dark:border-white px-6 py-3 text-gray-900 dark:text-white hover:bg-gray-900 hover:text-white dark:hover:bg-white dark:hover:text-gray-900">
-            Contact me
-          </a>
-        </div>
-        <div>
-          <h3 class="text-lg font-normal text-gray-900 dark:text-white mb-4">Resources</h3>
-          <ul class="space-y-2 text-gray-600 dark:text-gray-300">
-            <li>
-              <a href="https://www.vitsoe.com/us/about/good-design" class="border-b border-gray-300 dark:border-gray-700 hover:text-gray-900 dark:hover:text-white">
-                Dieter Rams: Ten Principles for Good Design
-              </a>
-            </li>
-            <li>
-              <a href="https://designobserver.com" class="border-b border-gray-300 dark:border-gray-700 hover:text-gray-900 dark:hover:text-white">
-                Design Observer
-              </a>
-            </li>
-            <li>
-              <a href="https://alistapart.com" class="border-b border-gray-300 dark:border-gray-700 hover:text-gray-900 dark:hover:text-white">
-                A List Apart
-              </a>
-            </li>
-            <li>
-              <a href="https://hackdesign.org" class="border-b border-gray-300 dark:border-gray-700 hover:text-gray-900 dark:hover:text-white">
-                Hack Design
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
 </Layout>
 
 <style>

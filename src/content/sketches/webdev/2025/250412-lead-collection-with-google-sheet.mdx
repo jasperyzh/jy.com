@@ -1,0 +1,116 @@
+---
+title: "Simple Lead Collection with Google Sheets"
+description: "Learn how to collect and store website leads using Google Sheets for free without complex CRM systems."
+date: 250412
+category: "Web Development"
+tags: ["google-sheets", "lead-generation", "web-forms", "marketing", "business-starter-pack"]
+status: "completed"
+thumbnail: "/img/blog/google-sheets-lead-collection.jpg"
+---
+
+import LeadCollectionForm from "./250412-lead-collection-with-google-sheet.astro";
+
+# Simple Lead Collection with Google Sheets
+
+Setting up a lead collection system doesn't require expensive tools or complex CRM systems. Google Sheets offers a powerful, free, and easy-to-use solution that's perfect for small businesses, startups, or personal projects. This guide will walk you through implementing a Google Sheets-based lead collection system for your website.
+
+## Why Use Google Sheets for Lead Collection?
+
+- **Zero Cost**: Completely free to use with a Google account
+- **Familiar Interface**: Easy to use if you're familiar with spreadsheets
+- **No Coding Required**: Simple setup with Google Forms
+- **Collaboration**: Easy sharing and collaboration capabilities
+- **Exportable Data**: Export your leads to CSV or other formats when needed
+- **Automation Potential**: Can be extended with Google Apps Script
+
+
+## Example: Lead Collection Form
+
+<LeadCollectionForm />
+
+---
+
+## Implementation Steps
+
+### Step 1: Create a Google Sheet
+
+1. Go to [Google Sheets](https://sheets.google.com) and create a new spreadsheet
+2. Rename it to something meaningful like "Website Leads"
+3. Create column headers for the information you want to collect:
+   - Name
+   - Email
+   - Phone Number
+   - Message/Query
+   - Source
+   - Date Submitted
+
+### Step 2: Create a Google Form
+
+1. Go to [Google Forms](https://forms.google.com) and create a new form
+2. Add questions that correspond to your sheet columns:
+   - Name (Short answer)
+   - Email (Short answer with email validation)
+   - Phone Number (Short answer with optional validation)
+   - Message/Query (Paragraph)
+   - Source (Optional: Use a dropdown or hidden field)
+3. Configure form settings:
+   - Under "Responses" tab, click the Google Sheets icon
+   - Select "Create a new spreadsheet" or link to your existing one
+   - Ensure validation is set up for email fields
+
+### Step 3: Embed the Form on Your Website
+
+**Option 1: Direct Embed**
+```html
+<iframe 
+  src="YOUR_GOOGLE_FORM_URL_HERE?embedded=true" 
+  width="100%" 
+  height="800" 
+  frameborder="0" 
+  marginheight="0" 
+  marginwidth="0">
+  Loading…
+</iframe>
+```
+
+**Option 2: Custom Form with POST Request**
+Create a custom form on your website and use the form component provided in this post. This gives you more control over styling and user experience.
+
+### Step 4: Set Up Notifications
+
+1. In Google Forms, go to "More" (three dots) > "Form settings"
+2. Navigate to the "Responses" tab
+3. Enable "Get email notifications for new responses"
+4. Add email addresses that should receive notifications
+
+## Managing Your Leads
+
+Once your form is live, you'll start collecting leads in your Google Sheet. Here are some tips for managing them effectively:
+
+1. **Use Filters**: Filter leads by date, source, or other criteria
+2. **Add Status Column**: Track lead status (New, Contacted, Converted, etc.)
+3. **Color Coding**: Use conditional formatting to highlight high-priority leads
+4. **Sort by Date**: Keep newest leads at the top for quick access
+5. **Regular Backups**: Export your data periodically for safekeeping
+
+## Taking It Further: Advanced Options
+
+When you're ready to scale beyond Google Sheets, consider:
+
+1. **Google Apps Script**: Create custom automation, like sending personalized follow-up emails
+2. **Zapier Integration**: Connect Google Sheets to other tools like email marketing platforms
+3. **CRM Migration**: Export your data to a CRM system when your business outgrows Google Sheets
+4. **Data Analysis**: Use Google Data Studio to create visual reports of your leads
+
+## Limitations & Considerations
+
+- **Volume Limitations**: Works best for lower volumes (< 1000 leads/month)
+- **Limited Automation**: Basic compared to dedicated CRM systems
+- **Privacy Concerns**: Ensure your data collection complies with regulations like GDPR
+- **Scaling Issues**: May become unwieldy with very large datasets
+
+## Conclusion
+
+Google Sheets offers a powerful starting point for lead collection that costs nothing to implement. Start with this solution to gather leads and understand your customers better. As your business grows, you can always migrate to more robust systems while maintaining all your historical lead data.
+
+Try the implementation below to see how simple it can be to collect leads using Google Sheets!
