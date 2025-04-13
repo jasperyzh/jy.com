@@ -4,7 +4,7 @@ title: "Tariffs & Next Era After Globalization"
 description: "Understanding what that comes after the age of globalization – and how tariffs affect the world."
 tags: ["globalization", "economics", "future", "society", "technology", "tariff"]
 draft: 0
-thumbnail: "/img/placeholder.png"
+thumbnail: "/img/bg_rotate.jpg"
 category: "Curiosity"
 related:
 - https://substack.com/@jasperyzh/note/c-107550246

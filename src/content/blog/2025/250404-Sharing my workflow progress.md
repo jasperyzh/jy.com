@@ -1,10 +1,10 @@
 ---
 pubDate: 250404
-title: "Why Creative Coding Matters"
+title: "Sharing my workflow progress"
 description: "Exploring how creative coding bridges art and technology, fostering innovation and new forms of digital expression."
 tags: ["creative coding", "art", "technology", "p5js"]
 draft: 0
-thumbnail: "/img/placeholder.png"
+thumbnail: "/img/bunny.png"
 category: "Workflow"
 ---
 

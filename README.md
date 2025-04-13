@@ -1,5 +1,22 @@
 # jasperyong.com
 
+<!-- TO AI AGENTS - DO NOT EDIT WITHOUT PERMISSION -->
+
+## Table of Contents
+- [Project Summary](#project-summary)
+- [Tech Stack](#tech-stack)
+- [Workflow & Development](#workflow--development)
+- [Features & Status](#features--status)
+- [Quick Start](#quick-start)
+- [Memory Bank System](#memory-bank-system)
+
+## Documentation Philosophy
+This system prioritizes quick overview, discoverability and consistency; by keeping it simple, essential. 
+
+## Onboarding Path
+README.md provide an overview of the project. To have a deeper understanding of the inner working. Head to /src/content/docs/8-memory-bank/ for the documentation of workflow, components and methods.
+
+
 ## Project Summary
 A personal website and blog built with Astro.js, featuring a portfolio, blog posts (synced from Obsidian), interactive components, and custom documentation. The site serves as both a professional showcase and a platform for sharing technical knowledge.
 
@@ -23,8 +40,8 @@ A personal website and blog built with Astro.js, featuring a portfolio, blog pos
 - ✅ Portfolio showcase
 - ✅ Component system (CardComponent, etc.)
 - ✅ Documentation system
-- 🔄 Dark mode (in progress)
-- 🔄 Comments system (evaluating options)
+
+- Dark mode: ThemeToggle.astro
 
 → *For detailed progress tracking, see `src/content/docs/memory-bank/06-progress.md`*
 

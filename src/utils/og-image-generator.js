@@ -118,15 +118,12 @@ export async function generateOGImage(options) {
 export function determineFormat(thumbnail) {
   if (!thumbnail) return 'svg'; // Default to SVG if no thumbnail
   
-  // Format priority: svg (default) < jpg < jpeg < webp < png
+  // If a custom thumbnail is provided, use its format
+  // This ensures custom images take priority over generated ones
   const extension = path.extname(thumbnail).toLowerCase().substring(1);
-  const formatPriority = {
-    'svg': 1,
-    'jpg': 2,
-    'jpeg': 3,
-    'webp': 4,
-    'png': 5
-  };
   
-  return formatPriority[extension] ? extension : 'svg';
+  // Return the custom image's extension if valid, otherwise default to svg
+  return extension && ['svg', 'jpg', 'jpeg', 'webp', 'png'].includes(extension) 
+    ? extension 
+    : 'svg';
 } 

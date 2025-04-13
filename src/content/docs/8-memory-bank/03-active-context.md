@@ -5,13 +5,10 @@ pubDate: 250413
 draft: 0
 ---
 
-### **3. `activeContext.md` (Current Reality)**
-```markdown
-# ACTIVE CONTEXT
-<!-- DAILY UPDATES REQUIRED -->
+# ACTIVE CONTEXT (Current Reality)
 
 ## Current Focus (2024-04-13)
-```focus-area
+
 - Sprint Goal: Implement Memory Bank system and redesign landing page based on Circora reference
 - Blockers: 
   - [ ] Need to validate Memory Bank templates against actual implementation @matsu
@@ -28,10 +25,8 @@ draft: 0
   - [x] Optimized build process with caching
   - [ ] Add theme variations based on content categories
   - [ ] Explore raster conversion options for platforms that don't support SVG
-```
 
 ## Recent Decisions
-```decision-log
 | Date | Decision | Impact | Owner |
 |------|----------|--------|-------|
 | 2024-04-13 | Use SVG for thumbnail generation instead of Canvas/p5.js | Eliminated native dependencies, simplified build process | @matsu |
@@ -47,20 +42,16 @@ draft: 0
 | 2024-04-05 | Use Substack as main platform for social media posting | Reduced development complexity | @matsu |
 | 2024-04-04 | Referenced [[250220-Personal Website & Blog - Organization#Blog]] for blog structure | Consistent content organization | @matsu |
 | 2024-04-02 | Enhanced CSS with variables and semantic classes | Improved theme consistency | @matsu |
-```
 
 ## Immediate Todos
-```hotlist
 1. [High] Add theme variations to OG image generator → ETA: 2024-04-15
 2. [Med] Explore raster conversion options for SVG thumbnails → ETA: 2024-04-17
 2. [Med] Create validation script for tech context → Depends On: Final structure
 3. [Med] Add docs collection to thumbnail generation → ETA: 2024-04-16
 4. [Med] Add dark mode toggle → Depends On: CSS refactoring
 5. [Low] Implement comments system → Evaluating options: Disqus, Staticman, GitHub Issues
-```
 
 ## Current Development Branch
-```git-context
 - Branch: feature/generative-thumbnails
 - Base: main
 - Key Files:  
@@ -72,10 +63,8 @@ draft: 0
   - src/pages/generate-og-preview.astro
   - src/content/docs/8-memory-bank/07-generative-thumbnails.md
   - src/content/docs/8-memory-bank/08-thumbnail-howto.md
-```
 
 ## Recent Learnings
-```learnings
 - Memory Bank structure improves AI context retention
 - Static site generation with Astro provides excellent performance
 - Content syncing from Obsidian streamlines workflow
@@ -83,13 +72,8 @@ draft: 0
 - Deterministic randomness can be created using content-based seeds
 - Collection-based organization improves content management
 - Format priority system allows flexibility while maintaining backward compatibility
-```
 
 ## Archive
-```archive
 - [2024-04-08] Completed Memory Bank system implementation
 - [2024-04-04] Referenced [[250220-Personal Website & Blog - Organization#Blog]] for blog structure
 - [2024-04-02] Updated global.css with modern CSS structure
-```
-
----
