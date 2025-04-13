@@ -1,7 +1,7 @@
 ---
-title: Project Brief & Status
-description: Project Brief, Information and Status.
-pubDate: 250413
+title: AI Instructions
+description: Guidelines for AI agents to effectively work with this project.
+pubDate: 250408
 draft: 0
 ---
 
@@ -13,11 +13,11 @@ This is a personal website and blog built with Astro.js, featuring a portfolio, 
 ## Memory Bank System
 I rely on the Memory Bank files for persistent context about this project. Before starting any task, please read the relevant Memory Bank files:
 
-- `memory-bank/02-product-context.md`: Purpose and user experience goals
-- `memory-bank/03-active-context.md`: Current focus and recent decisions
-- `memory-bank/04-system-patterns.md`: Architecture and design patterns
-- `memory-bank/05-tech-context.md`: Technical stack and environment
-- `memory-bank/06-progress.md`: Current status and tracking
+- `src/content/docs/8-memory-bank/02-product-context.md`: Purpose and user experience goals
+- `src/content/docs/8-memory-bank/03-active-context.md`: Current focus and recent decisions
+- `src/content/docs/8-memory-bank/04-system-patterns.md`: Architecture and design patterns
+- `src/content/docs/8-memory-bank/05-tech-context.md`: Technical stack and environment
+- `src/content/docs/8-memory-bank/06-progress.md`: Current status and tracking
 
 ## Core Workflows
 
@@ -43,7 +43,7 @@ I rely on the Memory Bank files for persistent context about this project. Befor
 
 ## When Suggesting Changes
 
-1. **First, read the Memory Bank**: Particularly `active-context.md` and `system-patterns.md`
+1. **First, read the Memory Bank**: Particularly `03-active-context.md` and `04-system-patterns.md`
 2. **Check existing patterns**: Look for similar components or solutions
 3. **Consider both implementation and maintenance**: Optimize for readability
 4. **Document your changes**: Update the relevant Memory Bank files after significant changes
@@ -337,107 +337,3 @@ By implementing this Memory Bank system, you are essentially giving your AI codi
 5. **Validation Hooks**  
    - Script reminders in `techContext.md`  
    - Auto-generation notices in `progress.md`
-
-
----
-
-
-
-# PRODUCT CONTEXT (The Why)
-- Need a centralized platform to demonstrate technical skills and share knowledge
-- Want to connect content creation workflow from Obsidian to public web presence
-
-## User Experience Goals
-- Primary: Create a seamless showcase of technical skills and written content
-- Secondary: Demonstrate proficiency with modern web technologies
-- Tertiary: Build a platform for experimentation with interactive components
-
-## Target Audience
-- Tech professionals and potential employers
-- Fellow developers interested in web technologies
-- Readers of technical content and tutorials
-
-## User Flows
-1. Content Discovery → Blog Post → Related Projects → Contact
-2. Portfolio Review → Technical Details → Interactive Demo → Contact
-3. Documentation → Implementation Example → Source Code → Adaptation
-
-## Success Metrics
-- Engagement: Average time spent on blog posts > 3 min
-- Portfolio: Project page click-through > 40%
-- Technical: Lighthouse performance score > 90
-
-
-# PROGRESS TRACKER
-
-## Maintenance Log 2024-04-13
-- Added: Generative thumbnails system for automatic OG images @matsu
-- Added: SVG-based image generation for blog posts and sketches
-- Added: Multi-collection support with format priority system
-- Added: Comprehensive documentation for the thumbnails system
-- Fixed: Eliminated need for canvas/p5.js dependencies by using pure SVG
-- Updated: Layout components to use new thumbnail path structure
-- Optimized: Build-time generation with caching for better performance
-
-## Maintenance Log 2024-04-08
-- Updated: README.md (Major restructuring for improved organization) @matsu
-- Updated: Memory Bank system documentation and structure
-- Updated: All Memory Bank files with project-specific context
-- Updated: Reorganized AI Agent Memory Bank guide for better clarity and structure
-- Updated: Established component strategy (.astro by default, .vue for specific cases) @matsu
-- Updated: Established styling strategy (base HTML elements via CSS variables, components focus on layout) @matsu
-- Updated: Improved CardComponent and BlogPostCard with better composition, accessibility and documentation @matsu
-- Updated: Added design style guide based on Circora reference while maintaining our color scheme @matsu
-- Pending: Tech stack validation, component documentation, landing page implementation
-
-## Current State (2024-04-13)
-```system-health
-- Core Site: Operational
-- Blog Integration: Functional (v1)
-- Portfolio Section: In Development (70%)
-- Interactive Components: Initial Implementation
-- Memory Bank: Established
-- OG Images: Automated (v1)
-```
-
-## Milestone Progress
-```milestones
-- [100%] Memory Bank Implementation ✓ DONE
-- [85%] OG Image Automation → Remaining: Raster conversion option
-- [75%] Core Website Structure → Remaining: Navigation refinement, responsive testing
-- [60%] Blog/Content Integration → Remaining: Tags, categories, search
-- [20%] Interactive Components → Blocked By: Component library standardization
-- [0%] Dark Mode → Pending CSS architecture refinement
-```
-
-## Feature Status
-```features
-- ✅ Astro.js framework implementation
-- ✅ Content Collection configuration
-- ✅ Obsidian integration scripts
-- ✅ CardComponent implementation
-- ✅ GitHub Actions CI/CD
-- ✅ Memory Bank system
-- ✅ Generative OG image system
-- 🔄 Portfolio showcase
-- ⏳ Comments system
-- ⏳ Dark mode toggle
-- ⏳ Search functionality
-```
-
-## Knowledge Gaps
-```unknowns
-1. Best approach for comments system → Assumption: Staticman or GitHub Issues
-2. Performance impact of interactive components → Research: Bundle size analysis needed
-3. SEO optimization strategy → Owner: @matsu
-4. Best approach for raster conversion of SVGs → Research: Sharp library or client-side solution
-```
-
-## Next Actions
-```next-steps
-1. Add theme variations to the OG image generator
-2. Create validation script for tech context
-3. Finalize portfolio component design
-4. Research and select commenting system
-5. Implement dark mode toggle
-```

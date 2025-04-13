@@ -33,6 +33,9 @@ draft: 0
 | 2024-04-13 | Implement format priority system (svg < jpg < jpeg < webp < png) | More flexible image format handling | @matsu |
 | 2024-04-13 | Organize thumbnails by collection (/thumbnails/[collection]/[slug]) | Better organization, follows content structure | @matsu |
 | 2024-04-13 | Use build-time generation with caching | Faster builds, only regenerates when content changes | @matsu |
+| 2024-04-08 | Clarified tech stack in README: Astro.js only with Vue3 as exception for component interactivity | More precise tech stack description | @matsu |
+| 2024-04-08 | Clarified styling: Barebone TailwindCSS with custom semantic classes | Better understanding of styling approach | @matsu |
+| 2024-04-08 | Specified libraries are for sketches only | Clearer scope for external dependencies | @matsu |
 | 2024-04-08 | Use starwind components for styling whenever possible | Consistent component style and reduced duplication | @matsu |
 | 2024-04-08 | New component demos will be placed under the demo index.astro page | Centralized component demos for easier testing and discovery | @matsu |
 | 2024-04-08 | Established design style guide based on Circora reference | Consistent design language, improved UX | @matsu |
@@ -55,7 +58,7 @@ draft: 0
 - Branch: feature/generative-thumbnails
 - Base: main
 - Key Files:  
-  - src/content/docs/memory-bank/*.md
+  - src/content/docs/8-memory-bank/*.md
   - README.md (updated)
   - src/utils/og-image-generator.js
   - scripts/generate-og-images.mjs

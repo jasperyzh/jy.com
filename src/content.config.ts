@@ -34,7 +34,8 @@ const ob_blog = defineCollection({
       "Web Development", 
       "Workflow", 
       "Curiosity", 
-      "Generative Art"
+      "Generative Art",
+      "Documentation"
     ]), // Required category from preset list
   }),
 });

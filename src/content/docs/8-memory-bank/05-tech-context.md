@@ -12,8 +12,8 @@ draft: 0
 
 ## Core Stack
 ```stack
-- Frontend: Astro.js + Vue 3 (Lockfile: package-lock.json)
-- CSS: TailwindCSS (Config: tailwind.config.js)
+- Frontend: Astro.js only, with Vue3 as exception for component interactivity
+- CSS: Barebone TailwindCSS with custom semantic classes and Starwind
 - Content: Markdown/MDX with Astro Content Collections
 - Analytics: Google Analytics (G-LQ2S4M9E6S)
 ```
@@ -31,10 +31,10 @@ draft: 0
 
 ## Additional Libraries
 ```libraries
-- tone.js: Audio processing for interactive demos
-- pixi.js: 2D graphics and visualizations
-- three.js: 3D graphics and WebGL effects
-- canvas-sketch: Creative coding experiments
+- tone.js: Audio processing for interactive demos (sketches only)
+- pixi.js: 2D graphics and visualizations (sketches only)
+- three.js: 3D graphics and WebGL effects (sketches only)
+- canvas-sketch: Creative coding experiments (sketches only)
 ```
 
 ## Dev Environment
@@ -46,6 +46,7 @@ draft: 0
 4. Scripts:
    - `scripts/copy-blog-docs-posts.sh`: Syncs Obsidian content
    - `scripts/copy-projects-readme-to-obsidian.sh`: Updates Obsidian with project data
+   - `scripts/generate-og-images.mjs`: Generates OG images for content collections
 ```
 
 ## Testing Matrix

@@ -1,9 +1,21 @@
 ---
+pubDate: 250413
+title: "AI Agent (Cursor) Memory Bank Implementation Guide"
+description: An instruction guide and templates for setting up a memory-bank to use with cursor's AI Agents
+tags: ["general", "webdev", "ai"]
+draft: 0
+thumbnail: "/thumbnails/blog/250413-ai-instructions-general.svg" 
+category: "Web Development"
+---
+
+```
+---
 title: AI Instructions (General)
 description: General Guidelines for AI agents to generate and edit the project documentation.
 pubDate: 250413 *(Consistent YYMMDD format)*
 draft: 0
 ---
+```
 
 **Create a project documentation system with two layers:**
 1.  A concise `README.md` overview (1 page max)
@@ -100,5 +112,3 @@ Icon Legend: 🗄️ (Content Collection) | 🔗 (Routing) | 🔧 (Utility) | ..
 4.  **Decision Log Philosophy:** Architectural decisions are captured as `decisions-*.md` files within `/memory-bank/`. The detailed process and context for active decisions may be further elaborated in `03-active-context.md` *(AI Agent: Ensure relevant decisions link back or are referenced here as appropriate)*.
 
 ---
-
-This version incorporates your specific choices: `YYMMDD` dates, `🔧` utility icon, `tree` format, Option B file naming (`[type]-[topic].md` in flat `/memory-bank/`), allows both link types, and references the decision log context file. It should provide clear instructions for an AI agent.
