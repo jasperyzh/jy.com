@@ -122,7 +122,7 @@ export const prerender = true;
       <!-- Pagination controls -->
       {(prevUrl || nextUrl) && (
         <div class="mt-8">
-          <Pagination {prevUrl} {nextUrl} />
+          <Pagination {prevUrl} {nextUrl} {currentPage} {totalPages} />
         </div>
       )}
     </div>

@@ -99,7 +99,7 @@ const nextUrl =
       <!-- Pagination controls -->
       {(prevUrl || nextUrl) && (
         <div class="mt-8">
-          <Pagination {prevUrl} {nextUrl} />
+          <Pagination {prevUrl} {nextUrl} currentPage={currentPage} totalPages={totalPages} />
         </div>
       )}
     </div>

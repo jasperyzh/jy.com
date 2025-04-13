@@ -1,24 +1,84 @@
 ---
 // import Link from "./Link.astro";
 
-import Button from "@/components/starwind/button";
+import {
+  Pagination as PaginationRoot,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+  PaginationEllipsis
+} from "@/components/starwind/pagination";
 
-const { prevUrl, nextUrl } = Astro.props;
+const { prevUrl, nextUrl, currentPage, totalPages } = Astro.props;
+
+// Calculate page numbers to display
+const displayPages: number[] = [];
+const maxDisplayed = 5;
+const halfDisplay = Math.floor(maxDisplayed / 2);
+
+let startPage = Math.max(1, currentPage - halfDisplay);
+let endPage = Math.min(totalPages, startPage + maxDisplayed - 1);
+
+// Adjust if we're near the end
+if (endPage - startPage + 1 < maxDisplayed && startPage > 1) {
+  startPage = Math.max(1, endPage - maxDisplayed + 1);
+}
+
+for (let i = startPage; i <= endPage; i++) {
+  displayPages.push(i);
+}
 ---
 
-<nav aria-label="pagination">
-  {
-    prevUrl && (
-      <Button href={prevUrl} class="prev">
+<PaginationRoot>
+  <PaginationContent>
+    <PaginationItem>
+      <PaginationPrevious href={prevUrl || "#"} class={!prevUrl ? "opacity-50 pointer-events-none" : ""}>
         Newer
-      </Button>
-    )
-  }
-  {
-    nextUrl && (
-      <Button href={nextUrl} class="next">
+      </PaginationPrevious>
+    </PaginationItem>
+
+    {startPage > 1 && (
+      <>
+        <PaginationItem>
+          <PaginationLink href="/blog/page/1">1</PaginationLink>
+        </PaginationItem>
+        {startPage > 2 && (
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+        )}
+      </>
+    )}
+
+    {displayPages.map((page) => (
+      <PaginationItem>
+        <PaginationLink 
+          href={page === 1 ? "/blog" : `/blog/page/${page}`}
+          isActive={page === currentPage}>
+          {page}
+        </PaginationLink>
+      </PaginationItem>
+    ))}
+
+    {endPage < totalPages && (
+      <>
+        {endPage < totalPages - 1 && (
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+        )}
+        <PaginationItem>
+          <PaginationLink href={`/blog/page/${totalPages}`}>{totalPages}</PaginationLink>
+        </PaginationItem>
+      </>
+    )}
+
+    <PaginationItem>
+      <PaginationNext href={nextUrl || "#"} class={!nextUrl ? "opacity-50 pointer-events-none" : ""}>
         Older
-      </Button>
-    )
-  }
-</nav>
+      </PaginationNext>
+    </PaginationItem>
+  </PaginationContent>
+</PaginationRoot>
