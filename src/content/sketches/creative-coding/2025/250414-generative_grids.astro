@@ -1,0 +1,237 @@
+<script
+  is:inline
+  src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
+<div id="drawingCanvas" style="width: 100%; height: 100vh; max-height: 800px;"></div>
+
+<script is:inline>
+  // Golden Ratio constant
+  const GOLDEN_RATIO = 1.618;
+
+  let canvasWidth;
+  let canvasHeight;
+
+  // Style parameters
+  let baseColor;
+  let shadowColor;
+  let frameMargin;
+  let innerPadding;
+  let tileGap;
+  let borderRadius;
+  let shadowOffset;
+  let minTileSizeFactor; // Factor of the smaller canvas dimension
+
+  // Array to hold the tile definitions
+  let tiles = [];
+
+  function setup() {
+    // Get parent element dimensions
+    let parentElement = document.getElementById('drawingCanvas');
+    canvasWidth = parentElement.offsetWidth;
+    canvasHeight = parentElement.offsetHeight;
+
+    let canvas = createCanvas(canvasWidth, canvasHeight);
+    canvas.parent("drawingCanvas");
+
+    // --- Style Initialization ---
+    baseColor = color("#FDB813"); // A nice golden yellow
+    // Calculate a darker shade for shadows automatically
+    shadowColor = color(
+      red(baseColor) * 0.618,
+      green(baseColor) * 0.618,
+      blue(baseColor) * 0.618,
+      200 // Add some transparency to the shadow
+    );
+    // Dynamic sizing based on canvas dimensions
+    frameMargin = min(width, height) * 0.05;
+    innerPadding = min(width, height) * 0.01;
+    tileGap = min(width, height) * 0.015;
+    borderRadius = min(width, height) * 0.02;
+    shadowOffset = min(width, height) * 0.008;
+    minTileSizeFactor = 0.15; // Minimum tile size relative to smaller canvas dimension
+
+    noStroke();
+    rectMode(CORNER);
+
+    generateTiles();
+
+    // noLoop(); // Draw once after setup
+  }
+
+  function draw() {
+    background(baseColor); // Set the main background color
+
+    // --- Draw the Frame ---
+    // Simulate the inset look by drawing the inner area with a shadow
+    let innerFrameX = frameMargin;
+    let innerFrameY = frameMargin;
+    let innerFrameW = width - 2 * frameMargin;
+    let innerFrameH = height - 2 * frameMargin;
+
+    // 1. Draw shadow for the main inner area (making it look inset)
+    fill(shadowColor);
+    rect(
+      innerFrameX + shadowOffset,
+      innerFrameY + shadowOffset,
+      innerFrameW,
+      innerFrameH,
+      borderRadius * 0.8 // Slightly less rounded frame corners
+    );
+
+    // 2. Draw the main inner background surface
+    fill(baseColor);
+    rect(
+      innerFrameX,
+      innerFrameY,
+      innerFrameW,
+      innerFrameH,
+      borderRadius * 0.8
+    );
+
+    // --- Draw the Tiles ---
+    for (let tile of tiles) {
+      // Calculate actual drawing dimensions, accounting for the gap
+      let drawX = tile.x + tileGap;
+      let drawY = tile.y + tileGap;
+      let drawW = tile.w - 2 * tileGap;
+      let drawH = tile.h - 2 * tileGap;
+
+      // Only draw if the tile has positive dimensions after applying the gap
+      if (drawW > 1 && drawH > 1) {
+        // 1. Draw shadow for the tile
+        fill(shadowColor);
+        rect(
+          drawX + shadowOffset,
+          drawY + shadowOffset,
+          drawW,
+          drawH,
+          borderRadius
+        );
+
+        // 2. Draw the main tile body
+        fill(baseColor);
+        rect(drawX, drawY, drawW, drawH, borderRadius);
+      }
+    }
+    // Note: The speaker icon from the original screenshot is not included
+    // as it seems like a UI element overlaid on the image, not part of the design.
+  }
+
+  // --- Tile Generation Logic ---
+  function generateTiles() {
+    tiles = []; // Clear previous tiles
+
+    let minSize = min(width, height) * minTileSizeFactor;
+
+    // Define the area available for tiling (inside the frame and padding)
+    let startX = frameMargin + innerPadding;
+    let startY = frameMargin + innerPadding;
+    let availableW = width - 2 * (frameMargin + innerPadding);
+    let availableH = height - 2 * (frameMargin + innerPadding);
+
+    // Start the recursive partitioning process
+    if (availableW > minSize && availableH > minSize) {
+      partition(startX, startY, availableW, availableH, minSize);
+    }
+  }
+
+  // Recursive function to partition space into tiles
+  function partition(x, y, w, h, minSize) {
+    // Base Case: Stop partitioning if the area is too small OR randomly decide to stop
+    let stopChance = map(
+      w * h,
+      minSize * minSize,
+      minSize * 5 * (minSize * 5),
+      0.5,
+      0.05,
+      true
+    ); // Higher chance to stop on smaller areas
+    if (w < minSize * 1.8 || h < minSize * 1.8 || random() < stopChance) {
+      // Only add the tile if it's reasonably large
+      if (w >= minSize && h >= minSize) {
+        tiles.push({ x: x, y: y, w: w, h: h });
+      }
+      return; // Stop recursion for this branch
+    }
+
+    // Recursive Step: Decide whether to split vertically or horizontally
+    let splitVertical;
+    if (w > h * 1.3) {
+      // If significantly wider, prefer vertical split
+      splitVertical = true;
+    } else if (h > w * 1.3) {
+      // If significantly taller, prefer horizontal split
+      splitVertical = false;
+    } else {
+      // Otherwise, random choice
+      splitVertical = random() > 0.5;
+    }
+
+    if (splitVertical) {
+      // --- Vertical Split ---
+      // Ensure the split point leaves at least minSize on both sides
+      let splitMin = minSize;
+      let splitMax = w - minSize;
+      if (splitMin >= splitMax) {
+        // Cannot split respecting minSize, treat as base case
+        if (w >= minSize && h >= minSize)
+          tiles.push({ x: x, y: y, w: w, h: h });
+        return;
+      }
+      let splitW = random(splitMin, splitMax);
+      // Recurse on the left and right partitions
+      partition(x, y, splitW, h, minSize);
+      partition(x + splitW, y, w - splitW, h, minSize);
+    } else {
+      // --- Horizontal Split ---
+      // Ensure the split point leaves at least minSize on both sides
+      let splitMin = minSize;
+      let splitMax = h - minSize;
+      if (splitMin >= splitMax) {
+        // Cannot split respecting minSize, treat as base case
+        if (w >= minSize && h >= minSize)
+          tiles.push({ x: x, y: y, w: w, h: h });
+        return;
+      }
+      let splitH = random(splitMin, splitMax);
+      // Recurse on the top and bottom partitions
+      partition(x, y, w, splitH, minSize);
+      partition(x, y + splitH, w, h - splitH, minSize);
+    }
+  }
+
+  // --- Interaction ---
+  // Regenerate layout when the mouse is pressed
+  function mousePressed() {
+    // Optional: Re-calculate styles if needed, e.g., if window resized
+    frameMargin = min(width, height) * 0.05;
+    innerPadding = min(width, height) * 0.01;
+    tileGap = min(width, height) * 0.015;
+    borderRadius = min(width, height) * 0.02;
+    shadowOffset = min(width, height) * 0.008;
+    minTileSizeFactor = 0.15;
+
+    generateTiles();
+    redraw(); // Redraw the canvas immediately since noLoop() might be active
+  }
+
+  // Adjust canvas on window resize
+  function windowResized() {
+    // Get parent element dimensions
+    let parentElement = document.getElementById('drawingCanvas');
+    canvasWidth = parentElement.offsetWidth;
+    canvasHeight = parentElement.offsetHeight;
+    
+    resizeCanvas(canvasWidth, canvasHeight);
+
+    // Recalculate all dynamic sizes
+    frameMargin = min(width, height) * 0.05;
+    innerPadding = min(width, height) * 0.01;
+    tileGap = min(width, height) * 0.015;
+    borderRadius = min(width, height) * 0.02;
+    shadowOffset = min(width, height) * 0.008;
+    
+    // Regenerate layout for the new size
+    generateTiles();
+    redraw();
+  }
+</script>

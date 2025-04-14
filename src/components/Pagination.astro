@@ -11,7 +11,7 @@ import {
   PaginationEllipsis
 } from "@/components/starwind/pagination";
 
-const { prevUrl, nextUrl, currentPage, totalPages } = Astro.props;
+const { prevUrl, nextUrl, currentPage, totalPages, baseUrl = "/blog" } = Astro.props;
 
 // Calculate page numbers to display
 const displayPages: number[] = [];
@@ -42,7 +42,7 @@ for (let i = startPage; i <= endPage; i++) {
     {startPage > 1 && (
       <>
         <PaginationItem>
-          <PaginationLink href="/blog/page/1">1</PaginationLink>
+          <PaginationLink href={baseUrl}>1</PaginationLink>
         </PaginationItem>
         {startPage > 2 && (
           <PaginationItem>
@@ -55,7 +55,7 @@ for (let i = startPage; i <= endPage; i++) {
     {displayPages.map((page) => (
       <PaginationItem>
         <PaginationLink 
-          href={page === 1 ? "/blog" : `/blog/page/${page}`}
+          href={page === 1 ? baseUrl : `${baseUrl}/page/${page}`}
           isActive={page === currentPage}>
           {page}
         </PaginationLink>
@@ -70,7 +70,7 @@ for (let i = startPage; i <= endPage; i++) {
           </PaginationItem>
         )}
         <PaginationItem>
-          <PaginationLink href={`/blog/page/${totalPages}`}>{totalPages}</PaginationLink>
+          <PaginationLink href={`${baseUrl}/page/${totalPages}`}>{totalPages}</PaginationLink>
         </PaginationItem>
       </>
     )}

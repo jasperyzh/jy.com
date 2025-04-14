@@ -1,45 +1,74 @@
 ---
-import { getCollection } from "astro:content";
+/**
+ * Paginated sketches page
+ * Handles routes like /sketches/page/2, /sketches/page/3, etc.
+ */
 import Layout from "@/layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import Pagination from "@/components/Pagination.astro";
 import { formatYymmddDate } from "@/utils/formatDate";
 import { getSketchFullUrl, getCategoryUrl } from "@/utils/sketchUtils";
 import { Button } from "@/components/starwind/button";
 import { Badge } from "@/components/starwind/badge";
-import Pagination from "@/components/Pagination.astro";
 
-// Pagination configuration
-export const SKETCHES_PER_PAGE = 6;
-  
-// Get all sketches
-const allSketches = await getCollection("sketches");
+// Import the sketches per page constant from sketches index
+import { SKETCHES_PER_PAGE } from "../index.astro";
 
-// Sort sketches by date (newest first)
-const sortedSketches = allSketches.sort((a, b) => {
-  const dateA = a.data.date instanceof Date ? a.data.date : new Date(a.data.date);
-  const dateB = b.data.date instanceof Date ? b.data.date : new Date(b.data.date);
-  return dateB.getTime() - dateA.getTime();
-});
+// Define props and generate static paths
+export async function getStaticPaths() {
+  const allSketches = await getCollection("sketches");
 
-// Calculate pagination for first page
-const totalPages = Math.ceil(sortedSketches.length / SKETCHES_PER_PAGE);
-const currentPage = 1;
-const start = 0;
-const end = start + SKETCHES_PER_PAGE;
-const paginatedSketches = sortedSketches.slice(start, end);
+  // Sort sketches by date (newest first)
+  const sortedSketches = allSketches.sort((a, b) => {
+    const dateA = a.data.date instanceof Date ? a.data.date : new Date(a.data.date);
+    const dateB = b.data.date instanceof Date ? b.data.date : new Date(b.data.date);
+    return dateB.getTime() - dateA.getTime();
+  });
 
-// Calculate previous and next page URLs
-const prevUrl = currentPage > 1 ? `/sketches/page/${currentPage - 1}` : null;
-const nextUrl = currentPage < totalPages ? `/sketches/page/${currentPage + 1}` : null;
+  // Calculate total number of pages
+  const totalPages = Math.ceil(sortedSketches.length / SKETCHES_PER_PAGE);
+
+  // Generate an array of page numbers [1, 2, 3, ...]
+  return Array.from({ length: totalPages }).map((_, i) => {
+    const page = i + 1;
+    const start = i * SKETCHES_PER_PAGE;
+    const end = start + SKETCHES_PER_PAGE;
+
+    return {
+      params: { page: page.toString() },
+      props: {
+        sketches: sortedSketches.slice(start, end),
+        totalSketches: sortedSketches.length,
+        currentPage: page,
+        totalPages,
+        allSketches: sortedSketches, // Pass all sketches for filtering categories/tags
+      },
+    };
+  });
+}
+
+// Define page props
+const { sketches, totalSketches, currentPage, totalPages, allSketches } = Astro.props;
+
+// Calculate pagination URLs
+const prevUrl =
+  currentPage > 1
+    ? currentPage === 2
+      ? "/sketches" 
+      : `/sketches/page/${currentPage - 1}`
+    : null;
+const nextUrl =
+  currentPage < totalPages ? `/sketches/page/${currentPage + 1}` : null;
 
 // Extract all categories and tags for filtering
-const categories = [...new Set(sortedSketches.map(sketch => sketch.data.category))];
-const allTags = sortedSketches.flatMap(sketch => sketch.data.tags || []);
+const categories = [...new Set(allSketches.map(sketch => sketch.data.category))];
+const allTags = allSketches.flatMap(sketch => sketch.data.tags || []);
 const tags = [...new Set(allTags)].sort();
 
 // Calculate count for each category
 const categoryCounts = {};
 categories.forEach(category => {
-  categoryCounts[category] = sortedSketches.filter(sketch => 
+  categoryCounts[category] = allSketches.filter(sketch => 
     sketch.data.category === category
   ).length;
 });
@@ -47,13 +76,15 @@ categories.forEach(category => {
 // Calculate count for each tag
 const tagCounts = {};
 tags.forEach(tag => {
-  tagCounts[tag] = sortedSketches.filter(sketch => 
+  tagCounts[tag] = allSketches.filter(sketch => 
     sketch.data.tags && sketch.data.tags.includes(tag)
   ).length;
 });
+
+export const prerender = true;
 ---
 
-<Layout title="Sketches - Code & Design Ideas" description="A collection of code sketches, design experiments, and interactive demos">
+<Layout title={`Sketches - Page ${currentPage}`} description="A collection of code sketches, design experiments, and interactive demos">
   <main class="max-w-7xl mx-auto px-4 py-8">
     <header class="mb-12 text-center">
       <h1 class="text-4xl font-bold mb-4">Code Sketches</h1>
@@ -113,8 +144,14 @@ tags.forEach(tag => {
       
       <!-- Sketches grid -->
       <div class="lg:col-span-3">
+        <!-- Page information -->
+        <div class="mb-6 text-sm text-gray-500 dark:text-gray-400">
+          Showing {sketches.length} of {totalSketches} sketches
+          {totalPages > 1 && ` (Page ${currentPage} of ${totalPages})`}
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {paginatedSketches.map(sketch => (
+          {sketches.map(sketch => (
             <a 
               href={getSketchFullUrl(sketch)}
               class="group bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-md border border-slate-200 dark:border-slate-700 hover:shadow-lg transition-shadow"
@@ -187,19 +224,24 @@ tags.forEach(tag => {
           ))}
         </div>
         
-        {/* Pagination controls */}
-        {totalPages > 1 && (
+        <!-- Empty State -->
+        {sketches.length === 0 && (
+          <div class="text-center py-12">
+            <div class="text-6xl mb-4">📝</div>
+            <h3 class="text-2xl font-bold mb-2">No sketches found</h3>
+            <p class="text-gray-600 dark:text-gray-300">
+              There are no sketches available at the moment. Please check back later.
+            </p>
+          </div>
+        )}
+        
+        <!-- Pagination controls -->
+        {(prevUrl || nextUrl) && (
           <div class="mt-12 flex justify-center">
-            <Pagination
-              prevUrl={prevUrl}
-              nextUrl={nextUrl}
-              currentPage={currentPage}
-              totalPages={totalPages}
-              baseUrl="/sketches"
-            />
+            <Pagination {prevUrl} {nextUrl} {currentPage} {totalPages} baseUrl="/sketches" />
           </div>
         )}
       </div>
     </div>
   </main>
-</Layout>
+</Layout> 

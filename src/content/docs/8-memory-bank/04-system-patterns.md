@@ -350,3 +350,64 @@ The sketch system uses a consistent URL formatting approach for categories and t
    ```
 
 This ensures consistent URL formatting across the application while maintaining readable original names in the UI.
+
+## Pagination Pattern
+
+The website uses a consistent pagination pattern across different content sections, implemented using Starwind UI components.
+
+### Core Features:
+
+1. **Section-Aware Navigation**:
+   ```typescript
+   <Pagination
+     prevUrl={prevUrl}
+     nextUrl={nextUrl}
+     currentPage={currentPage}
+     totalPages={totalPages}
+     baseUrl="/section"
+   />
+   ```
+   - Maintains consistent URLs for different sections (blog, sketches, etc.)
+   - Correctly links to section-specific pages
+
+2. **Smart Page Display**:
+   - Always shows first and last page numbers
+   - Displays current page and adjacent pages for context
+   - Adds ellipsis (...) for skipped ranges
+   - Highlights current page with active styling
+   
+3. **Responsive Implementation**:
+   - Same component works across all device sizes
+   - Prev/Next buttons for sequential navigation
+   - Numbered pages for direct access to specific pages
+
+### Usage Pattern:
+
+1. **URL Calculation**:
+   ```typescript
+   // For first page of section
+   const prevUrl = null;
+   const nextUrl = totalPages > 1 ? `/section/page/2` : null;
+   
+   // For subsequent pages
+   const prevUrl = currentPage > 1 
+     ? currentPage === 2 
+       ? "/section" 
+       : `/section/page/${currentPage - 1}` 
+     : null;
+   const nextUrl = currentPage < totalPages 
+     ? `/section/page/${currentPage + 1}` 
+     : null;
+   ```
+
+2. **Component Implementation**:
+   - Based on Starwind UI pagination components
+   - Extended with section-aware URL generation
+   - Configurable baseUrl for different content sections
+   - Smart handling of first page URL (no /page/1 in URL)
+
+### Page Structure:
+
+- Root page: `src/pages/section/index.astro`
+- Paginated pages: `src/pages/section/page/[page].astro`
+- Both use the same Pagination component with appropriate props

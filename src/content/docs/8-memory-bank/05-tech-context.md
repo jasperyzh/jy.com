@@ -21,12 +21,22 @@ draft: 0
 ## CSS Architecture
 ```css-architecture
 - Base: TailwindCSS with custom theme extension
+- Components: Starwind UI for consistent, accessible UI elements
 - Global Variables: CSS custom properties for typography, spacing, colors
 - Theme Configuration: Extended theme in tailwind.config.js
 - Base Elements: Styled via global.css with CSS variables
 - Components: Focus on layout and component-specific styling
 - Dark Mode: Class-based strategy with CSS variables
 - Utility Class Strategy: Use Tailwind utilities → semantic classes → custom CSS (in that order)
+```
+
+## Starwind UI Components
+```starwind-components
+- Pagination: Implemented with baseUrl parameter for section-aware links
+- Button: Used for primary and secondary actions
+- Badge: Used for status indicators and tags
+- Card: Base for blog post and sketch cards
+- Other components to be implemented as needed
 ```
 
 ## Additional Libraries

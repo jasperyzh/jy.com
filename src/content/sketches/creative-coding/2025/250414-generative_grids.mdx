@@ -1,0 +1,31 @@
+---
+layout: "@/layouts/SketchLayout.astro"
+title: "Generative Grids"
+description: "Interactive recursive grid system with golden ratio aesthetics"
+date: "2025-04-14"
+category: "Creative Coding"
+tags: ["javascript", "p5js", "generative-art", "recursive"]
+status: "completed"
+thumbnail: "/thumbnails/sketches/250414-generative_grids.svg"
+---
+
+import GenerativeGridsSketch from "./250414-generative_grids.astro";
+
+# Generative Grids
+
+This sketch explores recursive binary space partitioning to create aesthetically pleasing grid layouts. The algorithm divides space into smaller and smaller rectangles, creating a dynamic composition that balances between order and randomness.
+
+## Features
+
+- **Golden Ratio Aesthetics**: Uses the golden ratio (1.618) for color relationships and proportions
+- **Recursive Partitioning**: Employs binary space partitioning with minimum size constraints
+- **Dynamic Sizing**: Automatically adapts to different screen sizes
+- **Interactive**: Click anywhere to generate a new composition
+
+The visual style is inspired by modernist design principles, with clean lines and a warm color palette. Each tile is rendered with subtle shadows to create a sense of depth and dimension.
+
+<div class="interactive-component">
+  <GenerativeGridsSketch />
+</div>
+
+Try clicking on the canvas to generate new compositions. Each layout is unique, demonstrating how simple recursive rules can create complex and visually interesting patterns.

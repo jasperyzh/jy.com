@@ -1,0 +1,1140 @@
+<!-- Font Imports (Example using Google Fonts) -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@100;400;600;700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap"
+  rel="stylesheet"
+/>
+
+<style is:inline>
+  /* Using modern Tailwind v4 imports */
+  /* @import "tailwindcss/preflight";
+  @import "tailwindcss/utilities"; */
+
+  @layer base {
+    /* Define base font families */
+    html {
+      font-family: "Lora", serif; /* Default body font */
+      color: theme("colors.gray.800");
+      @apply leading-relaxed; /* Default line height */
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: "Inter", sans-serif; /* Default heading font */
+      color: theme("colors.gray.900");
+      font-weight: 600; /* Default semi-bold for headings */
+    }
+
+    /* Specific Heading Styles */
+    h1 {
+      @apply text-5xl md:text-7xl font-thin tracking-wider leading-tight mt-8 mb-12;
+      /* 'font-thin' approximates the light weight */
+      /* 'tracking-wider' approximates the letter spacing */
+    }
+
+    h2 {
+      /* Style applied via wrapper div typically for number */
+      @apply text-3xl md:text-4xl font-semibold mb-6 mt-16 flex items-center;
+    }
+
+    h3 {
+      @apply text-xl md:text-2xl font-semibold mb-4 mt-8;
+    }
+
+    p {
+      @apply mb-4 max-w-prose; /* Limit paragraph width for readability */
+    }
+
+    a {
+      /* Basic link styling - customize as needed */
+      @apply text-red-600; /* Example link color */
+      /* Add underline on hover if desired: hover:underline */
+    }
+
+    /* Highlight span style */
+    .highlight {
+      @apply bg-yellow-200 px-1 py-0.5 rounded-sm;
+    }
+
+    blockquote {
+      @apply italic border-l-4 border-gray-300 pl-4 my-6 text-gray-700;
+      /* Example blockquote style */
+    }
+
+    /* Other base styles */
+    hr {
+      @apply border-t border-gray-200 my-12;
+    }
+    img {
+      @apply max-w-full h-auto; /* Basic responsive images */
+    }
+
+    /* 6-column grid layout */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      /* Alternative fixed-width approach: */
+      /* grid-template-columns: repeat(6, 200px);  */
+      column-gap: 1rem;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      /* padding: 0 1rem; */
+    }
+
+    .grid-span-6 {
+      grid-column: span 6;
+    }
+
+    .grid-span-5 {
+      grid-column: span 5;
+    }
+
+    .grid-span-4 {
+      grid-column: span 4;
+    }
+
+    .grid-span-3 {
+      grid-column: span 3;
+    }
+
+    .grid-span-2 {
+      grid-column: span 2;
+    }
+
+    .grid-span-1 {
+      grid-column: span 1;
+    }
+
+    /* For explicit column positioning */
+    .grid-start-1 {
+      grid-column-start: 1;
+    }
+    .grid-start-2 {
+      grid-column-start: 2;
+    }
+    .grid-start-3 {
+      grid-column-start: 3;
+    }
+    .grid-start-4 {
+      grid-column-start: 4;
+    }
+    .grid-start-5 {
+      grid-column-start: 5;
+    }
+    .grid-start-6 {
+      grid-column-start: 6;
+    }
+
+    .grid-end-2 {
+      grid-column-end: 2;
+    }
+    .grid-end-3 {
+      grid-column-end: 3;
+    }
+    .grid-end-4 {
+      grid-column-end: 4;
+    }
+    .grid-end-5 {
+      grid-column-end: 5;
+    }
+    .grid-end-6 {
+      grid-column-end: 6;
+    }
+    .grid-end-7 {
+      grid-column-end: 7;
+    }
+
+    /* Vertical grid lines for development */
+    .grid-lines {
+      position: relative;
+    }
+
+    .grid-lines::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: repeating-linear-gradient(
+        to right,
+        rgba(0, 255, 0, 0.6),
+        rgba(0, 255, 0, 0.6) 1px,
+        transparent 1px,
+        transparent calc(100% / 6)
+      );
+      pointer-events: none;
+      z-index: 1000;
+    }
+  }
+</style>
+
+<!-- <body class="bg-white">
+    <header
+      class="bg-red-600 text-white p-2 text-sm flex justify-between items-center"
+    >
+      <span>Table of Contents</span>
+      <div>
+        <button class="bg-blue-700 px-3 py-1 rounded text-xs mr-2">Like</button>
+        <button class="bg-gray-800 px-3 py-1 rounded text-xs">Post</button>
+      </div>
+    </header> -->
+
+<!-- Main Content Area -->
+<main class="mx-auto" style="max-width: 1000px">
+  <!-- Section 1: Intro -->
+  <section class="intro grid-container grid-lines">
+    <h1
+      class="text-5xl md:text-6xl lg:text-[4.8rem] font-thin tracking-wider w-full mb-4"
+    >
+      Startups, this is how design works
+    </h1>
+    <p class="author text-sm text-gray-500">
+      A guide for non-designers by <a href="#">Wells Riley</a><br />
+      Format inspired by <a href="#">Jessica Hische</a>.<br />
+      Originally published in 2012.
+    </p>
+
+    <hr class="grid-span-6 my-5" />
+
+    <p class="mb-6">
+      Companies like Apple are making design impossible for startups to ignore.
+      Startups like <a href="#">Github</a>, <a href="#">Airbnb</a>, <a href="#"
+        >Square</a
+      >, and <a href="#">Fitbit</a> have design at the core of their business, and
+      they're doing phenomenal work. But what is 'design' actually? Is it a logo?
+      A Wordpress theme? An innovative UI?
+    </p>
+    <p class="mb-6">
+      It's so much more than that. It's a state of mind. It's an approach to a
+      problem. It's how you're going to kick your competitor's ass. This handy
+      guide will help you understand design and provide resources to help you
+      find awesome design talent.
+    </p>
+  </section>
+
+  <style>
+    main > section {
+      margin-block: calc(var(--spacing) * 12);
+    }
+    .intro {
+      h1 {
+        grid-column: 1 / -1;
+      }
+      p.author {
+        grid-column: -1 / -3;
+        margin-top: -3rem;
+        padding-inline: 1rem;
+      }
+      p {
+        grid-column: span 4;
+        margin-bottom: calc(var(--spacing) * 6);
+      }
+    }
+  </style>
+
+  <!-- Section 2: What is Design -->
+  <section class="what-design grid-container grid-lines">
+    <div class="def__1">
+      <h2 class="heading-with-number" data-number="1.1">
+        De•sign [dǝzajn] is a method of problem solving.
+      </h2>
+      <p>
+        The simplest definition. Design is so many things, executed in many
+        different ways, but the function is always the same. Whether it's
+        blueprints, a clever UI, a brochure, or a chair – design can help solve
+        a visual or physical problem.¹
+      </p>
+    </div>
+    <div class="def__2 grid-span-3 grid-start-4">
+      <h2 class="heading-with-number" data-number="1.2">
+        So what is "good design"?
+      </h2>
+      <p>
+        This definition is not so simple. The best designs are notorious for
+        seeming not designed at all – or <span class="highlight"
+          >'undesigned'</span
+        >.
+      </p>
+      <p>
+        It's easier if we break things down a bit. If you know what to look for,
+        it's easier to identify good design when you see it, or perhaps <span
+          class="highlight">when you can't see it at all</span
+        >.
+      </p>
+    </div>
+  </section>
+
+  <style is:global>
+    /* heading-with-number */
+    h2.heading-with-number {
+      position: relative;
+    }
+    h2.heading-with-number > span {
+      position: absolute;
+      left: -3rem;
+      top: 0.5rem;
+    }
+  </style>
+  <style>
+    .what-design {
+      .def__1 {
+        grid-column: 2 / span 2;
+      }
+      .def__2 {
+        grid-column: 5 / span 2;
+      }
+      h2 {
+        /* text-4xl */
+        font-size: var(--text-4xl);
+        line-height: var(--tw-leading, var(--text-4xl--line-height));
+        /* mb-4? */
+        margin-bottom: calc(var(--spacing) * 4);
+      }
+    }
+  </style>
+
+  <hr class="grid-span-6 my-5" />
+
+  <!-- Section 3: Dieter Rams -->
+  <style>
+    .the-designer {
+      figure {
+        grid-column: 1 / span 2;
+        grid-row: 1 / span 2;
+      }
+      header {
+        grid-column: 3 / span 4;
+        grid-row: 1;
+      }
+
+      h2 {
+        /* text-4xl */
+        font-size: var(--text-3xl);
+        line-height: var(--tw-leading, var(--text-4xl--line-height));
+        /* mb-4? */
+        margin-bottom: calc(var(--spacing) * 4);
+      }
+      .the-designer__intro {
+        grid-column: 3 / span 3;
+
+        p {
+          grid-column: 1 / span 3;
+        }
+      }
+    }
+  </style>
+  <section class="the-designer grid-container grid-lines">
+    <figure
+      class="w-40 h-40 md:w-56 md:h-56 bg-gray-300 rounded-full mx-auto md:mx-0"
+    >
+      <img
+        src="/img/placeholder.png"
+        alt="The Designer Portrait"
+        class="w-full h-full object-cover rounded-full"
+      />
+    </figure>
+
+    <header>
+      <h2 class="heading-with-number mt-0" data-number="1.3">
+        Dieter Rams' Ten Principles of "Good Design"
+      </h2>
+      <p class="text-3xl text-gray-500 italic mb-6">
+        (Wow, how convenient is that?)
+      </p>
+    </header>
+    <div class="the-designer__intro">
+      <p>
+        Dieter Rams is a German industrial designer <span class="highlight"
+          >closely associated with the consumer products company Braun</span
+        > and functionalist industrial design.
+      </p>
+      <p>
+        According to <a href="#">Vitsœ</a>: Back in the early 1980s, aware that
+        his design was a significant contributor to the world, he asked himself
+        an important question: <span class="italic"
+          >"Is my design good design?"</span
+        >
+      </p>
+      <p>
+        Since good design can't be measured in a finite way, he set about
+        expressing the ten most important principles for what he considered was
+        good design. (Sometimes they are referred as the 'Ten commandments'.)
+        Here they are.²
+      </p>
+    </div>
+
+    <hr class="grid-span-6 my-5" />
+
+    <style>
+      h3 {
+        grid-column: 3 / -1;
+      }
+
+      /* Create a grid layout for principles */
+      .principles-container {
+        /* display: grid;
+        grid-template-columns: subgrid;
+        grid-column: 2 / -1;
+        gap: 1rem;
+        text-align: center; */
+        display: grid;
+        grid-column: 2 / -1;
+        grid-template-columns: subgrid;
+        gap: 0.5rem;
+        /* grid-template-rows: repeat(3, 80px); */
+      }
+
+      .principle {
+        display: grid;
+        grid-template-rows: auto 1fr;
+        justify-items: center;
+        align-items: center;
+        padding: 1rem;
+        /* margin-right: .5rem; */
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        aspect-ratio: 1;
+      }
+
+      .principle-icon {
+        width: 2rem;
+        height: 2rem;
+        background-color: #fee2e2;
+        color: #dc2626;
+        border-radius: 0.25rem;
+        margin-bottom: 0.5rem;
+        display: grid;
+        place-items: center;
+      }
+    </style>
+    <h3 class="mt-12 mb-6">Good design is...</h3>
+
+    <!-- Wrap principles in the container div -->
+    <div class="principles-container">
+      <div class="principle">
+        <div class="principle-icon">R</div>
+        <span>innovative</span>
+      </div>
+      <div class="principle">
+        <div class="principle-icon">W</div>
+        <span>makes a product useful</span>
+      </div>
+      <div class="principle">
+        <div class="principle-icon">P</div>
+        <span>aesthetic</span>
+      </div>
+      <div class="principle">
+        <div class="principle-icon">C</div>
+        <span>makes a product understandable</span>
+      </div>
+      <div class="principle">
+        <div class="principle-icon">S</div>
+        <span>unobtrusive</span>
+      </div>
+      <div class="principle">
+        <div class="principle-icon">H</div>
+        <span>honest</span>
+      </div>
+      <div class="principle">
+        <div class="principle-icon">L</div>
+        <span>long-lasting</span>
+      </div>
+      <div class="principle">
+        <div class="principle-icon">T</div>
+        <span>thorough</span>
+      </div>
+      <div class="principle">
+        <div class="principle-icon">E</div>
+        <span>environmentally friendly</span>
+      </div>
+      <div class="principle">
+        <div class="principle-icon">.</div>
+        <span>as little design as possible</span>
+      </div>
+    </div>
+    <!-- ... end principles -->
+
+    <hr class="grid-span-6 my-5" />
+
+    <div class="the-designer-quote">
+      <figure>
+        <img src="/img/placeholder.png" alt="" />
+        <figurecap class="text-center text-xs text-gray-500 mt-2">
+          <p>Braun vs Apple</p>
+        </figurecap>
+      </figure>
+      <blockquote>
+        "We designers, <span class="highlight">we don't work in a vacuum</span>.
+        We need business people. We are not the fine artists we are often
+        confused with. Today you find few companies that take design seriously,
+        as I see it."
+        <cite class="block text-right not-italic text-sm text-gray-600 mt-2"
+          >— Dieter Rams</cite
+        >
+      </blockquote>
+    </div>
+  </section>
+  <style>
+    .the-designer-quote {
+      display: grid;
+      grid-column: 1 / -1;
+      grid-template-columns: subgrid;
+      /* grid-column: 1 / -1; */
+
+      figure {
+        grid-column: 1 / span 3;
+      }
+      blockquote {
+        grid-column: 4 / -1;
+        grid-row: 1 / span 2;
+        align-self: center;
+      }
+    }
+  </style>
+
+  <hr class="grid-span-6 my-5" />
+
+  <!-- Section 4: Good Design / Objectified -->
+  <section class="good-design grid-container grid-lines">
+    <div class="bg-gray-100 rounded border border-gray-200">
+      <h2 class="heading-with-number" data-number="1.4"></h2>
+      <p>
+        Good design can't be achieved with glossy buttons or masterful
+        wireframes alone. It's a merger of all these principles into something
+        that is meaningful and deliberate.
+      </p>
+      <p>
+        Just like a great business plan is nothing without expert execution, a
+        great Photoshop mockup is nothing, for example, without careful
+        consideration to UI or the user's needs.
+      </p>
+    </div>
+
+    <figure>
+      <img src="/img/placeholder.png" alt="" />
+      <figurecap class="text-center text-xs text-gray-500 mt-2">
+        <p>Bucket Icon</p>
+      </figurecap>
+    </figure>
+  </section>
+  <style>
+    .good-design {
+      & > div {
+        grid-column: 1 / -3;
+        align-self: center;
+        padding: 1rem;
+        display: grid;
+        grid-template-columns: subgrid;
+
+        & > * {
+          grid-column: 2 / span 3;
+        }
+      }
+      & > figure {
+        grid-column: -1 / -3;
+      }
+    }
+  </style>
+
+  <hr class="grid-span-6 my-5" />
+
+  <section class="grid-container grid-lines">
+    <div class="the-objectified">
+      <div>
+        <h2 class="heading-with-number" data-number="1.5">Objectified</h2>
+        <p>
+          A documentary film that provides a look at the creativity behind
+          everything from toothbrushes to tech gadgets. Watch the complete film <a
+            href="#">here</a
+          >.
+        </p>
+      </div>
+
+      <figure>
+        <iframe
+          class="aspect-video"
+          title="vimeo-player"
+          src="https://player.vimeo.com/video/90707938?h=02518ae13b"
+          allowfullscreen></iframe>
+        <figurecap class="text-center text-xs text-gray-500 mt-2">
+          <p>Various Braun and Vitsœ Products</p>
+        </figurecap>
+      </figure>
+    </div>
+    <style>
+      .the-objectified {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        & > div {
+          grid-column: 1 / span 1;
+        }
+
+        & > figure {
+          grid-column: 2 / -1;
+
+          iframe {
+            width: 100%;
+          }
+        }
+      }
+    </style>
+  </section>
+  <hr class="grid-span-6 my-5" />
+
+  <section class="grid-container grid-lines">
+    <div class="reflect-product">
+      <figure>
+        <img src="/img/placeholder.png" alt="" />
+        <figurecap class="text-center text-xs text-gray-500 mt-2">
+          <p>Bucket Icon</p>
+        </figurecap>
+      </figure>
+
+      <div>
+        <h2 class="heading-with-number" data-number="1.6">
+          Reflect on Your Product
+        </h2>
+        <p>
+          Take a look at your current product – is design contributing in an
+          innovative way? Does it make the product useful, understandable, and
+          aesthetic? Is it long-lasting, or will it look outdated or break in a
+          few years?
+        </p>
+        <p>
+          These are really hard questions to answer. Designers enable you to
+          work within these constraints to create a product customers will fall
+          in love with. <strong class="font-semibold"
+            >Love is a really strong emotion.</strong
+          >
+        </p>
+        <p>
+          Dieter Rams and his contemporariesstarted a movement in 20<sup>th</sup
+          > Century towards simple and beautiful products. Design was a strongly
+          valued aspect of business, even 60 years ago. It totally has a place in
+          business today – it's a proven method.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .reflect-product {
+      display: grid;
+      grid-column: 1 / -1;
+      grid-template-columns: subgrid;
+      & > figure {
+        grid-column: 1 / span 2;
+        align-self: center;
+        padding-right: 3rem;
+      }
+      & > div {
+        grid-column: 3 / -2;
+      }
+    }
+  </style>
+
+  <hr class="grid-span-6 my-5" />
+
+  <!-- Section 5: Kinds of Design -->
+  <section class="grid-container grid-lines">
+    <div class="kinds-design">
+      <h1 class="text-8xl mb-16">There are different kinds of design.</h1>
+
+      <figure>
+        <img
+          src="/img/placeholder.png"
+          alt=""
+          class="aspect-[3/4] object-cover"
+        />
+        <figurecap class="text-xs text-gray-500 text-center">
+          Poster for Bob Dylan's Greatest Hits ©1975 Milton Glaser
+        </figurecap>
+      </figure>
+
+      <div class="graphic-design">
+        <h2 class="heading-with-number text-4xl mb-6" data-number="2.1">
+          Graphic Design
+        </h2>
+        <p>
+          This is a term that describes an array of different kinds of
+          designers. Think of it like the term 'entrepreneur'. It describes a
+          wide variety of businesspeople - from founders to VCs to <span
+            class="highlight">"Chief Ninjas"</span
+          > - but isn't all-inclusive. Graphic designers work with graphical images,
+          whether they be illustrations, <span class="highlight"
+            >typography</span
+          >, or images, and on a variety of media including print and web.
+          Graphic design is typically rendered in 2D – printed on a physical
+          surface or displayed on a screen.
+        </p>
+      </div>
+
+      <hr />
+
+      <div class="print-design">
+        <h4 class="text-red-600 font-semibold mb-2">↳ Print Design</h4>
+        <p class="text-sm">
+          A type of graphic designer that works exclusively with print media.
+          Before the widespread adoption of computers, software, and the web,
+          virtually all graphic designers worked on print media such as posters,
+          magazines, billboards, and books. Print designers are typically
+          masters of typography, illustration, and traditional printing
+          processes like the <span class="highlight">Linotype machine</span> or the
+          <span class="highlight">letterpress machine</span>, a 500-year-old
+          printing method that has regained popularity in recent years for its
+          handmade and traditional feel.
+        </p>
+      </div>
+    </div>
+
+    <style>
+      .kinds-design {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-row: auto;
+        grid-template-columns: subgrid;
+        & > h1 {
+          grid-column: 1 / -1;
+        }
+        & > figure {
+          grid-column: 1 / span 2;
+          grid-row: 3 / span 4;
+        }
+
+        & > .graphic-design {
+          display: grid;
+          grid-column: 3 / span 3;
+          grid-row: 2 / span 2;
+          grid-template-columns: subgrid;
+          grid-template-rows: subgrid;
+
+          & > h2 {
+            grid-column: 1 / -1;
+          }
+          & > p {
+            grid-column: 1 / -1;
+          }
+        }
+
+        & > hr {
+          grid-column: 4 / span 1;
+          grid-row: 4 / span 1;
+          margin-block: calc(var(--spacing) * 12);
+        }
+
+        & > .print-design {
+          display: grid;
+          grid-column: 4 / span 2;
+          grid-row: 5 / span 4;
+          grid-template-columns: subgrid;
+          grid-template-rows: subgrid;
+
+          & > h2 {
+            grid-column: 1 / -1;
+          }
+          & > p {
+            grid-column: 1 / -1;
+          }
+        }
+      }
+    </style>
+
+    <!-- Interaction Design -->
+    <div class="interaction-design">
+      <h2 class="heading-with-number text-4xl mb-6" data-number="2.2">
+        Interaction Design
+      </h2>
+      <p>
+        Interaction designers, on the other hand, focus on digital products and
+        interactive software design. Some examples include web apps like <a
+          href="#">Facebook</a
+        > and <a href="#">Pinterest</a>, mobile apps like <a href="#"
+          >Tweetbot</a
+        >, and operating systems like OS X. While graphic design is meant to be
+        observed, interaction design helps humans experience or manipulate
+        software or interface with screen-based hardware in order to <span
+          class="highlight">achieve specific goals</span
+        > – checking email, withdrawing money from an ATM, or "Liking" a webpage
+        (such as this one!)
+      </p>
+      <blockquote class="mt-6">
+        "Interaction design is heavily focused on satisfying the needs and
+        desires of the people who will use the product." ³
+      </blockquote>
+
+      <!-- Placeholder for framework icons -->
+      <figure>
+        <div
+          class="grid grid-cols-3 gap-2 text-center text-xs text-gray-600 px-4"
+        >
+          <div
+            class="aspect-square bg-amber-300 rounded-3xl grid items-center content-center"
+          >
+            <span class="text-4xl mb-1">💡</span>IDEA
+          </div>
+          <div
+            class="aspect-square bg-amber-300 rounded-3xl grid items-center content-center"
+          >
+            <span class="text-4xl mb-1">☁️</span>METAPHOR
+          </div>
+          <div
+            class="aspect-square bg-amber-300 rounded-3xl grid items-center content-center"
+          >
+            <span class="text-4xl mb-1">📄</span>MODEL
+          </div>
+          <div
+            class="aspect-square bg-amber-300 rounded-3xl grid items-center content-center"
+          >
+            <span class="text-4xl mb-1">⚠️</span>ERROR
+          </div>
+          <div
+            class="aspect-square bg-amber-300 rounded-3xl grid items-center content-center"
+          >
+            <span class="text-4xl mb-1">🎭</span>SCENARIO
+          </div>
+          <div
+            class="aspect-square bg-amber-300 rounded-3xl grid items-center content-center"
+          >
+            <span class="text-4xl mb-1">🔗</span>TASK
+          </div>
+          <div
+            class="aspect-square bg-amber-300 rounded-3xl grid items-center content-center"
+          >
+            <span class="text-4xl mb-1">🖼️</span>DISPLAY
+          </div>
+          <div
+            class="aspect-square bg-amber-300 rounded-3xl grid items-center content-center"
+          >
+            <span class="text-4xl mb-1">👆</span>CONTROL
+          </div>
+        </div>
+        <figurecap class="text-xs text-gray-500">
+          <p class="text-xs text-gray-500 text-end mt-2">
+            Framework by Bill Verplank <br />©2001 Bill Verplank
+          </p>
+        </figurecap>
+      </figure>
+    </div>
+
+    <style>
+      .interaction-design {
+        display: grid;
+        grid-column: 2 / -1;
+        grid-template-columns: subgrid;
+
+        & > * {
+          grid-column: 1 / span 3;
+        }
+        & > h2 {
+          grid-row: 1 / span 1;
+        }
+        & > figure {
+          grid-column: 4 / span 2;
+          grid-row: 2 / span 3;
+        }
+      }
+    </style>
+
+    <hr />
+
+    <!-- UI/UX Subsections -->
+    <div class="UIUX">
+      <figure>
+        <img
+          src="/img/placeholder.png"
+          alt=""
+          class="aspect-[3/4] object-cover"
+        />
+        <figurecap class="text-xs text-gray-500 text-center">
+          <p>Clean D7 Interface © 2008-2012 Robot, LLC</p>
+        </figurecap>
+      </figure>
+
+      <div class="the-UI">
+        <h4 class="text-red-600 font-semibold mb-6">↳ User Interface Design</h4>
+        <p class="text-sm">
+          User Interface (UI) design is the design of software or websites with
+          the focus on the user's experience and interaction. The <span
+            class="highlight"
+            >goal of user interface design is to make the user's interaction as
+            simple and efficient as possible</span
+          >. Good user interface design puts emphasis on goals and completing
+          tasks, and good UI design never <span class="highlight"
+            >draws more attention to itself</span
+          > than enforcing user goals.
+        </p>
+        <blockquote class="text-sm mt-4">
+          "The design process must balance technical functionality and visual
+          elements to create a system that is not only operational but also <span
+            class="highlight"
+            >usable and adaptable to changing user needs."</span
+          > ⁷
+        </blockquote>
+      </div>
+      <div class="the-UX">
+        <h4 class="text-red-600 font-semibold mb-6">
+          ↳ User Experience Design
+        </h4>
+        <p class="text-sm">
+          User Experience (UX) design "incorporates aspects of psychology,
+          anthropology, sociology, computer science, graphic design, industrial
+          design and cognitive science. Depending on the purpose of the product,
+          UX may also involve content design disciplines such as communication
+          design, instructional design, or game design." ⁸
+        </p>
+        <p class="text-sm mt-4">
+          The goal of UX design is to create a seamless, simple, and useful
+          interaction between a user and a product, whether it be hardware or
+          software. As with UI design, user experience design focuses on
+          creating interactions designed to meet or assist a user's goals and
+          needs.
+        </p>
+      </div>
+    </div>
+    <style>
+      .UIUX {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        grid-template-rows: auto auto auto;
+        margin-block: calc(var(--spacing) * 12);
+
+        & > figure {
+          grid-column: 1 / span 2;
+          grid-row: 2 / span 3;
+          padding-right: 3rem;
+
+          figurecap {
+            text-align: right;
+          }
+        }
+        & > .the-UI {
+          grid-column: 3 / span 2;
+          display: grid;
+          grid-row: 1/ -1;
+          grid-auto-flow: row;
+          grid-template-rows: subgrid;
+        }
+        & > .the-UX {
+          grid-column: 5 / span 2;
+          display: grid;
+          grid-row: 1/ -1;
+          grid-auto-flow: row;
+          grid-template-rows: subgrid;
+        }
+      }
+    </style>
+
+    <!-- Industrial Design -->
+    <div class="industrial-design">
+      <figure>
+        <img
+          src="/img/placeholder.png"
+          alt=""
+          class="aspect-[3/4] object-cover"
+        />
+        <figurecap class="text-xs text-gray-500 text-center">
+          <p>Panton Stacking Chair ©1967 Verner Panton</p>
+        </figurecap>
+      </figure>
+
+      <h2 class="heading-with-number text-4xl mb-12" data-number="2.3">
+        Industrial Design
+      </h2>
+      <p>
+        Industrial designers create physical products designated for
+        mass-consumption by <span class="highlight">millions</span> of people. Motorcycles,
+        iPods, toothbrushes, and nightstands are all designed by industrial designers.
+        These people are masters of physical goods and innovation within the constraints
+        of production lines and machines.
+      </p>
+      <blockquote class="mt-6">
+        "The objective is to study both function and form, and the connection
+        between product, the user, and the environment." ⁹
+      </blockquote>
+    </div>
+  </section>
+  <style>
+    .industrial-design {
+      display: grid;
+      grid-column: 1 / -1;
+      grid-template-columns: subgrid;
+      margin-block: calc(var(--spacing) * 12);
+
+      & > * {
+        grid-column: 3 / span 2;
+      }
+      & > figure {
+        grid-column: 1 / span 2;
+        grid-row: 2 / span 6;
+        padding-right: 3rem;
+      }
+    }
+  </style>
+  {
+    /*
+    
+      <hr class="grid-span-6" />
+
+      <!-- Section 6: Data -->
+      <section class="grid-span-6">
+        <h1 class="text-center">Data: what does the industry think?</h1>
+
+        <div class="grid-container mt-16">
+          <div class="grid-span-6">
+            <h2 class="heading-with-number" data-number="3.1">
+              What qualities of design do startups consider most important?
+            </h2>
+            <p>
+              I asked 78 CEOs, marketers, engineers, and designers about their
+              opinions and definitions of design. Before I could come up with
+              anything for this project, I had to check my assumptions at the
+              door and get some legit data. <strong class="font-semibold"
+                >It seems that entrepreneurs / engineers and designers are
+                thinking about the same things.</strong
+              >
+            </p>
+
+            <div class="grid-container mt-8">
+              <div class="grid-span-2 grid-start-1">
+                <h4 class="font-semibold mb-4 text-center">
+                  Business, Marketers, and Engineers
+                </h4>
+                <!-- Placeholder Pie Chart -->
+                <div
+                  class="w-40 h-40 md:w-56 md:h-56 bg-teal-100 border-4 border-teal-300 rounded-full mx-auto flex items-center justify-center text-teal-700"
+                >
+                  Pie Chart 1
+                </div>
+              </div>
+              <div class="grid-span-2 grid-start-3">
+                <h4 class="font-semibold mb-4 text-center">
+                  Designers and Creative Directors
+                </h4>
+                <!-- Placeholder Pie Chart -->
+                <div
+                  class="w-40 h-40 md:w-56 md:h-56 bg-teal-100 border-4 border-teal-300 rounded-full mx-auto flex items-center justify-center text-teal-700"
+                >
+                  Pie Chart 2
+                </div>
+              </div>
+              <div class="grid-span-2 grid-start-5">
+                <h4 class="font-semibold mb-4 text-center">
+                  Dieter Rams' Principles
+                </h4>
+                <!-- Placeholder Pie Chart -->
+                <div
+                  class="w-40 h-40 md:w-56 md:h-56 bg-teal-100 border-4 border-teal-300 rounded-full mx-auto flex items-center justify-center text-teal-700"
+                >
+                  Pie Chart 3
+                </div>
+              </div>
+            </div>
+            <!-- Placeholder Legend -->
+            <div
+              class="mt-8 text-xs text-center border border-gray-200 p-2 max-w-xs mx-auto"
+            >
+              Legend Placeholder
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-container mt-16">
+          <div class="grid-span-6">
+            <h2 class="heading-with-number" data-number="3.2">
+              How important is product design?
+            </h2>
+            <p>
+              Product design includes both digital and physical products. It
+              represents not only the aesthetic qualities, but <strong
+                class="font-semibold"
+                >what it does, how well a user thinks it's going to do it, and
+                how easily & quickly they can complete a task.</strong
+              >
+            </p>
+            <p>
+              Think for a moment. How important is product design to <strong
+                class="font-semibold">you</strong
+              >? How important do you think aesthetics and ease-of-use are to <strong
+                class="font-semibold">your</strong
+              > customers?
+            </p>
+
+            <div class="grid-container mt-8">
+              <div class="grid-span-3 grid-start-1">
+                <h4 class="font-semibold mb-4 text-center text-red-600">
+                  How important is product design to you?
+                </h4>
+                <!-- Placeholder Bar Chart -->
+                <div
+                  class="w-full h-48 bg-gray-100 border border-gray-300 flex items-center justify-center text-gray-500"
+                >
+                  Bar Chart (You)
+                </div>
+              </div>
+              <div class="grid-span-3 grid-start-4">
+                <h4 class="font-semibold mb-4 text-center text-red-600">
+                  How important is product design to your users?
+                </h4>
+                <!-- Placeholder Bar Chart -->
+                <div
+                  class="w-full h-48 bg-gray-100 border border-gray-300 flex items-center justify-center text-gray-500"
+                >
+                  Bar Chart (Users)
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer Placeholder (Optional) -->
+    <footer class="grid-container py-8">
+      <div class="grid-span-6 text-center text-xs text-gray-400">
+        © 2024 Your Website Name
+      </div>
+    </footer>
+
+    <!-- Simple Script to add numbers (fixed TypeScript issue) -->
+    
+  */
+  }
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const headings = document.querySelectorAll(".heading-with-number");
+      headings.forEach((h2) => {
+        const number = h2.getAttribute("data-number"); // Use getAttribute instead of dataset
+        if (number) {
+          const numberSpan = document.createElement("span");
+          numberSpan.classList.add(
+            "bg-red-500",
+            "text-white",
+            "rounded-full",
+            "w-6",
+            "h-6",
+            "md:w-7",
+            "md:h-7", // Slightly larger on medium screens
+            "flex",
+            "items-center",
+            "justify-center",
+            "text-xs",
+            "font-bold",
+            "mr-3",
+            "flex-shrink-0" // Prevent shrinking
+          );
+          numberSpan.textContent = number;
+          h2.insertBefore(numberSpan, h2.firstChild);
+        }
+      });
+    });
+  </script>
+</main>
