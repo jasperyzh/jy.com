@@ -168,38 +168,5 @@
       "tags": ["Python", "TensorFlow", "FastAPI"],
       "year": "2024"
     }
-  ],
-  "skills": [
-    { "category": "Frontend", "items": ["HTML5", "CSS3", "JavaScript (ES6+)", "React", "Vue", "TailwindCSS", "SASS"] },
-    { "category": "Backend", "items": ["Node.js", "Python", "Django", "Express", "GraphQL", "REST API"] },
-    { "category": "Database", "items": ["MongoDB", "PostgreSQL", "Firebase", "Redis"] },
-    { "category": "DevOps", "items": ["Docker", "AWS", "CI/CD", "Git", "GitHub Actions"] },
-    { "category": "Tools", "items": ["VS Code", "Figma", "Postman", "Jest", "Webpack"] }
-  ],
-  "projects": [
-    {
-      "title": "E-commerce Platform",
-      "description": "A full-stack e-commerce solution with product management, cart functionality, and secure checkout.",
-      "image": "https://images.unsplash.com/photo-1661956602944-249bcd04b63f?q=80&w=2070",
-      "tags": ["React", "Node.js", "MongoDB", "Stripe"],
-      "demoUrl": "#",
-      "codeUrl": "#"
-    },
-    {
-      "title": "Health & Fitness App",
-      "description": "Mobile-first fitness tracking application with workout plans, nutrition tracking, and progress analytics.",
-      "image": "https://images.unsplash.com/photo-1571019613914-85f342c6a11e?q=80&w=2070",
-      "tags": ["React Native", "Firebase", "GraphQL"],
-      "demoUrl": "#",
-      "codeUrl": "#"
-    },
-    {
-      "title": "AI Content Generator",
-      "description": "Using machine learning to create personalized content based on user preferences and behavior.",
-      "image": "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=2070",
-      "tags": ["Python", "TensorFlow", "Flask", "AWS"],
-      "demoUrl": "#",
-      "codeUrl": "#"
-    }
   ]
 } 

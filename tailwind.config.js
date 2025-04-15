@@ -57,10 +57,10 @@ export default {
         "2xl": "var(--radius-2xl)",
         "3xl": "var(--radius-3xl)",
       },
-      animation: {
-        "accordion-down": "var(--animate-accordion-down)",
-        "accordion-up": "var(--animate-accordion-up)",
-      },
+      // animation: {
+      //   "accordion-down": "var(--animate-accordion-down)",
+      //   "accordion-up": "var(--animate-accordion-up)",
+      // },
       typography: {
         DEFAULT: {
           css: {

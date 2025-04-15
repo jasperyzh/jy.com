@@ -1,25 +1,35 @@
 ---
-const { href, label, onClick } = Astro.props;
+import { Button } from "@/components/starwind/button";
+import { Icon } from "astro-icon/components";
+
+const { href = "/", label = "Back", variant = "outline", className = "", name = "arrow-left" } = Astro.props;
 ---
 
-<a href={href} class="btn btn-secondary my-3" onclick={onClick}>
-  <i class="bi bi-arrow-left"></i>
-  {label}
-</a>
+<Button 
+  variant={variant}
+  class={className}
+  data-href={href}
+  id="return-button"
+>
+  <Icon name=`bi:${name}` /> {label}
+</Button>
 
-<!-- <style>
-    .btn {
-        margin-top: 1rem;
-        text-decoration: none;
-        padding: 0.5rem 1rem;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 0.25rem;
-        transition: background-color 0.3s;
-    }
-
-    .btn:hover {
-        background-color: #0056b3;
-    }
-</style> -->
+<script>
+  // Find all return buttons on the page
+  const returnButtons = document.querySelectorAll('#return-button');
+  
+  returnButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const fallbackHref = button.getAttribute('data-href') || '/';
+      const referrer = document.referrer;
+      
+      if (!referrer || referrer === window.location.href) {
+        // No referrer or same page referrer, use fallback URL
+        window.location.href = fallbackHref;
+      } else {
+        // Otherwise go back in history
+        history.back();
+      }
+    });
+  });
+</script>

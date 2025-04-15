@@ -1,5 +1,7 @@
 ---
 import { Button } from "@/components/starwind/button";
+import { Icon } from "astro-icon/components";
+
 import { SITE_TITLE } from "@/consts";
 import ThemeToggleButton from "@/components/ThemeToggle.astro";
 
@@ -11,204 +13,175 @@ const pathname = new URL(Astro.request.url).pathname;
 const currentPath = pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
 ---
 
-<nav
-  class="flex items-center justify-between h-16"
-  aria-label="Main navigation"
->
-  <div class="flex items-center justify-between w-full">
-    <!-- Mobile menu button-->
-    <div class="md:hidden">
-      <button
-        type="button"
-        class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white transition-colors duration-200"
-        aria-controls="mobile-menu"
-        aria-expanded="false"
-        id="mobile-menu-button"
-      >
-        <span class="sr-only">Open main menu</span>
-        <!-- Menu icon -->
-        <svg
-          class="block h-6 w-6"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          aria-hidden="true"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 6h16M4 12h16M4 18h16"></path>
-        </svg>
-      </button>
-    </div>
+<nav aria-label="Main navigation">
+  <Button class="home" href="/" variant="ghost" aria-label="Home"
+    >{SITE_TITLE}</Button
+  >
 
-    <!-- Logo/Brand -->
-    <a href="/" class="flex-shrink-0 flex items-center" aria-label="Home">
-      <div class="text-xl font-bold">{SITE_TITLE}</div>
-    </a>
+  <Button
+    class="menu-toggle md:hidden"
+    type="button"
+    variant="ghost"
+    size="icon"
+    aria-controls="nav-links"
+    aria-expanded="false"
+    id="mobile-menu-button"
+  >
+    <span class="sr-only">Toggle menu</span>
+    <Icon name="bi:list" />
+  </Button>
 
-    <!-- Desktop Navigation -->
-    <div class="hidden md:block">
-      <div class="ml-10 flex items-center space-x-4">
-        {
-          isDevelopment && (
-            <Button
-              href="/demo"
-              class={`bg-warning/20 ${currentPath === "/demo" ? "bg-warning/30 dark:bg-warning/40 font-medium" : ""} text-warning-foreground hover:bg-warning/30 dark:bg-warning/30 dark:hover:bg-warning/40 transition-colors duration-200`}
-              size="sm"
-            >
-              Demo Pages
-            </Button>
-          )
-        }
-        <Button
-          href="/sketches"
-          class={`bg-transparent ${currentPath === "/sketches" ? "bg-gray-100 dark:bg-gray-800 font-medium" : ""} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
-          size="sm">Sketches & Experiments</Button
-        >
-        <Button
-          href="/blog"
-          class={`bg-transparent ${currentPath === "/blog" ? "bg-gray-100 dark:bg-gray-800 font-medium" : ""} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
-          size="sm">Blog</Button
-        >
-        <!-- <Button
-          href="/portfolio"
-          class={`bg-transparent ${currentPath === "/portfolio" ? "bg-gray-100 dark:bg-gray-800 font-medium" : ""} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
-          size="sm">Portfolio</Button
-        > -->
-        <Button
-          href="/#contact"
-          class={`bg-transparent ${currentPath === "/contact" ? "bg-gray-100 dark:bg-gray-800 font-medium" : ""} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
-          size="sm">Contact</Button
-        >
-        <div class="flex items-center justify-center">
-          <ThemeToggleButton />
-        </div>
-      </div>
-    </div>
-  </div>
-</nav>
+  <div class="nav-links" id="nav-links">
+    <Button
+      class="close-menu md:hidden"
+      variant="ghost"
+      size="icon"
+      aria-label="Close menu"
+    >
+      <Icon name="bi:x-lg" class="h-5 w-5" />
+    </Button>
 
-<!-- Mobile menu, show/hide based on menu state -->
-<div
-  class="md:hidden hidden transform transition-all duration-300 ease-in-out"
-  id="mobile-menu"
->
-  <div class="flex flex-col space-y-2 p-4">
     {
       isDevelopment && (
-        <Button
-          href="/demo"
-          class={`bg-warning/20 ${currentPath === "/demo" ? "bg-warning/30 dark:bg-warning/40 font-medium" : ""} text-warning-foreground hover:bg-warning/30 dark:bg-warning/30 dark:hover:bg-warning/40 transition-colors duration-200`}
-          size="sm"
-        >
+        <Button href="/demo" variant="ghost" size="sm">
           Demo Pages
         </Button>
       )
     }
-    <Button
-      href="/sketches"
-      class={`bg-transparent ${currentPath === "/sketches" ? "bg-gray-100 dark:bg-gray-800 font-medium" : ""} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
-      size="sm">Sketches & Experiments</Button
+    <Button href="/sketches" variant="ghost" size="sm"
+      >Sketches & Experiments</Button
     >
-    <Button
-      href="/blog"
-      class={`bg-transparent ${currentPath === "/blog" ? "bg-gray-100 dark:bg-gray-800 font-medium" : ""} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
-      size="sm">Blog</Button
-    >
-    <!-- <Button
-      href="/portfolio"
-      class={`bg-transparent ${currentPath === "/portfolio" ? "bg-gray-100 dark:bg-gray-800 font-medium" : ""} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
-      size="sm">Portfolio</Button
-    > -->
-    <Button
-      href="/#contact"
-      class={`bg-transparent ${currentPath === "/contact" ? "bg-gray-100 dark:bg-gray-800 font-medium" : ""} text-gray-800 hover:text-gray-200 dark:text-gray-200 dark:hover:text-gray-800 transition-colors duration-200`}
-      size="sm">Contact</Button
-    >
-    <div class="flex items-center pt-2">
+    <Button href="/blog" variant="ghost" size="sm">Blog</Button>
+    <Button href="/#contact" variant="ghost" size="sm">Contact</Button>
+    <div>
       <ThemeToggleButton />
-      <span class="ml-2 text-sm text-gray-600 dark:text-gray-400"
-        >Toggle theme</span
-      >
     </div>
   </div>
-</div>
+</nav>
+
+<style>
+  nav {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-template-rows: auto;
+    padding-block: 0.75rem;
+
+    & > .home {
+      grid-column: 1 / span 2;
+      justify-self: start;
+    }
+
+    & > .menu-toggle {
+      grid-column: -1 / span 2;
+      grid-row: 1;
+      justify-self: end;
+    }
+
+    & > .nav-links {
+      grid-column: -1 / span 4;
+      justify-self: end;
+    }
+  }
+
+  .menu-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-links {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .nav-links {
+      position: fixed;
+      top: 0;
+      right: -60vw;
+      bottom: 0;
+      width: 60vw;
+      z-index: 50;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-end;
+      padding: 5rem 2rem 2rem;
+      gap: 1.5rem;
+      background-color: var(--color-bg, #fff);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      background-color: rgba(255, 255, 255, 0.9);
+      transition: right 0.3s ease;
+      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    :global(.dark) .nav-links {
+      background-color: rgba(15, 23, 42, 0.9);
+      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-links.active {
+      right: 0;
+    }
+
+    .close-menu {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+    }
+  }
+</style>
 
 <script>
-  // Enhanced mobile menu toggle with animation
+  // Simple menu toggle
   document.addEventListener("DOMContentLoaded", () => {
-    const mobileMenuButton = document.getElementById("mobile-menu-button");
-    const mobileMenu = document.getElementById("mobile-menu");
+    const menuButton = document.getElementById("mobile-menu-button");
+    const navLinks = document.getElementById("nav-links");
+    const closeButton = document.querySelector(".close-menu");
 
-    if (mobileMenuButton && mobileMenu) {
-      mobileMenuButton.addEventListener("click", () => {
-        const expanded =
-          mobileMenuButton.getAttribute("aria-expanded") === "true";
+    // Toggle menu open
+    if (menuButton && navLinks) {
+      menuButton.addEventListener("click", () => {
+        navLinks.classList.add("active");
+        menuButton.setAttribute("aria-expanded", "true");
+        document.body.style.overflow = "hidden";
+      });
+    }
 
-        // Toggle aria-expanded
-        mobileMenuButton.setAttribute("aria-expanded", (!expanded).toString());
+    // Close menu
+    if (closeButton && navLinks) {
+      closeButton.addEventListener("click", closeMenu);
+    }
 
-        // Toggle menu visibility with animation
-        if (expanded) {
-          // Hide menu
-          mobileMenu.style.maxHeight = `${mobileMenu.scrollHeight}px`;
-          setTimeout(() => {
-            mobileMenu.style.maxHeight = "0px";
-            mobileMenu.style.opacity = "0";
-            setTimeout(() => {
-              mobileMenu.classList.add("hidden");
-            }, 300);
-          }, 10);
-        } else {
-          // Show menu
-          mobileMenu.classList.remove("hidden");
-          mobileMenu.style.maxHeight = "0px";
-          mobileMenu.style.opacity = "0";
-          setTimeout(() => {
-            mobileMenu.style.maxHeight = `${mobileMenu.scrollHeight}px`;
-            mobileMenu.style.opacity = "1";
-          }, 10);
+    // Close when clicking on menu links
+    const menuLinks = navLinks?.querySelectorAll("a");
+    menuLinks?.forEach((link) => {
+      link.addEventListener("click", () => {
+        if (window.innerWidth < 768) {
+          closeMenu();
         }
       });
+    });
+
+    // Close on escape key
+    document.addEventListener("keydown", (e) => {
+      if (
+        e.key === "Escape" &&
+        navLinks &&
+        navLinks.classList.contains("active")
+      ) {
+        closeMenu();
+      }
+    });
+
+    function closeMenu() {
+      if (!navLinks || !menuButton) return;
+
+      navLinks.classList.remove("active");
+      menuButton.setAttribute("aria-expanded", "false");
+      document.body.style.overflow = "";
+      menuButton.focus();
     }
   });
 </script>
-
-<style>
-  /* Animation styles for mobile menu */
-  #mobile-menu {
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-    transition:
-      max-height 0.3s ease-in-out,
-      opacity 0.3s ease-in-out;
-  }
-
-  /* Ensure nav items have consistent height and padding */
-  :global(.navbar-btn) {
-    display: inline-flex;
-    align-items: center;
-    height: 2.5rem;
-  }
-
-  /* Active page indicator - additional styling */
-  :global(.active-page) {
-    position: relative;
-  }
-
-  :global(.active-page)::after {
-    content: "";
-    position: absolute;
-    bottom: -4px;
-    left: 50%;
-    transform: translateX(-50%);
-    height: 2px;
-    width: 20px;
-    background-color: currentColor;
-    border-radius: 2px;
-  }
-</style>

@@ -1,28 +1,14 @@
 <script is:inline>
   // This code is inlined in the head to make dark mode instant & blocking.
-  // This prevents theme flicker on page load
-  const getThemePreference = () => {
-    if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
-      return localStorage.getItem("theme");
-    }
-    // Always default to light theme instead of checking system preferences
-    return "light";
-    /**
-     * use these for system preferences
-     * return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-     */
-  };
-
-  // Apply theme immediately before page render
-  const theme = getThemePreference();
-
-  // Apply dark class to html element if needed
-  if (theme === "dark") {
-    document.documentElement.classList.add("dark");
+  // This follows Tailwind's recommended approach: https://tailwindcss.com/docs/dark-mode
+  
+  // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+  if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.documentElement.classList.add('dark');
   } else {
-    document.documentElement.classList.remove("dark");
+    document.documentElement.classList.remove('dark');
   }
-
+  
   if (typeof localStorage !== "undefined") {
     // Watch the document element and persist user preference when it changes.
     const observer = new MutationObserver(() => {

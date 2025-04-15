@@ -1,0 +1,242 @@
+---
+import Layout from "@/layouts/BaseLayout.astro";
+import { getSketchFullUrl, getCategoryUrl } from "@/utils/sketchUtils";
+import Pagination from "@/components/Pagination.astro";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/starwind/card";
+import Badge from "@/components/starwind/badge";
+import Button from "@/components/starwind/button";
+import FormattedDate from "@/components/FormattedDate.astro";
+
+// Define props with default values
+interface Props {
+  title?: string;
+  description?: string;
+  pageSubtitle?: string;
+  currentPage?: number;
+  totalPages?: number;
+  prevUrl?: string | null;
+  nextUrl?: string | null;
+  paginatedSketches?: any[];
+  categories?: string[];
+  tags?: string[];
+  categoryCounts?: Record<string, number>;
+  tagCounts?: Record<string, number>;
+  baseUrl?: string;
+  allSketchesCount?: number;
+  activeCategory?: string;
+  activeTag?: string;
+}
+
+const {
+  title = "Sketches - Code & Design Ideas",
+  description = "A collection of code sketches, design experiments, and interactive demos",
+  pageSubtitle = "",
+  currentPage = 1,
+  totalPages = 1,
+  prevUrl = null,
+  nextUrl = null,
+  paginatedSketches = [],
+  categories = [],
+  tags = [],
+  categoryCounts = {},
+  tagCounts = {},
+  baseUrl = "/sketches",
+  allSketchesCount = 0,
+  activeCategory = "",
+  activeTag = "",
+} = Astro.props;
+---
+
+<Layout title={title} description={description}>
+  <div class="container container--grid mx-auto px-4 max-w-7xl">
+    <header class="header--page">
+      <h1>Sketches & Experiments</h1>
+      <p class="text-balance">
+        A collection of code snippets, design experiments, interactive demos,
+        and learning resources
+      </p>
+      {pageSubtitle && (
+        <div class="mt-4 inline-block text-lg font-medium px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-md">
+          {pageSubtitle}
+        </div>
+      )}
+    </header>
+
+    <!-- sidebar -->
+    <aside class="mt-4">
+      <ul class="space-y-2 text-end">
+        <li>
+          <Button 
+            href="/sketches" 
+            variant={!activeCategory && !activeTag ? "default" : "outline"}
+          >
+            All Sketches
+            <span class="text-xs text-gray-500 dark:text-gray-400">
+              {allSketchesCount}
+            </span>
+          </Button>
+        </li>
+        <!-- Categories -->
+        {
+          categories.map((category) => (
+            <li>
+              <Button 
+                href={getCategoryUrl(category)} 
+                variant={activeCategory === category ? "default" : "outline"}
+                class={activeCategory === category ? "border-primary" : ""}
+              >
+                {category}
+                <span class="text-xs text-gray-500 dark:text-gray-400">
+                  {categoryCounts[category]}
+                </span>
+              </Button>
+            </li>
+          ))
+        }
+      </ul>
+
+      <hr class="max-w-16 my-4 ms-auto" />
+      <!-- Tags -->
+      <div class="flex flex-wrap gap-2 justify-end">
+        {
+          tags.slice(0, 10).map((tag) => (
+            <Badge 
+              href={`/sketches/tag/${tag}`} 
+              variant={activeTag === tag ? "default" : "outline"} 
+              size="sm"
+              class={activeTag === tag ? "bg-primary" : ""}
+            >
+              {tag}
+              <span class="ml-1 text-xs text-gray-500 dark:text-gray-400">
+                ({tagCounts[tag]})
+              </span>
+            </Badge>
+          ))
+        }
+        <!-- {
+          tags.length > 10 && (
+            <Button
+              href="/sketches/tags"
+              variant="outline"
+              size="sm"
+              class="text-sm"
+            >
+              View all tags...
+            </Button>
+          )
+        } -->
+      </div>
+    </aside>
+
+    <!-- Sketches grid -->
+    <section class="posts-grid">
+      {
+        paginatedSketches.map((sketch) => (
+          <Card class="card hover:border-primary/50 transition-colors overflow-hidden">
+            <CardHeader class="p-0 mb-3 relative">
+              <img
+                src={sketch.data.thumbnail}
+                alt={sketch.data.title}
+                class="aspect-square object-cover"
+              />
+              <Badge
+                href={getCategoryUrl(sketch.data.category)}
+                class="z-10 absolute right-2 top-2"
+                variant="primary"
+              >
+                {sketch.data.category}
+              </Badge>
+              <div class="z-10 absolute bottom-2 right-2 flex flex-wrap justify-end gap-1 mb-3">
+                {sketch.data.tags &&
+                  sketch.data.tags.slice(0, 3).map((tag) => (
+                    <Badge href={`/sketches/tag/${tag}`} size="sm">
+                      {tag}
+                    </Badge>
+                  ))}
+                {sketch.data.tags && sketch.data.tags.length > 3 && (
+                  <Badge size="sm">+{sketch.data.tags.length - 3} more</Badge>
+                )}
+              </div>
+            </CardHeader>
+            <CardContent class="pb-1">
+              <span class="text-sm text-gray-500 dark:text-gray-400 my-2">
+                <FormattedDate date={sketch.data.date} />
+              </span>
+              <CardTitle class="text-balance">{sketch.data.title}</CardTitle>
+            </CardContent>
+            <CardFooter class="pb-4"></CardFooter>
+            <a
+              href={getSketchFullUrl(sketch)}
+              class="stretched-link"
+              aria-label={`View the ${sketch.data.title}`}
+            />
+          </Card>
+        ))
+      }
+    </section>
+
+    {
+      /* Pagination controls */
+      totalPages > 1 && (
+        <div class="pagination grid grid-cols-subgrid !col-start-2 !col-span-5 my-8">
+          <div class="self-center col-span-5">
+            <Pagination
+              prevUrl={prevUrl}
+              nextUrl={nextUrl}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              baseUrl={baseUrl}
+            />
+          </div>
+        </div>
+      )
+    }
+  </div>
+
+  <style>
+    .container--grid {
+      & > aside {
+        display: none;
+
+        @media (min-width: 768px) {
+          display: block;
+          grid-column: 1 / span 2 !important;
+        }
+
+        @media (min-width: 1024px) {
+          grid-column: 1 / 2 !important;
+        }
+      }
+
+      & > .posts-grid {
+        @media (min-width: 768px) {
+          grid-column: 3 / -1;
+
+          * {
+            grid-column: auto / span 3;
+          }
+        }
+        @media (min-width: 1024px) {
+          grid-column: 2 / -1;
+          * {
+            grid-column: auto / span 3;
+          }
+        }
+        @media (min-width: 1280px) {
+          grid-column: 2 / -1;
+          * {
+            grid-column: auto / span 2;
+          }
+        }
+      }
+    }
+  </style>
+</Layout>

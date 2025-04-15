@@ -94,6 +94,7 @@ import { Switch } from "@/components/starwind/switch";
   const themeSwitch = document.querySelector("#theme-switch") as HTMLElement;
   const customToggle = document.querySelector(".custom-toggle") as HTMLElement;
 
+  // Initialize switch to match current state
   const isDark = document.documentElement.classList.contains("dark");
   themeSwitch.setAttribute("aria-checked", isDark ? "true" : "false");
 
@@ -104,13 +105,15 @@ import { Switch } from "@/components/starwind/switch";
   });
 
   themeSwitch.addEventListener("starwind-switch:change", (e: Event) => {
-    // Get current theme
-    const event = e as SwitchChangeEvent;
-
+    // Simple toggle that follows Tailwind's recommendations
     const isDark = document.documentElement.classList.contains("dark");
-    document.documentElement.classList.toggle("dark", !isDark);
-
-    // Update localStorage to persist theme
-    localStorage.setItem("theme", !isDark ? "dark" : "light");
+    
+    if (isDark) {
+      document.documentElement.classList.remove('dark');
+      localStorage.theme = 'light';
+    } else {
+      document.documentElement.classList.add('dark');
+      localStorage.theme = 'dark';
+    }
   });
 </script>

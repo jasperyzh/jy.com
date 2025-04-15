@@ -1,47 +1,175 @@
-<p class="hello_world">
-  <span class="japanese-text">(。・∀・)ノ*:･ﾟ</span>hello_world
-  <span class="stars">
-    <span class="star animate--moveUpDown" style="--animation-delay: 0s">🌟</span>
-    <span class="star animate--moveUpDown" style="--animation-delay: 0.314s">🌟</span>
-    <span class="star animate--moveUpDown" style="--animation-delay: 0.628s">🌟</span>
-  </span>
-</p>
+---
+import Button from "./starwind/button";
 
-<style>
-  .hello_world {
-    font-size: var(--fs-small, 1rem);
-    display: inline-block;
-    position: relative;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-  
-  .japanese-text {
-    font-family: 'Hiragino Kaku Gothic Pro', 'Meiryo', sans-serif;
-  }
-  
-  span.stars {
-    position: absolute;
-    right: -3rem;
-    top: 0;
+export interface HelloGreetingProps {
+  class?: string;
+}
+
+const { class: className = "" } = Astro.props as HelloGreetingProps;
+---
+
+<Button
+  variant="ghost"
+  class={`select-none mb-3 text-gray-500 hover:text-gray-50 relative font-mono ${className}`}
+>
+  <span class="text-3xl md:text-5xl font-bold cursor-pointer" id="hello-text">Hello!</span>
+  <span class="hidden">(。・∀・)ノ*:･ﾟ</span>
+  <span class="stars">
+    <span class="star animate--updownloop" style="--animation-delay: 0s"
+      >🌟</span
+    >
+    <span class="star animate--updownloop" style="--animation-delay: 0.314s"
+      >🌟</span
+    >
+    <span class="star animate--updownloop" style="--animation-delay: 0.628s"
+      >🌟</span
+    >
+  </span>
+  <div id="star-container" class="absolute pointer-events-none"></div>
+</Button>
+<style is:global>
+  .stars {
     span.star {
       display: inline-block;
-      font-family: monospace;
-      filter: drop-shadow(3px 3px 12px rgba(252 213 63 / 1));
+      filter: drop-shadow(3px 3px 12px rgba(252 213 63 / 0.5));
+    }
+    .star.animate--updownloop {
+      animation: moveUpDown 1s ease-in-out infinite;
+      animation-delay: var(--animation-delay, 0);
     }
   }
-  .animate--moveUpDown {
-    animation: moveUpDown 2s ease-in-out infinite;
-    animation-delay: var(--animation-delay, 0);
-  }
+
   @keyframes moveUpDown {
     0%,
     100% {
       transform: translateY(0);
     }
     50% {
-      transform: translateY(
-        -1.5rem
-      ); /* Adjust the value to control the height of the bounce */
+      transform: translateY(-1rem);
+    }
+  }
+
+  .shooting-star {
+    position: absolute;
+    font-size: 1rem;
+    pointer-events: none;
+    z-index: 10;
+    opacity: 1;
+  }
+
+  @keyframes shootOut {
+    0% {
+      transform: translate(0, 0) scale(0.5) rotate(0deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(var(--x, 100px), var(--y, -100px)) scale(1) rotate(var(--rotation, 180deg));
+      opacity: 0;
     }
   }
 </style>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const helloText = document.getElementById('hello-text');
+    const starContainer = document.getElementById('star-container');
+
+    if (helloText && starContainer) {
+      helloText.addEventListener('click', () => {
+        // Create 8 shooting stars
+        for (let i = 0; i < 8; i++) {
+          createShootingStar(starContainer, helloText);
+        }
+      });
+    }
+  });
+
+  function createShootingStar(container, sourceElement) {
+    const star = document.createElement('span');
+    star.textContent = '🌟';
+    star.classList.add('shooting-star');
+    
+    // Position star at the hello text center
+    const sourceRect = sourceElement.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+    
+    // Initial position (relative to container)
+    // const startX = sourceRect.width / 2;
+    // const startY = sourceRect.height / 2;
+    const startX = 0;
+    const startY = 0;
+    
+    // Random angle but focused upward and outward (between -30 and 210 degrees)
+    const angleRange = Math.PI * 4/1; // 240 degrees in radians
+    const angleOffset = -Math.PI/6; // -30 degrees
+    const angle = angleOffset + Math.random() * angleRange;
+    
+    // Initial velocity (speed and direction)
+    const speed = 5 + Math.random() * 4;
+    const vx = Math.cos(angle) * speed;
+    const vy = Math.sin(angle) * speed;
+
+    // Gravity and other physics parameters
+    const gravity = 0.12;
+    const resistance = 0.99;
+    const duration = 2000 + Math.random() * 1000; // 2-3 seconds
+    const rotationSpeed = (Math.random() - 0.5) * 20;
+    
+    // Set initial position
+    star.style.left = `${startX}px`;
+    star.style.top = `${startY}px`;
+    container.appendChild(star);
+    
+    // Start time of animation
+    const startTime = performance.now();
+    
+    // Animation function
+    function animate(currentTime) {
+      const elapsed = currentTime - startTime;
+      if (elapsed >= duration) {
+        star.remove();
+        return;
+      }
+      
+      // Current time progress (0 to 1)
+      const progress = elapsed / duration;
+      
+      // Calculate current position with physics
+      const timeUnits = elapsed / 16; // roughly based on 60fps
+      
+      // Position calculation with gravity and initial velocity
+      const posX = startX + vx * timeUnits * resistance ** timeUnits;
+      const posY = startY + vy * timeUnits * resistance ** timeUnits + 
+                  0.5 * gravity * timeUnits ** 2;
+      
+      // Calculate rotation
+      const rotation = rotationSpeed * timeUnits;
+      
+      // Fading out near the end
+      const opacity = progress > 0.7 ? 1 - ((progress - 0.7) / 0.3) : 1;
+      
+      // Apply transformations
+      star.style.transform = `translate(${posX}px, ${posY}px) rotate(${rotation}deg)`;
+      star.style.opacity = opacity;
+      
+      // Check if star is off screen but still animate until duration
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+      
+      if (posX < -50 || posX > screenWidth + 50 ||
+          posY < -50 || posY > screenHeight + 50) {
+        // Off screen but still animate for a bit longer for stars that might come back
+        if (progress > 0.6) {
+          star.remove();
+          return;
+        }
+      }
+      
+      // Continue animation
+      requestAnimationFrame(animate);
+    }
+    
+    // Start animation
+    requestAnimationFrame(animate);
+  }
+</script>

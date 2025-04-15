@@ -1,10 +1,24 @@
 @import "tailwindcss";
 @import "./prism.css"; /* Import Prism CSS for syntax highlighting */
 
-@custom-variant dark (&:is(.dark *));
+/* @custom-variant dark (&:is(.dark *)); */
 /* @plugin "tailwindcss-animate"; */
 /* @plugin "@tailwindcss/forms"; */
-@variant dark (&:where(.dark, .dark *));
+/* @variant dark (&:where(.dark, .dark *)); */
+
+
+/* 
+These animation variables are used by accordion components in the UI.
+You can see their usage in the tailwind.config.js file where they're defined in the animation section:
+animation: {
+  "accordion-down": "var(--animate-accordion-down)",
+  "accordion-up": "var(--animate-accordion-up)",
+}
+
+To find components using these animations:
+1. Search for "accordion-down" or "accordion-up" class names in your components
+2. Look for components that use the Accordion component from your UI library
+3. Check components that have collapsible/expandable sections
 
 @theme {
   --animate-accordion-down: accordion-down 0.2s ease-out;
@@ -27,7 +41,7 @@
       height: 0;
     }
   }
-}
+} */
 
 @theme inline {
   --color-background: var(--background);
@@ -137,6 +151,13 @@
     --input: var(--color-stone-800);
     --outline: var(--color-blue-600);
     --radius: 0.5rem;
+
+    * {
+      @apply border-border outline-ring/50;
+    }
+    body {
+      @apply bg-background text-foreground;
+    }
   }
 
   * {
@@ -185,7 +206,7 @@
       text-decoration: underline;
       text-underline-offset: 2px;
       transition: color 0.2s ease;
-      
+
       &:hover {
         color: color-mix(in oklch, var(--color-primary), black 20%);
       }
@@ -197,11 +218,12 @@
       color: var(--color-foreground);
     }
 
-    ul, ol {
+    ul,
+    ol {
       margin-top: 0.5rem;
       margin-bottom: 1rem;
       padding-left: 1.5rem;
-      
+
       li {
         line-height: 1.75;
         margin-bottom: 0.5rem;
@@ -260,6 +282,13 @@
     transition-timing-function: var(--default-transition-timing-function);
     transition-duration: var(--default-transition-duration);
   }
+
+  .transition-theme {
+    transition-property:
+      color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+  }
 }
 
 :root {
@@ -295,6 +324,11 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Add smooth transition for all color changes */
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .dark {
@@ -331,11 +365,61 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
+/* utility classes */
+
+.stretched-link {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+}
+.stretched-link--above {
+  position: relative;
+  z-index: 10;
+}
+:where(:has(.stretched-link)) {
+  position: relative;
+}
+
+/* layout */
+.container--grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1rem;
+  width: 100%;
+}
+
+.container--grid > * {
+  grid-column: 1 / -1;
+}
+
+.posts-grid {
+  grid-column: 1 /-1;
+
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 2rem 1rem;
+
+  & > * {
+    grid-column: 1/-1;
   }
-  body {
-    @apply bg-background text-foreground;
+
+  @media (min-width: 1024px) {
+    grid-column: 2 /-1;
+
+    & > * {
+      grid-column: span 2;
+    }
+  }
+}
+
+.header--page {
+  h1 {
+    font-size: 3rem;
+  }
+  @media (min-width: 1024px) {
+    grid-column: 2 / span 3;
   }
 }

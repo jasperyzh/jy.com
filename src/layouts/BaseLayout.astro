@@ -21,26 +21,31 @@ import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
 ---
 
-<html lang="en">
+<html lang="en" class="transition-theme">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <Head title={title} description={description} />
   </head>
   <body class="flex flex-col min-h-screen">
-    <header class="mb-4">
-      <div class="max-w-6xl container mx-auto">
+    <header
+      class="fixed top-0 left-0 right-0 bg-background z-100 shadow-sm shadow-slate-400/50 dark:shadow-slate-800/50"
+    >
+      <div class="container container--grid mx-auto max-w-7xl px-4">
         <Navbar />
-        <hr class="mt-2 border-gray-200" />
       </div>
     </header>
 
-    <main class="flex-grow">
+    <main class="flex-grow pt-24">
       <slot />
     </main>
 
     <!-- Footer component -->
-    <Footer email="hello@jasperyong.com" phone="+1 555.123.4567" />
+    <footer class="bg-slate-900 py-16 mt-auto overflow-clip">
+      <div class="container container--grid mx-auto max-w-7xl px-4 ">
+        <Footer />
+      </div>
+    </footer>
   </body>
 </html>
 

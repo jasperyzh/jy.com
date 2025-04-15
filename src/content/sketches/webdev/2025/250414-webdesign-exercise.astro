@@ -6,188 +6,7 @@
   rel="stylesheet"
 />
 
-<style is:inline>
-  /* Using modern Tailwind v4 imports */
-  /* @import "tailwindcss/preflight";
-  @import "tailwindcss/utilities"; */
-
-  @layer base {
-    /* Define base font families */
-    html {
-      font-family: "Lora", serif; /* Default body font */
-      color: theme("colors.gray.800");
-      @apply leading-relaxed; /* Default line height */
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      font-family: "Inter", sans-serif; /* Default heading font */
-      color: theme("colors.gray.900");
-      font-weight: 600; /* Default semi-bold for headings */
-    }
-
-    /* Specific Heading Styles */
-    h1 {
-      @apply text-5xl md:text-7xl font-thin tracking-wider leading-tight mt-8 mb-12;
-      /* 'font-thin' approximates the light weight */
-      /* 'tracking-wider' approximates the letter spacing */
-    }
-
-    h2 {
-      /* Style applied via wrapper div typically for number */
-      @apply text-3xl md:text-4xl font-semibold mb-6 mt-16 flex items-center;
-    }
-
-    h3 {
-      @apply text-xl md:text-2xl font-semibold mb-4 mt-8;
-    }
-
-    p {
-      @apply mb-4 max-w-prose; /* Limit paragraph width for readability */
-    }
-
-    a {
-      /* Basic link styling - customize as needed */
-      @apply text-red-600; /* Example link color */
-      /* Add underline on hover if desired: hover:underline */
-    }
-
-    /* Highlight span style */
-    .highlight {
-      @apply bg-yellow-200 px-1 py-0.5 rounded-sm;
-    }
-
-    blockquote {
-      @apply italic border-l-4 border-gray-300 pl-4 my-6 text-gray-700;
-      /* Example blockquote style */
-    }
-
-    /* Other base styles */
-    hr {
-      @apply border-t border-gray-200 my-12;
-    }
-    img {
-      @apply max-w-full h-auto; /* Basic responsive images */
-    }
-
-    /* 6-column grid layout */
-    .grid-container {
-      display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-      /* Alternative fixed-width approach: */
-      /* grid-template-columns: repeat(6, 200px);  */
-      column-gap: 1rem;
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      /* padding: 0 1rem; */
-    }
-
-    .grid-span-6 {
-      grid-column: span 6;
-    }
-
-    .grid-span-5 {
-      grid-column: span 5;
-    }
-
-    .grid-span-4 {
-      grid-column: span 4;
-    }
-
-    .grid-span-3 {
-      grid-column: span 3;
-    }
-
-    .grid-span-2 {
-      grid-column: span 2;
-    }
-
-    .grid-span-1 {
-      grid-column: span 1;
-    }
-
-    /* For explicit column positioning */
-    .grid-start-1 {
-      grid-column-start: 1;
-    }
-    .grid-start-2 {
-      grid-column-start: 2;
-    }
-    .grid-start-3 {
-      grid-column-start: 3;
-    }
-    .grid-start-4 {
-      grid-column-start: 4;
-    }
-    .grid-start-5 {
-      grid-column-start: 5;
-    }
-    .grid-start-6 {
-      grid-column-start: 6;
-    }
-
-    .grid-end-2 {
-      grid-column-end: 2;
-    }
-    .grid-end-3 {
-      grid-column-end: 3;
-    }
-    .grid-end-4 {
-      grid-column-end: 4;
-    }
-    .grid-end-5 {
-      grid-column-end: 5;
-    }
-    .grid-end-6 {
-      grid-column-end: 6;
-    }
-    .grid-end-7 {
-      grid-column-end: 7;
-    }
-
-    /* Vertical grid lines for development */
-    .grid-lines {
-      position: relative;
-    }
-
-    .grid-lines::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: repeating-linear-gradient(
-        to right,
-        rgba(0, 255, 0, 0.6),
-        rgba(0, 255, 0, 0.6) 1px,
-        transparent 1px,
-        transparent calc(100% / 6)
-      );
-      pointer-events: none;
-      z-index: 1000;
-    }
-  }
-</style>
-
-<!-- <body class="bg-white">
-    <header
-      class="bg-red-600 text-white p-2 text-sm flex justify-between items-center"
-    >
-      <span>Table of Contents</span>
-      <div>
-        <button class="bg-blue-700 px-3 py-1 rounded text-xs mr-2">Like</button>
-        <button class="bg-gray-800 px-3 py-1 rounded text-xs">Post</button>
-      </div>
-    </header> -->
-
-<!-- Main Content Area -->
-<main class="mx-auto" style="max-width: 1000px">
+<main>
   <!-- Section 1: Intro -->
   <section class="intro grid-container grid-lines">
     <h1
@@ -201,7 +20,7 @@
       Originally published in 2012.
     </p>
 
-    <hr class="grid-span-6 my-5" />
+    <hr class="col-span-6 my-5" />
 
     <p class="mb-6">
       Companies like Apple are making design impossible for startups to ignore.
@@ -219,26 +38,6 @@
     </p>
   </section>
 
-  <style>
-    main > section {
-      margin-block: calc(var(--spacing) * 12);
-    }
-    .intro {
-      h1 {
-        grid-column: 1 / -1;
-      }
-      p.author {
-        grid-column: -1 / -3;
-        margin-top: -3rem;
-        padding-inline: 1rem;
-      }
-      p {
-        grid-column: span 4;
-        margin-bottom: calc(var(--spacing) * 6);
-      }
-    }
-  </style>
-
   <!-- Section 2: What is Design -->
   <section class="what-design grid-container grid-lines">
     <div class="def__1">
@@ -252,7 +51,7 @@
         a visual or physical problem.¹
       </p>
     </div>
-    <div class="def__2 grid-span-3 grid-start-4">
+    <div class="def__2 col-span-3 col-start-4">
       <h2 class="heading-with-number" data-number="1.2">
         So what is "good design"?
       </h2>
@@ -271,65 +70,9 @@
     </div>
   </section>
 
-  <style is:global>
-    /* heading-with-number */
-    h2.heading-with-number {
-      position: relative;
-    }
-    h2.heading-with-number > span {
-      position: absolute;
-      left: -3rem;
-      top: 0.5rem;
-    }
-  </style>
-  <style>
-    .what-design {
-      .def__1 {
-        grid-column: 2 / span 2;
-      }
-      .def__2 {
-        grid-column: 5 / span 2;
-      }
-      h2 {
-        /* text-4xl */
-        font-size: var(--text-4xl);
-        line-height: var(--tw-leading, var(--text-4xl--line-height));
-        /* mb-4? */
-        margin-bottom: calc(var(--spacing) * 4);
-      }
-    }
-  </style>
-
-  <hr class="grid-span-6 my-5" />
+  <hr class="col-span-6 my-5" />
 
   <!-- Section 3: Dieter Rams -->
-  <style>
-    .the-designer {
-      figure {
-        grid-column: 1 / span 2;
-        grid-row: 1 / span 2;
-      }
-      header {
-        grid-column: 3 / span 4;
-        grid-row: 1;
-      }
-
-      h2 {
-        /* text-4xl */
-        font-size: var(--text-3xl);
-        line-height: var(--tw-leading, var(--text-4xl--line-height));
-        /* mb-4? */
-        margin-bottom: calc(var(--spacing) * 4);
-      }
-      .the-designer__intro {
-        grid-column: 3 / span 3;
-
-        p {
-          grid-column: 1 / span 3;
-        }
-      }
-    }
-  </style>
   <section class="the-designer grid-container grid-lines">
     <figure
       class="w-40 h-40 md:w-56 md:h-56 bg-gray-300 rounded-full mx-auto md:mx-0"
@@ -370,50 +113,8 @@
       </p>
     </div>
 
-    <hr class="grid-span-6 my-5" />
+    <hr class="col-span-6 my-5" />
 
-    <style>
-      h3 {
-        grid-column: 3 / -1;
-      }
-
-      /* Create a grid layout for principles */
-      .principles-container {
-        /* display: grid;
-        grid-template-columns: subgrid;
-        grid-column: 2 / -1;
-        gap: 1rem;
-        text-align: center; */
-        display: grid;
-        grid-column: 2 / -1;
-        grid-template-columns: subgrid;
-        gap: 0.5rem;
-        /* grid-template-rows: repeat(3, 80px); */
-      }
-
-      .principle {
-        display: grid;
-        grid-template-rows: auto 1fr;
-        justify-items: center;
-        align-items: center;
-        padding: 1rem;
-        /* margin-right: .5rem; */
-        border: 1px solid #e5e7eb;
-        border-radius: 0.5rem;
-        aspect-ratio: 1;
-      }
-
-      .principle-icon {
-        width: 2rem;
-        height: 2rem;
-        background-color: #fee2e2;
-        color: #dc2626;
-        border-radius: 0.25rem;
-        margin-bottom: 0.5rem;
-        display: grid;
-        place-items: center;
-      }
-    </style>
     <h3 class="mt-12 mb-6">Good design is...</h3>
 
     <!-- Wrap principles in the container div -->
@@ -461,7 +162,7 @@
     </div>
     <!-- ... end principles -->
 
-    <hr class="grid-span-6 my-5" />
+    <hr class="col-span-6 my-5" />
 
     <div class="the-designer-quote">
       <figure>
@@ -481,25 +182,8 @@
       </blockquote>
     </div>
   </section>
-  <style>
-    .the-designer-quote {
-      display: grid;
-      grid-column: 1 / -1;
-      grid-template-columns: subgrid;
-      /* grid-column: 1 / -1; */
 
-      figure {
-        grid-column: 1 / span 3;
-      }
-      blockquote {
-        grid-column: 4 / -1;
-        grid-row: 1 / span 2;
-        align-self: center;
-      }
-    }
-  </style>
-
-  <hr class="grid-span-6 my-5" />
+  <hr class="col-span-6 my-5" />
 
   <!-- Section 4: Good Design / Objectified -->
   <section class="good-design grid-container grid-lines">
@@ -524,26 +208,8 @@
       </figurecap>
     </figure>
   </section>
-  <style>
-    .good-design {
-      & > div {
-        grid-column: 1 / -3;
-        align-self: center;
-        padding: 1rem;
-        display: grid;
-        grid-template-columns: subgrid;
 
-        & > * {
-          grid-column: 2 / span 3;
-        }
-      }
-      & > figure {
-        grid-column: -1 / -3;
-      }
-    }
-  </style>
-
-  <hr class="grid-span-6 my-5" />
+  <hr class="col-span-6 my-5" />
 
   <section class="grid-container grid-lines">
     <div class="the-objectified">
@@ -568,26 +234,9 @@
         </figurecap>
       </figure>
     </div>
-    <style>
-      .the-objectified {
-        display: grid;
-        grid-column: 1 / -1;
-        grid-template-columns: subgrid;
-        & > div {
-          grid-column: 1 / span 1;
-        }
-
-        & > figure {
-          grid-column: 2 / -1;
-
-          iframe {
-            width: 100%;
-          }
-        }
-      }
-    </style>
   </section>
-  <hr class="grid-span-6 my-5" />
+
+  <hr class="col-span-6 my-5" />
 
   <section class="grid-container grid-lines">
     <div class="reflect-product">
@@ -625,23 +274,7 @@
     </div>
   </section>
 
-  <style>
-    .reflect-product {
-      display: grid;
-      grid-column: 1 / -1;
-      grid-template-columns: subgrid;
-      & > figure {
-        grid-column: 1 / span 2;
-        align-self: center;
-        padding-right: 3rem;
-      }
-      & > div {
-        grid-column: 3 / -2;
-      }
-    }
-  </style>
-
-  <hr class="grid-span-6 my-5" />
+  <hr class="col-span-6 my-5" />
 
   <!-- Section 5: Kinds of Design -->
   <section class="grid-container grid-lines">
@@ -694,58 +327,6 @@
         </p>
       </div>
     </div>
-
-    <style>
-      .kinds-design {
-        display: grid;
-        grid-column: 1 / -1;
-        grid-row: auto;
-        grid-template-columns: subgrid;
-        & > h1 {
-          grid-column: 1 / -1;
-        }
-        & > figure {
-          grid-column: 1 / span 2;
-          grid-row: 3 / span 4;
-        }
-
-        & > .graphic-design {
-          display: grid;
-          grid-column: 3 / span 3;
-          grid-row: 2 / span 2;
-          grid-template-columns: subgrid;
-          grid-template-rows: subgrid;
-
-          & > h2 {
-            grid-column: 1 / -1;
-          }
-          & > p {
-            grid-column: 1 / -1;
-          }
-        }
-
-        & > hr {
-          grid-column: 4 / span 1;
-          grid-row: 4 / span 1;
-          margin-block: calc(var(--spacing) * 12);
-        }
-
-        & > .print-design {
-          display: grid;
-          grid-column: 4 / span 2;
-          grid-row: 5 / span 4;
-          grid-template-columns: subgrid;
-          grid-template-rows: subgrid;
-
-          & > h2 {
-            grid-column: 1 / -1;
-          }
-          & > p {
-            grid-column: 1 / -1;
-          }
-        }
-      }
-    </style>
 
     <!-- Interaction Design -->
     <div class="interaction-design">
@@ -824,25 +405,6 @@
       </figure>
     </div>
 
-    <style>
-      .interaction-design {
-        display: grid;
-        grid-column: 2 / -1;
-        grid-template-columns: subgrid;
-
-        & > * {
-          grid-column: 1 / span 3;
-        }
-        & > h2 {
-          grid-row: 1 / span 1;
-        }
-        & > figure {
-          grid-column: 4 / span 2;
-          grid-row: 2 / span 3;
-        }
-      }
-    </style>
-
     <hr />
 
     <!-- UI/UX Subsections -->
@@ -899,39 +461,6 @@
         </p>
       </div>
     </div>
-    <style>
-      .UIUX {
-        display: grid;
-        grid-column: 1 / -1;
-        grid-template-columns: subgrid;
-        grid-template-rows: auto auto auto;
-        margin-block: calc(var(--spacing) * 12);
-
-        & > figure {
-          grid-column: 1 / span 2;
-          grid-row: 2 / span 3;
-          padding-right: 3rem;
-
-          figurecap {
-            text-align: right;
-          }
-        }
-        & > .the-UI {
-          grid-column: 3 / span 2;
-          display: grid;
-          grid-row: 1/ -1;
-          grid-auto-flow: row;
-          grid-template-rows: subgrid;
-        }
-        & > .the-UX {
-          grid-column: 5 / span 2;
-          display: grid;
-          grid-row: 1/ -1;
-          grid-auto-flow: row;
-          grid-template-rows: subgrid;
-        }
-      }
-    </style>
 
     <!-- Industrial Design -->
     <div class="industrial-design">
@@ -962,179 +491,1319 @@
       </blockquote>
     </div>
   </section>
-  <style>
-    .industrial-design {
+
+  <hr class="col-span-6" />
+
+  <!-- Section 6: Data -->
+  <section class="the-data grid-container grid-lines">
+    <h1 class="text-8xl mb-16">Data: what does the industry think?</h1>
+
+    <div class="the-quality">
+      <h2 class="heading-with-number text-4xl mb-6" data-number="3.1">
+        What qualities of design do startups consider most important?
+      </h2>
+      <p>
+        I asked 78 CEOs, marketers, engineers, and designers about their
+        opinions and definitions of design. Before I could come up with anything
+        for this project, I had to check my assumptions at the door and get some
+        legit data. <strong class="font-semibold"
+          >It seems that entrepreneurs / engineers and designers are thinking
+          about the same things.</strong
+        >
+      </p>
+    </div>
+
+    <div class="the-data-pies">
+      <div class="pie pie1">
+        <h4 class="font-semibold mb-4 text-center">
+          Business, Marketers, and Engineers
+        </h4>
+        <!-- Placeholder Pie Chart -->
+        <div
+          class="w-40 h-40 md:w-56 md:h-56 bg-teal-100 border-4 border-teal-300 rounded-full mx-auto flex items-center justify-center text-teal-700"
+        >
+          Pie Chart 1
+        </div>
+      </div>
+      <div class="pie pie2">
+        <h4 class="font-semibold mb-4 text-center">
+          Designers and Creative Directors
+        </h4>
+        <!-- Placeholder Pie Chart -->
+        <div
+          class="w-40 h-40 md:w-56 md:h-56 bg-teal-100 border-4 border-teal-300 rounded-full mx-auto flex items-center justify-center text-teal-700"
+        >
+          Pie Chart 2
+        </div>
+      </div>
+      <div class="pie pie3">
+        <h4 class="font-semibold mb-4 text-center">Dieter Rams' Principles</h4>
+        <!-- Placeholder Pie Chart -->
+        <div
+          class="w-40 h-40 md:w-56 md:h-56 bg-teal-100 border-4 border-teal-300 rounded-full mx-auto flex items-center justify-center text-teal-700"
+        >
+          Pie Chart 3
+        </div>
+      </div>
+      <!-- Placeholder Legend -->
+      <div
+        class="pie pielegend mt-8 text-xs text-center border border-gray-200 p-2 max-w-xs mx-auto"
+      >
+        Legend Placeholder
+      </div>
+    </div>
+
+    <div class="product-design">
+      <h2 class="heading-with-number text-4xl mb-6" data-number="3.2">
+        How important is product design?
+      </h2>
+      <p>
+        Product design includes both digital and physical products. It
+        represents not only the aesthetic qualities, but <strong
+          class="font-semibold"
+          >what it does, how well a user thinks it's going to do it, and how
+          easily & quickly they can complete a task.</strong
+        >
+      </p>
+      <p>
+        Think for a moment. How important is product design to <strong
+          class="font-semibold">you</strong
+        >? How important do you think aesthetics and ease-of-use are to <strong
+          class="font-semibold">your</strong
+        > customers?
+      </p>
+    </div>
+
+    <div class="barchart">
+      <h4 class="font-semibold mb-4 text-center text-red-600">
+        How important is product design to you?
+      </h4>
+      <!-- Placeholder Bar Chart -->
+      <div
+        class="aspect-square w-full bg-gray-100 border border-gray-300 flex items-center justify-center text-gray-500"
+      >
+        Bar Chart (You)
+      </div>
+    </div>
+    <div class="barchart">
+      <h4 class="font-semibold mb-4 text-center text-red-600">
+        How important is product design to your users?
+      </h4>
+      <!-- Placeholder Bar Chart -->
+      <div
+        class="aspect-square w-full bg-gray-100 border border-gray-300 flex items-center justify-center text-gray-500"
+      >
+        Bar Chart (Users)
+      </div>
+    </div>
+
+    <header class="header--center">
+      <h2 class="heading-with-number text-4xl mb-6" data-number="3.3">
+        How deep does design go?
+      </h2>
+      <p>
+        Now we're getting somewhere. Great design is taking root in startup
+        culture, and it seems like many people are open to change. Not only do
+        many entrepreneurs, devs, and engineers see substantial room to improve
+        their own products, <strong class="font-semibold"
+          >they overwhelmingly believe that designers belong on a founding team.</strong
+        >
+      </p>
+    </header>
+
+    <div class="barchart">
+      <h4 class="font-semibold mb-4 text-center text-red-600">
+        Is your product well designed?
+      </h4>
+      <!-- Placeholder Bar Chart -->
+      <div
+        class="aspect-square w-full bg-gray-100 border border-gray-300 flex items-center justify-center text-gray-500"
+      >
+        Bar Chart (You)
+      </div>
+    </div>
+    <div class="barchart">
+      <h4 class="font-semibold mb-4 text-center text-red-600">
+        Do designers belong on the founding teams?
+      </h4>
+      <!-- Placeholder Bar Chart -->
+      <div
+        class="aspect-square w-full bg-gray-100 border border-gray-300 flex items-center justify-center text-gray-500"
+      >
+        Bar Chart (Users)
+      </div>
+    </div>
+
+    <hr class="col-span-6 my-12" />
+
+    <!-- Section 7: Designer + Founders -->
+    <h1 class="text-8xl mb-16 text-balance">
+      Designer + Founders: the missing link
+    </h1>
+
+    <div class="founder-intro header--center">
+      <h2 class="heading-with-number text-4xl mb-6" data-number="4.1">
+        Startups + designers = ?
+      </h2>
+      <p>
+        For a long time, a pair of co-founders consisted of an executive and an
+        engineer. It worked for Facebook, Microsoft, and Apple, just to name a
+        few. These companies have excellent designers today, because it's a
+        necessity they can't afford to ignore. It seems like design is becoming
+        more and more prevalent in new startups as well – Square, Fitbit,
+        Tapbots, and more are pushing the envelope.
+      </p>
+      <p>
+        Design is becoming a key differentiator for companies to acquire
+        funding, press coverage, and loyal users.
+      </p>
+      <p class="text-4xl my-6 leading-12">
+        I think it's time to shake things up a bit.
+        <br />Let's add designers into the mix.
+      </p>
+    </div>
+
+    <div class="designer-icons">
+      <figure>
+        <div class="grid grid-cols-2 gap-6">
+          <div
+            class="aspect-square bg-blue-300 rounded-xl grid place-items-center"
+          >
+            <span class="text-6xl">👨‍💻</span>
+          </div>
+          <div
+            class="aspect-square bg-amber-300 rounded-xl grid place-items-center"
+          >
+            <span class="text-6xl">👩‍🎨</span>
+          </div>
+        </div>
+        <figurecap class="text-xs text-gray-500 text-center">
+          <p class="my-4">
+            Successful startups bridge the gap between technical and design
+            expertise
+          </p>
+        </figurecap>
+      </figure>
+    </div>
+
+    <hr class="col-span-6 my-12" />
+
+    <div class="founder-team header--center">
+      <h2 class="heading-with-number text-4xl my-6" data-number="4.2">
+        The Dream Team
+      </h2>
+      <p>
+        The most successful startups have strong collaboration between technical
+        founders and designers from the beginning. When design is treated as a
+        core competency rather than just a visual polish, products tend to
+        <span class="highlight">resonate more deeply with users</span>.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-gray-100">
+    <div class="grid-container grid-lines">
+      <div class="the-team">
+        <div class="team-photos">
+          <figure>
+            <img
+              src="/img/placeholder.png"
+              alt="Team photo"
+              class="w-full rounded border border-gray-200"
+            />
+          </figure>
+          <figure>
+            <img
+              src="/img/placeholder.png"
+              alt="Team photo"
+              class="w-full rounded border border-gray-200"
+            />
+          </figure>
+          <figure>
+            <img
+              src="/img/placeholder.png"
+              alt="Team photo"
+              class="w-full rounded border border-gray-200"
+            />
+          </figure>
+          <figure>
+            <img
+              src="/img/placeholder.png"
+              alt="Team photo"
+              class="w-full rounded border border-gray-200"
+            />
+          </figure>
+          <figure>
+            <img
+              src="/img/placeholder.png"
+              alt="Team photo"
+              class="w-full rounded border border-gray-200"
+            />
+          </figure>
+        </div>
+        <div class="collaboration my-12 col-span-2">
+          <h4 class="text-red-600 font-semibold mb-2 text-3xl">
+            Communication is Key
+          </h4>
+          <p>
+            The best designer-founder relationships are built on clear
+            communication, mutual respect, and shared understanding of business
+            goals. <span class="highlight">Regular feedback sessions</span> and involvement
+            of designers in strategic decisions leads to better outcomes.
+          </p>
+          <div class="flex space-x-2 mt-4">
+            <span class="px-2 py-1 bg-gray-100 rounded-full text-xl">Trust</span
+            >
+            <span class="px-2 py-1 bg-gray-100 rounded-full text-xl"
+              >Transparency</span
+            >
+            <span class="px-2 py-1 bg-gray-100 rounded-full text-xl"
+              >Teamwork</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<hr class="col-span-6 my-5" />
+
+<!-- Section 8: Missing Link -->
+<section class="grid-container grid-lines missing-link-section">
+  <div class="missing-link">
+    <div class="sword-icon">
+      <img src="/img/placeholder.png" alt="Sword icon" class="w-full" />
+    </div>
+
+    <div class="missing-link-content">
+      <p class="text-xl md:text-2xl">
+        It's getting harder and harder to differentiate based on tech talent
+        alone. Designers like Jonathan Ive at Apple, Joe Gebbia at Airbnb, and
+        the rockstar design team at Dropbox (just to name a few) are changing
+        the world today – not entirely because Apple, Airbnb, or Dropbox have
+        better tech, but because they make their products more usable,
+        aesthetic, and <em>human</em>.
+      </p>
+    </div>
+  </div>
+
+  <div class="design-importance">
+    <p class="text-red-600 text-2xl md:text-3xl font-semibold">
+      Design is the link missing from your founding team. The perfect balance of
+      business, tech, and design is an incredibly powerful tool...
+    </p>
+
+    <p class="text-red-600 text-2xl md:text-3xl font-semibold mt-16 text-end">
+      ... and an even more powerful business model.
+    </p>
+  </div>
+</section>
+
+<hr class="col-span-6 my-12" />
+
+<!-- Section 9: Finding Great Talent -->
+<section class="grid-container grid-lines talent-section">
+  <div class="great-talent">
+    <div class="job-listings">
+      <h2 class="heading-with-number text-2xl" data-number="8.1">
+        Job Listings
+      </h2>
+      <p class="text-2xl mb-6 italic text-gray-500">Who do I look for?</p>
+      <p>
+        Finding the right design talent requires looking in the right places.
+        While general job boards can work, specialized platforms that cater to
+        designers will yield better results. <span class="highlight"
+          >Be specific about what you're looking for</span
+        > in your job descriptions.
+      </p>
+      <div class="flex flex-col space-y-4 mt-6">
+        <div class="font-semibold">What to include:</div>
+        <ul class="text-sm space-y-2">
+          <li>
+            <span class="text-yellow-500">✓</span> Clear description of projects
+            they'll work on
+          </li>
+          <li>
+            <span class="text-yellow-500">✓</span> Specific skills required (UI,
+            UX, visual design, etc.)
+          </li>
+          <li>
+            <span class="text-yellow-500">✓</span> Company values and design philosophy
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="portfolio-sites">
+      <h2 class="heading-with-number text-2xl" data-number="5.2">
+        Where to Find Designers
+      </h2>
+      <hr class="col-span-2 border-0" />
+      <p class="col-span-2">
+        Great designers showcase their work on portfolio platforms. These sites
+        not only let you see a designer's work but also their process and how
+        they think about problem-solving.
+      </p>
+
+      <div class="mt-8 p-4 bg-gray-50 rounded border border-gray-200">
+        <h4 class="font-semibold mb-2">Pro Tip</h4>
+        <p class="text-sm">
+          When evaluating portfolios, don't just look at final designs. Pay
+          attention to <span class="highlight"
+            >their process, problem-solving approach</span
+          >, and how they measure success. Great designers show their thinking,
+          not just their visual skills.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="hiring-advice col-start-2 col-span-3">
+    <div class="bg-black text-white p-6 rounded">
+      <h3 class="text-xl font-semibold mb-4">Advice</h3>
+      <p class="text-sm">
+        The best designers for startups aren't necessarily from big tech
+        companies. Look for designers who have worked in resource-constrained
+        environments and shown adaptability. <span
+          class="bg-white text-black px-1"
+          >Hire for potential and cultural fit</span
+        >, not just past experience.
+      </p>
+    </div>
+
+    <figure class="mt-6">
+      <img src="/img/placeholder.png" alt="Design tools" class="rounded" />
+      <figurecap class="text-xs text-gray-500 mt-2">
+        <p>Modern design stack: Figma, Sketch, and collaborative tools</p>
+      </figurecap>
+    </figure>
+  </div>
+</section>
+
+<hr class="col-span-6 my-12" />
+
+<!-- Section 9: Resources -->
+<section class="grid-container grid-lines resources-section">
+  <h1 class="text-8xl mb-16">Resources!</h1>
+
+  <div class="learning-resources col-span-2">
+    <h2 class="heading-with-number" data-number="9.1">Books & Articles</h2>
+    <p>
+      There are countless resources to help you understand design better. Here
+      are some curated recommendations to get you started on your design
+      journey.
+    </p>
+
+    <div class="resource-list mt-6">
+      <div class="resource">
+        <img
+          src="/img/placeholder.png"
+          alt="Book cover"
+          class="w-20 h-24 object-cover float-left mr-4 rounded shadow-sm"
+        />
+        <h4 class="font-semibold">Don't Make Me Think</h4>
+        <p class="text-sm text-gray-600">by Steve Krug</p>
+        <p class="text-sm mt-1">
+          A classic introduction to web usability that remains relevant today.
+          <a href="#" class="text-red-600">Read more →</a>
+        </p>
+      </div>
+
+      <hr class="my-4" />
+
+      <div class="resource">
+        <h4 class="font-semibold">Design Resources Online</h4>
+        <ul class="text-sm mt-2 space-y-1">
+          <li>
+            <a href="#" class="text-red-600">Nielsen Norman Group</a> - Research-based
+            UX guidance
+          </li>
+          <li>
+            <a href="#" class="text-red-600">A List Apart</a> - Web design best practices
+          </li>
+          <li>
+            <a href="#" class="text-red-600">Design Better</a> - InVision's design
+            education platform
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="design-tools">
+    <h2 class="heading-with-number" data-number="9.2">Tools & Software</h2>
+    <p>
+      Modern design tools have made it easier than ever to create professional
+      designs. Even if you're not a designer yourself, understanding these tools
+      can help you communicate better with your design team.
+    </p>
+
+    <div class="tools-grid mt-6 grid grid-cols-2 gap-4">
+      <div class="tool p-3 border border-gray-200 rounded">
+        <h4 class="font-semibold">Figma</h4>
+        <p class="text-sm mt-1">
+          Collaborative interface design tool. Great for teams.
+        </p>
+      </div>
+      <div class="tool p-3 border border-gray-200 rounded">
+        <h4 class="font-semibold">Sketch</h4>
+        <p class="text-sm mt-1">Professional digital design for Mac.</p>
+      </div>
+      <div class="tool p-3 border border-gray-200 rounded">
+        <h4 class="font-semibold">Adobe Creative Cloud</h4>
+        <p class="text-sm mt-1">
+          Suite including Photoshop, Illustrator, XD and more.
+        </p>
+      </div>
+      <div class="tool p-3 border border-gray-200 rounded">
+        <h4 class="font-semibold">Webflow</h4>
+        <p class="text-sm mt-1">Visual web development platform.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="design-guides">
+    <div class="bg-red-50 border border-red-200 p-4 rounded">
+      <h3 class="font-semibold text-red-600 mb-2">Ready to Get Started?</h3>
+      <p class="text-sm">
+        If you're serious about incorporating design into your startup, begin by
+        assessing your current product experience. <span class="highlight"
+          >Identify pain points</span
+        >
+        and areas where better design could improve user satisfaction and retention.
+      </p>
+      <a
+        href="#"
+        class="inline-block mt-4 px-4 py-2 bg-red-600 text-white text-sm font-semibold rounded"
+      >
+        Download Design Checklist →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Section 10: Share & About Author -->
+<section class="grid-container grid-lines share-section shadow-lg">
+  <div class="share-wrapper">
+    <h2 class="text-4xl font-thin text-gray-500 mb-6">Helpful? Share it!</h2>
+
+    <div class="social-buttons">
+      <button
+        class="bg-blue-600 text-white px-4 py-2 rounded flex items-center"
+      >
+        <span class="mr-2">Share</span>
+      </button>
+      <button
+        class="bg-blue-400 text-white px-4 py-2 rounded flex items-center"
+      >
+        <span class="mr-2">Tweet</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="author-content">
+    <p class="mb-4">
+      I love startups and design, and I want them to be best friends forever.
+      I'm Wells Riley, and I'm the founding designer at <a
+        href="#"
+        class="text-red-600">Runway</a
+      >, formerly Head of Design at <a href="#" class="text-red-600">Envoy</a>,
+      and the co-founder of
+      <a href="#" class="text-red-600">Hack Design</a> – an easy to follow design
+      course for people who do amazing things.
+    </p>
+
+    <p class="mb-4">
+      It's so exciting to see design taking a stronger role in new companies. I
+      hope this will be a valuable resource to help designers and entrepreneurs
+      speak the same language.
+    </p>
+
+    <p>
+      If you have any feedback, please feel free to tweet me <a
+        href="#"
+        class="text-red-600">@wr</a
+      >.
+    </p>
+  </div>
+
+  <div class="author-avatar">
+    <img
+      src="/img/placeholder.png"
+      alt="Author avatar"
+      class="rounded-full w-24 h-24 md:w-32 md:h-32"
+    />
+  </div>
+</section>
+
+<hr class="col-span-6 my-12" />
+
+<!-- Section 11: Acknowledgments -->
+<section class="grid-container grid-lines acknowledgments-section">
+  <h1 class="text-4xl md:text-6xl mb-8 md:mb-16 text-gray-600 font-thin col-span-6 text-center md:text-left">Thank you so much</h1>
+
+  <div class="grid grid-cols-1 md:grid-cols-6 col-span-6 gap-8">
+    <div class="md:col-span-3 md:col-start-1">
+      <h3 class="font-semibold mb-4 text-center md:text-left">Special thanks:</h3>
+      <ul class="space-y-2 mx-auto md:mx-0 max-w-xs md:max-w-none">
+        <li>Cameron Koczon</li>
+        <li>The Designer Fund</li>
+        <li>Dieter Rams</li>
+        <li>Enrique Allen</li>
+        <li>Gary Hustwit</li>
+        <li>Ian Hirschfeld</li>
+        <li>Jessica Hische</li>
+        <li>John Kane</li>
+        <li>Lost Type Co-op</li>
+        <li>Louie Mantia</li>
+        <li>Matthew Smith</li>
+        <li>Rogie King & Fine Goods</li>
+        <li>Seth Nickerson</li>
+        <li>□ Steve Jobs</li>
+      </ul>
+
+      <p class="text-sm mt-6 text-gray-500 text-center md:text-left">
+        And everyone else who helped me in some way. There are lots of you.
+      </p>
+    </div>
+
+    <div class="md:col-span-3 md:col-start-4 mt-8 md:mt-0">
+      <h3 class="font-semibold mb-4 text-center md:text-left">Sources:</h3>
+      <ol class="space-y-2 list-decimal pl-5 mx-auto md:mx-0 max-w-xs md:max-w-none">
+        <li>A Type Primer (pp. vii) : John Kane</li>
+        <li>Apple has achieved something I never did : The Telegraph</li>
+        <li>Dieter Rams - ten principles for good design : Vitsoe</li>
+        <li>
+          1960s Braun Products Hold the Secrets to Apple's Future : Gizmodo
+        </li>
+        <li>Interaction Design : Wikipedia</li>
+        <li>This isn't a source don't click here.</li>
+        <li>User Interface Design : Wikipedia</li>
+        <li>User Experience Design : Wikipedia</li>
+        <li>Industrial Design : Wikipedia</li>
+        <li>Alexa Andrzejewski</li>
+        <li>Founding Team - Joe Gebbia : Airbnb</li>
+        <li>Jessica Hische : Awesome</li>
+        <li>About : Mike Matas</li>
+        <li>Jeffrey Veen : An Event Apart</li>
+        <li>About the Film : Objectified</li>
+        <li>Infographic : The Designer Fund</li>
+        <li>Why Can't Startups Find Designers? : TNW</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="grid-container py-8 border-t border-gray-100 mt-16">
+  <div class="col-span-6 text-center text-xs text-gray-400">
+    © 2024 Design for Startups | Originally inspired by "Startups, this is how
+    design works"
+  </div>
+</footer>
+
+<!-- Simple Script to add numbers (fixed TypeScript issue) -->
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Add number circles to heading elements
+    const headings = document.querySelectorAll(".heading-with-number");
+    headings.forEach((h2) => {
+      const number = h2.getAttribute("data-number"); // Use getAttribute instead of dataset
+      if (number) {
+        const numberSpan = document.createElement("span");
+        numberSpan.classList.add(
+          "bg-red-500",
+          "text-white",
+          "rounded-full",
+          "w-6",
+          "h-6",
+          "md:w-7",
+          "md:h-7", // Slightly larger on medium screens
+          "flex",
+          "items-center",
+          "justify-center",
+          "text-xs",
+          "font-bold",
+          "mr-3",
+          "flex-shrink-0" // Prevent shrinking
+        );
+        numberSpan.textContent = number;
+        h2.insertBefore(numberSpan, h2.firstChild);
+      }
+    });
+  });
+</script>
+
+<style is:inline>
+  @layer base {
+    /* Define base font families */
+    html {
+      font-family: "Lora", serif; /* Default body font */
+      color: theme("colors.gray.800");
+      @apply leading-relaxed; /* Default line height */
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: "Inter", sans-serif; /* Default heading font */
+      color: theme("colors.gray.900");
+      font-weight: 600; /* Default semi-bold for headings */
+    }
+
+    /* Specific Heading Styles */
+    h1 {
+      @apply text-5xl md:text-7xl font-thin tracking-wider leading-tight mt-8 mb-12;
+      /* 'font-thin' approximates the light weight */
+      /* 'tracking-wider' approximates the letter spacing */
+    }
+
+    h2 {
+      /* Style applied via wrapper div typically for number */
+      @apply text-3xl md:text-4xl font-semibold mb-6 mt-16 flex items-center;
+    }
+
+    h3 {
+      @apply text-xl md:text-2xl font-semibold mb-4 mt-8;
+    }
+
+    p {
+      @apply mb-4 max-w-prose; /* Limit paragraph width for readability */
+    }
+
+    a {
+      /* Basic link styling - customize as needed */
+      @apply text-red-600; /* Example link color */
+      /* Add underline on hover if desired: hover:underline */
+    }
+
+    /* Highlight span style */
+    .highlight {
+      @apply bg-yellow-200 px-1 py-0.5 rounded-sm;
+    }
+
+    blockquote {
+      @apply italic border-l-4 border-gray-300 pl-4 my-6 text-gray-700;
+      /* Example blockquote style */
+    }
+
+    /* Other base styles */
+    hr {
+      @apply border-t border-gray-200 my-12;
+    }
+    img {
+      @apply max-w-full h-auto; /* Basic responsive images */
+    }
+  }
+
+  /* 6-column grid layout */
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    /* Alternative fixed-width approach: */
+    /* grid-template-columns: repeat(6, 200px);  */
+    column-gap: 1rem;
+    width: 100%;
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  /* Vertical grid lines for development */
+  /* .grid-lines {
+    position: relative;
+  }
+
+  .grid-lines::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      to right,
+      rgba(0, 255, 0, 0.6),
+      rgba(0, 255, 0, 0.6) 1px,
+      transparent 1px,
+      transparent calc(100% / 6)
+    );
+    pointer-events: none;
+    z-index: 1000;
+  } */
+
+  main > section {
+    margin-block: calc(var(--spacing) * 12);
+  }
+  .intro {
+    h1 {
+      grid-column: 1 / -1;
+    }
+    p.author {
+      grid-column: -1 / -3;
+      margin-top: -3rem;
+      padding-inline: 1rem;
+    }
+    p {
+      grid-column: span 4;
+      margin-bottom: calc(var(--spacing) * 6);
+    }
+  }
+  .what-design {
+    .def__1 {
+      grid-column: 2 / span 2;
+    }
+    .def__2 {
+      grid-column: 5 / span 2;
+    }
+    h2 {
+      /* text-4xl */
+      font-size: var(--text-4xl);
+      line-height: var(--tw-leading, var(--text-4xl--line-height));
+      /* mb-4? */
+      margin-bottom: calc(var(--spacing) * 4);
+    }
+  }
+
+  .the-designer {
+    figure {
+      grid-column: 1 / span 2;
+      grid-row: 1 / span 2;
+    }
+    header {
+      grid-column: 3 / span 4;
+      grid-row: 1;
+    }
+
+    h2 {
+      /* text-4xl */
+      font-size: var(--text-3xl);
+      line-height: var(--tw-leading, var(--text-4xl--line-height));
+      /* mb-4? */
+      margin-bottom: calc(var(--spacing) * 4);
+    }
+    .the-designer__intro {
+      grid-column: 3 / span 3;
+
+      p {
+        grid-column: 1 / span 3;
+      }
+    }
+  }
+
+  h3 {
+    grid-column: 3 / -1;
+  }
+
+  /* Create a grid layout for principles */
+  .principles-container {
+    /* display: grid;
+        grid-template-columns: subgrid;
+        grid-column: 2 / -1;
+        gap: 1rem;
+        text-align: center; */
+    display: grid;
+    grid-column: 2 / -1;
+    grid-template-columns: subgrid;
+    gap: 0.5rem;
+    /* grid-template-rows: repeat(3, 80px); */
+  }
+
+  .principle {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    justify-items: center;
+    align-items: center;
+    padding: 1rem;
+    /* margin-right: .5rem; */
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    aspect-ratio: 1;
+  }
+
+  .principle-icon {
+    width: 2rem;
+    height: 2rem;
+    background-color: #fee2e2;
+    color: #dc2626;
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+    display: grid;
+    place-items: center;
+  }
+
+  .the-designer-quote {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    /* grid-column: 1 / -1; */
+
+    figure {
+      grid-column: 1 / span 3;
+    }
+    blockquote {
+      grid-column: 4 / -1;
+      grid-row: 1 / span 2;
+      align-self: center;
+    }
+  }
+</style>
+
+<style is:global>
+  /* heading-with-number */
+  h2.heading-with-number {
+    position: relative;
+  }
+  h2.heading-with-number > span {
+    position: absolute;
+    left: -3rem;
+    top: 0.5rem;
+  }
+
+  .good-design {
+    & > div {
+      grid-column: 1 / -3;
+      align-self: center;
+      padding: 1rem;
+      display: grid;
+      grid-template-columns: subgrid;
+
+      & > * {
+        grid-column: 2 / span 3;
+      }
+    }
+    & > figure {
+      grid-column: -1 / -3;
+    }
+  }
+
+  .the-objectified {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    & > div {
+      grid-column: 1 / span 1;
+    }
+
+    & > figure {
+      grid-column: 2 / -1;
+
+      iframe {
+        width: 100%;
+      }
+    }
+  }
+
+  .reflect-product {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    & > figure {
+      grid-column: 1 / span 2;
+      align-self: center;
+      padding-right: 3rem;
+    }
+    & > div {
+      grid-column: 3 / -2;
+    }
+  }
+
+  .kinds-design {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-row: auto;
+    grid-template-columns: subgrid;
+    & > h1 {
+      grid-column: 1 / -1;
+    }
+    & > figure {
+      grid-column: 1 / span 2;
+      grid-row: 3 / span 4;
+    }
+
+    & > .graphic-design {
+      display: grid;
+      grid-column: 3 / span 3;
+      grid-row: 2 / span 2;
+      grid-template-columns: subgrid;
+      grid-template-rows: subgrid;
+
+      & > h2 {
+        grid-column: 1 / -1;
+      }
+      & > p {
+        grid-column: 1 / -1;
+      }
+    }
+
+    & > hr {
+      grid-column: 4 / span 1;
+      grid-row: 4 / span 1;
+      margin-block: calc(var(--spacing) * 12);
+    }
+
+    & > .print-design {
+      display: grid;
+      grid-column: 4 / span 2;
+      grid-row: 5 / span 4;
+      grid-template-columns: subgrid;
+      grid-template-rows: subgrid;
+
+      & > h2 {
+        grid-column: 1 / -1;
+      }
+      & > p {
+        grid-column: 1 / -1;
+      }
+    }
+  }
+  .interaction-design {
+    display: grid;
+    grid-column: 2 / -1;
+    grid-template-columns: subgrid;
+
+    & > * {
+      grid-column: 1 / span 3;
+    }
+    & > h2 {
+      grid-row: 1 / span 1;
+    }
+    & > figure {
+      grid-column: 4 / span 2;
+      grid-row: 2 / span 3;
+    }
+  }
+
+  .UIUX {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    grid-template-rows: auto auto auto;
+    margin-block: calc(var(--spacing) * 12);
+
+    & > figure {
+      grid-column: 1 / span 2;
+      grid-row: 2 / span 3;
+      padding-right: 3rem;
+
+      figurecap {
+        text-align: right;
+      }
+    }
+    & > .the-UI {
+      grid-column: 3 / span 2;
+      display: grid;
+      grid-row: 1/ -1;
+      grid-auto-flow: row;
+      grid-template-rows: subgrid;
+    }
+    & > .the-UX {
+      grid-column: 5 / span 2;
+      display: grid;
+      grid-row: 1/ -1;
+      grid-auto-flow: row;
+      grid-template-rows: subgrid;
+    }
+  }
+  .industrial-design {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    margin-block: calc(var(--spacing) * 12);
+
+    & > * {
+      grid-column: 3 / span 2;
+    }
+    & > figure {
+      grid-column: 1 / span 2;
+      grid-row: 2 / span 6;
+      padding-right: 3rem;
+    }
+  }
+  .the-data {
+    & > h1 {
+      grid-column: 1 / -1;
+    }
+
+    .the-quality {
+      grid-column: 2 / -1;
+
+      display: grid;
+      grid-template-columns: subgrid;
+      margin-bottom: 3rem;
+      /* grid-auto-flow: row; */
+
+      h2 {
+        grid-column: 1 / -1;
+      }
+      p {
+        grid-column: 1 / span 4;
+      }
+    }
+    .the-data-pies {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-template-rows: auto auto auto;
+
+      .pie {
+        border: 1px solid #aaa;
+        padding: 3rem 1rem;
+        h4 {
+          margin-bottom: 3rem;
+        }
+      }
+
+      .pie1 {
+        grid-column: 1 / span 2;
+        grid-row: 1 / -1;
+
+        display: grid;
+        grid-template-rows: subgrid;
+        grid-rows: 1/ 3;
+      }
+      .pie2 {
+        grid-column: 3 / span 2;
+        grid-row: 1 / -1;
+      }
+      .pie3 {
+        grid-column: 5 / span 2;
+        grid-row: 1 / -1;
+      }
+      .pielegend {
+        grid-column: 3 / span 2;
+        grid-row: 3 / span 1;
+      }
+    }
+  }
+  .product-design {
+    grid-column: 2 / -1;
+
+    display: grid;
+    grid-template-columns: subgrid;
+    margin: 3rem auto;
+    /* grid-auto-flow: row; */
+
+    h2 {
+      grid-column: 1 / -1;
+    }
+    p {
+      grid-column: 1 / span 4;
+    }
+  }
+  .barchart {
+    grid-column: auto / span 3;
+  }
+
+  .header--center {
+    grid-column: 2 / -1;
+
+    display: grid;
+    grid-template-columns: subgrid;
+    margin: 3rem auto;
+    /* grid-auto-flow: row; */
+
+    h2 {
+      grid-column: 1 / -1;
+    }
+    p {
+      grid-column: 1 / span 4;
+    }
+  }
+
+  .designer-icons {
+    grid-column: 2 / span 4;
+  }
+
+  .the-team {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    /* grid-auto-flow: row; */
+
+    .team-photos {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(200px, 1fr));
+      gap: 0;
+
+      img {
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+      }
+    }
+  }
+
+  .designer-founders {
+    & > h1 {
+      grid-column: 1 / -1;
+    }
+
+    .founder-intro {
+      grid-column: 1 / span 4;
+    }
+
+    .designer-icons {
+      grid-column: 5 / span 2;
+      align-self: center;
+    }
+
+    .founder-team {
       display: grid;
       grid-column: 1 / -1;
       grid-template-columns: subgrid;
-      margin-block: calc(var(--spacing) * 12);
+      margin-top: 2rem;
 
-      & > * {
-        grid-column: 3 / span 2;
+      & > h2 {
+        grid-column: 1 / span 3;
       }
-      & > figure {
-        grid-column: 1 / span 2;
-        grid-row: 2 / span 6;
-        padding-right: 3rem;
+
+      & > p {
+        grid-column: 1 / span 3;
+      }
+
+      .team-photo {
+        grid-column: 1 / span 4;
+        margin-top: 2rem;
+      }
+
+      .collaboration {
+        grid-column: 5 / span 2;
+        align-self: end;
       }
     }
-  </style>
-  {
-    /*
-    
-      <hr class="grid-span-6" />
-
-      <!-- Section 6: Data -->
-      <section class="grid-span-6">
-        <h1 class="text-center">Data: what does the industry think?</h1>
-
-        <div class="grid-container mt-16">
-          <div class="grid-span-6">
-            <h2 class="heading-with-number" data-number="3.1">
-              What qualities of design do startups consider most important?
-            </h2>
-            <p>
-              I asked 78 CEOs, marketers, engineers, and designers about their
-              opinions and definitions of design. Before I could come up with
-              anything for this project, I had to check my assumptions at the
-              door and get some legit data. <strong class="font-semibold"
-                >It seems that entrepreneurs / engineers and designers are
-                thinking about the same things.</strong
-              >
-            </p>
-
-            <div class="grid-container mt-8">
-              <div class="grid-span-2 grid-start-1">
-                <h4 class="font-semibold mb-4 text-center">
-                  Business, Marketers, and Engineers
-                </h4>
-                <!-- Placeholder Pie Chart -->
-                <div
-                  class="w-40 h-40 md:w-56 md:h-56 bg-teal-100 border-4 border-teal-300 rounded-full mx-auto flex items-center justify-center text-teal-700"
-                >
-                  Pie Chart 1
-                </div>
-              </div>
-              <div class="grid-span-2 grid-start-3">
-                <h4 class="font-semibold mb-4 text-center">
-                  Designers and Creative Directors
-                </h4>
-                <!-- Placeholder Pie Chart -->
-                <div
-                  class="w-40 h-40 md:w-56 md:h-56 bg-teal-100 border-4 border-teal-300 rounded-full mx-auto flex items-center justify-center text-teal-700"
-                >
-                  Pie Chart 2
-                </div>
-              </div>
-              <div class="grid-span-2 grid-start-5">
-                <h4 class="font-semibold mb-4 text-center">
-                  Dieter Rams' Principles
-                </h4>
-                <!-- Placeholder Pie Chart -->
-                <div
-                  class="w-40 h-40 md:w-56 md:h-56 bg-teal-100 border-4 border-teal-300 rounded-full mx-auto flex items-center justify-center text-teal-700"
-                >
-                  Pie Chart 3
-                </div>
-              </div>
-            </div>
-            <!-- Placeholder Legend -->
-            <div
-              class="mt-8 text-xs text-center border border-gray-200 p-2 max-w-xs mx-auto"
-            >
-              Legend Placeholder
-            </div>
-          </div>
-        </div>
-
-        <div class="grid-container mt-16">
-          <div class="grid-span-6">
-            <h2 class="heading-with-number" data-number="3.2">
-              How important is product design?
-            </h2>
-            <p>
-              Product design includes both digital and physical products. It
-              represents not only the aesthetic qualities, but <strong
-                class="font-semibold"
-                >what it does, how well a user thinks it's going to do it, and
-                how easily & quickly they can complete a task.</strong
-              >
-            </p>
-            <p>
-              Think for a moment. How important is product design to <strong
-                class="font-semibold">you</strong
-              >? How important do you think aesthetics and ease-of-use are to <strong
-                class="font-semibold">your</strong
-              > customers?
-            </p>
-
-            <div class="grid-container mt-8">
-              <div class="grid-span-3 grid-start-1">
-                <h4 class="font-semibold mb-4 text-center text-red-600">
-                  How important is product design to you?
-                </h4>
-                <!-- Placeholder Bar Chart -->
-                <div
-                  class="w-full h-48 bg-gray-100 border border-gray-300 flex items-center justify-center text-gray-500"
-                >
-                  Bar Chart (You)
-                </div>
-              </div>
-              <div class="grid-span-3 grid-start-4">
-                <h4 class="font-semibold mb-4 text-center text-red-600">
-                  How important is product design to your users?
-                </h4>
-                <!-- Placeholder Bar Chart -->
-                <div
-                  class="w-full h-48 bg-gray-100 border border-gray-300 flex items-center justify-center text-gray-500"
-                >
-                  Bar Chart (Users)
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <!-- Footer Placeholder (Optional) -->
-    <footer class="grid-container py-8">
-      <div class="grid-span-6 text-center text-xs text-gray-400">
-        © 2024 Your Website Name
-      </div>
-    </footer>
-
-    <!-- Simple Script to add numbers (fixed TypeScript issue) -->
-    
-  */
   }
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const headings = document.querySelectorAll(".heading-with-number");
-      headings.forEach((h2) => {
-        const number = h2.getAttribute("data-number"); // Use getAttribute instead of dataset
-        if (number) {
-          const numberSpan = document.createElement("span");
-          numberSpan.classList.add(
-            "bg-red-500",
-            "text-white",
-            "rounded-full",
-            "w-6",
-            "h-6",
-            "md:w-7",
-            "md:h-7", // Slightly larger on medium screens
-            "flex",
-            "items-center",
-            "justify-center",
-            "text-xs",
-            "font-bold",
-            "mr-3",
-            "flex-shrink-0" // Prevent shrinking
-          );
-          numberSpan.textContent = number;
-          h2.insertBefore(numberSpan, h2.firstChild);
+
+  .missing-link-section {
+    .missing-link {
+      display: grid;
+      grid-column: 1 / -1;
+      grid-template-columns: subgrid;
+      margin-bottom: 4rem;
+
+      .sword-icon {
+        grid-column: 1 / span 2;
+        padding-right: 2rem;
+      }
+
+      .missing-link-content {
+        grid-column: 3 / span 4;
+        align-self: center;
+
+        p {
+          line-height: 1.6;
         }
-      });
-    });
-  </script>
-</main>
+      }
+    }
+
+    .design-importance {
+      display: grid;
+      grid-column: 2 / -1;
+      grid-template-columns: subgrid;
+
+      p {
+        grid-column: 2 / span 4;
+      }
+    }
+  }
+
+  .great-talent {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-template-rows: subgrid;
+    grid-auto-flow: row;
+    grid-row: 1 / 6;
+    grid-column: 2 / -1;
+  }
+  .job-listings {
+    /* grid-column: 2 / span 2; */
+    display: grid;
+    /* grid-template-columns: subgrid; */
+    grid-template-rows: subgrid;
+    /* grid-auto-flow: row; */
+    grid-row: 1 / -1;
+    grid-column: 1 / span 2;
+  }
+  .portfolio-sites {
+    /* grid-column: 5 / span 2; */
+    display: grid;
+    /* grid-template-columns: subgrid; */
+    grid-template-rows: subgrid;
+    /* grid-auto-flow: row;  */
+    grid-column: 4 / span 2;
+    grid-row: 1 / -1;
+    /* grid-row: auto; */
+  }
+
+  .talent-section {
+    & > h1 {
+      grid-column: 1 / -1;
+    }
+
+    .designer-platforms {
+      .platform-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+      }
+    }
+  }
+
+  .resources-section {
+    & > h1 {
+      grid-column: 1 / -1;
+    }
+
+    .design-tools {
+      grid-column: 4 / span 2;
+    }
+
+    .design-guides {
+      grid-column: 2 / span 2;
+      margin-top: 3rem;
+    }
+  }
+
+  .share-section {
+    background-color: #fff;
+    border: 1px solid #eee;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    margin: 3rem auto;
+    /* box-shadow: 0 1px 3px rgba(0,0,0,0.05); */
+
+    .share-wrapper {
+      grid-column: 1 / span 6;
+      display: grid;
+      grid-template-columns: subgrid;
+    }
+
+    h2 {
+      grid-column: 1 / span 3;
+    }
+
+    .social-buttons {
+      grid-column: 1 / span 2;
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .author-content {
+      grid-column: 1 / span 4;
+    }
+
+    .author-avatar {
+      grid-column: 5 / span 2;
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+</style>

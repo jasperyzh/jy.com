@@ -1,0 +1,58 @@
+---
+import { Button } from "@/components/starwind/button";
+
+const { entry } = Astro.props;
+---
+<footer
+  class="p-6 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-700"
+>
+  <div class="flex justify-between items-center">
+    <Button variant="outline" onClick="history.back()">
+      <i class="bi bi-arrow-left mr-2"></i> Back to Blog
+    </Button>
+
+    <!-- <div class="flex gap-2">
+      <Button
+        size="sm"
+        variant="ghost"
+        aria-label="Share on Twitter"
+        onClick={`window.open('https://twitter.com/intent/tweet?url=${encodeURIComponent(Astro.url.href)}&text=${encodeURIComponent(entry.data.title)}', '_blank')`}
+      >
+        <i class="bi bi-twitter text-lg"></i>
+      </Button>
+      <Button
+        size="sm"
+        variant="ghost"
+        aria-label="Share on Facebook"
+        onClick={`window.open('https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(Astro.url.href)}', '_blank')`}
+      >
+        <i class="bi bi-facebook text-lg"></i>
+      </Button>
+      <Button
+        size="sm"
+        variant="ghost"
+        aria-label="Share on LinkedIn"
+        onClick={`window.open('https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.href)}', '_blank')`}
+      >
+        <i class="bi bi-linkedin text-lg"></i>
+      </Button>
+      <Button
+        size="sm"
+        variant="ghost"
+        aria-label="Share on WhatsApp"
+        onClick={`window.open('https://api.whatsapp.com/send?text=${encodeURIComponent(entry.data.title + " " + Astro.url.href)}', '_blank')`}
+      >
+        <i class="bi bi-whatsapp text-lg"></i>
+      </Button>
+      <Button
+        size="sm"
+        variant="ghost"
+        aria-label="More sharing options"
+        title="More sharing options"
+        onClick={`window.open('https://www.addtoany.com/share?url=${encodeURIComponent(Astro.url.href)}&title=${encodeURIComponent(entry.data.title)}', '_blank')`}
+      >
+        <i class="bi bi-share text-lg"></i>
+      </Button>
+    </div> -->
+  </div>
+</footer>

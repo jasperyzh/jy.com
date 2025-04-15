@@ -5,28 +5,17 @@ import ReturnButton from "@/components/ReturnButton.astro";
 import { formatYymmddDate } from "@/utils/formatDate";
 import { getBlogFilename } from "@/utils/blogUtils";
 
-// Import Starwind components
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/starwind/card";
-import { Button } from "@/components/starwind/button";
-import { Badge } from "@/components/starwind/badge";
-
-// import SingleSidebar from "../../components/SingleSidebar.astro";
+// Commented out until component is implemented
+// import FooterBlogShare from "@/components/FooterBlogShare.astro";
 
 // Fetch all posts and generate paths for each post
 export async function getStaticPaths() {
   const allPosts = await getCollection("ob_blog");
 
   // Log all post IDs for debugging
-  const postIds = allPosts.map(post => post.id);
-  console.log('All blog post IDs:', postIds);
-  
+  const postIds = allPosts.map((post) => post.id);
+  console.log("All blog post IDs:", postIds);
+
   // Filter out draft posts (unless in development)
   const publishedPosts = import.meta.env.DEV
     ? allPosts
@@ -36,21 +25,22 @@ export async function getStaticPaths() {
   const paths = publishedPosts.map((entry) => {
     // Use just the filename for the URL, ignoring the directory structure
     const cleanSlug = getBlogFilename(entry);
-    
+
     return {
       params: { slug: cleanSlug },
       props: { entry },
     };
   });
-  
+
   // Log generated paths for debugging
-  console.log('Generated paths:', paths.map(p => p.params.slug));
-  
+  /* console.log(
+    "Generated paths:",
+    paths.map((p) => p.params.slug)
+  ); */
   return paths;
 }
 
 const { entry } = Astro.props;
-console.log("Entry:", entry);
 
 // Add prerender directive to fix the warning
 export const prerender = true;
@@ -65,223 +55,109 @@ if (entry) {
 }
 ---
 
-<Layout title={entry?.data.title || 'Blog Post Not Found'} description={entry?.data.description || 'The requested blog post could not be found'}>
-  <main class="max-w-4xl mx-auto px-4 py-8">
-    {entry ? (
-      <article class="bg-white dark:bg-slate-800 shadow-xl rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700">
-        <header class="p-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white">
-          <!-- Back Button -->
-          <div class="mb-4">
-            <Button variant="outline" size="sm" class="bg-white/20 hover:bg-white/30 text-white" onClick="history.back()">
-              <i class="bi bi-arrow-left mr-2"></i> Back
-            </Button>
-          </div>
-
-          <h1 class="text-4xl font-extrabold mb-3 leading-tight">{entry.data.title}</h1>
-          <p class="text-xl opacity-90 mb-6 leading-relaxed">{entry.data.description}</p>
-          
-          <div class="flex items-center text-sm opacity-80">
-            <i class="bi bi-calendar-event mr-2"></i>
+<Layout
+  title={entry?.data.title || "Blog Post Not Found"}
+  description={entry?.data.description ||
+    "The requested blog post could not be found"}
+>
+  <div class="container container--grid max-w-5xl mx-auto mb-16   px-4">
+    {
+      entry ? (
+        <article>
+          <header>
             <time datetime={entry.data.pubDate.toISOString()}>
-              {formatYymmddDate(entry.data.pubDate).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })}
+              {formatYymmddDate(entry.data.pubDate).toLocaleDateString(
+                "en-US",
+                {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                }
+              )}
             </time>
-            
-            {entry.data.tags && entry.data.tags.length > 0 && (
-              <div class="ml-4 flex gap-2">
-                {entry.data.tags.map((tag: string) => (
-                  <Badge variant="secondary" class="bg-white/20 hover:bg-white/30">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-            )}
-          </div>
-        </header>
-        
-        <div class="px-8 py-10 prose prose-lg dark:prose-invert max-w-none">
-          {Content && (
-            <div class="content-wrapper">
-              <Content />
+            <h1>{entry.data.title}</h1>
+            <div class="flex items-center justify-end text-sm">
+              {entry.data.tags && entry.data.tags.length > 0 && (
+                <>
+                  {entry.data.tags.map((tag: string) => (
+                    <span class="inline-block mx-2">{tag}</span>
+                  ))}
+                </>
+              )}
             </div>
-          )}
-          {!Content && (
-            <div class="p-4 bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 text-amber-700 dark:text-amber-300 rounded-r-md">
-              <p>Content could not be loaded</p>
-            </div>
-          )}
-        </div>
-        
-        <footer class="p-6 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-700">
-          <div class="flex justify-between items-center">
-            <Button variant="outline" onClick="history.back()">
-              <i class="bi bi-arrow-left mr-2"></i> Back to Blog
-            </Button>
-            
-            <div class="flex gap-2">
-              <Button size="sm" variant="ghost" aria-label="Share on Twitter" 
-                onClick={`window.open('https://twitter.com/intent/tweet?url=${encodeURIComponent(Astro.url.href)}&text=${encodeURIComponent(entry.data.title)}', '_blank')`}>
-                <i class="bi bi-twitter text-lg"></i>
-              </Button>
-              <Button size="sm" variant="ghost" aria-label="Share on Facebook"
-                onClick={`window.open('https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(Astro.url.href)}', '_blank')`}>
-                <i class="bi bi-facebook text-lg"></i>
-              </Button>
-              <Button size="sm" variant="ghost" aria-label="Share on LinkedIn"
-                onClick={`window.open('https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.href)}', '_blank')`}>
-                <i class="bi bi-linkedin text-lg"></i>
-              </Button>
-              <Button size="sm" variant="ghost" aria-label="Share on WhatsApp"
-                onClick={`window.open('https://api.whatsapp.com/send?text=${encodeURIComponent(entry.data.title + ' ' + Astro.url.href)}', '_blank')`}>
-                <i class="bi bi-whatsapp text-lg"></i>
-              </Button>
-              <Button size="sm" variant="ghost" aria-label="More sharing options"
-                title="More sharing options"
-                onClick={`window.open('https://www.addtoany.com/share?url=${encodeURIComponent(Astro.url.href)}&title=${encodeURIComponent(entry.data.title)}', '_blank')`}>
-                <i class="bi bi-share text-lg"></i>
-              </Button>
+          </header>
+
+          <div class="content-wrapper max-w-2xl md:mx-auto">
+            <div class="prose prose-lg">
+              {Content && <Content />}
+              {!Content && <p>Content could not be loaded</p>}
             </div>
           </div>
-        </footer>
-      </article>
-    ) : (
-      <Card class="max-w-md mx-auto mt-12 text-center">
-        <CardHeader>
-          <i class="bi bi-exclamation-circle text-red-500 text-5xl mb-4"></i>
-          <CardTitle class="text-2xl">Blog Post Not Found</CardTitle>
-          <CardDescription>Sorry, the blog post you're looking for could not be found.</CardDescription>
-        </CardHeader>
-        <CardFooter class="justify-center">
-          <Button href="/blog">Back to Blog</Button>
-        </CardFooter>
-      </Card>
-    )}
-    
-  </main>
+
+          <footer>
+            <ReturnButton href="/blog" label="Back to Blog" />
+            {/* <FooterBlogShare {entry} /> */}
+          </footer>
+        </article>
+      ) : (
+        <p>Blog Post Not Found</p>
+      )
+    }
+  </div>
 </Layout>
-<!-- <script>
-  // Import Prism core and theme
-  import Prism from "prismjs";
+<style>
+  .container--grid > article {
+    /* Base mobile layout first */
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid; /* Single column on mobile */
+    position: relative;
 
-  // Import additional languages
-  import "prismjs/components/prism-javascript";
-  import "prismjs/components/prism-bash";
-  import "prismjs/components/prism-css";
-  import "prismjs/components/prism-json";
-  import "prismjs/components/prism-typescript";
-  import "prismjs/components/prism-markdown";
-  
-  // Import Bootstrap icons if not already loaded
-  if (!document.querySelector('link[href*="bootstrap-icons"]')) {
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css";
-    document.head.appendChild(link);
-  }
-  import "prismjs/components/prism-typescript";
-  import "prismjs/components/prism-css";
-  import "prismjs/components/prism-scss";
-  import "prismjs/components/prism-bash";
-  import "prismjs/components/prism-markdown";
-  import "prismjs/components/prism-json";
-  import "prismjs/components/prism-yaml";
+    header {
+      grid-column: 1 / -1; /* Full width on mobile */
+      grid-row: 1;
+    }
 
-  // Initialize Prism
-  document.addEventListener("DOMContentLoaded", () => {
-    requestAnimationFrame(() => {
-      Prism.highlightAll();
-    });
-  });
-</script> -->
-<!-- <style is:global>
-      /* Add any global styles that aren't covered by Tailwind/Starwind */
-      article .prose {
-        /* Enhance the prose styles */
-        --content-width: 100%;
-        width: var(--content-width);
-        max-width: 100%;
+    .content-wrapper {
+      grid-column: 1 / -1; /* Full width on mobile */
+      grid-row: 2;
+
+      overflow-x: auto;
+    }
+
+    footer {
+      grid-column: 1 / -1; /* Full width on mobile */
+      /* grid-row: 3; */
+
+      justify-self: center; /* Center on mobile */
+      position: relative; /* Normal flow on mobile */
+
+      margin-block: 1rem;
+    }
+
+    @media (min-width: 1024px) {
+      padding: 0 1rem;
+      grid-template-columns: subgrid;
+      grid-template-rows: auto auto auto;
+      header {
+        grid-column: 1 / span 2;
+        grid-row: 1 / span 1;
+
+        position: sticky;
+        top: 6rem; /* Adjust to account for fixed navbar height + some padding */
+
+        padding-inline-end: 1rem;
       }
-      
-      article .prose blockquote {
-        font-style: italic;
-        line-height: 1.65;
-        border-left: 3px solid theme('colors.blue.500');
-        padding-left: 1rem;
-        margin: 2rem 0;
-        color: theme('colors.slate.700');
-        background: theme('colors.slate.50');
-        padding: 1rem 1rem 1rem 2rem;
-        border-radius: 0.25rem;
+
+      .content-wrapper {
+        grid-column: 3 / span 4;
+        grid-row: 1 / 4;
       }
-      
-      article .prose pre {
-        border-radius: 0.5rem;
-        padding: 1.25rem;
+
+      footer {
+        grid-column: 1 / span 2;
+        grid-row: -1 / -2;
       }
-      
-      .dark article .prose blockquote {
-        color: theme('colors.slate.300');
-        background: theme('colors.slate.800');
-      }
-    </style>
-
-<style is:global>
-  /* Code block styling */
-  pre[class*="language-"] {
-    padding: 1.5rem;
-    margin: 1.5rem 0;
-    border-radius: 0.5rem;
-    overflow-x: auto;
-    background: #1a1a1a !important;
-    border: 1px solid #2d2d2d;
+    }
   }
-
-  code[class*="language-"] {
-    font-family: "Fira Code", Menlo, Monaco, Consolas, "Courier New", monospace;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    text-shadow: none;
-  }
-
-  /* Inline code styling */
-  :not(pre) > code {
-    padding: 0.2em 0.4em;
-    margin: 0;
-    border-radius: 3px;
-    background: #2d2d2d;
-    color: #e6e6e6;
-    font-size: 0.9em;
-  }
-
-  /* Token colors overrides if needed */
-  .token.comment,
-  .token.prolog,
-  .token.doctype,
-  .token.cdata {
-    color: #608b4e;
-  }
-
-  .token.punctuation {
-    color: #808080;
-  }
-
-  .token.property,
-  .token.tag,
-  .token.boolean,
-  .token.number,
-  .token.constant,
-  .token.symbol {
-    color: #569cd6;
-  }
-
-  .token.selector,
-  .token.attr-name,
-  .token.string,
-  .token.char,
-  .token.builtin {
-    color: #ce9178;
-  }
-</style> -->
+</style>

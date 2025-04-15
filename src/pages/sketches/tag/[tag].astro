@@ -1,9 +1,7 @@
 ---
 import { getCollection } from "astro:content";
-import BaseLayout from "@/layouts/BaseLayout.astro";
+import SketchPage from "@/layouts/SketchPage.astro";
 import { getAllTags, unslugify, getSketchFullUrl, slugify, getTagUrl, getCategoryUrl } from "@/utils/sketchUtils";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/starwind/card";
-import { Badge } from "@/components/starwind/badge";
 
 // Generate static paths for all tags
 export async function getStaticPaths() {
@@ -14,56 +12,50 @@ export async function getStaticPaths() {
     params: { tag: slugify(tag) },
     props: { 
       tag,
-      sketches: sketches.filter(sketch => sketch.data.tags?.includes(tag))
+      sketches: sketches.filter(sketch => sketch.data.tags?.includes(tag)),
+      allSketches: sketches
     }
   }));
 }
 
-const { tag, sketches } = Astro.props;
+const { tag, sketches, allSketches } = Astro.props;
 const title = `Sketches tagged with "${tag}"`;
+
+// Extract all categories and tags for filtering
+const categories = [...new Set(allSketches.map(sketch => sketch.data.category))];
+const allTags = allSketches.flatMap(sketch => sketch.data.tags || []);
+const tags = [...new Set(allTags)].sort();
+
+// Calculate count for each category
+const categoryCounts = {};
+categories.forEach(category => {
+  categoryCounts[category] = allSketches.filter(sketch => 
+    sketch.data.category === category
+  ).length;
+});
+
+// Calculate count for each tag
+const tagCounts = {};
+tags.forEach(t => {
+  tagCounts[t] = allSketches.filter(sketch => 
+    sketch.data.tags && sketch.data.tags.includes(t)
+  ).length;
+});
 
 // Add prerender directive
 export const prerender = true;
 ---
 
-<BaseLayout title={title}>
-  <div class="container mx-auto px-4 py-8">
-    <h1 class="text-4xl font-bold mb-8">{title}</h1>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {sketches.map(sketch => (
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              <a href={getSketchFullUrl(sketch)} class="hover:text-primary">
-                {sketch.data.title}
-              </a>
-            </CardTitle>
-            <CardDescription>{sketch.data.description}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div class="flex flex-wrap gap-2">
-              <Badge variant="outline">
-                <a href={getCategoryUrl(sketch.data.category)} class="hover:text-primary">
-                  {sketch.data.category}
-                </a>
-              </Badge>
-              {sketch.data.tags?.map(t => (
-                <Badge variant="secondary">
-                  <a href={getTagUrl(t)} class="hover:text-primary">
-                    {t}
-                  </a>
-                </Badge>
-              ))}
-            </div>
-          </CardContent>
-          <CardFooter>
-            <time datetime={sketch.data.date.toISOString()}>
-              {sketch.data.date.toLocaleDateString()}
-            </time>
-          </CardFooter>
-        </Card>
-      ))}
-    </div>
-  </div>
-</BaseLayout> 
+<SketchPage
+  title={title}
+  description={`Collection of code sketches tagged with "${tag}"`}
+  pageSubtitle={`Tag: ${tag}`}
+  paginatedSketches={sketches}
+  categories={categories}
+  tags={tags}
+  categoryCounts={categoryCounts}
+  tagCounts={tagCounts}
+  baseUrl="/sketches"
+  allSketchesCount={allSketches.length}
+  activeTag={tag}
+/> 

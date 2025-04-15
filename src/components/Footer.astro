@@ -1,14 +1,7 @@
 ---
-/**
- * Contact Section Component
- *
- * A clean, minimal contact section with "Say Hello" message,
- * inspired by Circora's design.
- *
- * @component
- */
-
 import { Icon } from "astro-icon/components";
+import HelloGreeting from "./HelloGreeting.astro";
+import Button from "./starwind/button";
 
 export interface ContactSectionProps {
   /** Email address */
@@ -24,9 +17,7 @@ export interface ContactSectionProps {
 }
 
 const {
-  email = "hello@yourdomain.com",
-  phone,
-  bgColor = "bg-slate-900",
+  email = "jasper.yzh@gmail.com",
   textColor = "text-white",
   class: className = "",
 } = Astro.props;
@@ -50,82 +41,102 @@ const socialLinks = [
 const todayYear = new Date().getFullYear();
 ---
 
-<footer class={`${bgColor} ${className} w-full py-16 px-6 lg:px-16`}>
-  <div class="max-w-6xl mx-auto">
-    <div
-      class="flex flex-col md:flex-row justify-between items-start md:items-center"
-    >
-      <!-- Say Hello heading -->
-      <div>
-        <h2 class={`${textColor} text-4xl md:text-5xl font-bold mb-2`}>
-          Say Hello!
-        </h2>
-        <p
-          class="text-balance text-lg text-gray-200 dark:text-gray-400"
+<div class="footer_container">
+  <div class="hello_world">
+    <HelloGreeting class="text-white" />
+
+    <p class="text-balance text-lg text-gray-300">
+      I'm currently available for select projects.
+      <br />If you're interested in collaborating, please reach out.
+    </p>
+  </div>
+
+  <div class="social_links my-4">
+    {
+      email && (
+        <Button
+          href={`mailto:${email}`}
+          variant="ghost"
+          class="text-gray-300 hover:text-gray-500"
         >
-          I'm currently available for select projects.
-          <br />If you're interested in collaborating, please reach out.
-        </p>
-      </div>
+          <Icon name="bi:envelope-fill" />
+          {email}
+        </Button>
+      )
+    }
+    <ul class="flex flex-row space-x-1">
+      {
+        socialLinks.map((link) => (
+          <Button
+            href={link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${link.platform} link`}
+            variant="ghost"
+            class="text-gray-300 hover:text-gray-500"
+          >
+            <Icon name={`bi:${link.platform}`} />
+          </Button>
+        ))
+      }
+    </ul>
+  </div>
 
-      <!-- Contact information -->
-      <div id="contact" class="flex flex-col space-y-2">
-        {
-          email && (
-            <a
-              href={`mailto:${email}`}
-              class={`${textColor} text-lg hover:opacity-80 transition-opacity`}
-            >
-              {email}
-            </a>
-          )
-        }
+  <hr class="border-gray-700 my-8" />
 
-        {
-          phone && (
-            <a
-              href={`tel:${phone.replace(/[^0-9+]/g, "")}`}
-              class={`${textColor} text-lg hover:opacity-80 transition-opacity`}
-            >
-              {phone}
-            </a>
-          )
-        }
-
-        <!-- Optional social links -->
-        <div class="flex space-x-4 mt-6">
-          <!-- <slot name="social" /> -->
-          {
-            socialLinks.map((link) => (
-              <a
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${link.platform} link`}
-                class="text-gray-100 dark:text-gray-200 hover:text-primary dark:hover:text-primary transition-colors text-2xl"
-              >
-                <Icon name={`bi:${link.platform}`} class="inline-block mb-2" />
-              </a>
-            ))
-          }
-        </div>
-      </div>
-    </div>
-
-    <!-- Copyright and additional info -->
-    <div
-      class={`${textColor} opacity-60 text-sm my-6 pt-8 border-t border-white/20`}
-    >
-      <!-- <slot name="footer" /> -->
-
-      <div class="flex justify-between items-center">
-        <span>© 2025 jasperyong.com</span>
-        <div class="flex space-x-6">
-          <a href="/docs" class="hover:underline">My Documentations</a>
-          <a href="/portfolio" class="hover:underline">Portfolio</a>
-          <a href="/resume" class="hover:underline">Resume</a>
-        </div>
-      </div>
+  <!-- Copyright and additional info -->
+  <div
+    class="flex flex-col-reverse md:flex-row items-start md:items-center md:justify-between gap-4"
+  >
+    <p class="text-gray-500 text-sm m-0 ms-2">© 2025 jasperyong.com</p>
+    <div class="flex justify-between gap-6">
+      <Button
+        size="sm"
+        href="/docs"
+        variant="ghost"
+        class="text-gray-300 hover:text-gray-500">My Documentations</Button
+      >
+      <Button
+        size="sm"
+        href="/portfolio"
+        variant="ghost"
+        class="text-gray-300 hover:text-gray-500">Portfolio</Button
+      >
+      <Button
+        size="sm"
+        href="/resume"
+        variant="ghost"
+        class="text-gray-300 hover:text-gray-500">Resume</Button
+      >
     </div>
   </div>
-</footer>
+</div>
+
+<style>
+  .footer_container {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+
+    & > * {
+      grid-column: 1 / -1;
+    }
+    .social_links {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    @media (min-width: 768px) {
+      .hello_world {
+        grid-column: 1 / span 3;
+      }
+
+      .social_links {
+        grid-column: auto / span 3;
+        justify-self: end;
+        align-items: flex-end;
+      }
+    }
+  }
+</style>
