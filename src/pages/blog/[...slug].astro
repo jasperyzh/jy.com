@@ -6,7 +6,7 @@ import { formatYymmddDate } from "@/utils/formatDate";
 import { getBlogFilename } from "@/utils/blogUtils";
 
 // Commented out until component is implemented
-// import FooterBlogShare from "@/components/FooterBlogShare.astro";
+import ShareButtonA2A from "@/components/ShareButtonA2A.astro";
 
 // Fetch all posts and generate paths for each post
 export async function getStaticPaths() {
@@ -96,8 +96,8 @@ if (entry) {
 
           <footer>
             <ReturnButton href="/blog" label="Back to Blog" />
-            {/* <FooterBlogShare {entry} /> */}
-          </footer>
+            <ShareButtonA2A {entry} />
+          </footer>   
         </article>
       ) : (
         <p>Blog Post Not Found</p>

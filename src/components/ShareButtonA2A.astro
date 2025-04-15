@@ -1,0 +1,99 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  entry: {
+    id: string;
+    data: {
+      title: string;
+    };
+  };
+}
+
+const { entry } = Astro.props;
+const title = entry.data.title;
+
+// Generate the full URL for the post
+const baseUrl = import.meta.env.SITE || "http://localhost:4321";
+const postUrl = `${baseUrl}/blog/${
+  entry.id
+    .split("/")
+    .pop()
+    ?.replace(/\.\w+$/, "") || ""
+}`;
+
+// Encode the URL and title for sharing
+const encodedUrl = encodeURIComponent(postUrl);
+const encodedTitle = encodeURIComponent(title);
+---
+
+<div class="share-container">
+  <!-- <script defer src="https://static.addtoany.com/menu/page.js"></script> -->
+  <div
+    class="a2a_kit a2a_kit_size_32 a2a_default_style d-flex align-items-center gap-2"
+  >
+    <a class="a2a_dd !hidden" href="https://www.addtoany.com/share"></a>
+    <a class="a2a_button_facebook"> <Icon name="bi:facebook" /></a>
+    <a class="a2a_button_whatsapp"> <Icon name="bi:twitter-x" /></a>
+    <a class="a2a_button_linkedin"> <Icon name="bi:linkedin" /></a>
+    <a class="a2a_button_x"> <Icon name="bi:whatsapp" /></a>
+    <a
+      href={`https://www.addtoany.com/share#url=${encodedUrl}&title=${encodedTitle}`}
+      title="More sharing options"
+      class="a2a_dd"
+    >
+      <Icon name="bi:three-dots" />
+    </a>
+  </div>
+</div>
+
+<script>
+  // Load AddToAny script asynchronously
+  document.addEventListener("DOMContentLoaded", () => {
+    // Check if AddToAny script is already loaded
+    if (!(window as any).a2a) {
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = "https://static.addtoany.com/menu/page.js";
+      document.body.appendChild(script);
+    } else {
+      // If already loaded, just update the menu
+      if ((window as any).a2a && (window as any).a2a.init) {
+        (window as any).a2a.init();
+      }
+    }
+  });
+</script>
+
+<style>
+  .share-container {
+    display: inline-block;
+    margin-block: 1rem;
+  }
+
+  /* Common styles for all share buttons */
+  .a2a_kit a {
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+  }
+
+  .a2a_kit a:hover {
+    transform: scale(1.1);
+  }
+
+  /* Override AddToAny default styles to match our design */
+ /*  :global(.a2a_kit) {
+    line-height: normal !important;
+  } */
+
+  /* Hide AddToAny's default icons so we can use Bootstrap icons */
+  /* :global(.a2a_kit a span) {
+    display: none !important;
+  } */
+</style>

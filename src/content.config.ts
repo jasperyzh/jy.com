@@ -142,22 +142,22 @@ const portfolio = defineCollection({
         year: z.string(),
       })
     ),
-    skills: z.array(
-      z.object({
-        category: z.string(),
-        items: z.array(z.string())
-      })
-    ),
-    projects: z.array(
-      z.object({
-        title: z.string(),
-        description: z.string(),
-        image: z.string(),
-        tags: z.array(z.string()),
-        demoUrl: z.string(),
-        codeUrl: z.string(),
-      })
-    ),
+    // skills: z.array(
+    //   z.object({
+    //     category: z.string(),
+    //     items: z.array(z.string())
+    //   })
+    // ),
+    // projects: z.array(
+    //   z.object({
+    //     title: z.string(),
+    //     description: z.string(),
+    //     image: z.string(),
+    //     tags: z.array(z.string()),
+    //     demoUrl: z.string(),
+    //     codeUrl: z.string(),
+    //   })
+    // ),
   })
 });
 
