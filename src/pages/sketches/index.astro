@@ -6,8 +6,8 @@ import { getSketchFullUrl, getCategoryUrl } from "@/utils/sketchUtils";
 // Pagination configuration
 export const SKETCHES_PER_PAGE = 9;
 
-// Get all sketches
-const allSketches = await getCollection("sketches");
+// Get all sketches (excluding drafts)
+const allSketches = await getCollection("sketches", ({ data }) => !data.draft);
 
 // Sort sketches by date (newest first)
 const sortedSketches = allSketches.sort((a, b) => {

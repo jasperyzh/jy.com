@@ -1,0 +1,463 @@
+---
+const flashcards_content = [
+  {
+    id: 1,
+    term: "Machine Learning (ML)",
+    definition:
+      "A field of Artificial Intelligence (AI) where systems learn patterns from data to make predictions or decisions without being explicitly programmed for the task.",
+    example:
+      "Predicting house prices based on features like size, location, and historical sales data.",
+    related_concepts: [
+      "Artificial Intelligence",
+      "Supervised Learning",
+      "Unsupervised Learning",
+      "Deep Learning",
+    ],
+    image_suggestion:
+      "Abstract network diagram showing data flowing into a 'brain' or model, producing outputs/predictions.",
+    image_alt:
+      "Abstract diagram representing machine learning processing data to make predictions.",
+    tags: ["Core Concept", "AI"],
+  },
+  {
+    id: 2,
+    term: "Supervised Learning",
+    definition:
+      "Training models using labeled datasets, where each input data point is paired with a correct output label.",
+    notes:
+      "Goal is to learn a mapping from inputs to outputs. Key types: Regression (predicting continuous values) and Classification (predicting discrete categories).",
+    example:
+      "Classifying emails as 'spam' or 'not spam' using a dataset of emails already labeled.",
+    related_concepts: [
+      "Regression",
+      "Classification",
+      "Labeled Data",
+      "Training Data",
+    ],
+    image_suggestion:
+      "Diagram showing input data points with clear labels (e.g., red/blue dots, cat/dog images) feeding into a model which learns to predict labels.",
+    image_alt:
+      "Diagram illustrating supervised learning with labeled input data and model prediction.",
+    tags: ["Learning Type", "Supervised"],
+  },
+  {
+    id: 3,
+    term: "Unsupervised Learning",
+    definition:
+      "Training models to find patterns, structures, or relationships in unlabeled data without predefined output guidance.",
+    notes:
+      "Goal is often data exploration or representation learning. Key types: Clustering (grouping similar data) and Dimensionality Reduction (simplifying data complexity).",
+    example:
+      "Grouping customers into distinct segments based on their purchasing behavior without prior knowledge of segments.",
+    related_concepts: [
+      "Clustering",
+      "Dimensionality Reduction",
+      "Unlabeled Data",
+      "Feature Learning",
+    ],
+    image_suggestion:
+      "Diagram showing scattered unlabeled data points being automatically grouped into distinct clusters by an algorithm.",
+    image_alt:
+      "Diagram illustrating unsupervised learning grouping unlabeled data points into clusters.",
+    tags: ["Learning Type", "Unsupervised"],
+  },
+  {
+    id: 4,
+    term: "Overfitting",
+    definition:
+      "When a model learns the training data too well, capturing noise and specific details, resulting in poor performance on new, unseen data.",
+    notes:
+      "Characterized by low training error but high validation/test error. Solutions include regularization, cross-validation, simplifying the model, or getting more diverse data.",
+    example:
+      "A decision tree that grows extremely deep, creating specific rules for almost every training sample.",
+    related_concepts: [
+      "Underfitting",
+      "Bias-Variance Tradeoff",
+      "Regularization",
+      "Cross-Validation",
+      "Generalization",
+    ],
+    image_suggestion:
+      "Graph showing a complex curve fitting training points perfectly (including outliers) but missing the underlying trend needed for test points.",
+    image_alt:
+      "Graph illustrating overfitting: a complex model fits training data but not the general trend.",
+    tags: ["Model Issue", "Evaluation", "Bias-Variance"],
+  },
+  {
+    id: 5,
+    term: "Underfitting",
+    definition:
+      "When a model is too simple to capture the underlying patterns in the data, resulting in poor performance on both the training and new data.",
+    notes:
+      "Characterized by high training and validation/test error. Solutions include increasing model complexity (e.g., adding features, using a more powerful model), feature engineering, or reducing regularization.",
+    example: "Using a linear regression model to fit highly non-linear data.",
+    related_concepts: [
+      "Overfitting",
+      "Bias-Variance Tradeoff",
+      "Model Complexity",
+      "Feature Engineering",
+    ],
+    image_suggestion:
+      "Graph showing a simple line (e.g., linear model) failing to capture the clear non-linear trend in scattered data points.",
+    image_alt:
+      "Graph illustrating underfitting: a simple model fails to capture the data's underlying pattern.",
+    tags: ["Model Issue", "Evaluation", "Bias-Variance"],
+  },
+  {
+    id: 6,
+    term: "Bias-Variance Tradeoff",
+    definition:
+      "The fundamental conflict in model building: reducing bias (error from wrong assumptions/underfitting) often increases variance (error from sensitivity to training data/overfitting), and vice versa.",
+    notes:
+      "Goal is to find a model complexity that balances bias and variance to minimize total error on unseen data.",
+    example:
+      "Simple models have high bias, low variance. Complex models have low bias, high variance.",
+    related_concepts: [
+      "Overfitting",
+      "Underfitting",
+      "Model Complexity",
+      "Regularization",
+      "Generalization Error",
+    ],
+    image_suggestion:
+      "A conceptual graph showing Error vs. Model Complexity. Bias decreases, Variance increases, and Total Error forms a U-shape, indicating an optimal complexity.",
+    image_alt:
+      "Graph illustrating the bias-variance tradeoff against model complexity.",
+    tags: ["Core Concept", "Evaluation", "Model Tuning"],
+  },
+  {
+    id: 7,
+    term: "Regression",
+    definition:
+      "A type of supervised learning task used to predict a continuous numerical value.",
+    notes:
+      "Common algorithms: Linear Regression, Polynomial Regression, Support Vector Regression (SVR), Decision Tree Regression.",
+    example:
+      "Predicting temperature, house prices, stock values, or a person's height.",
+    related_concepts: [
+      "Supervised Learning",
+      "Continuous Variable",
+      "Linear Regression",
+      "Loss Function (MSE)",
+    ],
+    image_suggestion:
+      "Scatter plot with data points and a best-fit line or curve representing the regression model's predictions.",
+    image_alt: "Scatter plot showing data points and a fitted regression line.",
+    tags: ["Supervised Learning", "Task Type"],
+  },
+  {
+    id: 8,
+    term: "Classification",
+    definition:
+      "A type of supervised learning task used to predict a discrete category or class label.",
+    notes:
+      "Common algorithms: Logistic Regression, K-Nearest Neighbors (KNN), Support Vector Machines (SVM), Decision Trees, Naive Bayes.",
+    example:
+      "Classifying emails as 'spam'/'not spam', identifying images as 'cat'/'dog', predicting customer churn ('yes'/'no').",
+    related_concepts: [
+      "Supervised Learning",
+      "Discrete Variable",
+      "Logistic Regression",
+      "Precision",
+      "Recall",
+      "ROC-AUC",
+      "Loss Function (Cross-Entropy)",
+    ],
+    image_suggestion:
+      "Scatter plot with data points belonging to different classes (e.g., red vs. blue dots) separated by a decision boundary learned by the model.",
+    image_alt:
+      "Scatter plot showing data points classified into distinct groups separated by a boundary.",
+    tags: ["Supervised Learning", "Task Type"],
+  },
+  {
+    id: 9,
+    term: "Clustering",
+    definition:
+      "An unsupervised learning task that involves grouping a set of unlabeled data points such that points in the same group (cluster) are more similar to each other than to those in other groups.",
+    notes:
+      "Requires a similarity or distance measure. Number of clusters might need to be specified (e.g., 'K' in K-Means).",
+    example:
+      "Customer segmentation for targeted marketing, grouping similar documents, anomaly detection (outliers).",
+    related_concepts: [
+      "Unsupervised Learning",
+      "K-Means",
+      "Similarity Measure",
+      "Dimensionality Reduction",
+    ],
+    image_suggestion:
+      "Scatter plot with unlabeled points that are automatically grouped into distinct colored clusters by an algorithm.",
+    image_alt:
+      "Scatter plot showing unlabeled data points grouped into distinct clusters.",
+    tags: ["Unsupervised Learning", "Task Type"],
+  },
+  {
+    id: 10,
+    term: "Cross-Validation (CV)",
+    definition:
+      "A resampling technique used to evaluate a model's performance on unseen data and prevent overfitting by partitioning the data into complementary subsets, training on some and validating on others multiple times.",
+    notes:
+      "Provides a more robust estimate of generalization performance than a single train-test split. Common type: K-Fold CV.",
+    example:
+      "5-fold CV: Data split into 5 folds; train on 4, test on 1, repeated 5 times with different test folds.",
+    related_concepts: [
+      "Evaluation",
+      "Overfitting",
+      "Hyperparameter Tuning",
+      "Train-Test Split",
+      "Generalization",
+    ],
+    image_suggestion:
+      "Diagram showing a dataset being split into K blocks (folds). Iterations show different folds being used for training (blue) and validation (red).",
+    image_alt: "Diagram illustrating the K-Fold Cross-Validation process.",
+    tags: ["Evaluation", "Technique", "Model Tuning"],
+  },
+  {
+    id: 11,
+    term: "Feature Engineering",
+    definition:
+      "The process of using domain knowledge to select, transform, and create input variables (features) from raw data to improve machine learning model performance.",
+    notes:
+      "Crucial step, often requiring creativity and iteration. 'Garbage in, garbage out' principle applies.",
+    example:
+      "Creating interaction terms (e.g., `width * height`), extracting text features (TF-IDF), one-hot encoding categorical variables, scaling numerical features.",
+    related_concepts: [
+      "Data Preparation",
+      "Feature Selection",
+      "Data Cleaning",
+      "Domain Knowledge",
+    ],
+    image_suggestion:
+      "Flowchart showing raw data (text, images, logs) being processed and transformed into a structured table of numerical features.",
+    image_alt:
+      "Diagram illustrating the feature engineering process transforming raw data into features.",
+    tags: ["Data Preparation", "Technique", "Core Concept"],
+  },
+  {
+    id: 12,
+    term: "Gradient Descent",
+    definition:
+      "An iterative optimization algorithm used to find the minimum of a function (typically a loss function) by repeatedly taking steps in the direction opposite to the gradient (steepest descent).",
+    notes:
+      "Learning rate hyperparameter controls step size. Variants: Batch, Stochastic (SGD), Mini-batch GD.",
+    example:
+      "Adjusting weights in a neural network to minimize the difference between predicted and actual outputs.",
+    related_concepts: [
+      "Optimization",
+      "Loss Function",
+      "Learning Rate",
+      "Backpropagation",
+      "Neural Network",
+    ],
+    image_suggestion:
+      "3D surface plot of a bowl-shaped loss function with arrows indicating the path of gradient descent converging towards the minimum point.",
+    image_alt:
+      "Graph showing gradient descent algorithm finding the minimum of a loss function.",
+    tags: ["Optimization", "Algorithm", "Training"],
+  },
+  {
+    id: 13,
+    term: "Loss Function (Cost Function)",
+    definition:
+      "A function that measures the difference (error or 'loss') between the model's predicted outputs and the actual target values.",
+    notes:
+      "The goal of model training is typically to minimize this function. Choice depends on the task (e.g., regression vs. classification).",
+    example:
+      "Mean Squared Error (MSE) for regression, Binary Cross-Entropy for binary classification.",
+    related_concepts: [
+      "Optimization",
+      "Gradient Descent",
+      "Regression",
+      "Classification",
+      "Evaluation Metric",
+    ],
+    image_suggestion:
+      "Simple graph showing actual data points and a model's prediction line, with vertical lines indicating the error (loss) for each point.",
+    image_alt:
+      "Graph illustrating the error measured by a loss function between predictions and actual values.",
+    tags: ["Core Concept", "Evaluation", "Training", "Optimization"],
+  },
+  {
+    id: 14,
+    term: "Regularization",
+    definition:
+      "Techniques used to prevent overfitting by adding a penalty term to the loss function, discouraging overly complex models (e.g., large coefficient weights).",
+    notes:
+      "Helps improve generalization to unseen data. Common types: L1 (Lasso) encourages sparsity (can perform feature selection), L2 (Ridge) shrinks weights towards zero.",
+    example:
+      "Adding the sum of squared weights (L2) or sum of absolute weights (L1) to the MSE loss in linear regression.",
+    related_concepts: [
+      "Overfitting",
+      "Bias-Variance Tradeoff",
+      "Loss Function",
+      "L1 Lasso",
+      "L2 Ridge",
+      "Model Complexity",
+    ],
+    image_suggestion:
+      "Conceptual diagram showing regularization acting like a constraint or 'pull' on model parameters, preventing them from becoming too large.",
+    image_alt:
+      "Abstract representation of regularization penalizing large model parameters.",
+    tags: ["Technique", "Overfitting", "Model Tuning"],
+  },
+  {
+    id: 15,
+    term: "Neural Network (NN)",
+    definition:
+      "A computational model inspired by the structure of biological neural networks, consisting of interconnected nodes ('neurons') organized in layers, capable of learning complex patterns.",
+    notes:
+      "Forms the basis of Deep Learning. Learns hierarchical features. Trained using backpropagation and gradient descent.",
+    example:
+      "Multi-Layer Perceptron (MLP) for tabular data, Convolutional Neural Networks (CNNs) for images.",
+    related_concepts: [
+      "Deep Learning",
+      "Artificial Intelligence",
+      "Neuron",
+      "Layer",
+      "Activation Function",
+      "Backpropagation",
+      "Gradient Descent",
+    ],
+    image_suggestion:
+      "Diagram showing interconnected nodes in layers: an input layer, one or more hidden layers, and an output layer.",
+    image_alt:
+      "Diagram of a simple artificial neural network structure with layers and connections.",
+    tags: ["Model Type", "Algorithm", "Deep Learning"],
+  },
+  {
+    id: 16,
+    term: "Decision Tree",
+    definition:
+      "A supervised learning model that uses a tree-like structure of splitting rules based on feature values to make predictions.",
+    notes:
+      "Easy to interpret ('white box'). Prone to overfitting if not constrained (e.g., max depth). Base learner for powerful ensemble methods like Random Forests and Gradient Boosting.",
+    example:
+      "A flowchart predicting loan approval based on income, credit score, and loan amount.",
+    related_concepts: [
+      "Supervised Learning",
+      "Classification",
+      "Regression",
+      "Ensemble Methods",
+      "Random Forest",
+      "Gradient Boosting",
+      "Overfitting",
+      "Interpretability",
+    ],
+    image_suggestion:
+      "A flowchart diagram representing a decision tree, starting with a root node, branching based on feature conditions, and ending in leaf nodes with predictions.",
+    image_alt:
+      "Diagram of a decision tree structure showing splits and leaf nodes.",
+    tags: [
+      "Model Type",
+      "Algorithm",
+      "Supervised Learning",
+      "Interpretability",
+    ],
+  },
+  {
+    id: 17,
+    term: "Precision & Recall",
+    definition:
+      "Evaluation metrics primarily used for classification tasks, especially important when dealing with imbalanced datasets.",
+    notes:
+      "**Precision** = TP / (TP + FP): Of all instances predicted positive, what fraction were actually positive? (Measures exactness). **Recall** (Sensitivity, True Positive Rate) = TP / (TP + FN): Of all actual positive instances, what fraction did the model correctly identify? (Measures completeness). Often a tradeoff exists; F1-Score combines them.",
+    example:
+      "In spam detection: High Precision means few legitimate emails are marked spam. High Recall means most spam emails are caught.",
+    related_concepts: [
+      "Classification",
+      "Evaluation Metric",
+      "Confusion Matrix",
+      "F1-Score",
+      "True Positive",
+      "False Positive",
+      "False Negative",
+      "ROC Curve",
+    ],
+    image_suggestion:
+      "A 2x2 Confusion Matrix (labeled TP, FP, FN, TN) with arrows visually highlighting the components used to calculate Precision (column-based) and Recall (row-based).",
+    image_alt:
+      "Confusion matrix illustrating True/False Positives/Negatives used for Precision and Recall calculation.",
+    tags: ["Evaluation", "Metrics", "Classification"],
+  },
+  {
+    id: 18,
+    term: "ROC Curve & AUC",
+    definition:
+      "Receiver Operating Characteristic (ROC) curve plots the True Positive Rate (Recall) against the False Positive Rate at various classification thresholds. Area Under the Curve (AUC) provides a single scalar value summarizing the model's ability to distinguish between classes across all thresholds.",
+    notes:
+      "AUC = 1 indicates a perfect classifier. AUC = 0.5 indicates performance no better than random guessing. Useful for comparing models and evaluating performance independent of a specific threshold.",
+    example:
+      "Comparing two different classifiers for disease detection by plotting their ROC curves and comparing their AUC values.",
+    related_concepts: [
+      "Classification",
+      "Evaluation Metric",
+      "True Positive Rate",
+      "False Positive Rate",
+      "Threshold",
+      "Precision",
+      "Recall",
+    ],
+    image_suggestion:
+      "A graph with False Positive Rate on the X-axis and True Positive Rate on the Y-axis, showing a curve from (0,0) to (1,1). The area under this curve (AUC) is shaded.",
+    image_alt:
+      "Graph of an ROC curve plotting True Positive Rate vs. False Positive Rate, with AUC highlighted.",
+    tags: ["Evaluation", "Metrics", "Classification"],
+  },
+  {
+    id: 19,
+    term: "Hyperparameters",
+    definition:
+      "Parameters whose values are set *before* the learning process begins, controlling the model's structure or the training algorithm's behavior. They are not learned from data.",
+    notes:
+      "Contrast with model *parameters* (like weights) which *are* learned during training. Optimal hyperparameters are typically found using search strategies (Grid Search, Random Search) combined with Cross-Validation.",
+    example:
+      "Learning rate for gradient descent, 'K' in K-Means or KNN, number of trees in a Random Forest, regularization strength (lambda/alpha), neural network architecture (number of layers/neurons).",
+    related_concepts: [
+      "Model Tuning",
+      "Optimization",
+      "Cross-Validation",
+      "Grid Search",
+      "Random Search",
+      "Model Parameters",
+      "Learning Rate",
+      "Regularization",
+    ],
+    image_suggestion:
+      "Diagram showing a 'settings panel' or 'tuning knobs' separate from the main model training block, representing external configurations.",
+    image_alt:
+      "Conceptual illustration of hyperparameters as external settings or knobs for a model.",
+    tags: ["Model Tuning", "Training", "Optimization", "Configuration"],
+  },
+  {
+    id: 20,
+    term: "Deep Learning (DL)",
+    definition:
+      "A subfield of Machine Learning based on artificial neural networks with multiple layers (deep architectures) that learn hierarchical representations of data.",
+    notes:
+      "Particularly effective on large datasets for complex tasks like image/speech recognition and natural language processing. Requires significant computational resources.",
+    example:
+      "Using Convolutional Neural Networks (CNNs) for image classification, Recurrent Neural Networks (RNNs) or Transformers for language translation.",
+    related_concepts: [
+      "Machine Learning",
+      "Neural Network",
+      "Artificial Intelligence",
+      "CNN",
+      "RNN",
+      "Transformer",
+      "Backpropagation",
+      "Hierarchical Features",
+    ],
+    image_suggestion:
+      "Diagram of a deep neural network with many hidden layers between the input and output, possibly showing feature abstraction at different levels.",
+    image_alt:
+      "Diagram illustrating a deep neural network architecture with multiple hidden layers.",
+    tags: ["ML Subset", "Deep Learning", "Neural Networks", "AI"],
+  },
+];
+
+import FlashcardsVue from './250419-flashcards-template.vue';
+---
+
+<div class="mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold text-center mb-8">Machine Learning Flashcards</h1>
+  <FlashcardsVue client:load flashcards={flashcards_content} />
+</div>

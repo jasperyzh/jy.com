@@ -1,78 +1,7 @@
 ---
 import Layout from "@/layouts/BaseLayout.astro";
 import { SITE_DESCRIPTION } from "../consts";
-
-// Define Dieter Rams' principles
-const principles = [
-  {
-    number: "01",
-    title: "Innovative",
-    description:
-      "Good design is innovative. Technological development is always offering new opportunities for innovative design. But innovative design always develops in tandem with innovative technology, and can never be an end in itself.",
-  },
-  {
-    number: "02",
-    title: "Useful",
-    description:
-      "Good design makes a product useful. Products are bought to be used. A product meets its purpose not only in functional, but also in psychological and aesthetic terms.",
-  },
-  {
-    number: "03",
-    title: "Aesthetic",
-    description:
-      "Good design is aesthetic. The aesthetic quality of a product is integral to its usefulness because products we use every day affect our person and our well-being.",
-  },
-  {
-    number: "04",
-    title: "Understandable",
-    description:
-      "Good design makes a product understandable. It clarifies the product's structure. Better still, it can make the product talk. At best, it is self-explanatory.",
-  },
-  {
-    number: "05",
-    title: "Unobtrusive",
-    description:
-      "Good design is unobtrusive. Products fulfilling a purpose are like tools. They are neither decorative objects nor works of art. Their design should therefore be both neutral and restrained.",
-  },
-  {
-    number: "06",
-    title: "Honest",
-    description:
-      "Good design is honest. It does not make a product more innovative, powerful or valuable than it really is. It does not attempt to manipulate the consumer with promises that cannot be kept.",
-  },
-  {
-    number: "07",
-    title: "Long-lasting",
-    description:
-      "Good design is long-lasting. It avoids being fashionable and therefore never appears antiquated. Unlike fashionable design, it lasts many years – even in today's throwaway society.",
-  },
-  {
-    number: "08",
-    title: "Thorough",
-    description:
-      "Good design is thorough down to the last detail. Nothing must be arbitrary or left to chance. Care and accuracy in the design process show respect towards the user.",
-  },
-  {
-    number: "09",
-    title: "Environmentally-friendly",
-    description:
-      "Good design is environmentally-friendly. Design makes an important contribution to the preservation of the environment. It conserves resources and minimizes physical and visual pollution throughout the lifecycle of the product.",
-  },
-  {
-    number: "10",
-    title: "As little design as possible",
-    description:
-      "Good design is as little design as possible. Less, but better – because it concentrates on the essential aspects, and the products are not burdened with non-essentials. Back to purity, back to simplicity.",
-  },
-];
-
-// Define projects/work examples
-const projects = [
-  { title: "Digital Design", href: "/work/digital-design" },
-  { title: "Product Design", href: "/work/product-design" },
-  { title: "Research", href: "/work/research" },
-  { title: "Typography", href: "/work/typography" },
-];
+import LandingPage from "@/components/LandingPage.astro";
 
 // Redirect to coming-soon page in production
 const isProduction = import.meta.env.PROD;
@@ -81,8 +10,10 @@ const isProduction = import.meta.env.PROD;
 <Layout title="Home" description={SITE_DESCRIPTION}>
   {isProduction && <script>window.location.href = "/coming-soon";</script>}
 
+
+  <LandingPage />
   <!-- Header Section -->
-  <header class="bg-white dark:bg-gray-900 py-8 px-4">
+  <!-- <header class="bg-white dark:bg-gray-900 py-8 px-4">
     <div class="max-w-4xl mx-auto">
       <h1 class="text-6xl font-normal leading-16">
         An attempt to understand <span class="block"
@@ -98,10 +29,10 @@ const isProduction = import.meta.env.PROD;
         >
       </div>
     </div>
-  </header>
+  </header> -->
 
   <!-- Introduction Section -->
-  <section
+  <!-- <section
     class="bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-8 px-4"
   >
     <div class="max-w-4xl mx-auto">
@@ -128,7 +59,7 @@ const isProduction = import.meta.env.PROD;
         </div>
       </div>
     </div>
-  </section>
+  </section> -->
 
   <!-- Principles Section -->
   <!-- <section

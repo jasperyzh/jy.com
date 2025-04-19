@@ -1,39 +1,37 @@
 ---
 import Layout from "@/layouts/BaseLayout.astro";
-import { Button } from "@/components/starwind/button";
+import ReturnButton from "@/components/ReturnButton.astro";
+import Button from "@/components/starwind/button";
 ---
 
 <Layout title="404 Page Not Found">
-  <div class="container mx-auto px-4 py-16 flex flex-col items-center justify-center text-center">
-    <div class="max-w-md w-full bg-card border rounded-xl p-8 shadow-lg pattern-background">
+  <div
+    class="container mx-auto px-4 py-16 flex flex-col items-center justify-center text-center"
+  >
+    <div
+      class="max-w-md w-full bg-card border rounded-xl p-8 shadow-lg pattern-background"
+    >
       <div class="error-animation-container mb-6">
-        <div class="not-found-emoji text-6xl animate-bounce-slow">
-          (╯°□°）╯
-        </div>
-        <div class="flipped-element">
-          ︵
-        </div>
+        <div class="not-found-emoji text-6xl animate-bounce-slow">(╯°□°）╯</div>
+        <div class="flipped-element">︵</div>
         <div class="flipped-text">
           <span>404</span>
         </div>
       </div>
-      
+
       <h1 class="text-4xl font-bold mb-2">Page Not Found</h1>
       <div class="font-mono mb-6 text-muted-foreground">
         The page you're looking for doesn't exist
       </div>
-      
+
       <p class="text-muted-foreground mb-8">
-        Oops! The page you're looking for seems to have been flipped upside down and tossed away.
+        Oops! The page you're looking for seems to have been flipped upside down
+        and tossed away.
       </p>
-      
+
       <div class="flex justify-center space-x-4">
-        <Button variant="outline" onclick="window.history.back()">
-          Go Back
-        </Button>
-        <Button href="/" variant="primary">
-          Go Home
-        </Button>
+        <ReturnButton variant="primary">Go Back</ReturnButton>
+        <Button variant="outline">Return to Home</Button>
       </div>
     </div>
   </div>
@@ -45,7 +43,7 @@ import { Button } from "@/components/starwind/button";
     position: relative;
     overflow: hidden;
   }
-  
+
   .pattern-background::before {
     content: "";
     position: absolute;
@@ -54,14 +52,22 @@ import { Button } from "@/components/starwind/button";
     right: 0;
     bottom: 0;
     opacity: 0.05;
-    background-image: 
-      radial-gradient(circle at 25px 25px, var(--color-primary) 2%, transparent 0%),
-      radial-gradient(circle at 75px 75px, var(--color-primary) 2%, transparent 0%);
+    background-image:
+      radial-gradient(
+        circle at 25px 25px,
+        var(--color-primary) 2%,
+        transparent 0%
+      ),
+      radial-gradient(
+        circle at 75px 75px,
+        var(--color-primary) 2%,
+        transparent 0%
+      );
     background-size: 100px 100px;
     z-index: 0;
     pointer-events: none;
   }
-  
+
   /* All content should be above the pattern */
   .pattern-background > * {
     position: relative;
@@ -76,28 +82,29 @@ import { Button } from "@/components/starwind/button";
     justify-content: center;
     overflow: hidden;
   }
-  
+
   /* Emoji styles */
   .not-found-emoji {
     position: absolute;
     left: 20%;
     z-index: 10;
   }
-  
+
   /* Add a slow bounce animation */
   @keyframes bounce-slow {
-    0%, 100% {
+    0%,
+    100% {
       transform: translateY(0);
     }
     50% {
       transform: translateY(-10px);
     }
   }
-  
+
   .animate-bounce-slow {
     animation: bounce-slow 2s infinite ease-in-out;
   }
-  
+
   /* Flipped element animation */
   .flipped-element {
     position: absolute;
@@ -106,7 +113,7 @@ import { Button } from "@/components/starwind/button";
     left: 50%;
     z-index: 5;
   }
-  
+
   /* Style for the flipped text */
   .flipped-text {
     position: absolute;
@@ -116,14 +123,14 @@ import { Button } from "@/components/starwind/button";
     font-weight: bold;
     z-index: 1;
   }
-  
+
   .flipped-text span {
     display: inline-block;
     transform: rotate(180deg);
     font-family: monospace;
     color: var(--color-primary);
   }
-  
+
   /* Animation for tossed element */
   @keyframes toss {
     0% {
@@ -136,35 +143,39 @@ import { Button } from "@/components/starwind/button";
       transform: translateX(50px) translateY(0) rotate(360deg);
     }
   }
-  
+
   .flipped-text {
     animation: toss 4s infinite ease-in-out;
   }
-  
+
   /* Responsive adjustments */
   @media (max-width: 640px) {
     .not-found-emoji {
       font-size: 3rem;
       left: 15%;
     }
-    
+
     .flipped-text {
       font-size: 2rem;
       right: 15%;
     }
-    
+
     .error-animation-container {
       height: 100px;
     }
   }
-  
+
   /* Add a subtle hover effect to the card */
   .bg-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
   }
-  
+
   .bg-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    box-shadow:
+      0 10px 25px -5px rgba(0, 0, 0, 0.1),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04);
   }
 </style>

@@ -1,0 +1,305 @@
+---
+layout: "@/layouts/SketchLayout.astro"
+title: "Poisson-Disc Sampling"
+description: "An interactive demonstration of Bridson's algorithm for blue noise distribution"
+date: "2025-04-18"
+category: "Creative Coding"
+tags: ["javascript", "p5js", "generative-art", "procedural-generation", "blue-noise"]
+status: "completed"
+thumbnail: "/thumbnails/sketches/250418-poisson_disc_sampling.svg"
+draft: 0
+---
+
+import PoissonDiscSampling from "./250418-poisson_disc_sampling.astro";
+
+## Unveiling the Beauty of Order: Poisson-Disc Sampling Explained
+
+-> Reference: [Jason Davies's interactive demo](https://www.jasondavies.com/poisson-disc/)
+
+Ever looked at points scattered randomly and felt something was... off? Simple random distributions often lead to ugly clumps and large empty areas. If you need points that are distributed randomly but maintain a certain minimum distance from each other – think placing trees in a forest, generating texture details, or distributing objects in a scene – you need something more sophisticated. Enter **Poisson-Disc Sampling (PDS)**.
+
+<PoissonDiscSampling />
+
+**What is Poisson-Disc Sampling?**
+
+Poisson-Disc Sampling is a technique for generating points in a space (like a 2D plane or a 3D volume) such that:
+
+1.  **Minimum Distance:** No two points are closer to each other than a specified minimum distance, `r`. Imagine each point having a small "exclusion disc" of radius `r/2` around it – no two discs can overlap.
+2.  **Random Distribution:** Subject to the minimum distance constraint, the points should appear randomly distributed, without forming obvious grid-like patterns.
+3.  **Tight Packing:** The algorithm aims to place points as densely as possible without violating the minimum distance rule.
+
+The result is a distribution that looks much more natural and uniform than simple random sampling, often referred to as "blue noise" due to its characteristics in frequency space (it lacks low-frequency energy, which corresponds to clumping).
+
+*(Imagine comparing two images here: one with simple random points showing clumps, and one with PDS showing uniform-but-random spacing)*
+
+**Why Not Just Scatter and Check?**
+
+A naive approach might be:
+1. Generate a random point.
+2. Check its distance to *all* previously placed points.
+3. If it's far enough from all of them, keep it.
+4. Repeat until you have enough points or can't place any more.
+
+This works, but it's slow! Checking against every previous point makes it an O(n²) algorithm, which becomes computationally expensive very quickly as the number of points (`n`) grows.
+
+**Bridson's Algorithm: The Fast O(n) Approach**
+
+Robert Bridson developed a clever algorithm that achieves Poisson-Disc Sampling in linear time, O(n). This makes it highly practical even for large numbers of points. Here's the core idea:
+
+1.  **Spatial Grid:** Imagine overlaying a grid onto your sampling area. The key insight is to choose a cell size small enough that *each grid cell can contain at most one valid sample point*. A cell size of `r / sqrt(2)` (for 2D) works perfectly. This grid acts as an acceleration structure.
+2.  **Active List:** Maintain a list of "active" points. These are points that have been placed but might still have space around them to generate new valid neighbors.
+3.  **Process:**
+    *   Start with one random point placed in the grid and added to the active list.
+    *   While the active list is not empty:
+        *   Pick a random point (`P`) from the active list.
+        *   Try generating `k` candidate points randomly within an annulus (a ring) between distance `r` and `2r` around `P`. (Why `k` attempts? It's a trade-off; 30 is a common value. Too few might miss valid spots; too many wastes time).
+        *   For each candidate point (`C`):
+            *   **Check Bounds:** Is `C` inside the sampling area?
+            *   **Check Proximity (The Fast Part):** Instead of checking *all* existing points, only check points in the neighboring grid cells around `C`. Because of the grid cell size, if any point is too close (`< r`), it *must* be in one of these nearby cells. This proximity check is now very fast (effectively O(1)).
+            *   If `C` is valid (within bounds and not too close to neighbors):
+                *   Add `C` to the list of samples.
+                *   Add `C` to the grid.
+                *   Add `C` to the active list (it might generate neighbors later).
+                *   Stop generating candidates for `P` (move on to the next active point).
+        *   If, after `k` attempts, no valid candidate was found around `P`:
+            *   Remove `P` from the active list (it's considered "finished" – no more room around it).
+    *   The algorithm terminates when the active list is empty, meaning no more points can be placed according to the rules.
+
+**Why the Annulus (`r` to `2r`)?**
+Generating candidates *exactly* at distance `r` might work, but searching in the annulus `r` to `2r` gives more flexibility and increases the chances of finding a valid spot quickly, especially in denser areas.
+
+**Parameters:**
+
+*   `r`: The minimum distance. Controls the density of points. Smaller `r` means more points.
+*   `k`: The number of candidate points to try around each active point before giving up on it. Higher `k` is more thorough but slightly slower.
+
+**Conclusion**
+
+Bridson's algorithm provides an elegant and efficient way to generate high-quality, natural-looking point distributions. Its O(n) performance makes it suitable for a wide range of applications in graphics, procedural generation, simulation, and data visualization where both randomness and spatial separation are desired.
+
+**Further Reading**
+
+*   [Fast Poisson Disk Sampling in Arbitrary Dimensions](http://www.cs.ubc.ca/~rbridson/docs/bridson-siggraph07-poissondisk.pdf) - Robert Bridson's original paper.
+*   [Mitchell’s best-candidate algorithm](https://bost.ocks.org/mike/algorithms/) - Another approach, often simpler for low dimensions but potentially slower.
+*   [A Spatial Data Structure for Fast Poisson-Disk Sample Generation](https://www.cs.virginia.edu/~gfx/pubs/antimony/antimony.pdf) - Dunbar and Humphreys (discusses the grid structure).
+
+---
+
+## p5.js Sketch: Visualizing Bridson's Algorithm
+
+This sketch implements Bridson's algorithm and visualizes the process.
+
+*   **White points:** Final, accepted samples.
+*   **Yellow points:** Points currently in the "active" list.
+*   **Green circle (optional):** Shows the annulus search area around the currently processed active point.
+*   **Red points (optional):** Invalid candidates that were rejected.
+
+```javascript
+// Poisson-Disc Sampling using Bridson's Algorithm
+// Daniel Shiffman's Coding Train implementation is a great reference:
+// https://thecodingtrain.com/challenges/168-poisson-disc-sampling
+
+let r = 15; // Minimum distance between points
+let k = 30; // Max attempts to find a valid point around an active point
+let grid = [];
+let w, h;
+let cols, rows;
+let cellSize;
+let active = [];
+let samples = [];
+
+// Visualization toggles
+let showGrid = false;
+let showSearch = false;
+let showRejected = false;
+
+let processingSpeed = 50; // How many points to process per frame
+
+function setup() {
+  createCanvas(600, 400);
+  background(0);
+  w = width;
+  h = height;
+
+  // --- Algorithm Setup ---
+  // Step 0: Calculate grid cell size and dimensions
+  cellSize = r / sqrt(2);
+  cols = floor(w / cellSize);
+  rows = floor(h / cellSize);
+
+  // Initialize grid with -1 (or null) indicating empty cells
+  for (let i = 0; i < cols; i++) {
+    grid[i] = [];
+    for (let j = 0; j < rows; j++) {
+      grid[i][j] = null; // Use null to store actual vectors later
+    }
+  }
+
+  // Step 1: Select initial sample
+  let initialPos = createVector(random(w), random(h));
+  let initialCol = floor(initialPos.x / cellSize);
+  let initialRow = floor(initialPos.y / cellSize);
+
+  samples.push(initialPos);
+  active.push(initialPos);
+  grid[initialCol][initialRow] = initialPos; // Store the vector itself
+}
+
+function draw() {
+  //background(0); // Redraw background each frame if desired, or draw points on top
+
+  // --- Algorithm Processing ---
+  // Step 2: Process active list (do multiple steps per frame for speed)
+  for (let total = 0; total < processingSpeed && active.length > 0; total++) {
+    // Pick a random active point
+    let activeIndex = floor(random(active.length));
+    let currentPos = active[activeIndex];
+    let foundCandidate = false;
+
+    // Optional: Visualize the search area
+    if (showSearch) {
+      noFill();
+      stroke(0, 255, 0, 100);
+      strokeWeight(1);
+      ellipse(currentPos.x, currentPos.y, r * 4, r * 4); // Outer radius 2r
+      ellipse(currentPos.x, currentPos.y, r * 2, r * 2); // Inner radius r
+    }
+
+    // Generate k candidates around the current point
+    for (let i = 0; i < k; i++) {
+      let angle = random(TWO_PI);
+      let dist = random(r, 2 * r);
+      let candidatePos = p5.Vector.fromAngle(angle);
+      candidatePos.setMag(dist);
+      candidatePos.add(currentPos);
+
+      // Check if the candidate is valid
+      if (isValid(candidatePos)) {
+        samples.push(candidatePos);
+        active.push(candidatePos);
+        let cCol = floor(candidatePos.x / cellSize);
+        let cRow = floor(candidatePos.y / cellSize);
+        grid[cCol][cRow] = candidatePos; // Store the new point in the grid
+        foundCandidate = true;
+        break; // Found a valid point, stop trying for this active point
+      } else if (showRejected) {
+          // Optional: visualize rejected points
+          fill(255, 0, 0, 100);
+          noStroke();
+          ellipse(candidatePos.x, candidatePos.y, 4, 4);
+      }
+    }
+
+    // If no valid candidate found after k attempts, remove current point from active list
+    if (!foundCandidate) {
+      active.splice(activeIndex, 1);
+    }
+  }
+
+
+  // --- Visualization ---
+   background(0); // Clear background once per frame before drawing everything
+
+  // Draw the grid (optional)
+  if (showGrid) {
+    stroke(50);
+    strokeWeight(1);
+    for (let i = 0; i <= cols; i++) {
+      line(i * cellSize, 0, i * cellSize, h);
+    }
+    for (let j = 0; j <= rows; j++) {
+      line(0, j * cellSize, w, j * cellSize);
+    }
+  }
+
+  // Draw all accepted sample points (white)
+  fill(255);
+  noStroke();
+  for (let pt of samples) {
+    ellipse(pt.x, pt.y, 6, 6);
+  }
+
+  // Draw active points (yellow)
+  fill(255, 255, 0);
+  noStroke();
+  for (let pt of active) {
+    ellipse(pt.x, pt.y, 6, 6);
+  }
+
+   // Display info
+   fill(255);
+   textSize(12);
+   text(`Samples: ${samples.length}`, 10, 20);
+   text(`Active: ${active.length}`, 10, 40);
+   if (active.length == 0) {
+       text("Finished!", 10, 60);
+       noLoop(); // Stop drawing when done
+   }
+}
+
+// Function to check if a candidate point is valid
+function isValid(candidate) {
+  // Check bounds
+  if (candidate.x < 0 || candidate.x >= w || candidate.y < 0 || candidate.y >= h) {
+    return false;
+  }
+
+  // Calculate grid cell coordinates for the candidate
+  let candCol = floor(candidate.x / cellSize);
+  let candRow = floor(candidate.y / cellSize);
+
+  // Check neighboring cells (including the candidate's own cell)
+  // Check a 5x5 area around the candidate cell
+  // (A 3x3 area centered on the candidate's cell is sufficient if the candidate is exactly at distance >=r,
+  // but since we check distances up to 2r, points slightly further than one cell away could be relevant.
+  // A 5x5 grid check ensures we check all cells within distance 2r.)
+  let searchRadius = 2; // Check 2 cells in each direction (makes a 5x5 grid)
+  for (let i = -searchRadius; i <= searchRadius; i++) {
+    for (let j = -searchRadius; j <= searchRadius; j++) {
+      let neighborCol = candCol + i;
+      let neighborRow = candRow + j;
+
+      // Check if the neighbor cell is within the grid bounds
+      if (neighborCol >= 0 && neighborCol < cols && neighborRow >= 0 && neighborRow < rows) {
+        let neighborPoint = grid[neighborCol][neighborRow];
+        // If there's a point in the neighbor cell...
+        if (neighborPoint) {
+          // Calculate distance (use distSq for efficiency)
+          let dSq = p5.Vector.distSq(candidate, neighborPoint);
+          if (dSq < r * r) {
+            return false; // Too close! Invalid candidate.
+          }
+        }
+      }
+    }
+  }
+
+  // If we checked all neighbors and none were too close
+  return true;
+}
+
+// Reset sketch on mouse press
+function mousePressed() {
+    grid = [];
+    active = [];
+    samples = [];
+    setup(); // Re-initialize everything
+    loop(); // Make sure loop restarts if it stopped
+}
+
+// You can add controls for toggling visualizations or changing 'r' here
+// Example:
+// function keyPressed() {
+//   if (key === 'g') showGrid = !showGrid;
+//   if (key === 's') showSearch = !showSearch;
+//   if (key === 'x') showRejected = !showRejected;
+// }
+```
+
+**How to Run the Sketch:**
+
+1.  Go to the [p5.js Web Editor](https://editor.p5js.org/).
+2.  Paste the code into the editor.
+3.  Press the "Play" button (▶).
+
+You should see points gradually appearing on the canvas, respecting the minimum distance rule. Active points (yellow) will generate new points until they are surrounded, at which point they turn white and are removed from the active list. The process stops when no active points remain. Click the mouse to restart the sampling process. You can uncomment the `keyPressed` function or add sliders/buttons to control visualization options and the minimum distance `r`.

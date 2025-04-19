@@ -1,0 +1,276 @@
+---
+layout: "@/layouts/SketchLayout.astro"
+title: "Perlin Noise Fundamentals"
+description: "Interactive tutorial on Perlin noise concepts with p5.js"
+date: "2025-04-17"
+category: "Creative Coding"
+tags: ["javascript", "p5js", "generative-art", "perlin-noise", "tutorial"]
+status: "completed"
+thumbnail: "/thumbnails/sketches/250417-perlin_noise.svg"
+draft: 1
+---
+
+// import PerlinNoiseSketch from "./250417-perlin_noise.astro";
+
+/*
+https://editor.p5js.org/jasper.yzh/sketches/zu6EKj-30
+https://editor.p5js.org/jasper.yzh/sketches/YNyM8JgJs
+https://editor.p5js.org/jasper.yzh/sketches/KIGWhjmET
+https://editor.p5js.org/jasper.yzh/sketches/QY7vPTNJL
+
+https://editor.p5js.org/jasper.yzh/sketches/lyqeqrDFg
+https://editor.p5js.org/jasper.yzh/sketches/5gdla_N-a
+https://editor.p5js.org/jasper.yzh/sketches/QyC15IdXc
+
+final - https://editor.p5js.org/jasper.yzh/sketches/lYrWDG0fi
+final2 - https://editor.p5js.org/jasper.yzh/sketches/j2X8THUoi
+
+https://aistudio.google.com/prompts/1oObZTQpuuzLE1ox1XO-vXeY9wA8A01WZ
+
+https://aistudio.google.com/prompts/1x_V_829tMqvbDqbN1X3izlsd6l1UyVqi
+
+
+*/
+
+## Perlin Noise Fundamentals with p5.js - Tutorial Page Plan
+
+**Page Goal:** To introduce beginners to Perlin Noise concepts (1D, 2D, 3D, Distribution, Applications) using interactive p5.js sketches and clear explanations.
+
+**Design Philosophy:** Minimalist, single-column, high-contrast, focused on the interactive sketches. Neutral background (e.g., `#f8f8f8` light or `#282c34` dark). Readable sans-serif font (e.g., Inter, Lato, Open Sans).
+
+---
+
+### **Page Structure & Content:**
+
+**1. Header / Introduction**
+    *   **Title:** Understanding Perlin Noise in p5.js
+    *   **Brief Intro:**
+        *   What is Perlin Noise? (Smooth, natural-looking randomness vs. jagged `random()`).
+        *   Why use it? (Organic movement, textures like clouds/landscapes, procedural generation).
+        *   What this page covers (Quick overview of sections).
+        *   Mention the `noise()` function in p5.js (Value Noise, similar results).
+
+**2. Section 1: 1D Noise - Smooth Movement**
+    *   **Concept:** Introducing `noise(t)` for 1D values, mapping, and the effect of step size.
+    *   **Interactive Sketch:**
+        *   A circle moving horizontally across the canvas.
+        *   *Default:* X-position controlled by `map(noise(t), 0, 1, 0, width)`.
+        *   *Controls:*
+            *   Slider: "Noise Speed" (controls `t += increment`, range e.g., 0.001 to 0.05).
+            *   Button: "Compare to Random" (toggles circle's X between `noise(t)` and `random(width)`).
+            *   *(Optional Enhancement):* Small line graph below the canvas plotting the raw `noise(t)` value over time.
+    *   **Code Snippet & Annotation:**
+        ```javascript
+        let t = 0;
+        let speed = 0.01; // Controlled by slider
+
+        function draw() {
+          // 1. Get noise value (always 0-1)
+          let noiseVal = noise(t);
+
+          // 2. Map value to desired range (screen width)
+          let x = map(noiseVal, 0, 1, 0, width);
+
+          // 3. Use the mapped value
+          ellipse(x, height / 2, 20);
+
+          // 4. Increment time offset slowly for smoothness
+          t += speed;
+        }
+        ```
+        *Highlight lines 4, 7, 13. Add tooltip on `noise(t)` explaining `t` is the position in noise space.*
+    *   **Key Takeaway:** `noise(t)` creates smooth sequences. Increment `t` slowly for organic motion. Map the 0-1 output to your needed range.
+
+**3. Section 2: 1D Noise for 2D Wandering**
+    *   **Concept:** Using *independent* 1D noise lookups (`tx`, `ty`) for seemingly random 2D movement.
+    *   **Interactive Sketch:**
+        *   A single "walker" dot moving around the canvas.
+        *   X position controlled by `noise(tx)`, Y by `noise(ty)`.
+        *   `tx` starts at 0, `ty` starts far away (e.g., 10000).
+        *   *Controls:*
+            *   Button: "Restart Walker" (resets position and `tx`, `ty`).
+            *   Slider: "Step Speed" (adjusts `tx += speed`, `ty += speed`).
+    *   **Code Snippet & Annotation:**
+        ```javascript
+        let tx = 0;
+        let ty = 10000; // Different start offset for y
+        let speed = 0.01; // Controlled by slider
+
+        function draw() {
+          // Get noise for x and y independently
+          let noiseX = noise(tx);
+          let noiseY = noise(ty);
+
+          // Map to screen coordinates
+          let x = map(noiseX, 0, 1, 0, width);
+          let y = map(noiseY, 0, 1, 0, height);
+
+          ellipse(x, y, 10); // Draw walker
+
+          // Increment both offsets
+          tx += speed;
+          ty += speed;
+        }
+        ```
+        *Highlight lines 2, 7, 8, 15, 16. Explain *why* `ty` starts differently.*
+    *   **Key Takeaway:** Use different starting offsets in the 1D noise space (`tx`, `ty`) to get independent-seeming smooth values for multiple dimensions.
+
+**4. Section 3: 2D & 3D Noise - Textures & Animation**
+    *   **Concept:** Using `noise(xoff, yoff)` for spatial patterns and `noise(xoff, yoff, zoff)` for animation. Effect of `inc`.
+    *   **Interactive Sketch:**
+        *   A grid of rectangles/pixels colored by 2D noise (grayscale or simple color map).
+        *   *Controls:*
+            *   Slider: "Noise Scale (inc)" (controls the `+= inc` value for `xoff`/`yoff`, range e.g., 0.005 to 0.1). Lower values = zoomed in / larger patterns.
+            *   Slider: "Animation Speed" (controls `zoff += speed`, range 0 to 0.05). Set to 0 for static 2D noise.
+            *   Button: "Restart Animation" (resets `zoff`).
+            *   *(Optional):* `noiseDetail()` sliders (Octaves, Falloff).
+    *   **Code Snippet & Annotation:**
+        ```javascript
+        let inc = 0.01; // Noise Scale Slider
+        let zoff = 0;
+        let animSpeed = 0.01; // Animation Speed Slider
+
+        function draw() {
+          let yoff = 0;
+          for (let y = 0; y < height; y++) {
+            let xoff = 0;
+            for (let x = 0; x < width; x++) {
+              // Get 2D/3D noise value
+              let n = noise(xoff, yoff, zoff);
+              // Map to brightness/color
+              let bright = map(n, 0, 1, 0, 255);
+              // Set pixel or draw rect...
+              set(x, y, color(bright)); // Example using set()
+              xoff += inc; // Step through noise space
+            }
+            yoff += inc; // Step through noise space
+          }
+          updatePixels(); // Update canvas if using pixels[] or set()
+          zoff += animSpeed; // Move through 3rd dimension (time)
+        }
+        ```
+        *Highlight lines 1, 11, 16, 18, 21. Explain `xoff`, `yoff`, `zoff`, and `inc`.*
+    *   **Key Takeaway:** 2D noise creates spatial patterns. Small `inc` values create larger, smoother features. 3D noise animates these patterns over time.
+
+**5. Section 4: Noise Distribution - Getting Even Results**
+    *   **Concept:** Visualizing the default noise bias towards 0.5 and demonstrating mapping techniques to flatten the distribution.
+    *   **Interactive Sketch:**
+        *   Histogram visualization (like Provided Sketch 2).
+        *   *Controls:*
+            *   Button: "Show Raw Noise Distribution" (Generates histogram for `noise(i * res)`).
+            *   Button: "Show 'Flat Map' Distribution (0.3-0.7)" (Generates histogram using the mapping/wrapping for even results).
+            *   Button: "Show 'Mountain Map' Distribution (0.1-0.9)" (Generates histogram using mapping for terrain/size).
+            *   *(Optional):* Button: "Generate More Samples" (e.g., 10k or 100k for smoother histogram).
+        *   *(Visual Aid):* Draw semi-transparent colored bands over the histogram area representing the 0.1-0.9 and 0.3-0.7 input ranges when the corresponding button is active.
+    *   **Code Snippet & Annotation:** (Show snippets for the mapping functions)
+        ```javascript
+        // Flat Mapping (e.g., for colors/types)
+        function getFlatNoise(v) {
+          let n = noise(v) + 0.033; // Raw + Offset (video method)
+          let mapped = map(n, 0.3, 0.7, 0, 1);
+          // Wrap results to stay within 0-1
+          if (mapped < 0) mapped += 1;
+          if (mapped > 1) mapped -= 1;
+          return mapped;
+        }
+
+        // Mountain Mapping (e.g., for size/terrain)
+        function getMountainNoise(v) {
+          let n = noise(v); // Raw noise sufficient here
+          // Map wider range, less likely to go out of bounds
+          return map(n, 0.1, 0.9, 0, 1);
+        }
+        ```
+        *Explain the purpose of each mapping strategy in comments.*
+    *   **Key Takeaway:** Raw noise clusters around 0.5. Map specific ranges (0.3-0.7 for flat, 0.1-0.9 for mountain) to get more useful distributions for different tasks.
+
+**6. Section 5: Grid Systems - Coherent Patterns**
+    *   **Concept:** Applying noise (based on grid coords `x,y`) to control properties like color, size, rotation independently. Spatial coherence. `noiseSeed()` and `pixelDensity()`.
+    *   **Interactive Sketch:**
+        *   A grid of shapes (circles/squares).
+        *   *Properties Controlled by Noise:*
+            *   Color: Using "flat map" noise + `floor()` for palette index.
+            *   Size: Using "mountain map" noise.
+            *   Rotation (Optional): Using "flat map" + `floor()` for quantized steps or continuous.
+        *   *Controls:*
+            *   Button: "Regenerate Grid" (calls `noiseSeed(random(10000))` and redraws).
+            *   Dropdown/Radio: "Size Mapping Mode" (Switch between "Flat (0.3-0.7)" and "Mountain (0.1-0.9)" for size calculation to see the difference).
+            *   Slider: "Noise Scale" (shared `res` value, or individual ones).
+    *   **Code Snippet & Annotation:** (Focus on the loop and noise calls)
+        ```javascript
+        // In setup():
+        noiseSeed(random(10000));
+        pixelDensity(1); // Ensure consistency
+
+        // In draw() or setup() loop:
+        for (let i = 0; i < numAcross; i++) {
+          for (let j = 0; j < numAcross; j++) {
+            let x = gridStartX + i * cellSize;
+            let y = gridStartY + j * cellSize;
+
+            // Noise for Color (Flat Map)
+            let nColor = getFlatNoise(x * resC, y * resC);
+            let colIndex = floor(nColor * palette.length);
+
+            // Noise for Size (Selectable Map)
+            let nSize = (mappingMode === 'flat') ?
+                         getFlatNoise(x * resS, y * resS) :
+                         getMountainNoise(x * resS, y * resS);
+            let elementSize = map(nSize, 0, 1, minSize, maxSize);
+
+            // ... (Draw element with colorIndex, elementSize)
+          }
+        }
+        ```
+        *Highlight independent noise calls, mapping, use of `noiseSeed`, `pixelDensity`. Explain `resC`, `resS`.*
+    *   **Key Takeaway:** Use noise based on grid coordinates (`x*res, y*res`) for coherent patterns. Use *independent* noise calculations (different `res` or offsets) for different properties. `noiseSeed()` ensures reproducibility.
+
+**7. Section 6: Flow Fields - Following the Noise**
+    *   **Concept:** Using 2D/3D noise to define angles, creating particle flows. Static vs. Animated.
+    *   **Interactive Sketch:**
+        *   An animated flow field (like Provided Sketch 9).
+        *   *Controls:*
+            *   Slider: "Field Resolution (res)" (controls `res` in `noise()` call for angle).
+            *   Slider: "Particle Speed / Step Length".
+            *   Toggle: "Show Particle Trails" (switches between `background(0)` and `background(0, 10)`).
+            *   Toggle: "Evolving Field (3D Noise)" (adds/removes `zoff` from noise calculation).
+            *   Button: "Reset Particles".
+            *   *(Optional Static View):* Button: "Show Static Field Lines" (runs static field code once).
+    *   **Code Snippet & Annotation:** (Focus on angle calculation and particle update)
+        ```javascript
+        // Inside particle update loop:
+        let angleNoise = noise(p.x * res, p.y * res, zoff * resZ);
+        let angle = map(angleNoise, 0, 1, 0, TWO_PI); // Map noise to angle
+
+        // Calculate velocity/step
+        let vx = cos(angle) * speed;
+        let vy = sin(angle) * speed;
+
+        // Update position
+        p.x += vx;
+        p.y += vy;
+
+        // Boundary checks (wrap or reset)...
+        // Draw particle...
+        ```
+        *Highlight line 2, 3, 9, 10. Explain how noise determines the angle.*
+    *   **Key Takeaway:** Noise can define angles at every point, creating flow fields. Particles follow these angles for dynamic, organic movement. 3D noise makes the field itself evolve.
+
+**8. Final Touches Section**
+    *   **Glossary (Collapsible):**
+        *   *Noise Offset:* The input value(s) to `noise()` (like `t`, `xoff`, `yoff`), determining *where* in the noise space you are sampling.
+        *   *Noise Scale / Resolution (`inc` or `res`):* Controls how "zoomed in" you are. Small values = large, smooth features. Large values = small, detailed features.
+        *   *Octave:* A layer of noise calculation at a specific frequency. `noiseDetail()` controls these.
+        *   *Mapping:* Translating a value from one range (like noise's 0-1) to another (like screen width or color).
+        *   *Deterministic:* Producing the same output for the same input (important for `noiseSeed()`).
+    *   **Further Reading:**
+        *   Link to [p5.js `noise()` reference](https://p5js.org/reference/#/p5/noise).
+        *   Link to [p5.js `noiseDetail()` reference](https://p5js.org/reference/#/p5/noiseDetail).
+        *   Link to [p5.js `noiseSeed()` reference](https://p5js.org/reference/#/p5/noiseSeed).
+        *   Link to Ken Perlin's page or a relevant article about the history/types of noise.
+        *   Link to The Coding Train's Perlin Noise videos.
+    *   **Parting Encouragement:** "You've learned the basics! The real fun starts when you experiment. Try combining Perlin noise with vectors, physics, colors, shapes, and sound. See what you can create!"
+
+---
+
+This plan provides a clear, interactive, and progressive learning experience, directly addressing the user's prompt and leveraging the provided sketch ideas effectively.

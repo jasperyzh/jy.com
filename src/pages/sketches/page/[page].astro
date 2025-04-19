@@ -9,7 +9,7 @@ import { SKETCHES_PER_PAGE } from "../index.astro";
 
 // Define props and generate static paths
 export async function getStaticPaths() {
-  const allSketches = await getCollection("sketches");
+  const allSketches = await getCollection("sketches", ({ data }) => !data.draft);
 
   // Sort sketches by date (newest first)
   const sortedSketches = allSketches.sort((a, b) => {

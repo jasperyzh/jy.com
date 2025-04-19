@@ -1,0 +1,45 @@
+---
+import { formatYymmddDate } from "@/utils/formatDate";
+
+interface Props {
+  date?: Date | string | number;
+  title?: string;
+  description?: string;
+  tags?: string[];
+}
+
+const { date, title, description, tags } = Astro.props;
+---
+
+<header>
+  {
+    date && (
+      <time
+        datetime={
+          date instanceof Date
+            ? date.toISOString()
+            : new Date(date).toISOString()
+        }
+      >
+        {formatYymmddDate(date).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })}
+      </time>
+    )
+  }
+  {title && <h1>{title}</h1>}
+  {description && <p>{description}</p>}
+  <div class="flex flex-wrap items-center justify-end text-sm">
+    {
+      tags && tags.length > 0 && (
+        <>
+          {tags.map((tag: string) => (
+            <span class="inline-block mx-2">{tag}</span>
+          ))}
+        </>
+      )
+    }
+  </div>
+</header>

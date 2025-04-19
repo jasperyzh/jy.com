@@ -1,0 +1,307 @@
+<main id="learn-land-container">
+  <div id="learn-land-app"></div>
+  <div id="confetti-container"></div>
+
+  <!-- Volume Control UI -->
+  <div class="audio-controls">
+    <label for="volume-slider">Volume:</label>
+    <input type="range" id="volume-slider" min="0" max="100" value="40" />
+    <button id="mute-toggle">🔊</button>
+  </div>
+</main>
+
+<script>
+  // Import Vue components
+  import {
+    createApp,
+    ref,
+    computed,
+    onMounted,
+    watch,
+  } from "vue/dist/vue.esm-bundler.js";
+  import { audioPlayer } from "@/utils/custom-tone.js";
+  import LearnLandGame from "./250417-quizgame-education-game1.vue";
+
+  // Declare global audioPlayer for TypeScript
+  declare global {
+    interface Window {
+      audioPlayer: typeof audioPlayer;
+    }
+  }
+
+  // Confetti function
+  function createConfetti() {
+    const container = document.getElementById("confetti-container");
+    if (!container) return; // Guard clause for null check
+
+    const colors = [
+      "#667eea",
+      "#764ba2",
+      "#48bb78",
+      "#38a169",
+      "#f56565",
+      "#e53e3e",
+      "#fbd38d",
+      "#ed8936",
+    ];
+    const confettiCount = 200;
+
+    // Clear any existing confetti
+    container.innerHTML = ""; // Safe to use since we have the guard clause above
+
+    for (let i = 0; i < confettiCount; i++) {
+      const confetti = document.createElement("div");
+      const size = Math.random() * 10 + 5; // Random size between 5-15px
+
+      confetti.style.position = "absolute";
+      confetti.style.width = `${size}px`;
+      confetti.style.height = `${size}px`;
+      confetti.style.backgroundColor =
+        colors[Math.floor(Math.random() * colors.length)];
+      confetti.style.borderRadius = Math.random() > 0.5 ? "50%" : "0"; // Circle or square
+      confetti.style.opacity = `${Math.random() * 0.8 + 0.2}`; // Convert to string for TypeScript
+
+      // Random starting position (top of screen, random horizontal position)
+      confetti.style.left = `${Math.random() * 100}vw`;
+      confetti.style.top = `-${size}px`;
+
+      // Random rotation
+      confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+      // Animation properties
+      const duration = Math.random() * 3 + 2; // 2-5 seconds
+      const delay = Math.random() * 2; // 0-2 seconds delay
+
+      confetti.style.animation = `fall ${duration}s ease-in ${delay}s forwards`;
+
+      // Safe to use since we have the guard clause above
+      container.appendChild(confetti);
+
+      // Remove confetti after animation completes
+      setTimeout(
+        () => {
+          confetti.remove();
+        },
+        (duration + delay) * 1000
+      );
+    }
+
+    // Add fall animation to the document if it doesn't exist
+    if (!document.getElementById("confetti-animation")) {
+      const style = document.createElement("style");
+      style.id = "confetti-animation";
+      style.textContent = `
+                        @keyframes fall {
+                            0% { transform: translateY(0) rotate(0deg); }
+                            100% { transform: translateY(100vh) rotate(720deg); }
+                        }
+                    `;
+      document.head.appendChild(style);
+    }
+  }
+
+  // Setup Vue app
+  const LearnLandApp = {
+    components: {
+      LearnLandGame,
+    },
+    setup() {
+      // Make audioPlayer available globally for components
+      window.audioPlayer = audioPlayer;
+
+      return {};
+    },
+    template: `
+      <LearnLandGame />
+    `,
+  };
+
+  // Mount the Vue app when the document is ready
+  document.addEventListener("DOMContentLoaded", () => {
+    // Create the app without initializing audio yet
+    const app = createApp(LearnLandApp);
+    app.mount("#learn-land-app");
+
+    // Set up volume controls (without initializing audio yet)
+    const volumeSlider = document.getElementById("volume-slider");
+    const muteToggle = document.getElementById("mute-toggle");
+
+    if (volumeSlider && muteToggle) {
+      // First interaction with audio controls will initialize audio
+      const initAudioOnInteraction = async () => {
+        try {
+          if (!audioPlayer.initialized) {
+            console.log("Initializing audio on user interaction");
+            await audioPlayer.init();
+            audioPlayer.setVolume(0.4);
+          }
+        } catch (error) {
+          console.error("Failed to initialize audio:", error);
+        }
+      };
+
+      // Update volume when slider changes
+      volumeSlider.addEventListener("input", async (e) => {
+        await initAudioOnInteraction();
+
+        const target = e.target as HTMLInputElement;
+        if (!target) return;
+
+        const volume = Number(target.value) / 100;
+        audioPlayer.setVolume(volume);
+
+        // Update mute button icon based on volume
+        muteToggle.textContent = volume === 0 ? "🔇" : "🔊";
+      });
+
+      // Toggle mute when button is clicked
+      muteToggle.addEventListener("click", async () => {
+        await initAudioOnInteraction();
+
+        if (audioPlayer.isMuted) {
+          audioPlayer.unmute();
+          muteToggle.textContent = "🔊";
+          // TypeScript doesn't know volumeSlider is an HTMLInputElement
+          (volumeSlider as HTMLInputElement).value = String(
+            audioPlayer.volume * 100
+          );
+        } else {
+          audioPlayer.mute();
+          muteToggle.textContent = "🔇";
+        }
+      });
+    }
+  });
+</script>
+<style is:global>
+  #learn-land-container {
+    #learn-land-app {
+      background-color: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      margin-top: 20px;
+      overflow: hidden;
+      position: relative;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      min-height: 600px;
+    }
+
+    /* Fonts and general styling */
+    .learn-land-app {
+      font-family: "Comic Sans MS", "Chalkboard SE", sans-serif;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: "Comic Sans MS", "Chalkboard SE", sans-serif;
+      color: #4a5568;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes bounce {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes shake {
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+      20%,
+      60% {
+        transform: translateX(-5px);
+      }
+      40%,
+      80% {
+        transform: translateX(5px);
+      }
+    }
+
+    /* Confetti container */
+    #confetti-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* Audio Controls Styling */
+    .audio-controls {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 10px;
+      border-radius: 50px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .audio-controls label {
+      margin-right: 10px;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .audio-controls input[type="range"] {
+      width: 80px;
+      margin-right: 10px;
+    }
+
+    .audio-controls button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      transition: all 0.2s;
+    }
+
+    .audio-controls button:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+  }
+</style>

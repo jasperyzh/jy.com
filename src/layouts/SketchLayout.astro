@@ -5,231 +5,65 @@ import { Button } from "@/components/starwind/button";
 import { Badge } from "@/components/starwind/badge";
 import { getCategoryUrl, slugify } from "@/utils/sketchUtils";
 
-const { title, description, date, category, tags, status, thumbnail, liveUrl } = Astro.props;
+import Article from "@/components/Article.astro";
+import ArticleHeader from "@/components/ArticleHeader.astro";
+import ArticleContent from "@/components/ArticleContent.astro";
+import ArticleFooter from "@/components/ArticleFooter.astro";
 
-// Format the date
-const formattedDate = date 
-  ? formatYymmddDate(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
-  : '';
+// Define the type for frontmatter props expected in Markdown files
 
-// Status badge color mapping
-const statusColors = {
-  idea: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
-  wip: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
-  completed: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
-  archived: "bg-gray-100 text-gray-800 dark:bg-gray-800/50 dark:text-gray-400"
+type Props = {
+  title: string;
+  description?: string;
+  date?: Date;
+  category?: string;
+  tags?: string[];
+  status?: "idea" | "wip" | "completed" | "archived";
+  thumbnail?: string;
+  liveUrl?: string;
+  frontmatter?: Record<string, any>;
 };
+
+const {
+  frontmatter,
+  title: propTitle,
+  description: propDescription,
+  date: propDate,
+  category: propCategory,
+  tags: propTags,
+  status: propStatus,
+  thumbnail: propThumbnail,
+  liveUrl: propLiveUrl,
+} = Astro.props;
+
+// Use frontmatter data if available, otherwise fall back to props
+const title = frontmatter?.title || propTitle;
+const description = frontmatter?.description || propDescription;
+const date = frontmatter?.date || propDate;
+const category = frontmatter?.category || propCategory;
+const tags = frontmatter?.tags || propTags;
+const status = frontmatter?.status || propStatus;
+const thumbnail = frontmatter?.thumbnail || propThumbnail;
+const liveUrl = frontmatter?.liveUrl || propLiveUrl;
 ---
 
-<BaseLayout {title} {description}>
-  <main class="max-w-4xl mx-auto px-4 py-8">
-    <article class="bg-white dark:bg-slate-800 shadow-xl rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700">
-      <header class="p-6 bg-gradient-to-r from-emerald-500 to-blue-600 text-white">
-        <!-- Back Button -->
-        <div class="mb-4">
-          <Button variant="outline" size="sm" class="bg-white/20 hover:bg-white/30 text-white" onclick="history.back()">
-            <i class="bi bi-arrow-left mr-2"></i> Back
-          </Button>
-        </div>
+<BaseLayout title={title} description={description}>
+  <Article>
+    <ArticleHeader
+      date={date}
+      title={title}
+      description={description}
+      tags={tags}
+    />
 
-        <h1 class="text-4xl font-extrabold mb-3 leading-tight">{title}</h1>
-        <p class="text-xl opacity-90 mb-6 leading-relaxed">{description}</p>
-        
-        <div class="flex flex-wrap items-center gap-4 text-sm opacity-80">
-          {status && (
-            <span class={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[status] || ''}`}>
-              {status.charAt(0).toUpperCase() + status.slice(1)}
-            </span>
-          )}
-          
-          <div class="flex items-center">
-            <i class="bi bi-calendar-event mr-2"></i>
-            <time datetime={date instanceof Date ? date.toISOString() : ''}>{formattedDate}</time>
-          </div>
-          
-          {category && (
-            <div class="flex items-center">
-              <i class="bi bi-folder mr-2"></i>
-              <a href={getCategoryUrl(category)} class="hover:underline">{category}</a>
-            </div>
-          )}
-          
-          {liveUrl && (
-            <a href={liveUrl} target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-white hover:underline">
-              <i class="bi bi-box-arrow-up-right mr-2"></i>
-              Live Demo
-            </a>
-          )}
-        </div>
-        
-        {tags && tags.length > 0 && (
-          <div class="mt-4 flex flex-wrap gap-2">
-            {tags.map((tag: string) => (
-              <Badge variant="secondary" class="bg-white/20 hover:bg-white/30">
-                <a href={`/sketches/tag/${slugify(tag)}`} class="hover:underline">{tag}</a>
-              </Badge>
-            ))}
-          </div>
-        )}
-      </header>
+    <ArticleContent>
+      <slot />
+    </ArticleContent>
 
-      {thumbnail && (
-        <div class="w-full relative">
-          <img 
-            src={thumbnail} 
-            alt={`Thumbnail for ${title}`} 
-            class="w-full h-64 object-cover object-center" 
-          />
-        </div>
-      )}
-      
-      <div class="px-8 py-10">
-        <div class="prose dark:prose-invert prose-lg mx-auto">
-          <slot />
-        </div>
-      </div>
-      
-      <footer class="p-6 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-700">
-        <div class="flex justify-between items-center">
-          <Button variant="outline" onclick="history.back()">
-            <i class="bi bi-arrow-left mr-2"></i> Back to Sketches
-          </Button>
-          
-          <div class="flex gap-2">
-            <Button size="sm" variant="ghost" aria-label="Share on Twitter" 
-              onclick={`window.open('https://twitter.com/intent/tweet?url=${encodeURIComponent(Astro.url.href)}&text=${encodeURIComponent(title)}', '_blank')`}>
-              <i class="bi bi-twitter text-lg"></i>
-            </Button>
-            <Button size="sm" variant="ghost" aria-label="Share on Facebook"
-              onclick={`window.open('https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(Astro.url.href)}', '_blank')`}>
-              <i class="bi bi-facebook text-lg"></i>
-            </Button>
-            <Button size="sm" variant="ghost" aria-label="Share on LinkedIn"
-              onclick={`window.open('https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.href)}', '_blank')`}>
-              <i class="bi bi-linkedin text-lg"></i>
-            </Button>
-            <Button size="sm" variant="ghost" aria-label="More sharing options"
-              title="More sharing options"
-              onclick={`window.open('https://www.addtoany.com/share?url=${encodeURIComponent(Astro.url.href)}&title=${encodeURIComponent(title)}', '_blank')`}>
-              <i class="bi bi-share text-lg"></i>
-            </Button>
-          </div>
-        </div>
-      </footer>
-    </article>
-  </main>
+    <ArticleFooter
+      returnUrl="/sketches"
+      returnLabel="Back to Sketches"
+      title={title}
+    />
+  </Article>
 </BaseLayout>
-
-<script>
-  // Initialize PrismJS
-  import { initPrism } from '@/utils/prism';
-  
-  document.addEventListener('DOMContentLoaded', () => {
-    // Initialize syntax highlighting
-    initPrism();
-  });
-</script>
-
-<style is:global>
-  /* This ensures MDX content is properly styled */
-  .prose {
-    max-width: 100%;
-  }
-  
-  .prose h1 {
-    color: #2d3748;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-    font-size: 2.25rem;
-    font-weight: 700;
-    line-height: 1.2;
-  }
-  
-  .prose h2 {
-    color: #2d3748;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    font-size: 1.875rem;
-    font-weight: 700;
-    line-height: 1.3;
-  }
-  
-  .prose h3 {
-    color: #2d3748;
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
-    font-size: 1.5rem;
-    font-weight: 600;
-    line-height: 1.3;
-  }
-  
-  .prose p {
-    margin: 1.25rem 0;
-    line-height: 1.7;
-  }
-  
-  .prose ul, .prose ol {
-    margin: 1.25rem 0;
-    padding-left: 1.5rem;
-  }
-  
-  .prose li {
-    margin: 0.5rem 0;
-  }
-  
-  .prose a {
-    color: #3182ce;
-    text-decoration: underline;
-    text-underline-offset: 0.15em;
-  }
-  
-  .prose a:hover {
-    color: #2c5282;
-  }
-  
-  .prose blockquote {
-    border-left: 4px solid #e2e8f0;
-    padding-left: 1rem;
-    margin: 1.5rem 0;
-    color: #4a5568;
-    font-style: italic;
-  }
-  
-  .dark .prose h1, 
-  .dark .prose h2, 
-  .dark .prose h3 {
-    color: #e2e8f0;
-  }
-  
-  .dark .prose a {
-    color: #63b3ed;
-  }
-  
-  .dark .prose a:hover {
-    color: #90cdf4;
-  }
-  
-  .dark .prose blockquote {
-    border-left-color: #4a5568;
-    color: #a0aec0;
-  }
- 
-
-  /* Interactive component styling */
-  .interactive-component {
-    margin: 2rem 0;
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    background: rgba(0, 0, 0, 0.03);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-  }
-
-  .dark .interactive-component {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-</style> 

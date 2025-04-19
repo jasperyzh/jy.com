@@ -5,7 +5,7 @@ import { getAllTags, unslugify, getSketchFullUrl, slugify, getTagUrl, getCategor
 
 // Generate static paths for all tags
 export async function getStaticPaths() {
-  const sketches = await getCollection("sketches");
+  const sketches = await getCollection("sketches", ({ data }) => !data.draft);
   const tags = getAllTags(sketches);
 
   return tags.map(tag => ({

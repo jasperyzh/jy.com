@@ -1,12 +1,13 @@
 ---
 import { getCollection, render } from "astro:content";
-import Layout from "@/layouts/BaseLayout.astro";
-import ReturnButton from "@/components/ReturnButton.astro";
-import { formatYymmddDate } from "@/utils/formatDate";
+import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getBlogFilename } from "@/utils/blogUtils";
 
 // Commented out until component is implemented
-import ShareButtonA2A from "@/components/ShareButtonA2A.astro";
+import Article from "@/components/Article.astro";
+import ArticleHeader from "@/components/ArticleHeader.astro";
+import ArticleContent from "@/components/ArticleContent.astro";
+import ArticleFooter from "@/components/ArticleFooter.astro";
 
 // Fetch all posts and generate paths for each post
 export async function getStaticPaths() {
@@ -55,109 +56,34 @@ if (entry) {
 }
 ---
 
-<Layout
+<BaseLayout
   title={entry?.data.title || "Blog Post Not Found"}
   description={entry?.data.description ||
     "The requested blog post could not be found"}
 >
-  <div class="container container--grid max-w-5xl mx-auto mb-16   px-4">
-    {
-      entry ? (
-        <article>
-          <header>
-            <time datetime={entry.data.pubDate.toISOString()}>
-              {formatYymmddDate(entry.data.pubDate).toLocaleDateString(
-                "en-US",
-                {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                }
-              )}
-            </time>
-            <h1>{entry.data.title}</h1>
-            <div class="flex items-center justify-end text-sm">
-              {entry.data.tags && entry.data.tags.length > 0 && (
-                <>
-                  {entry.data.tags.map((tag: string) => (
-                    <span class="inline-block mx-2">{tag}</span>
-                  ))}
-                </>
-              )}
-            </div>
-          </header>
+  {
+    entry ? (
+      <Article>
+        <ArticleHeader
+          date={entry.data.pubDate}
+          title={entry.data.title}
+          description={entry.data.description}
+          tags={entry.data.tags}
+        />
 
-          <div class="content-wrapper max-w-2xl md:mx-auto">
-            <div class="prose prose-lg">
-              {Content && <Content />}
-              {!Content && <p>Content could not be loaded</p>}
-            </div>
-          </div>
+        <ArticleContent>
+          {Content && <Content />}
+          {!Content && <p>Content could not be loaded</p>}
+        </ArticleContent>
 
-          <footer>
-            <ReturnButton href="/blog" label="Back to Blog" />
-            <ShareButtonA2A {entry} />
-          </footer>   
-        </article>
-      ) : (
-        <p>Blog Post Not Found</p>
-      )
-    }
-  </div>
-</Layout>
-<style>
-  .container--grid > article {
-    /* Base mobile layout first */
-    display: grid;
-    grid-column: 1 / -1;
-    grid-template-columns: subgrid; /* Single column on mobile */
-    position: relative;
-
-    header {
-      grid-column: 1 / -1; /* Full width on mobile */
-      grid-row: 1;
-    }
-
-    .content-wrapper {
-      grid-column: 1 / -1; /* Full width on mobile */
-      grid-row: 2;
-
-      overflow-x: auto;
-    }
-
-    footer {
-      grid-column: 1 / -1; /* Full width on mobile */
-      /* grid-row: 3; */
-
-      justify-self: center; /* Center on mobile */
-      position: relative; /* Normal flow on mobile */
-
-      margin-block: 1rem;
-    }
-
-    @media (min-width: 1024px) {
-      padding: 0 1rem;
-      grid-template-columns: subgrid;
-      grid-template-rows: auto auto auto;
-      header {
-        grid-column: 1 / span 2;
-        grid-row: 1 / span 1;
-
-        position: sticky;
-        top: 6rem; /* Adjust to account for fixed navbar height + some padding */
-
-        padding-inline-end: 1rem;
-      }
-
-      .content-wrapper {
-        grid-column: 3 / span 4;
-        grid-row: 1 / 4;
-      }
-
-      footer {
-        grid-column: 1 / span 2;
-        grid-row: -1 / -2;
-      }
-    }
+        <ArticleFooter
+          returnUrl="/blog"
+          returnLabel="Back to Blog"
+          title={entry.data.title}
+        />
+      </Article>
+    ) : (
+      <p>Blog Post Not Found</p>
+    )
   }
-</style>
+</BaseLayout>

@@ -185,6 +185,10 @@ const sketches = defineCollection({
     thumbnail: z.string().optional(),
     liveUrl: z.string().optional(),
     layout: z.string().optional(),
+    draft: z
+      .union([z.boolean(), z.number()])
+      .transform((value) => Boolean(value))
+      .default(false),
   }),
 });
 

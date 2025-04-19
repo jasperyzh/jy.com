@@ -6,7 +6,7 @@ import { getSketchFilename } from "@/utils/sketchUtils";
 
 // Fetch all sketches and generate paths for each
 export async function getStaticPaths() {
-  const allSketches = await getCollection("sketches");
+  const allSketches = await getCollection("sketches", ({ data }) => !data.draft);
 
   // Generate paths for each sketch using the utility function
   const paths = allSketches.map((entry) => {
@@ -32,7 +32,8 @@ if (entry) {
   Content = rendered.Content;
 }
 
-// MDX files with their own layout don't need to be wrapped in SketchLayout
+// Determine which layout to use based on frontmatter
+// If the sketch defines a custom layout, use that, otherwise use the default SketchLayout
 const hasCustomLayout = entry?.data?.layout && typeof entry.data.layout === 'string';
 ---
 

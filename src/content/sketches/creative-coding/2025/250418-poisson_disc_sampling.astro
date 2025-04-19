@@ -1,0 +1,233 @@
+<div>
+  <!-- p5js cdn -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.1/p5.js"></script>
+  <div id="poissonDiscSamplingCanvas"></div>
+
+</div>
+
+
+<script is:inline>
+ // Poisson-Disc Sampling using Bridson's Algorithm
+// Daniel Shiffman's Coding Train implementation is a great reference:
+// https://thecodingtrain.com/challenges/168-poisson-disc-sampling
+
+// https://www.jasondavies.com/poisson-disc/
+
+let r = 15; // Minimum distance between points
+let k = 30; // Max attempts to find a valid point around an active point
+let grid = [];
+let w, h;
+let cols, rows;
+let cellSize;
+let active = [];
+let samples = [];
+
+// Visualization toggles
+let showGrid = false;
+let showSearch = false;
+let showRejected = false;
+
+let processingSpeed = 50; // How many points to process per frame
+function setup() {
+  
+  let canvas = createCanvas(640, 480);
+  canvas.style('width', '100%');
+  canvas.style('height', 'auto');
+  canvas.style('aspect-ratio', '4/3');
+
+  canvas.parent("poissonDiscSamplingCanvas");
+  
+  // frameRate(12)
+  background(0);
+  w = width;
+  h = height;
+
+  // --- Algorithm Setup ---
+  cellSize = r / sqrt(2);
+  cols = floor(w / cellSize);
+  rows = floor(h / cellSize);
+
+  // Initialize grid
+  grid = []; // Make sure grid is reset here if setup is called again
+  for (let i = 0; i < cols; i++) {
+    grid[i] = [];
+    for (let j = 0; j < rows; j++) {
+      grid[i][j] = null;
+    }
+  }
+
+  // --- Step 1: Select initial sample ---
+  let initialPos = createVector(random(w), random(h));
+
+  // Calculate initial grid indices
+  let initialCol = floor(initialPos.x / cellSize);
+  let initialRow = floor(initialPos.y / cellSize);
+
+  // *** FIX: Constrain indices to be within valid grid bounds ***
+  // This prevents errors if random() hits the exact edge w or h
+  initialCol = constrain(initialCol, 0, cols - 1);
+  initialRow = constrain(initialRow, 0, rows - 1);
+
+  // Now it's safe to add the point
+  samples = [initialPos]; // Reset samples array
+  active = [initialPos];  // Reset active array
+  grid[initialCol][initialRow] = initialPos;
+}
+
+function draw() {
+  //background(0); // Redraw background each frame if desired, or draw points on top
+
+  // --- Algorithm Processing ---
+  // Step 2: Process active list (do multiple steps per frame for speed)
+  for (let total = 0; total < processingSpeed && active.length > 0; total++) {
+    // Pick a random active point
+    let activeIndex = floor(random(active.length));
+    let currentPos = active[activeIndex];
+    let foundCandidate = false;
+
+    // Optional: Visualize the search area
+    if (showSearch) {
+      noFill();
+      stroke(0, 255, 0, 100);
+      strokeWeight(1);
+      ellipse(currentPos.x, currentPos.y, r * 4, r * 4); // Outer radius 2r
+      ellipse(currentPos.x, currentPos.y, r * 2, r * 2); // Inner radius r
+    }
+
+    // Generate k candidates around the current point
+    for (let i = 0; i < k; i++) {
+      let angle = random(TWO_PI);
+      // *** Fix 1: Rename 'dist' variable ***
+      let candidateDist = random(r, 2 * r);
+      let candidatePos = p5.Vector.fromAngle(angle);
+      // *** Use renamed variable ***
+      candidatePos.setMag(candidateDist);
+      candidatePos.add(currentPos);
+
+      // Check if the candidate is valid
+      if (isValid(candidatePos)) {
+        samples.push(candidatePos);
+        active.push(candidatePos);
+        
+        let cCol = floor(candidatePos.x / cellSize);
+        let cRow = floor(candidatePos.y / cellSize);
+         // *** FIX: Constrain calculated indices before grid assignment ***
+        cCol = constrain(cCol, 0, cols - 1);
+        cRow = constrain(cRow, 0, rows - 1);
+        
+        
+        // Now safe to assign
+        grid[cCol][cRow] = candidatePos; // Store the new point in the grid
+        foundCandidate = true;
+        break; // Found a valid point, stop trying for this active point
+      } else if (showRejected) {
+          // Optional: visualize rejected points
+          fill(255, 0, 0, 100);
+          noStroke();
+          ellipse(candidatePos.x, candidatePos.y, 4, 4);
+      }
+    }
+
+    // If no valid candidate found after k attempts, remove current point from active list
+    if (!foundCandidate) {
+      active.splice(activeIndex, 1);
+    }
+  }
+
+
+  // --- Visualization ---
+   background(0); // Clear background once per frame before drawing everything
+
+  // Draw the grid (optional)
+  if (showGrid) {
+    stroke(50);
+    strokeWeight(1);
+    for (let i = 0; i <= cols; i++) {
+      line(i * cellSize, 0, i * cellSize, h);
+    }
+    for (let j = 0; j <= rows; j++) {
+      line(0, j * cellSize, w, j * cellSize);
+    }
+  }
+
+  // Draw all accepted sample points (white)
+  fill(120);
+  noStroke();
+  for (let pt of samples) {
+    ellipse(pt.x, pt.y, 6, 6);
+  }
+
+  // Draw active points (yellow)
+  fill(255, 255, 0);
+  noStroke();
+  for (let pt of active) {
+    ellipse(pt.x, pt.y, 6, 6);
+  }
+
+   // Display info
+   fill(255);
+   textSize(12);
+   text(`Samples: ${samples.length}`, 10, 20);
+   text(`Active: ${active.length}`, 10, 40);
+   if (active.length == 0) {
+       text("Finished!", 10, 60);
+       noLoop(); // Stop drawing when done
+   }
+}
+
+// Function to check if a candidate point is valid
+function isValid(candidate) {
+  // Check bounds
+  if (candidate.x < 0 || candidate.x >= w || candidate.y < 0 || candidate.y >= h) {
+    return false;
+  }
+
+  // Calculate grid cell coordinates for the candidate
+  let candCol = floor(candidate.x / cellSize);
+  let candRow = floor(candidate.y / cellSize);
+
+  // Check neighboring cells (including the candidate's own cell)
+  let searchRadius = 2; // Check 2 cells in each direction (makes a 5x5 grid)
+  for (let i = -searchRadius; i <= searchRadius; i++) {
+    for (let j = -searchRadius; j <= searchRadius; j++) {
+      let neighborCol = candCol + i;
+      let neighborRow = candRow + j;
+
+      // Check if the neighbor cell is within the grid bounds
+      if (neighborCol >= 0 && neighborCol < cols && neighborRow >= 0 && neighborRow < rows) {
+        let neighborPoint = grid[neighborCol][neighborRow];
+        // If there's a point in the neighbor cell...
+        if (neighborPoint) {
+          // *** Fix 2: Calculate squared distance correctly ***
+          let dSq = p5.Vector.sub(candidate, neighborPoint).magSq();
+          // Calculate distance (use distSq for efficiency)
+          // let dSq = p5.Vector.distSq(candidate, neighborPoint); // Incorrect!
+          if (dSq < r * r) {
+            return false; // Too close! Invalid candidate.
+          }
+        }
+      }
+    }
+  }
+
+  // If we checked all neighbors and none were too close
+  return true;
+}
+
+// Reset sketch on mouse press
+function mousePressed() {
+    grid = [];
+    active = [];
+    samples = [];
+    setup(); // Re-initialize everything
+    loop(); // Make sure loop restarts if it stopped
+}
+
+// You can add controls for toggling visualizations or changing 'r' here
+// Example:
+// function keyPressed() {
+//   if (key === 'g') showGrid = !showGrid;
+//   if (key === 's') showSearch = !showSearch;
+//   if (key === 'x') showRejected = !showRejected;
+// }
+</script>

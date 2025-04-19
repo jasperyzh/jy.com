@@ -1,0 +1,70 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { tv } from "tailwind-variants";
+
+type Props = HTMLAttributes<"article">;
+
+const article = tv({
+  base: "grid relative",
+});
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<div class="container container--grid max-w-5xl mx-auto mb-16 px-4">
+  <article class={article({ class: className })} {...rest}>
+    <slot />
+  </article>
+</div>
+<style>
+  article {
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    position: relative;
+  }
+
+  /* Styling for child elements */
+  article :global(header) {
+    grid-column: 1 / -1; /* Full width on mobile */
+    grid-row: 1;
+  }
+
+  article :global(.content-wrapper) {
+    grid-column: 1 / -1; /* Full width on mobile */
+    grid-row: 2;
+  }
+
+  article :global(footer) {
+    grid-column: 1 / -1; /* Full width on mobile */
+    justify-self: center; /* Center on mobile */
+    position: relative; /* Normal flow on mobile */
+    margin-block: 1rem;
+  }
+
+  @media (min-width: 1024px) {
+    article {
+      padding: 0 1rem;
+      grid-template-columns: subgrid;
+      grid-template-rows: auto auto auto;
+    }
+
+    article :global(header) {
+      grid-column: 1 / span 2;
+      grid-row: 1 / span 1;
+      position: sticky;
+      top: 6rem; /* Adjust to account for fixed navbar height + some padding */
+      padding-inline-end: 1rem;
+    }
+
+    article :global(.content-wrapper) {
+      grid-column: 3 / span 4;
+      grid-row: 1 / 4;
+    }
+
+    article :global(footer) {
+      grid-column: 1 / span 2;
+      grid-row: -1 / -2;
+    }
+  }
+</style>
+
