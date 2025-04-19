@@ -2,26 +2,27 @@
   "contactInfo": {
     "name": "Jasper Yong",
     "title": "Full-Stack Web Developer",
-    "email": "info@jasperyong.com",
+    "email": "jasper.yzh@gmail.com",
     "website": "jasperyong.com",
-    "github": "github.com/jy",
-    "linkedin": "linkedin.com/in/jy",
+    "github": "https://github.com/jasperyzh/",
+    "linkedin": "https://www.linkedin.com/in/jaspery/",
     "location": "Kuala Lumpur, Malaysia"
   },
-  "summary": "Diverse background in various sectors of the tech industry, with solid education and curiosity that have driven a career spanning six years. Proven expertise in building applications across all layers, from server architecture to data storage and user interface. Skilled in leading projects, implementing SDLC methodologies, and streamlining workflow processes to enhance team efficiency and delivery.",
-  
+  "summary": "Dedicated Full-Stack Web Developer with 9+ years of experience across Full-Stack Web and back-end development. Proficient in crafting responsive, user-centric web solutions for diverse industries. Proven ability in team leadership, optimize SEO, and manage project effectively. Passionate about delivering engaging web experiences and continuously expanding expertise in the latest technologies.",
+
   "professionalExperience": [
     {
       "role": "Full-Stack Web Developer",
-      "company": "Self-Employed / Freelance",
-      "period": "Jan 2019 - Present",
+      "company": "Fishermen Analytics",
+      "period": "Aug 2015 - May 2024",
       "description": "Collaborate with startups and SMEs to develop and maintain websites and web applications using modern technologies.",
       "highlights": [
-        "Architecture design and API implementation for various projects",
-        "Building scalable, maintainable, and secure applications",
-        "Key collaborations with national clients on high-visibility projects",
-        "Implementation of dynamic frontend solutions with React/Vue/Astro",
-        "Backend development with Node.js, Express, and Postgres"
+        "Website Design & Development: Develop and maintain responsive websites using HTML, CSS, JavaScript, and WordPress. Optimized performance and reliability for seamless user experiences.",
+        "SEO & Analytics: Increased average SEO scores from 50 to 80+, boosting search engine visibility. Leveraged analytics to enhance user engagement.",
+        "Team Leadership: Lead a small team of developers and designers in delivering web solutions, from email templates to full-fledged websites with CMS. Implemented organizational tools, improving team communication and efficiency.",
+        "Project management: Managed projects for clients like Yayasan Petronas, Petrosains, Paramount Property, Taylor U",
+        "UI/UX improvements: Collaborated with content and design teams to enhance UI/UX, increasing user retention. Streamlined navigation and improve SEO consistency across all platforms. ",
+        "Multimedia Proficiency: Beyond web development, frequently assisted with graphic design, video editing tasks, showcasing versatility and supporting team success. Provide tech support, helping colleagues solve challenges in unfamiliar technical areas."
       ]
     },
     {
@@ -37,83 +38,124 @@
       ]
     }
   ],
-  
+
   "keyProjects": [
     {
-      "name": "E-commerce Platform Redesign",
-      "description": "Complete overhaul of a legacy e-commerce system to modern technology stack",
+      "name": "YayasanPetronas.com.my - CSR Platform",
+      "description": "Developed and launched a CSR-focused website, enhancing the visibility of social initiatives and increasing donor engagement.",
       "highlights": [
-        "Improved site performance by 60%",
-        "Implemented JAMstack architecture for enhanced security",
-        "Reduced operational costs by 40%",
-        "Increased conversion rates by 25%"
+        "Leveraged intuitive UX design to ensure seamless navigation and engagement",
+        "Successfully drove awareness of the organization's activities",
+        "Culminated in a high-profile launch event led by Dr. Wan Azizah"
       ]
     },
     {
-      "name": "Enterprise Resource Management System",
-      "description": "Modular ERP system providing integrated solutions for manufacturing clients",
+      "name": "Petrosains.com.my - Nation's STEM Advocacy",
+      "description": "Redesigned and revamped the Petrosains website to better support STEM advocacy in Malaysia.",
       "highlights": [
-        "Real-time data synchronization across modules",
-        "Custom reporting and analytics dashboard",
-        "Integration with IoT devices for production monitoring",
-        "Role-based access control system"
+        "Created an overhauled and refreshed interface catering to diverse user groups from students to educators",
+        "Significantly enhanced visibility and accessibility of STEM resources",
+        "Increased community outreach and education content distribution"
+      ]
+    },
+    {
+      "name": "ParamountProperty.my",
+      "description": "Managed and expanded the Paramount Property website portfolio, growing the number of projects from 10 to 15 over 7 years.",
+      "highlights": [
+        "Collaborated with the in-house IT team to ensure continuous service improvement and uptime",
+        "Contributed to increased user satisfaction and efficiency",
+        "Supported sustained business growth through digital presence optimization"
+      ]
+    },
+    {
+      "name": "BersatuForMakan - Fishermen x BFM Campaign",
+      "description": "Contributed to a collaborative campaign with BFM 89.9 to highlight Malaysia's rich culinary heritage after the omission from Netflix's Street Food series.",
+      "highlights": [
+        "Developed a dedicated microsite that played a key role in driving campaign success",
+        "With a modest budget of RM2000, reached almost 3 million people and generated RM700k in earned media",
+        "Achieved a 628% increase in engagement and sixfold growth in followers, providing significant PR mileage for BFM"
       ]
     }
   ],
-  
+
   "personalAchievements": [
-    "Successfully migrated multiple legacy applications to modern frameworks",
-    "Mentored junior developers, creating comprehensive onboarding documentation",
-    "Speaker at regional web development conferences",
-    "Open-source contributor to several popular JavaScript libraries"
+    "Self-Taught Developer: Successfully self-taught to become a seasoned full-stack web developer, continuously expanding expertise in the latest technologies and industry best practices",
+    "Team Leadership: Groomed junior developers, instilling best practices and reducing onboarding time. Pitched new project management processes that improved team cohesion and efficiency",
+    "Project Management: Managed projects from concept to launch, delivering on time and implementing agile methodologies for improved team productivity"
   ],
-  
-  "professionalPhilosophy": "Committed to developing elegant solutions that balance technical excellence with user experience. Advocate for clean, maintainable code and collaborative development processes. Always seeking to expand knowledge and embrace new technologies that enhance digital experiences.",
-  
+
+  "professionalPhilosophy": "I am passionate about continuous learning and creating impactful, user-centric solutions through cutting-edge technology. I value simplicity and clarity in design, and approach UX challenges with both philosophical and creative problem-solving. I strive for a balance in work and life through interests like music, woodworking, and art. Currently exploring AI integration in web development.",
+
   "technicalExpertise": {
-    "languages": ["JavaScript", "TypeScript", "HTML5", "CSS3/SCSS", "SQL", "Python"],
-    "frontendTechnologies": ["React", "Vue.js", "Next.js", "Astro", "Redux", "Tailwind CSS"],
-    "backendTechnologies": ["Node.js", "Express", "REST API Design", "GraphQL"],
-    "tools": ["Git", "Docker", "Jest", "Webpack", "Vite"],
-    "designSoftware": ["Adobe XD", "Figma"],
-    "databases": ["PostgreSQL", "MongoDB", "Redis"]
+    "languages": ["HTML", "CSS", "JavaScript", "TypeScript", "PHP"],
+    "frontendTechnologies": [
+      "AstroJS",
+      "Vue.js",
+      "TailwindCSS",
+      "BootstrapCSS",
+      "WordPress",
+      "React"
+    ],
+    "backendTechnologies": ["Node.js", "Express", "REST API Design"],
+    "tools": [
+      "Git / GitHub",
+      "Linux",
+      "Bash",
+      "Docker",
+      "Obsidian.md",
+      "Cursor/ Windsurf",
+      "AI-Tools"
+    ],
+    "designSoftware": [
+      "Figma",
+      "Penpot",
+      "Adobe Photoshop",
+      "Adobe Illustrator",
+      "GIMP",
+      "Inkscape"
+    ],
+    "databases": ["PostgreSQL", "MySQL"]
   },
-  
+
   "additionalCompetencies": [
     "Advanced problem-solving and analytical thinking",
-    "Strong communication and presentation skills",
-    "Project planning and agile methodology implementation",
+    "Project planning and documentation methodology implementation",
     "UI/UX design principles and best practices",
     "Performance optimization techniques",
     "Secure coding practices and implementation",
     "Cross-browser compatibility and responsive design"
   ],
-  
+
   "education": [
     {
-      "degree": "Bachelor of Computer Science",
-      "institution": "University of Technology",
-      "year": "2016",
-      "highlights": ["Focus on Software Engineering", "Data Structures & Algorithms"]
+      "degree": "BA (Hons) in Computer Games Design",
+      "institution": "University of Teesside, UK",
+      "year": "2010 - 2012",
+      "highlights": ["Focus on Computer Games Design", "Documentation & Design"]
     },
     {
-      "degree": "Professional Certification in Web Development",
-      "institution": "Tech Academy",
-      "year": "2017",
-      "highlights": ["Frontend & Backend Specialization"]
+      "degree": "Diploma in Multimedia Design",
+      "institution": "The One Academy, Malaysia",
+      "year": "2006 - 2008",
+      "highlights": [
+        "Art & Design Fundamentals",
+        "Multimedia Design Fundamentals",
+        "3D Animation Fundamentals",
+        "Web Design Fundamentals"
+      ]
     }
   ],
-  
+
   "languages": [
-    {"language": "English", "proficiency": "Professional"},
-    {"language": "Mandarin", "proficiency": "Native"},
-    {"language": "Bahasa Malaysia", "proficiency": "Professional"}
+    { "language": "English", "proficiency": "Fluent" },
+    { "language": "Mandarin", "proficiency": "Fluent" },
+    { "language": "Bahasa Malaysia", "proficiency": "Basic" }
   ],
-  
+
   "interests": [
-    "Continuous learning through online courses and workshops",
-    "Contributing to open-source projects",
-    "Attending tech conferences and meetups",
+    "Continuous learning, self-improvement, and building",
+    "Generative Art and Creative Coding",
+    "Philosophy, Economics, and History",
     "Exploring emerging technologies in web development"
   ]
-} 
+}
