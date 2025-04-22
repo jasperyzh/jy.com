@@ -1,0 +1,114 @@
+---
+import Layout from "@/layouts/BaseLayout.astro";
+import { getSketchFullUrl, getCategoryUrl } from "@/utils/sketchUtils";
+import Pagination from "@/components/Pagination.astro";
+import CardPost from "@/components/CardPost.astro";
+
+import PageSidebar from "@/layouts/PageSidebar.astro";
+
+// Define props with default values
+interface Props {
+  title?: string;
+  description?: string;
+  pageSubtitle?: string;
+  currentPage?: number;
+  totalPages?: number;
+  prevUrl?: string | null;
+  nextUrl?: string | null;
+  paginatedSketches?: any[];
+  categories?: string[];
+  tags?: string[];
+  categoryCounts?: Record<string, number>;
+  tagCounts?: Record<string, number>;
+  baseUrl?: string;
+  allSketchesCount?: number;
+  activeCategory?: string;
+  activeTag?: string;
+}
+
+const {
+  title = "Sketches - Code & Design Ideas",
+  description = "A collection of code sketches, design experiments, and interactive demos",
+  pageSubtitle = "",
+  currentPage = 1,
+  totalPages = 1,
+  prevUrl = null,
+  nextUrl = null,
+  paginatedSketches = [],
+  categories = [],
+  tags = [],
+  categoryCounts = {},
+  tagCounts = {},
+  baseUrl = "/sketches",
+  allSketchesCount = 0,
+  activeCategory = "",
+  activeTag = "",
+} = Astro.props;
+---
+
+<Layout title={title} description={description}>
+  <div class="container container--grid mx-auto my-6 px-4 max-w-7xl">
+    <header class="header--page">
+      <h1>Sketches & Experiments</h1>
+      <p class="text-balance">
+        A collection of code snippets, design experiments, interactive demos,
+        and learning resources
+      </p>
+      
+    </header>
+
+    <!-- Use PageSidebar component -->
+    <PageSidebar
+      type="sketch"
+      baseUrl="/sketches"
+      tags={tags}
+      tagCounts={tagCounts}
+      categories={categories}
+      categoryCounts={categoryCounts}
+      activeTag={activeTag}
+      activeCategory={activeCategory}
+      allItemsCount={allSketchesCount}
+      formatCategoryUrl={(category) => getCategoryUrl(category)}
+    />
+
+    <!-- Sketches grid -->
+    <section class="posts-grid">
+      {
+        paginatedSketches.map((sketch) => (
+          <CardPost
+            title={sketch.data.title}
+            description={sketch.data.description}
+            date={sketch.data.date}
+            tags={sketch.data.tags || []}
+            category={sketch.data.category}
+            url={getSketchFullUrl(sketch)}
+            thumbnail={sketch.data.thumbnail}
+            thumbnailAlt={sketch.data.title}
+            showThumbnail={true}
+            categoryUrlPrefix="/sketches/category"
+            tagUrlPrefix="/sketches/tag"
+            type="sketch"
+          />
+        ))
+      }
+    </section>
+
+    {
+      /* Pagination controls */
+      totalPages > 1 && (
+        <div class="pagination grid grid-cols-subgrid !col-start-2 !col-span-5 my-8">
+          <div class="self-center col-span-5">
+            <Pagination
+              prevUrl={prevUrl}
+              nextUrl={nextUrl}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              baseUrl={baseUrl}
+            />
+          </div>
+        </div>
+      )
+    }
+  </div>
+
+</Layout>

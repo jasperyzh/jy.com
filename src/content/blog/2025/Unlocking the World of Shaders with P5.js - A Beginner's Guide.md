@@ -3,7 +3,7 @@ pubDate: 000000
 title: "Unlocking the World of Shaders with P5.js: A Beginner's Guide"
 description: What exactly are shaders, and how can one approach them, especially using a friendly tool like P5.js
 tags: ["general", "webdev"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png" 
 category: "Curiosity"
 ---

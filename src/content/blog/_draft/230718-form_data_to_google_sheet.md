@@ -3,7 +3,7 @@ pubDate: 230718
 title: Creating a Simple Form to Google Sheets Database
 description: Looking for an efficient, easy-to-implement way to capture and store this data, consider using Google Sheets as a makeshift database.
 tags: ["general", "webdev"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png" 
 category: "Curiosity"
 ---

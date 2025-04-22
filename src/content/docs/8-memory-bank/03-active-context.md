@@ -80,7 +80,6 @@ draft: 0
   - src/pages/sketches/page/[page].astro
   - src/pages/blog/index.astro
   - src/pages/blog/page/[page].astro
-  - src/layouts/BlogLayout.astro
   - src/content/docs/8-memory-bank/*.md
 
 ## Recent Learnings

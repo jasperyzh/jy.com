@@ -1,0 +1,123 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+
+import Article from "@/components/Article.astro";
+import ArticleHeader from "@/components/ArticleHeader.astro";
+import ArticleContent from "@/components/ArticleContent.astro";
+import ArticleFooter from "@/components/ArticleFooter.astro";
+
+// Define the type for frontmatter props expected in Markdown files
+
+type Props = {
+  title: string;
+  description?: string;
+  date?: Date;
+  category?: string;
+  tags?: string[];
+  status?: "idea" | "wip" | "completed" | "archived";
+  thumbnail?: string;
+  liveUrl?: string;
+  frontmatter?: Record<string, any>;
+};
+
+const {
+  frontmatter,
+  title: propTitle,
+  description: propDescription,
+  date: propDate,
+  category: propCategory,
+  tags: propTags,
+  status: propStatus,
+  thumbnail: propThumbnail,
+  liveUrl: propLiveUrl,
+  ...rest
+} = Astro.props;
+
+// Use frontmatter data if available, otherwise fall back to props
+const title = frontmatter?.title || propTitle;
+const description = frontmatter?.description || propDescription;
+const date = frontmatter?.date || propDate;
+const category = frontmatter?.category || propCategory;
+const tags = frontmatter?.tags || propTags;
+const status = frontmatter?.status || propStatus;
+const thumbnail = frontmatter?.thumbnail || propThumbnail;
+const liveUrl = frontmatter?.liveUrl || propLiveUrl;
+---
+
+<BaseLayout title={title} description={description}>
+  <!-- <Article> START -->
+  <article {...rest}>
+    <!-- <Article> START -->
+
+    <ArticleHeader
+      date={date}
+      title={title}
+      description={description}
+      tags={tags}
+    />
+
+    <ArticleContent>
+      <slot />
+    </ArticleContent>
+
+    <ArticleFooter
+      returnUrl="/sketches"
+      returnLabel="Back to Sketches"
+      title={title}
+    />
+  </article>
+  <!-- </Article> END -->
+</BaseLayout>
+
+<slot />
+<style>
+  article {
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    position: relative;
+  }
+
+  /* Styling for child elements */
+  article :global(header) {
+    grid-column: 1 / -1; /* Full width on mobile */
+    grid-row: 1;
+  }
+
+  article :global(.content-wrapper) {
+    grid-column: 1 / -1; /* Full width on mobile */
+    grid-row: 2;
+  }
+
+  article :global(footer) {
+    grid-column: 1 / -1; /* Full width on mobile */
+    justify-self: center; /* Center on mobile */
+    position: relative; /* Normal flow on mobile */
+    margin-block: 1rem;
+  }
+
+  @media (min-width: 1024px) {
+    article {
+      padding: 0 1rem;
+      grid-template-columns: subgrid;
+      grid-template-rows: auto auto auto;
+    }
+
+    article :global(header) {
+      grid-column: 1 / span 2;
+      grid-row: 1 / span 1;
+      position: sticky;
+      top: 6rem; /* Adjust to account for fixed navbar height + some padding */
+      padding-inline-end: 1rem;
+    }
+
+    article :global(.content-wrapper) {
+      grid-column: 3 / span 4;
+      grid-row: 1 / 4;
+    }
+
+    article :global(footer) {
+      grid-column: 1 / span 2;
+      grid-row: -1 / -2;
+    }
+  }
+</style>

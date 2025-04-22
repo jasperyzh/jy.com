@@ -1,14 +1,26 @@
 ---
 import { getCollection, render } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { initPrism } from "@/utils/prism"; // Import PrismJS initialization function
+import { Icon } from "astro-icon/components";
+import Button from "@/components/starwind/button";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/starwind/select";
+// import { initPrism } from "@/utils/prism"; // Import PrismJS initialization function
 
 // Add prerender directive to fix the warning
 export const prerender = true;
 
 export async function getStaticPaths() {
   const allDocs = await getCollection("docs");
-  
+
   // Filter out draft posts (unless in development)
   const publishedDocs = import.meta.env.DEV
     ? allDocs
@@ -17,21 +29,20 @@ export async function getStaticPaths() {
   // Generate paths for each document
   return publishedDocs.map((entry) => {
     // Get the path parts
-    const pathParts = entry.id.split('/');
-    
+    const pathParts = entry.id.split("/");
+
     // Process path parts to remove digit prefixes
-    const cleanPathParts = pathParts.map(part => {
+    const cleanPathParts = pathParts.map((part) => {
       // Remove digit prefix from directory/file names (e.g., "0-introduction" -> "introduction")
-      return part.replace(/^\d+-/, '');
+      return part.replace(/^\d+-/, "");
     });
-    
+
     // console.log(cleanPathParts)
-    
+
     // Create a slug that preserves the folder structure but without digits
-    const slug = cleanPathParts.length > 1 
-      ? cleanPathParts.join('/') 
-      : cleanPathParts[0];
-    
+    const slug =
+      cleanPathParts.length > 1 ? cleanPathParts.join("/") : cleanPathParts[0];
+
     return {
       params: { slug },
       props: { entry, allDocs: publishedDocs },
@@ -51,46 +62,50 @@ if (entry) {
 }
 
 // Extract useful information for navigation
-const pathParts = entry?.id.split('/') || [];
-const section = pathParts.length > 1 ? pathParts[0] : 'root';
-const filename = pathParts.length > 0 ? pathParts[pathParts.length - 1] : '';
-const currentPage = entry?.id || '';
+const pathParts = entry?.id.split("/") || [];
+const section = pathParts.length > 1 ? pathParts[0] : "root";
+const filename = pathParts.length > 0 ? pathParts[pathParts.length - 1] : "";
+const currentPage = entry?.id || "";
 
 // Organize documentation by sections (directories)
 const docsBySection = {};
 
 // Group documents by section
-allDocs.forEach(doc => {
-  const parts = doc.id.split('/');
-  const docSection = parts.length > 1 ? parts[0] : 'root';
-  
+allDocs.forEach((doc) => {
+  const parts = doc.id.split("/");
+  const docSection = parts.length > 1 ? parts[0] : "root";
+
   // Extract the clean section name without digit prefix
-  const cleanSection = docSection.replace(/^\d+-/, '');
-  
+  const cleanSection = docSection.replace(/^\d+-/, "");
+
   if (!docsBySection[cleanSection]) {
     docsBySection[cleanSection] = [];
   }
-  
+
   docsBySection[cleanSection].push(doc);
 });
 
 // Sort documents within each section by their original order (using digit prefixes)
-Object.keys(docsBySection).forEach(sectionKey => {
+Object.keys(docsBySection).forEach((sectionKey) => {
   docsBySection[sectionKey].sort((a, b) => {
-    const partsA = a.id.split('/');
-    const partsB = b.id.split('/');
-    
+    const partsA = a.id.split("/");
+    const partsB = b.id.split("/");
+
     // For multi-level paths, compare each level
     for (let i = 0; i < Math.min(partsA.length, partsB.length); i++) {
       // Extract numbers if they exist at the start of part names
-      const numA = partsA[i].match(/^(\d+)-/) ? parseInt(partsA[i].match(/^(\d+)-/)[1]) : 0;
-      const numB = partsB[i].match(/^(\d+)-/) ? parseInt(partsB[i].match(/^(\d+)-/)[1]) : 0;
-      
+      const numA = partsA[i].match(/^(\d+)-/)
+        ? parseInt(partsA[i].match(/^(\d+)-/)[1])
+        : 0;
+      const numB = partsB[i].match(/^(\d+)-/)
+        ? parseInt(partsB[i].match(/^(\d+)-/)[1])
+        : 0;
+
       if (numA !== numB) {
         return numA - numB;
       }
     }
-    
+
     // If all matching parts have the same number, compare by length
     return partsA.length - partsB.length;
   });
@@ -100,214 +115,270 @@ Object.keys(docsBySection).forEach(sectionKey => {
 const sortedSections = Object.keys(docsBySection).sort((a, b) => {
   // Create a mapping of clean section names to their original names with prefixes
   const sectionMapping = {};
-  
-  allDocs.forEach(doc => {
-    const parts = doc.id.split('/');
+
+  allDocs.forEach((doc) => {
+    const parts = doc.id.split("/");
     if (parts.length > 0) {
       const originalSection = parts[0];
-      const cleanSection = originalSection.replace(/^\d+-/, '');
+      const cleanSection = originalSection.replace(/^\d+-/, "");
       sectionMapping[cleanSection] = originalSection;
     }
   });
-  
+
   // Get the original sections with prefixes
-  const originalA = sectionMapping[a] || '';
-  const originalB = sectionMapping[b] || '';
-  
+  const originalA = sectionMapping[a] || "";
+  const originalB = sectionMapping[b] || "";
+
   // Extract prefix numbers for sorting
   const getPrefix = (section) => {
     const match = section.match(/^(\d+)-/);
     return match ? parseInt(match[1], 10) : 999;
   };
-  
+
   const prefixA = getPrefix(originalA);
   const prefixB = getPrefix(originalB);
-  
+
   return prefixA - prefixB;
 });
 
 // Function to get section title (now using clean section names)
 function getSectionTitle(sectionName) {
   // Remove any remaining digit prefixes (should be clean already but just in case)
-  const cleanName = sectionName.replace(/^\d+-/, '');
-  
+  const cleanName = sectionName.replace(/^\d+-/, "");
+
   const titles = {
-    'introduction': 'Introduction',
-    'reference': 'Reference',
-    'root': 'Documentation'
+    introduction: "Introduction",
+    reference: "Reference",
+    root: "Documentation",
   };
-  
-  return titles[cleanName] || cleanName.charAt(0).toUpperCase() + cleanName.slice(1).replace(/-/g, ' ');
+
+  return (
+    titles[cleanName] ||
+    cleanName.charAt(0).toUpperCase() + cleanName.slice(1).replace(/-/g, " ")
+  );
 }
 
 // Function to extract the display title from a document
 function getDisplayTitle(doc) {
-  const filename = doc.id.split('/').pop();
+  const filename = doc.id.split("/").pop();
   const match = filename.match(/^(\d+)-(.+)\.md$/);
-  
+
   if (match) {
     const [_, number, slug] = match;
     return {
       number, // Keep the number for ordering if needed
-      title: doc.data.title || slug.replace(/-/g, ' ')
+      title: doc.data.title || slug.replace(/-/g, " "),
     };
   }
-  
+
   return {
-    number: '',
-    title: doc.data.title || filename.replace(/\.md$/, '').replace(/-/g, ' ')
+    number: "",
+    title: doc.data.title || filename.replace(/\.md$/, "").replace(/-/g, " "),
   };
 }
 
 // Function to generate URL for a document
 function getDocUrl(doc) {
   // Split the ID into parts
-  const parts = doc.id.split('/');
-  
+  const parts = doc.id.split("/");
+
   // Remove digit prefixes from each part
-  const cleanParts = parts.map(part => part.replace(/^\d+-/, ''));
-  
+  const cleanParts = parts.map((part) => part.replace(/^\d+-/, ""));
+
   // Join back and create the URL
-  return `/docs/${cleanParts.join('/').replace(/\.md$/, '')}`;
+  return `/docs/${cleanParts.join("/").replace(/\.md$/, "")}`;
 }
 
 // Find the section that contains the current page
-const currentSection = pathParts.length > 1 ? pathParts[0].replace(/^\d+-/, '') : 'root';
+const currentSection =
+  pathParts.length > 1 ? pathParts[0].replace(/^\d+-/, "") : "root";
 ---
 
-<BaseLayout title={entry?.data.title || 'Documentation Not Found'} description={entry?.data.description || 'The requested documentation page could not be found'}>
-  <div class="flex flex-col md:flex-row max-w-7xl mx-auto px-4 py-8 gap-8">
-    <!-- Sidebar -->
-    <aside class="md:w-64 flex-shrink-0 pb-4 md:pb-0">
-      <div class="sticky top-24 overflow-y-auto pr-4 pb-12 max-h-[calc(100vh-6rem)] hover:pr-2">
-        <div class="mb-8">
-          <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-2">Documentation</h2>
-          <p class="text-slate-600 dark:text-slate-300 text-sm">Everything you need to know</p>
-        </div>
+<BaseLayout
+  title={entry?.data.title || "Documentation Not Found"}
+  description={entry?.data.description ||
+    "The requested documentation page could not be found"}
+>
+  <div class="container container--grid mx-auto my-6 px-4 max-w-7xl">
+    <!-- Page Header -->
+    <header class="header--page">
+      <h1>Documentation</h1>
+      <p>Everything you need to know</p>
 
-        <nav class="overflow-hidden">
-          {sortedSections.map(sectionKey => (
-            <div class="mb-6 section-container" data-section={sectionKey}>
-              <button 
-                class="section-toggle flex justify-between items-center w-full font-semibold text-sm uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-3" 
-                aria-expanded={sectionKey === 'introduction' ? 'true' : 'false'}
-                aria-controls={`section-${sectionKey}`}
-              >
-                <span>{getSectionTitle(sectionKey)}</span>
-                <svg xmlns="http://www.w3.org/2000/svg" class:list={[
-                  "h-4 w-4 transform transition-transform duration-300",
-                  sectionKey === 'introduction' && "rotate-180"
-                ]} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <ul 
-                id={`section-${sectionKey}`} 
-                class="space-y-2 section-content overflow-hidden transition-all duration-300 ease-in-out"
-                style={`max-height: ${sectionKey === 'introduction' ? '1000px' : '0'}`}
-              >
-                {docsBySection[sectionKey].map(doc => {
-                  const { number, title } = getDisplayTitle(doc);
-                  const isActive = currentPage === doc.id;
-                  return (
-                    <li>
-                      <a
-                        href={getDocUrl(doc)}
-                        class={`block px-3 py-2 text-sm rounded-md transition-colors ${
-                          isActive
-                            ? "bg-blue-50 text-blue-700 font-medium dark:bg-blue-900/30 dark:text-blue-300"
-                            : "text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
-                        }`}
-                      >
-                        {number && <span class="text-slate-500 mr-1">{number}.</span>}
+      <!-- Mobile Select Navigation -->
+      <div class="md:hidden mt-4">
+        <Select id="mobile-doc-nav">
+          <SelectTrigger class="w-full">
+            <SelectValue
+              placeholder={entry?.data.title || "Select documentation"}
+            />
+          </SelectTrigger>
+          <SelectContent>
+            {
+              sortedSections.map((sectionKey) => (
+                <SelectGroup>
+                  <SelectLabel>{getSectionTitle(sectionKey)}</SelectLabel>
+                  {docsBySection[sectionKey].map((doc) => {
+                    const { number, title } = getDisplayTitle(doc);
+                    const isActive = currentPage === doc.id;
+                    const docUrl = getDocUrl(doc);
+                    return (
+                      <SelectItem value={docUrl}>
+                        {number && `${number}. `}
                         {title}
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          ))}
+                      </SelectItem>
+                    );
+                  })}
+                  <SelectSeparator />
+                </SelectGroup>
+              ))
+            }
+          </SelectContent>
+        </Select>
+      </div>
+
+      <hr class="my-6" />
+    </header>
+
+    <!-- Sidebar - hidden on mobile -->
+    <aside class="docs-sidebar hidden md:block">
+      <div
+        class="sticky top-24 overflow-y-auto pr-4 pb-12 max-h-[calc(100vh-6rem)] hover:pr-2"
+      >
+        <nav class="overflow-hidden">
+          {
+            sortedSections.map((sectionKey) => (
+              <div class="mb-2 section-container" data-section={sectionKey}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  class="section-toggle w-full justify-between items-center font-semibold text-sm uppercase tracking-wide"
+                  aria-expanded={
+                    sectionKey === "introduction" ? "true" : "false"
+                  }
+                  aria-controls={`section-${sectionKey}`}
+                >
+                  <span>{getSectionTitle(sectionKey)}</span>
+
+                  <Icon
+                    name="bi:chevron-down"
+                    class:list={[
+                      "h-4 w-4 transform transition-transform duration-300",
+                      sectionKey === "introduction" && "rotate-180",
+                    ]}
+                  />
+                </Button>
+                <ul
+                  id={`section-${sectionKey}`}
+                  class="section-content overflow-hidden transition-all duration-300 ease-in-out"
+                  style={`max-height: ${sectionKey === "introduction" ? "1000px" : "0"}`}
+                >
+                  {docsBySection[sectionKey].map((doc) => {
+                    const { number, title } = getDisplayTitle(doc);
+                    const isActive = currentPage === doc.id;
+                    return (
+                      <li>
+                        <Button
+                          href={getDocUrl(doc)}
+                          variant="ghost"
+                          size="sm"
+                          class={`w-full justify-start px-3 py-2 text-sm rounded-md ms-2 ${
+                            isActive
+                              ? "bg-blue-500/50 font-bold dark:bg-blue-500/30"
+                              : "font-light"
+                          }`}
+                        >
+                          {number && (
+                            <span class="text-slate-500 mr-1">{number}.</span>
+                          )}
+                          {title}
+                        </Button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))
+          }
         </nav>
 
-        <div class="mt-8 pt-8 border-t border-slate-200 dark:border-slate-700">
-          <a
+        <div class="mt-8 pt-8 border-t">
+          <Button
             href="/"
-            class="inline-flex items-center text-sm text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
+            variant="ghost"
+            size="sm"
+            class="inline-flex items-center text-sm"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4 mr-2"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-              ></path>
-            </svg>
+            <Icon name="bi:house-fill" class="h-4 w-4 mr-2" />
             Back to Home
-          </a>
+          </Button>
         </div>
       </div>
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 min-w-0">
+    <main class="docs-content">
       <article class="prose prose-slate dark:prose-invert max-w-none">
-        {Content && (
-          <div class="content-wrapper">
-            <Content />
-          </div>
-        )}
-        {!Content && (
-          <div class="p-4 bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 text-amber-700 dark:text-amber-300 rounded-r-md">
-            <p>Documentation could not be loaded</p>
-          </div>
-        )}
+        {
+          Content && (
+            <div class="content-wrapper">
+              <Content />
+            </div>
+          )
+        }
+        {
+          !Content && (
+            <div class="p-4 bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 text-amber-700 dark:text-amber-300 rounded-r-md">
+              <p>Documentation could not be loaded</p>
+            </div>
+          )
+        }
       </article>
     </main>
   </div>
 
   <script>
     // Initialize PrismJS when the document loads
-    import { initPrism } from '@/utils/prism';
-    
-    document.addEventListener('DOMContentLoaded', () => {
+    import { initPrism } from "@/utils/prism";
+
+    document.addEventListener("DOMContentLoaded", () => {
       // Initialize PrismJS for syntax highlighting
       initPrism();
-      
+
       // Ensure code blocks have proper language labels
-      document.querySelectorAll('pre[class*="language-"]').forEach(block => {
+      document.querySelectorAll('pre[class*="language-"]').forEach((block) => {
         // Extract language class (e.g., "language-js" -> "js")
-        const langClass = [...block.classList].find(cls => cls.startsWith('language-'));
+        const langClass = [...block.classList].find((cls) =>
+          cls.startsWith("language-")
+        );
         if (langClass) {
-          const language = langClass.replace('language-', '');
-          block.setAttribute('data-language', language);
+          const language = langClass.replace("language-", "");
+          block.setAttribute("data-language", language);
         }
       });
-      
+
       // Fix code blocks that might not have language classes
-      document.querySelectorAll('pre:not([class*="language-"])').forEach(block => {
-        // Check if it contains a code element with language class
-        const codeElement = block.querySelector('code[class*="language-"]');
-        if (codeElement) {
-          const langClass = [...codeElement.classList].find(cls => cls.startsWith('language-'));
-          if (langClass) {
-            const language = langClass.replace('language-', '');
-            block.classList.add(langClass);
-            block.setAttribute('data-language', language);
+      document
+        .querySelectorAll('pre:not([class*="language-"])')
+        .forEach((block) => {
+          // Check if it contains a code element with language class
+          const codeElement = block.querySelector('code[class*="language-"]');
+          if (codeElement) {
+            const langClass = [...codeElement.classList].find((cls) =>
+              cls.startsWith("language-")
+            );
+            if (langClass) {
+              const language = langClass.replace("language-", "");
+              block.classList.add(langClass);
+              block.setAttribute("data-language", language);
+            }
           }
-        }
-      });
-      
+        });
+
       // Initialize collapsible sections
-      const STORAGE_KEY = 'docSectionStates';
-      const sectionContainers = document.querySelectorAll('.section-container');
-      
+      const STORAGE_KEY = "docSectionStates";
+      const sectionContainers = document.querySelectorAll(".section-container");
+
       // Get stored section states from localStorage
       let storedStates = {};
       try {
@@ -316,130 +387,164 @@ const currentSection = pathParts.length > 1 ? pathParts[0].replace(/^\d+-/, '') 
           storedStates = JSON.parse(savedStates);
         }
       } catch (e) {
-        console.error('Error loading section states from localStorage:', e);
+        console.error("Error loading section states from localStorage:", e);
       }
-      
+
       // Setup each section
-      sectionContainers.forEach(container => {
+      sectionContainers.forEach((container) => {
         const section = (container as HTMLElement).dataset.section;
-        const toggle = container.querySelector('.section-toggle');
-        const content = container.querySelector('.section-content') as HTMLElement;
-        const icon = toggle?.querySelector('svg');
-        
+        const toggle = container.querySelector(".section-toggle");
+        const content = container.querySelector(
+          ".section-content"
+        ) as HTMLElement;
+        const icon = toggle?.querySelector("svg");
+
         if (!toggle || !content || !icon || !section) return;
-        
+
         // Set initial state based on localStorage or default
-        let isExpanded = section === 'introduction';
+        let isExpanded = section === "introduction";
         if (section in storedStates) {
           isExpanded = storedStates[section];
         }
-        
+
         // Set initial state
-        toggle.setAttribute('aria-expanded', isExpanded.toString());
+        toggle.setAttribute("aria-expanded", isExpanded.toString());
         if (isExpanded) {
           // Wait for next frame to ensure content height is calculated correctly
           requestAnimationFrame(() => {
             content.style.maxHeight = `${content.scrollHeight}px`;
-            icon.classList.add('rotate-180');
+            icon.classList.add("rotate-180");
           });
         } else {
-          content.style.maxHeight = '0px';
+          content.style.maxHeight = "0px";
         }
-        
+
         // Toggle functionality
-        toggle.addEventListener('click', () => {
-          isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.addEventListener("click", () => {
+          isExpanded = toggle.getAttribute("aria-expanded") === "true";
           const newState = !isExpanded;
           
-          toggle.setAttribute('aria-expanded', newState.toString());
-          
+          toggle.setAttribute("aria-expanded", newState.toString());
+
           if (newState) {
             // Use scrollHeight to determine the full height
             content.style.maxHeight = `${content.scrollHeight}px`;
-            icon.classList.add('rotate-180');
+            icon.classList.add("rotate-180");
           } else {
-            content.style.maxHeight = '0px';
-            icon.classList.remove('rotate-180');
+            content.style.maxHeight = "0px";
+            icon.classList.remove("rotate-180");
           }
-          
+
           // Save to localStorage
           try {
             storedStates[section] = newState;
             localStorage.setItem(STORAGE_KEY, JSON.stringify(storedStates));
           } catch (e) {
-            console.error('Error saving section states to localStorage:', e);
+            console.error("Error saving section states to localStorage:", e);
           }
         });
-        
+
         // Update maxHeight when window resizes
-        window.addEventListener('resize', () => {
-          if (toggle.getAttribute('aria-expanded') === 'true') {
+        window.addEventListener("resize", () => {
+          if (toggle.getAttribute("aria-expanded") === "true") {
             content.style.maxHeight = `${content.scrollHeight}px`;
           }
         });
       });
-      
+
       // Auto-expand the section that contains the current document
-      const currentSection = '{currentSection}';
+      const currentSection = "{currentSection}";
       if (currentSection) {
-        const currentSectionContainer = document.querySelector(`[data-section="${currentSection}"]`);
+        const currentSectionContainer = document.querySelector(
+          `[data-section="${currentSection}"]`
+        );
         if (currentSectionContainer) {
-          const currentSectionToggle = currentSectionContainer.querySelector('.section-toggle');
-          const currentSectionContent = currentSectionContainer.querySelector('.section-content');
-          const currentSectionIcon = currentSectionToggle?.querySelector('svg');
-          
-          if (!currentSectionToggle || !currentSectionContent || !currentSectionIcon) return;
-          
+          const currentSectionToggle =
+            currentSectionContainer.querySelector(".section-toggle");
+          const currentSectionContent =
+            currentSectionContainer.querySelector(".section-content");
+          const currentSectionIcon = currentSectionToggle?.querySelector("svg");
+
+          if (
+            !currentSectionToggle ||
+            !currentSectionContent ||
+            !currentSectionIcon
+          )
+            return;
+
           // Only expand if not already expanded
-          if (currentSectionToggle.getAttribute('aria-expanded') === 'false') {
-            currentSectionToggle.setAttribute('aria-expanded', 'true');
-            (currentSectionContent as HTMLElement).style.maxHeight = `${currentSectionContent.scrollHeight}px`;
-            currentSectionIcon.classList.add('rotate-180');
-            
+          if (currentSectionToggle.getAttribute("aria-expanded") === "false") {
+            currentSectionToggle.setAttribute("aria-expanded", "true");
+            (currentSectionContent as HTMLElement).style.maxHeight =
+              `${currentSectionContent.scrollHeight}px`;
+            currentSectionIcon.classList.add("rotate-180");
+
             // Save to localStorage
             try {
               storedStates[currentSection] = true;
               localStorage.setItem(STORAGE_KEY, JSON.stringify(storedStates));
             } catch (e) {
-              console.error('Error saving section states to localStorage:', e);
+              console.error("Error saving section states to localStorage:", e);
             }
           }
         }
+      }
+
+      // Handle mobile select navigation
+      const mobileSelect = document.getElementById("mobile-doc-nav");
+      if (mobileSelect) {
+        mobileSelect.addEventListener("starwind-select:change", (event) => {
+          // Get the selected URL and navigate to it
+          const selectedUrl = (event as CustomEvent).detail.value;
+          if (selectedUrl) {
+            window.location.href = selectedUrl;
+          }
+        });
       }
     });
   </script>
 
   <style>
+    .docs-sidebar {
+      grid-column: 1 / span 12; /* Full width on mobile */
+    }
+
+    .docs-content {
+      grid-column: 1 / span 12; /* Full width on mobile */
+    }
+
+    @media (min-width: 768px) {
+      .docs-sidebar {
+        grid-column: 1 / span 2; /* Sidebar takes 3 columns */
+      }
+      .docs-content {
+        grid-column: 3 / -1; /* Content takes remaining 9 */
+      }
+    }
+
+    /* Sticky sidebar styles */
     .sticky {
-      /* Hide scrollbar by default */
       scrollbar-width: none;
       -ms-overflow-style: none;
       &::-webkit-scrollbar {
         display: none;
       }
-      
-      /* Show scrollbar on hover */
+
       &:hover {
         scrollbar-width: thin;
         -ms-overflow-style: auto;
         &::-webkit-scrollbar {
           display: block;
-          width: 6px;
+          opacity: 0.2;
+          width: 5px;
         }
         &::-webkit-scrollbar-track {
           background: transparent;
         }
         &::-webkit-scrollbar-thumb {
-          background-color: rgba(0, 0, 0, 0.2);
+          background-color: rgba(0, 0, 0, 0.1);
           border-radius: 3px;
         }
-      }
-    }
-
-    /* Dark mode scrollbar */
-    @media (prefers-color-scheme: dark) {
-      .sticky:hover::-webkit-scrollbar-thumb {
-        background-color: rgba(255, 255, 255, 0.2);
       }
     }
 
@@ -455,4 +560,4 @@ const currentSection = pathParts.length > 1 ? pathParts[0].replace(/^\d+-/, '') 
       user-select: none;
     }
   </style>
-</BaseLayout> 
+</BaseLayout>

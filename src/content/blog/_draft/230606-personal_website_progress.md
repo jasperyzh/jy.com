@@ -3,7 +3,7 @@ pubDate: 230606
 title: Personal Website Progress 2023
 description: Took me long to get to this stage, over-complicate task and stage fright procrastinate. At least its up now.
 tags: ["general", "webdev"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png" 
 category: "Curiosity"
 ---

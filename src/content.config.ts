@@ -122,42 +122,25 @@ const resume = defineCollection({
 
 // Define portfolio collection
 const portfolio = defineCollection({
-  type: 'data',
+  loader: glob({
+    pattern: "**/*.md",
+    base: "./src/content/portfolio",
+  }),
   schema: z.object({
-    items: z.array(
-      z.object({
-        title: z.string(),
-        category: z.string(),
-        thumbnail: z.string(),
-        images: z.array(
-          z.object({
-            src: z.string(),
-            width: z.number(),
-            height: z.number(),
-            caption: z.string(),
-          })
-        ),
-        description: z.string(),
-        tags: z.array(z.string()),
-        year: z.string(),
-      })
-    ),
-    // skills: z.array(
-    //   z.object({
-    //     category: z.string(),
-    //     items: z.array(z.string())
-    //   })
-    // ),
-    // projects: z.array(
-    //   z.object({
-    //     title: z.string(),
-    //     description: z.string(),
-    //     image: z.string(),
-    //     tags: z.array(z.string()),
-    //     demoUrl: z.string(),
-    //     codeUrl: z.string(),
-    //   })
-    // ),
+    title: z.string(),
+    description: z.string().optional(),
+    date: z.string().or(z.date()),
+    updatedDate: z.string().or(z.date()).optional(),
+    thumbnail: z.string(),
+    category: z.string(),
+    tags: z.array(z.string()),
+    draft: z.boolean().default(false),
+    images: z.array(z.object({
+      src: z.string(),
+      width: z.number().default(1920),
+      height: z.number().default(1080),
+      caption: z.string().optional()
+    }))
   })
 });
 

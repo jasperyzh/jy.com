@@ -3,7 +3,7 @@ pubDate: 231204
 title: Sketch of circles wiggling.
 description: A sketch of grids with circles with small circles orbiting within restlessly, it keeps wiggle-wiggle-wiggle-wiggle.
 tags: ["general", "webdev"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png" 
 category: "Curiosity"
 ---

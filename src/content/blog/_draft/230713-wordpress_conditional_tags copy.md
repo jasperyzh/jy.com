@@ -3,7 +3,7 @@ pubDate: 230713
 title: "Importing Data from a CSV File: A Guide for WordPress Developers"
 description: Learn how to import data from CSV files into WordPress and create/update posts and pages. Streamline your data import process as a web developer.
 tags: ["general", "webdev"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png" 
 category: "Curiosity"
 ---

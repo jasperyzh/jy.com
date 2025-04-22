@@ -3,7 +3,7 @@ pubDate: 250412
 title: "No-code Website Design & Development"
 description: Unraveling the complexity of launching a blog.
 tags: ["general", "webdev"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png" 
 category: "Web Development"
 ---

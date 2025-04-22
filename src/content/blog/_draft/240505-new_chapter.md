@@ -3,7 +3,7 @@ pubDate: 240505
 title: New Chapter for Career
 description: Wondering about my next steps
 tags: ["general", "webdev"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png" 
 category: "Curiosity"
 ---

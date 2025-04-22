@@ -3,7 +3,7 @@ pubDate: 250409
 title: "Creating a Coming Soon Page with Astro.js and Vercel"
 description: "Learn how to set up a temporary coming soon page that redirects all traffic while you build your Astro.js website on Vercel"
 tags: ["astro", "vercel", "github", "redirect", "coming-soon"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png"
 category: "Web Development"
 ---

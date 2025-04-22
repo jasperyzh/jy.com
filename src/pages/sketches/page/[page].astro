@@ -4,7 +4,7 @@
  * Handles routes like /sketches/page/2, /sketches/page/3, etc.
  */
 import { getCollection } from "astro:content";
-import SketchPage from "@/layouts/SketchPage.astro";
+import PageSketch from "@/layouts/PageSketch.astro";
 import { SKETCHES_PER_PAGE } from "../index.astro";
 
 // Define props and generate static paths
@@ -77,7 +77,7 @@ tags.forEach(tag => {
 export const prerender = true;
 ---
 
-<SketchPage
+<PageSketch
   title={`Sketches - Page ${currentPage}`}
   description="A collection of code sketches, design experiments, and interactive demos"
   currentPage={currentPage}

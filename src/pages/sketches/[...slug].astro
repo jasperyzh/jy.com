@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import SketchLayout from "@/layouts/SketchLayout.astro";
+import PostLayout from "@/layouts/PostLayout.astro";
 import { getSketchFilename } from "@/utils/sketchUtils";
 
 // Fetch all sketches and generate paths for each
@@ -33,7 +33,7 @@ if (entry) {
 }
 
 // Determine which layout to use based on frontmatter
-// If the sketch defines a custom layout, use that, otherwise use the default SketchLayout
+// If the sketch defines a custom layout, use that, otherwise use the default PostLayout
 const hasCustomLayout = entry?.data?.layout && typeof entry.data.layout === 'string';
 ---
 
@@ -41,7 +41,7 @@ const hasCustomLayout = entry?.data?.layout && typeof entry.data.layout === 'str
   hasCustomLayout ? (
     <Content />
   ) : (
-    <SketchLayout
+    <PostLayout
       title={entry.data.title}
       description={entry.data.description}
       date={entry.data.date}
@@ -52,7 +52,7 @@ const hasCustomLayout = entry?.data?.layout && typeof entry.data.layout === 'str
       liveUrl={entry.data.liveUrl}
     >
       <Content />
-    </SketchLayout>
+    </PostLayout>
   )
 ) : (
   <BaseLayout title="Sketch Not Found" description="The requested sketch could not be found">

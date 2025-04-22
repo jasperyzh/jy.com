@@ -4,14 +4,9 @@
  * Displays all blog posts organized by date (newest first)
  * Also shows a tag cloud for filtering posts by topic
  */
-import Layout from "@/layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
-
-import TagCloud from "@/components/TagCloud.astro";
-import Pagination from "@/components/Pagination.astro";
+import PageBlog from "@/layouts/PageBlog.astro";
 import { formatYymmddDate } from "@/utils/formatDate";
-
-import CardBlogPost from "@/components/CardBlogPost.astro";
 import { getBlogFilename } from "@/utils/blogUtils";
 
 // Pagination configuration
@@ -28,9 +23,12 @@ const sortedPosts = allPosts.sort((a, b) => {
 });
 
 // Filter out draft posts in production
-const publishedPosts = import.meta.env.PROD
+/* const publishedPosts = import.meta.env.PROD
   ? sortedPosts.filter((post) => !post.data.draft)
   : sortedPosts;
+ */
+
+const publishedPosts = sortedPosts.filter((post) => !post.data.draft);
 
 // Calculate pagination
 const totalPages = Math.ceil(publishedPosts.length / POSTS_PER_PAGE);
@@ -40,73 +38,33 @@ const end = start + POSTS_PER_PAGE;
 const paginatedPosts = publishedPosts.slice(start, end);
 
 // Calculate previous and next page URLs
-const prevUrl = currentPage > 1 ? `/blog/page/${currentPage - 1}` : null;
+const prevUrl = null;
 const nextUrl =
   currentPage < totalPages ? `/blog/page/${currentPage + 1}` : null;
+
+// Extract all tags for filtering
+const allTags = publishedPosts.flatMap((post) => post.data.tags || []);
+const tags = [...new Set(allTags)].sort();
+
+// Calculate count for each tag
+const tagCounts = {};
+tags.forEach((tag) => {
+  tagCounts[tag] = publishedPosts.filter(
+    (post) => post.data.tags && post.data.tags.includes(tag)
+  ).length;
+});
 ---
 
-<Layout title="Blog">
-  <div class="container container--grid mx-auto px-4 max-w-7xl">
-    <!-- Header Section -->
-    <header class="header--page">
-      <h1>Blog</h1>
-      <p>
-        Insights, tutorials, and thoughts on web development, creative coding,
-        and more.
-      </p>
-    </header>
-
-    <!-- Filters Section -->
-    <!-- <TagCloud /> -->
-    <!-- <div id="total_pages">
-          Showing {paginatedPosts.length} of {publishedPosts.length} posts
-          {totalPages > 1 && `(Page ${currentPage} of ${totalPages})`}
-        </div> -->
-
-    <!-- Blog Posts Grid -->
-    <section class="posts-grid">
-      {
-        paginatedPosts.map((post) => (
-          <CardBlogPost
-            title={post.data.title}
-            description={post.data.description || "No description available"}
-            date={formatYymmddDate(post.data.pubDate || new Date())}
-            tags={post.data.tags || []}
-            category={post.data.category}
-            url={`/blog/${getBlogFilename(post)}`}
-            thumbnail={post.data.thumbnail || "/img/placeholder.png"}
-          />
-        ))
-      }
-    </section>
-    <!-- Empty State -->
-    {paginatedPosts.length === 0 && <p>Missing blog posts</p>}
-
-    <!-- Pagination controls -->
-    {
-      (prevUrl || nextUrl) && (
-        <div class="mt-8">
-          <Pagination
-            {prevUrl}
-            {nextUrl}
-            currentPage={currentPage}
-            totalPages={totalPages}
-            baseUrl="/blog"
-          />
-        </div>
-      )
-    }
-  </div>
-</Layout>
-<style>
-  @media (min-width: 1024px) {
-    .container--grid {
-      & > section.posts-grid {
-        grid-column: 2 / span 4;
-      }
-      .posts-grid > * {
-        grid-column: 1 / -1;
-      }
-    }
-  }
-</style>
+<PageBlog
+  title="Blog"
+  description="Insights, tutorials, and thoughts on web development, creative coding, and more."
+  currentPage={currentPage}
+  totalPages={totalPages}
+  prevUrl={prevUrl}
+  nextUrl={nextUrl}
+  paginatedPosts={paginatedPosts}
+  tags={tags}
+  tagCounts={tagCounts}
+  baseUrl="/blog"
+  allPostsCount={publishedPosts.length}
+/>

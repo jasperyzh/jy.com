@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import SketchPage from "@/layouts/SketchPage.astro";
+import PageSketch from "@/layouts/PageSketch.astro";
 import { getSketchFullUrl, getCategoryUrl } from "@/utils/sketchUtils";
 
 // Pagination configuration
@@ -54,7 +54,7 @@ tags.forEach((tag) => {
 });
 ---
 
-<SketchPage
+<PageSketch
   title="Sketches - Code & Design Ideas"
   description="A collection of code sketches, design experiments, and interactive demos"
   currentPage={currentPage}

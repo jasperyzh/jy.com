@@ -3,7 +3,7 @@ pubDate: 230711
 title: Understanding WordPress Conditional Tags
 description: WordPress conditional tags enable developers to control the content flow based on specific conditions.
 tags: ["general", "webdev"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png" 
 category: "Curiosity"
 ---

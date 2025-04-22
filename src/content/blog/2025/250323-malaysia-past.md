@@ -3,7 +3,7 @@ pubDate: 250323
 title: "Malaysia's Path: From Colonial Rule to Modern Nation"
 description: "An exploration of Malaysia's journey through history, examining its transformation from a colony to a diverse and thriving independent nation."
 tags: ["Malaysia", "History", "Independence"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png"
 category: "Curiosity"
 ---

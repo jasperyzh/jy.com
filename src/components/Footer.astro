@@ -22,20 +22,26 @@ const {
   class: className = "",
 } = Astro.props;
 
+import {
+  URL_FACEBOOK,
+  URL_INSTAGRAM,
+  URL_LINKEDIN,
+  URL_GITHUB,
+} from "@/consts";
+
 const socialLinks = [
-  { platform: "facebook", href: "https://facebook.com", icon: "mdi:facebook" },
   {
     platform: "instagram",
-    href: "https://www.instagram.com/jasperyzh/",
+    href: URL_INSTAGRAM,
     icon: "mdi:instagram",
   },
-  { platform: "twitter", href: "https://twitter.com", icon: "mdi:twitter" },
+  { platform: "facebook", href: URL_FACEBOOK, icon: "mdi:facebook" },
+  { platform: "linkedin", href: URL_LINKEDIN, icon: "mdi:linkedin" },
   {
     platform: "github",
-    href: "https://github.com/jasperyzh/",
+    href: URL_GITHUB,
     icon: "mdi:github",
   },
-  { platform: "youtube", href: "https://youtube.com", icon: "mdi:youtube" },
 ];
 
 const todayYear = new Date().getFullYear();

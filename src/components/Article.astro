@@ -39,6 +39,14 @@ const { class: className, ...rest } = Astro.props;
     justify-self: center; /* Center on mobile */
     position: relative; /* Normal flow on mobile */
     margin-block: 1rem;
+
+    display: grid;
+    justify-items: center;
+    gap: 1rem;
+
+    @media (min-width: 1024px) {
+      justify-items: start;
+    }
   }
 
   @media (min-width: 1024px) {

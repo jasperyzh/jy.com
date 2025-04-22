@@ -3,7 +3,7 @@ pubDate: 221212
 title: "Embarking on Your Blogging Journey: A Starter Guide"
 description: Unraveling the complexity of launching a blog.
 tags: ["general", "webdev"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png" 
 category: "Curiosity"
 ---

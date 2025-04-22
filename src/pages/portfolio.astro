@@ -10,73 +10,128 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/starwind/card";
+import PageSidebar from "@/layouts/PageSidebar.astro";
+import { formatForUrl } from "@/utils/blogUtils";
 
 import { SITE_TITLE } from "../consts";
-import { getEntry } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 import { Icon } from "astro-icon/components";
 
-// Get portfolio data from content collection
-const portfolioEntry = await getEntry("portfolio", "index");
-if (!portfolioEntry) {
-  throw new Error("Portfolio data not found");
-}
+// Get all portfolio items from the collection
+const allPortfolioItems = await getCollection("portfolio");
 
-const { items } = portfolioEntry.data;
+// Filter out draft items (unless in development)
+const publishedPortfolioItems = import.meta.env.DEV
+  ? allPortfolioItems
+  : allPortfolioItems.filter((item) => !item.data.draft);
 
-// Sort projects by year (newest to oldest)
-const sortedProjects = [...items].sort((a, b) => b.year.localeCompare(a.year));
+// Sort projects by date (newest to oldest)
+const sortedProjects = publishedPortfolioItems.sort((a, b) => {
+    const dateA = new Date(a.data.date);
+    const dateB = new Date(b.data.date);
+    return dateB.getTime() - dateA.getTime();
+});
+
+// Extract all unique tags and categories with counts
+const allTags = new Set<string>();
+const tagCounts: Record<string, number> = {};
+const allCategories = new Set<string>();
+const categoryCounts: Record<string, number> = {};
+
+publishedPortfolioItems.forEach((item) => {
+  // Process tags
+  if (item.data.tags && Array.isArray(item.data.tags)) {
+    item.data.tags.forEach((tag) => {
+      allTags.add(tag);
+      tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+    });
+  }
+  
+  // Process categories
+  if (item.data.category) {
+    allCategories.add(item.data.category);
+    categoryCounts[item.data.category] = (categoryCounts[item.data.category] || 0) + 1;
+  }
+});
+
+// Convert Sets to sorted arrays
+const sortedTags = Array.from(allTags).sort();
+const sortedCategories = Array.from(allCategories).sort();
 ---
 
 <Layout title={`Portfolio - ${SITE_TITLE}`}>
-  <div class="container container--grid mx-auto px-4 max-w-7xl">
+  <div class="container container--grid mx-auto my-6 px-4 max-w-7xl">
     <!-- Header Section -->
     <header class="header--page">
       <h1>Portfolio</h1>
       <p>A collection of my work and projects</p>
     </header>
 
+    <!-- Sidebar -->
+    <PageSidebar
+      type="portfolio"
+      baseUrl="/portfolio"
+      tags={sortedTags}
+      tagCounts={tagCounts}
+      showCounts={false}
+      showHref={false}
+      categories={sortedCategories}
+      categoryCounts={categoryCounts}
+      allItemsCount={publishedPortfolioItems.length}
+      formatTagUrl={(tag) => `/portfolio/tag/${formatForUrl(tag)}`}
+      formatCategoryUrl={(category) => `/portfolio/category/${formatForUrl(category)}`}
+    />
+      
     <!-- Portfolio grid -->
     <section class="posts-grid">
       {
         sortedProjects.map((project, projectIndex) => (
-          <Card class="card hover:border-primary/50 transition-colors overflow-hidden">
+          <Card class="card hover:border-primary/50 transition-colors overflow-hidden group">
             <CardHeader class="p-0 mb-3">
-              <img
-                src={project.thumbnail}
-                alt={project.title}
-                class="aspect-[4/3] w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
-              />
+              {project.data.thumbnail && (
+                <img
+                  src={project.data.thumbnail}
+                  alt={project.data.title}
+                  class="aspect-[4/3] w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
+                  loading="lazy"
+                />
+              )}
             </CardHeader>
             <CardContent class="pb-1">
-              <span class="text-sm text-gray-500 dark:text-gray-400 my-2">
-                {project.year}
+              <span class="text-sm text-gray-500 dark:text-gray-400 my-2 block">
+                 {new Date(project.data.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
               </span>
-              <CardTitle class="text-balance">{project.title}</CardTitle>
-              <CardDescription class="hidden md:block lg:max-w-2xl text-balance">
-                <p class="mb-4">{project.description}</p>
-              </CardDescription>
+              <CardTitle class="text-balance mb-2">{project.data.title}</CardTitle>
+              {project.data.description && (
+                <CardDescription class="text-balance">
+                  {project.data.description}
+                </CardDescription>
+              )}
             </CardContent>
-            <CardFooter class="pb-4">
-              <div class="flex justify-between items-start w-100 mb-3">
-                <Badge variant="outline">{project.category}</Badge>
+            <CardFooter class="flex-col items-start pb-4">
+               {project.data.category && (
+                  <Badge variant="outline" class="mb-3">{project.data.category}</Badge>
+               )}
+               {project.data.tags && project.data.tags.length > 0 && (
                 <div class="flex flex-wrap gap-1 mb-3">
-                  {project.tags.slice(0, 3).map((tag) => (
+                  {project.data.tags.slice(0, 3).map((tag) => (
                     <Badge>{tag}</Badge>
                   ))}
-                  {project.tags.length > 3 && (
+                  {project.data.tags.length > 3 && (
                     <span class="text-xs text-gray-500 dark:text-gray-400">
-                      +{project.tags.length - 3} more
+                      +{project.data.tags.length - 3} more
                     </span>
                   )}
                 </div>
-              </div>
+               )}
+               {/* Make the entire card clickable as a gallery trigger */}
+               <a
+                 href="#"
+                 data-project-index={projectIndex}
+                 class="stretched-link gallery-trigger"
+                 aria-label={`View gallery for ${project.data.title}`}
+               />
             </CardFooter>
-            <a
-              href="#"
-              data-project-index={projectIndex}
-              class="stretched-link gallery-trigger"
-              aria-label={`View the ${project.title}`}
-            />
           </Card>
         ))
       }
@@ -90,8 +145,9 @@ const sortedProjects = [...items].sort((a, b) => b.year.localeCompare(a.year));
       <p class="text-lg mb-8">
         Let's discuss your project and bring your ideas to life.
       </p>
-      <Button size="lg" href="mailto:jasper.yzh@gmail.com" target="_blank">
-        <Icon name="bi:envelope-fill" /> Get in Touch
+      <Button size="lg" href="mailto:jasper.yzh@gmail.com" target="_blank" class="inline-flex items-center">
+        <Icon name="bi:envelope-fill" class="h-5 w-5 me-2" /> 
+        <span>Get in Touch</span>
       </Button>
     </section>
 
@@ -99,8 +155,8 @@ const sortedProjects = [...items].sort((a, b) => b.year.localeCompare(a.year));
     <div class="hidden">
       <div class="pswp-gallery-all">
         {
-          items.map((project, projectIndex) =>
-            project.images.map((image, imageIndex) => (
+          sortedProjects.map((project, projectIndex) =>
+            project.data.images && project.data.images.map((image, imageIndex) => (
               <a
                 href={image.src}
                 data-pswp-width={image.width}
@@ -109,11 +165,11 @@ const sortedProjects = [...items].sort((a, b) => b.year.localeCompare(a.year));
                 data-project-index={projectIndex}
                 data-image-index={imageIndex}
                 class="gallery-item-hidden"
-                data-pswp-caption={`<div class="pswp__title">${project.title}</div><div class="pswp__description">${image.caption}</div>`}
+                data-pswp-caption={`<div class="pswp__title">${project.data.title}</div><div class="pswp__description">${image.caption || ""}</div>`}
               >
                 <img
                   src={image.src}
-                  alt={image.caption}
+                  alt={image.caption || `Image for ${project.data.title}`}
                   loading="lazy"
                   class="hidden"
                 />
@@ -179,9 +235,9 @@ const sortedProjects = [...items].sort((a, b) => b.year.localeCompare(a.year));
         }
       });
 
-      // Add click handlers to all thumbnail images and buttons
+      // Add click handlers to all gallery triggers (the card links)
       document
-        .querySelectorAll(".gallery-item, .gallery-trigger")
+        .querySelectorAll(".gallery-trigger")
         .forEach((item) => {
           item.addEventListener("click", (e) => {
             e.preventDefault();
@@ -296,30 +352,44 @@ const sortedProjects = [...items].sort((a, b) => b.year.localeCompare(a.year));
   }
 </style>
 
-<style>
+<!-- <style>
   .posts-grid {
     display: grid;
+    /* Use subgrid to align items within the parent grid defined in BaseLayout */
     grid-template-columns: subgrid;
     grid-column: 1 / -1;
+    gap: 1.5rem; /* Add gap between cards */
 
+    /* Default to 1 column */
+    & > * {
+        grid-column: auto / span 12;
+    }
+
+    /* 2 columns on medium screens */
     @media (min-width: 768px) {
       & > * {
-        grid-column: auto / span 3;
+        grid-column: auto / span 6;
       }
     }
+
+    /* 3 columns on large screens */
     @media (min-width: 1024px) {
-      grid-column: 1 / -1;
-
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
-
-      max-width: 1000px;
-      margin: auto;
-
+      /* Account for sidebar */
+      grid-column: 4 / -1;
+      
       & > * {
         grid-column: auto / span 1;
       }
     }
   }
-</style>
+
+  .card {
+    /* Ensure cards fill the grid cell height */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .card > *:last-child {
+      margin-top: auto; /* Push footer to bottom */
+  }
+</style> -->

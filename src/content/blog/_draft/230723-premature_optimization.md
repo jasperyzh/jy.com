@@ -3,7 +3,7 @@ pubDate: 230723
 title: "Premature Optimization: A Developer's Guide"
 description: Based on the insightful video by CodeAesthetic, discusses the balance between performance, velocity, and adaptability in code optimization.
 tags: ["general", "webdev"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png" 
 category: "Curiosity"
 ---

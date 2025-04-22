@@ -3,7 +3,7 @@ pubDate: 241126
 title: Inertia, Keep Going, Keep Rolling
 description: just a matter of working it out
 tags: ["General"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png" 
 category: "Curiosity"
 ---

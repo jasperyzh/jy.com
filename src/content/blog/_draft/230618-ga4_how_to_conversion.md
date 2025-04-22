@@ -3,7 +3,7 @@ pubDate: 230618
 title: How to Configure GA4 Goals and Conversions
 description: A Short guide on how to configure GA4 "Goals" and conversion. Setting up custom events and how to view it.
 tags: ["general"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png" 
 category: "Curiosity"
 ---

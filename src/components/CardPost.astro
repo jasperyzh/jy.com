@@ -1,0 +1,161 @@
+---
+/**
+ * Universal Card Component for Blog Posts and Sketches
+ */
+
+// import CardComponent from "./CardComponent.astro";
+import FormattedDate from "./FormattedDate.astro";
+import { formatForUrl } from "@/utils/blogUtils";
+import { Badge } from "@/components/starwind/badge";
+import type { HTMLAttributes } from "astro/types";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/starwind/card";
+
+export interface CardProps extends HTMLAttributes<"div"> {
+  /** Post title */
+  title: string;
+  /** Post description */
+  description?: string;
+  /** Publication date */
+  date: Date;
+  /** Array of tags */
+  tags?: string[];
+  /** Category */
+  category?: string;
+  /** URL to the full content */
+  url: string;
+  /** Thumbnail image URL */
+  thumbnail?: string;
+  /** Thumbnail alt text */
+  thumbnailAlt?: string;
+  /** Maximum number of tags to display before showing +n */
+  maxVisibleTags?: number;
+  /** Show thumbnail image */
+  showThumbnail?: boolean;
+  /** Category URL prefix */
+  categoryUrlPrefix?: string;
+  /** Tag URL prefix */
+  tagUrlPrefix?: string;
+  /** Type of card: 'blog' or 'sketch' */
+  type?: "blog" | "sketch";
+}
+
+const {
+  title,
+  description,
+  date,
+  tags = [],
+  category,
+  url,
+  thumbnail,
+  thumbnailAlt,
+  maxVisibleTags = 3,
+  showThumbnail = true,
+  categoryUrlPrefix = "/blog/category",
+  tagUrlPrefix = "/blog/tag",
+  type = "blog",
+  ...restProps
+} = Astro.props;
+
+// Limit tags for display
+const visibleTags = tags.slice(0, maxVisibleTags);
+const hasMoreTags = tags.length > maxVisibleTags;
+const isSketch = type === "sketch";
+---
+
+<Card
+  class={`card hover:border-primary/50 transition-colors overflow-hidden ${isSketch && "is-sketch"}`}
+>
+  {
+    isSketch && thumbnail && (
+      <figure>
+        <img
+          src={thumbnail}
+          alt={thumbnailAlt || title}
+          class="object-cover w-full h-full aspect-[4/3]"
+        />
+      </figure>
+    )
+  }
+
+  <div class="card-content pb-5 md:py-4">
+    <CardHeader class="py-0">
+      <FormattedDate date={date} class="m-0" />
+      <CardTitle class="text-2xl mb-2">{title}</CardTitle>
+    </CardHeader>
+
+    {
+      description && (
+        <CardContent class="py-0">
+          <CardDescription class="hidden md:block text-balance mb-4">
+            {description}
+          </CardDescription>
+        </CardContent>
+      )
+    }
+
+    {
+      tags.length > 0 && (
+        <CardFooter class="py-0">
+          <div class="flex flex-wrap gap-1 stretched-link--above">
+            {category && (
+              <Badge href={`${categoryUrlPrefix}/${category}`} size="sm">
+                {category}
+              </Badge>
+            )}
+            {visibleTags.map((tag) => (
+              <Badge
+                variant="outline"
+                href={`${tagUrlPrefix}/${formatForUrl(tag)}`}
+                size="sm"
+              >
+                #{tag}
+              </Badge>
+            ))}
+            {/* {hasMoreTags && (
+              <Badge variant="outline" size="sm">
+                +{tags.length - maxVisibleTags}
+              </Badge>
+            )} */}
+          </div>
+        </CardFooter>
+      )
+    }
+  </div>
+  <a href={url} class="stretched-link" aria-label={`View ${title}`}></a>
+</Card>
+
+<style>
+  .card {
+    display: grid;
+    grid-template-columns: subgrid;
+    gap: 1rem;
+
+    & > * {
+      grid-column: 1/-1;
+    }
+
+    .card-content {
+      align-content: center;
+    }
+
+    @media (min-width: 768px) {
+      &.is-sketch {
+        grid-template-columns: 2fr 4fr;
+
+        figure {
+          grid-column: 1/2;
+        }
+        .card-content {
+          grid-column: 2/3;
+        }
+      }
+    }
+  }
+</style>

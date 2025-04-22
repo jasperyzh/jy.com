@@ -3,12 +3,10 @@
  * Paginated blog page
  * Handles routes like /blog/page/2, /blog/page/3, etc.
  */
-import Layout from "@/layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
-import Pagination from "@/components/Pagination.astro";
+import PageBlog from "@/layouts/PageBlog.astro";
 import { formatYymmddDate } from "@/utils/formatDate";
-import BlogPostCard from "@/components/BlogPostCard.astro";
-import { getBlogFilename } from "@/utils/blogUtils";
+import { getBlogFilename, formatForUrl } from "@/utils/blogUtils";
 
 // Import the posts per page constant from blog index
 import { POSTS_PER_PAGE } from "../index.astro";
@@ -45,90 +43,50 @@ export async function getStaticPaths() {
         totalPosts: publishedPosts.length,
         currentPage: page,
         totalPages,
+        allPosts: publishedPosts, // Pass all posts for tag filtering
       },
     };
   });
 }
 
 // Define page props
-const { posts, totalPosts, currentPage, totalPages } = Astro.props;
+const { posts, totalPosts, currentPage, totalPages, allPosts } = Astro.props;
 
 // Calculate pagination URLs
 const prevUrl =
   currentPage > 1
-    ? `/blog/page/${currentPage - 1}`
-    : currentPage > 2
+    ? currentPage === 2
       ? "/blog"
-      : null;
+      : `/blog/page/${currentPage - 1}`
+    : null;
 const nextUrl =
   currentPage < totalPages ? `/blog/page/${currentPage + 1}` : null;
+
+// Extract all tags for filtering
+const allTags = allPosts.flatMap(post => post.data.tags || []);
+const tags = [...new Set(allTags)].sort();
+
+// Calculate count for each tag
+const tagCounts = {};
+tags.forEach(tag => {
+  tagCounts[tag] = allPosts.filter(post => 
+    post.data.tags && post.data.tags.includes(tag)
+  ).length;
+});
 
 export const prerender = true;
 ---
 
-<Layout title={`Blog - Page ${currentPage}`}>
-  <main class="container mx-auto px-4 py-8">
-    <div class="max-w-7xl mx-auto">
-      <!-- Header Section -->
-      <div class="mb-8 text-center">
-        <h1
-          class="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-purple-700 text-transparent bg-clip-text"
-        >
-          Blog
-        </h1>
-        <p class="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-          Insights, tutorials, and thoughts on web development, creative coding,
-          and more.
-        </p>
-      </div>
-
-      <!-- Filters Section -->
-
-      <!-- Blog Posts Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-        {
-          posts.map((post) => (
-            <BlogPostCard
-              title={post.data.title}
-              description={post.data.description || "No description available"}
-              date={formatYymmddDate(post.data.pubDate || new Date())}
-              tags={post.data.tags || []}
-              category={post.data.category}
-              url={`/blog/${getBlogFilename(post)}`}
-              thumbnail={post.data.thumbnail || "/img/placeholder.png"}
-            />
-          ))
-        }
-      </div>
-
-      <!-- Empty State -->
-      {
-        posts.length === 0 && (
-          <div class="text-center py-12">
-            <div class="text-6xl mb-4">📝</div>
-            <h3 class="text-2xl font-bold mb-2">No posts found</h3>
-            <p class="text-slate-600 dark:text-slate-300">
-              There are no posts available at the moment. Please check back
-              later.
-            </p>
-          </div>
-        )
-      }
-
-      <!-- Pagination controls -->
-      {
-        (prevUrl || nextUrl) && (
-          <div class="mt-8">
-            <Pagination
-              {prevUrl}
-              {nextUrl}
-              {currentPage}
-              {totalPages}
-              baseUrl="/blog"
-            />
-          </div>
-        )
-      }
-    </div>
-  </main>
-</Layout>
+<PageBlog
+  title={`Blog - Page ${currentPage}`}
+  description="Insights, tutorials, and thoughts on web development, creative coding, and more."
+  currentPage={currentPage}
+  totalPages={totalPages}
+  prevUrl={prevUrl}
+  nextUrl={nextUrl}
+  paginatedPosts={posts}
+  tags={tags}
+  tagCounts={tagCounts}
+  baseUrl="/blog"
+  allPostsCount={totalPosts}
+/>

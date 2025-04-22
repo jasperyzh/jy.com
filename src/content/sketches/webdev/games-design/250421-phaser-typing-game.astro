@@ -1,0 +1,1053 @@
+<div id="game-container"></div>
+
+<script
+  is:inline
+  src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.min.js"></script>
+
+<script>
+  // Inform TypeScript that Phaser is a global variable
+  declare var Phaser: any;
+
+  //== Start stateManager code ==
+  const gameState = {
+    currentLevel: 1,
+    score: 0,
+    highScore: 0,
+    timeLeft: 20,
+    lastPlayed: null as string | null,
+    playHistory: [] as any[],
+    settings: {
+      difficulty: "normal", // easy/normal/hard
+      musicOn: true,
+      sfxOn: true,
+      enableNotifications: true,
+    },
+  };
+
+  // Local storage keys
+  const STORAGE_KEY = "typedash_game_state";
+  const HISTORY_KEY = "typedash_play_history";
+
+  // Initialize game state - should be called when app starts
+  function initGameState() {
+    loadGameState();
+
+    // Check for network connection and sync if online
+    if (navigator.onLine) {
+      syncGameData();
+    }
+
+    // Listen for online event to sync when connection is restored
+    window.addEventListener("online", syncGameData);
+  }
+
+  // Save game state to localStorage
+  function saveGameState() {
+    gameState.lastPlayed = new Date().toISOString();
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        currentLevel: gameState.currentLevel,
+        highScore: gameState.highScore,
+        settings: gameState.settings,
+        lastPlayed: gameState.lastPlayed,
+      })
+    );
+  }
+
+  // Save a play session to history
+  function savePlaySession(level, score, accuracy, duration) {
+    const session = {
+      timestamp: new Date().toISOString(),
+      level,
+      score,
+      accuracy,
+      duration,
+    };
+
+    gameState.playHistory.unshift(session);
+
+    // Keep only the last 20 sessions
+    if (gameState.playHistory.length > 20) {
+      gameState.playHistory = gameState.playHistory.slice(0, 20);
+    }
+
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(gameState.playHistory));
+  }
+
+  // Load game state from localStorage
+  function loadGameState() {
+    try {
+      const savedState = localStorage.getItem(STORAGE_KEY);
+      const savedHistory = localStorage.getItem(HISTORY_KEY);
+
+      if (savedState) {
+        const parsedState = JSON.parse(savedState);
+        gameState.currentLevel = parsedState.currentLevel || 1;
+        gameState.highScore = parsedState.highScore || 0;
+        gameState.lastPlayed = parsedState.lastPlayed || null;
+
+        if (parsedState.settings) {
+          gameState.settings = {
+            ...gameState.settings,
+            ...parsedState.settings,
+          };
+        }
+      }
+
+      if (savedHistory) {
+        gameState.playHistory = JSON.parse(savedHistory);
+      }
+    } catch (error) {
+      console.error("Error loading game state:", error);
+      // If there's a parsing error, reset localStorage
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(HISTORY_KEY);
+    }
+  }
+
+  // Reset game state for a new game
+  function resetGameState() {
+    gameState.score = 0;
+    gameState.timeLeft = 20;
+
+    // Adjust time based on difficulty
+    if (gameState.settings.difficulty === "easy") {
+      gameState.timeLeft = 30;
+    } else if (gameState.settings.difficulty === "hard") {
+      gameState.timeLeft = 15;
+    }
+
+    // Preserve settings, history and highScore
+  }
+
+  // Update high score if current score is higher
+  function updateHighScore() {
+    if (gameState.score > gameState.highScore) {
+      gameState.highScore = gameState.score;
+      saveGameState();
+      return true;
+    }
+    return false;
+  }
+
+  // Sync game data with server when online (placeholder for future implementation)
+  function syncGameData() {
+    // This function would communicate with a backend service
+    // For now, we're just using localStorage
+    console.log("Game data synced with online storage");
+
+    // Implement this when you have a backend API
+    /*
+  fetch('/api/sync', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      highScore: gameState.highScore,
+      playHistory: gameState.playHistory
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Update local data with server data if needed
+    if (data.highScore > gameState.highScore) {
+      gameState.highScore = data.highScore;
+      saveGameState();
+    }
+  })
+  .catch(error => {
+    console.error('Sync error:', error);
+  });
+  */
+  }
+  //== End stateManager code ==
+
+  //== Start Boot Scene ==
+  class Boot extends Phaser.Scene {
+    constructor() {
+      super("Boot");
+    }
+
+    preload() {
+      // Set up loading bar
+      const width = this.cameras.main.width;
+      const height = this.cameras.main.height;
+
+      const progressBar = this.add.graphics();
+      const progressBox = this.add.graphics();
+      progressBox.fillStyle(0x222222, 0.8);
+      progressBox.fillRect(width / 4, height / 2 - 30, width / 2, 50);
+
+      const loadingText = this.add
+        .text(width / 2, height / 2 - 50, "Loading...", {
+          font: "20px Arial",
+          fill: "#ffffff",
+        })
+        .setOrigin(0.5, 0.5);
+
+      // Loading progress events
+      this.load.on("progress", (value) => {
+        progressBar.clear();
+        progressBar.fillStyle(0xffffff, 1);
+        progressBar.fillRect(
+          width / 4 + 10,
+          height / 2 - 20,
+          (width / 2 - 20) * value,
+          30
+        );
+      });
+
+      this.load.on("complete", () => {
+        progressBar.destroy();
+        progressBox.destroy();
+        loadingText.destroy();
+      });
+
+      // Load game assets here
+      // this.load.image('background', 'assets/sprites/background.png');
+      // this.load.image('logo', 'assets/sprites/logo.png');
+      // this.load.audio('title_music', 'assets/audio/title_music.mp3');
+      // this.load.audio('correct_sound', 'assets/audio/correct.mp3');
+      // this.load.audio('wrong_sound', 'assets/audio/wrong.mp3');
+    }
+
+    create() {
+      this.scene.start("MainMenu");
+    }
+  }
+  //== End Boot Scene ==
+
+  //== Start MainMenu Scene ==
+  class MainMenu extends Phaser.Scene {
+    constructor() {
+      super("MainMenu");
+    }
+
+    create() {
+      // Load saved game state
+      loadGameState();
+
+      const width = this.cameras.main.width;
+      const height = this.cameras.main.height;
+
+      // Add title
+      this.add
+        .text(width / 2, height / 4, "TypeDash", {
+          font: "48px Arial",
+          fill: "#ffffff",
+        })
+        .setOrigin(0.5);
+
+      // High score display
+      this.add
+        .text(width / 2, height / 3, `High Score: ${gameState.highScore}`, {
+          font: "24px Arial",
+          fill: "#ffffff",
+        })
+        .setOrigin(0.5);
+
+      // Create start button
+      const startButton = this.add
+        .text(width / 2, height / 2, "Play Game", {
+          font: "32px Arial",
+          fill: "#ffffff",
+          padding: { x: 20, y: 10 },
+          backgroundColor: "#1a6b00",
+        })
+        .setOrigin(0.5)
+        .setInteractive({ useHandCursor: true })
+        .on("pointerover", () => startButton.setStyle({ fill: "#ff0" }))
+        .on("pointerout", () => startButton.setStyle({ fill: "#ffffff" }))
+        .on("pointerdown", () =>
+          this.scene.start("Game", { level: gameState.currentLevel })
+        );
+
+      // Settings button
+      const settingsButton = this.add
+        .text(width / 2, height / 2 + 80, "Settings", {
+          font: "28px Arial",
+          fill: "#ffffff",
+          padding: { x: 15, y: 8 },
+          backgroundColor: "#004080",
+        })
+        .setOrigin(0.5)
+        .setInteractive({ useHandCursor: true })
+        .on("pointerover", () => settingsButton.setStyle({ fill: "#ff0" }))
+        .on("pointerout", () => settingsButton.setStyle({ fill: "#ffffff" }))
+        .on("pointerdown", () => this.showSettings());
+
+      // Add footer text for installation prompt
+      if (window.matchMedia("(display-mode: browser)").matches) {
+        this.add
+          .text(width / 2, height - 40, "Install app for offline play", {
+            font: "18px Arial",
+            fill: "#7788ff",
+          })
+          .setOrigin(0.5);
+      }
+    }
+
+    showSettings() {
+      const width = this.cameras.main.width;
+      const height = this.cameras.main.height;
+
+      // Create a semi-transparent background
+      const overlay = this.add
+        .rectangle(0, 0, width, height, 0x000000, 0.7)
+        .setOrigin(0)
+        .setInteractive();
+
+      // Settings panel
+      const panel = this.add
+        .rectangle(width / 2, height / 2, width * 0.7, height * 0.7, 0x333333)
+        .setOrigin(0.5);
+
+      // Title
+      this.add
+        .text(width / 2, height / 2 - panel.height / 2 + 40, "Settings", {
+          font: "32px Arial",
+          fill: "#ffffff",
+        })
+        .setOrigin(0.5);
+
+      // Difficulty setting
+      this.add
+        .text(width / 2 - 120, height / 2 - 50, "Difficulty:", {
+          font: "24px Arial",
+          fill: "#ffffff",
+        })
+        .setOrigin(0, 0.5);
+
+      const difficulty = this.add
+        .text(width / 2 + 50, height / 2 - 50, gameState.settings.difficulty, {
+          font: "24px Arial",
+          fill: "#ffff00",
+        })
+        .setOrigin(0, 0.5)
+        .setInteractive({ useHandCursor: true })
+        .on("pointerdown", () => {
+          // Cycle through difficulties
+          const difficulties = ["easy", "normal", "hard"];
+          const currentIndex = difficulties.indexOf(
+            gameState.settings.difficulty
+          );
+          const nextIndex = (currentIndex + 1) % difficulties.length;
+          gameState.settings.difficulty = difficulties[nextIndex];
+          difficulty.setText(gameState.settings.difficulty);
+          saveGameState();
+        });
+
+      // Music toggle
+      this.add
+        .text(width / 2 - 120, height / 2, "Music:", {
+          font: "24px Arial",
+          fill: "#ffffff",
+        })
+        .setOrigin(0, 0.5);
+
+      const musicState = this.add
+        .text(
+          width / 2 + 50,
+          height / 2,
+          gameState.settings.musicOn ? "ON" : "OFF",
+          {
+            font: "24px Arial",
+            fill: gameState.settings.musicOn ? "#00ff00" : "#ff0000",
+          }
+        )
+        .setOrigin(0, 0.5)
+        .setInteractive({ useHandCursor: true })
+        .on("pointerdown", () => {
+          gameState.settings.musicOn = !gameState.settings.musicOn;
+          musicState.setText(gameState.settings.musicOn ? "ON" : "OFF");
+          musicState.setFill(
+            gameState.settings.musicOn ? "#00ff00" : "#ff0000"
+          );
+          saveGameState();
+        });
+
+      // Sound effects toggle
+      this.add
+        .text(width / 2 - 120, height / 2 + 50, "Sound FX:", {
+          font: "24px Arial",
+          fill: "#ffffff",
+        })
+        .setOrigin(0, 0.5);
+
+      const sfxState = this.add
+        .text(
+          width / 2 + 50,
+          height / 2 + 50,
+          gameState.settings.sfxOn ? "ON" : "OFF",
+          {
+            font: "24px Arial",
+            fill: gameState.settings.sfxOn ? "#00ff00" : "#ff0000",
+          }
+        )
+        .setOrigin(0, 0.5)
+        .setInteractive({ useHandCursor: true })
+        .on("pointerdown", () => {
+          gameState.settings.sfxOn = !gameState.settings.sfxOn;
+          sfxState.setText(gameState.settings.sfxOn ? "ON" : "OFF");
+          sfxState.setFill(gameState.settings.sfxOn ? "#00ff00" : "#ff0000");
+          saveGameState();
+        });
+
+      // Close button
+      const closeButton = this.add
+        .text(width / 2, height / 2 + panel.height / 2 - 40, "Close", {
+          font: "28px Arial",
+          fill: "#ffffff",
+          padding: { x: 20, y: 10 },
+          backgroundColor: "#880000",
+        })
+        .setOrigin(0.5)
+        .setInteractive({ useHandCursor: true })
+        .on("pointerover", () => closeButton.setStyle({ fill: "#ff0" }))
+        .on("pointerout", () => closeButton.setStyle({ fill: "#ffffff" }))
+        .on("pointerdown", () => {
+          overlay.destroy();
+          panel.destroy();
+          closeButton.destroy();
+          // Remove all other settings elements
+          this.scene.restart(); // Restarting scene to remove all elements - simpler than manual removal
+        });
+    }
+  }
+  //== End MainMenu Scene ==
+
+  //== Start Game Scene ==
+  class Game extends Phaser.Scene {
+    constructor() {
+      super("Game");
+      this.activeLetters = [];
+      this.comboCount = 0;
+      this.correctLetters = 0;
+      this.wrongLetters = 0;
+      this.startTime = 0;
+    }
+
+    init(data) {
+      this.level = data.level || 1;
+      resetGameState();
+      this.startTime = Date.now();
+
+      // Configure difficulty based on level
+      this.letterSpeed = 100 + this.level * 50;
+      this.spawnRate = 2000 - this.level * 200;
+      if (this.spawnRate < 500) this.spawnRate = 500;
+
+      // Configure difficulty based on settings
+      if (gameState.settings.difficulty === "easy") {
+        this.letterSpeed *= 0.7;
+        this.spawnRate *= 1.5;
+      } else if (gameState.settings.difficulty === "hard") {
+        this.letterSpeed *= 1.3;
+        this.spawnRate *= 0.7;
+      }
+
+      // Save game state periodically for offline recovery
+      this.saveInterval = this.time.addEvent({
+        delay: 10000, // Save every 10 seconds
+        callback: this.saveProgress,
+        callbackScope: this,
+        loop: true,
+      });
+    }
+
+    saveProgress() {
+      // Save current game state for offline recovery
+      saveGameState();
+    }
+
+    create() {
+      const width = this.cameras.main.width;
+      const height = this.cameras.main.height;
+
+      // Background
+      this.add.rectangle(0, 0, width, height, 0x000033).setOrigin(0);
+
+      // Game UI
+      this.timeText = this.add.text(20, 20, `Time: ${gameState.timeLeft}`, {
+        font: "24px Arial",
+        fill: "#ffffff",
+      });
+
+      this.scoreText = this.add
+        .text(width - 20, 20, `Score: ${gameState.score}`, {
+          font: "24px Arial",
+          fill: "#ffffff",
+        })
+        .setOrigin(1, 0);
+
+      this.levelText = this.add
+        .text(width / 2, 20, `Level ${this.level}`, {
+          font: "24px Arial",
+          fill: "#ffffff",
+        })
+        .setOrigin(0.5, 0);
+
+      this.comboText = this.add
+        .text(width / 2, 50, "", {
+          font: "20px Arial",
+          fill: "#ffff00",
+        })
+        .setOrigin(0.5, 0);
+
+      // Timer event
+      this.timer = this.time.addEvent({
+        delay: 1000,
+        callback: this.updateTimer,
+        callbackScope: this,
+        loop: true,
+      });
+
+      // Letter spawner
+      this.letterSpawner = this.time.addEvent({
+        delay: this.spawnRate,
+        callback: this.spawnLetter,
+        callbackScope: this,
+        loop: true,
+      });
+
+      // Keyboard input
+      this.input.keyboard.on("keydown", this.handleKeyPress, this);
+
+      // Add mobile input if on mobile device
+      if (this.sys.game.device.os.android || this.sys.game.device.os.iOS) {
+        this.addVirtualKeyboard();
+      }
+    }
+
+    update() {
+      // Update letter positions
+      for (let i = this.activeLetters.length - 1; i >= 0; i--) {
+        const letterObj = this.activeLetters[i];
+        // Ensure object exists before accessing properties
+        if (!letterObj || !letterObj.text || !letterObj.background) {
+          this.activeLetters.splice(i, 1); // Remove invalid entry
+          continue;
+        }
+        letterObj.y += this.letterSpeed * (1 / 60);
+
+        // Remove letters that go off screen
+        if (letterObj.y > this.cameras.main.height) {
+          letterObj.text.destroy();
+          letterObj.background.destroy();
+          this.activeLetters.splice(i, 1);
+
+          // Reset combo
+          this.comboCount = 0;
+          this.updateComboText();
+        }
+      }
+    }
+
+    updateTimer() {
+      gameState.timeLeft--;
+      this.timeText.setText(`Time: ${gameState.timeLeft}`);
+
+      if (gameState.timeLeft <= 0) {
+        // Clean up timers and events
+        if (this.timer) this.timer.remove();
+        if (this.letterSpawner) this.letterSpawner.remove();
+        if (this.saveInterval) this.saveInterval.remove();
+        this.input.keyboard.off("keydown", this.handleKeyPress, this);
+
+        // Calculate game duration
+        const duration = Math.floor((Date.now() - this.startTime) / 1000);
+        const accuracy = this.calculateAccuracy();
+
+        // Save play session for history
+        savePlaySession(this.level, gameState.score, accuracy, duration);
+
+        // Update high score
+        updateHighScore();
+
+        this.scene.start("GameOver", {
+          score: gameState.score,
+          level: this.level,
+          accuracy: accuracy,
+          duration: duration,
+        });
+      }
+    }
+
+    spawnLetter() {
+      const width = this.cameras.main.width;
+
+      // Choose character set based on level
+      let possibleChars;
+      if (this.level === 1) {
+        possibleChars = "abcdefghijklmnopqrstuvwxyz";
+      } else if (this.level === 2) {
+        possibleChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      } else {
+        possibleChars =
+          "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      }
+
+      const randomChar = possibleChars.charAt(
+        Math.floor(Math.random() * possibleChars.length)
+      );
+      const x = Phaser.Math.Between(50, width - 50);
+      const y = 100;
+
+      // Create background for the letter
+      const background = this.add.circle(x, y, 25, 0x444444);
+
+      // Create letter text
+      const text = this.add
+        .text(x, y, randomChar, {
+          font: "32px Arial",
+          fill: "#ffffff",
+        })
+        .setOrigin(0.5);
+
+      // Add to active letters array
+      this.activeLetters.push({
+        char: randomChar,
+        text,
+        background,
+        x, // Store initial x for reference if needed
+        y, // Store initial y for reference, gets updated in update()
+      });
+    }
+
+    handleKeyPress(event) {
+      const keyPressed = event.key; // Use event.key for case sensitivity
+
+      // Prevent scrolling with spacebar
+      if (keyPressed === " ") {
+        event.preventDefault();
+        return; // Early return for spacebar
+      }
+
+      // Only process single character keys (handles Shift, Ctrl etc.)
+      if (keyPressed.length !== 1) {
+        return;
+      }
+
+      // Check if the key matches any active letters
+      let matchFound = false;
+      let matchIndex = -1;
+
+      // Find the lowest matching letter
+      for (let i = 0; i < this.activeLetters.length; i++) {
+        const letterObj = this.activeLetters[i];
+        if (!letterObj || !letterObj.char) continue; // Skip if invalid
+
+        // Match logic: Level 1 is case-insensitive, others are case-sensitive
+        if (
+          (this.level === 1 &&
+            letterObj.char.toLowerCase() === keyPressed.toLowerCase()) ||
+          (this.level > 1 && letterObj.char === keyPressed)
+        ) {
+          // If a match is already found, check if this one is lower
+          if (!matchFound || letterObj.y > this.activeLetters[matchIndex].y) {
+            matchFound = true;
+            matchIndex = i;
+          }
+        }
+      }
+
+      if (matchFound) {
+        const letterObj = this.activeLetters[matchIndex];
+
+        // Visual effect for correct letter
+        this.tweens.add({
+          targets: [letterObj.text, letterObj.background],
+          scale: 1.5,
+          alpha: 0,
+          duration: 300,
+          onComplete: () => {
+            // Check if text and background still exist before destroying
+            if (letterObj.text) letterObj.text.destroy();
+            if (letterObj.background) letterObj.background.destroy();
+          },
+        });
+
+        // Remove from active letters
+        this.activeLetters.splice(matchIndex, 1);
+
+        // Increase score
+        gameState.score += 10 * (1 + Math.floor(this.comboCount / 5));
+        this.correctLetters++;
+
+        // Update combo
+        this.comboCount++;
+        this.updateComboText();
+
+        // Update score text
+        this.scoreText.setText(`Score: ${gameState.score}`);
+
+        // Add time bonus for certain combos
+        if (this.comboCount > 0 && this.comboCount % 10 === 0) {
+          gameState.timeLeft += 2;
+          this.timeText.setText(`Time: ${gameState.timeLeft}`);
+
+          // Show time bonus text
+          const timeBonusText = this.add
+            .text(this.cameras.main.width / 2, 100, "+2 sec", {
+              font: "24px Arial",
+              fill: "#00ff00",
+            })
+            .setOrigin(0.5);
+
+          this.tweens.add({
+            targets: timeBonusText,
+            y: 70,
+            alpha: 0,
+            duration: 1000,
+            onComplete: () => timeBonusText.destroy(),
+          });
+        }
+      } else {
+        // Wrong key press
+        // Reset combo
+        this.comboCount = 0;
+        this.updateComboText();
+
+        // Visual feedback for wrong key
+        const wrongText = this.add
+          .text(
+            this.cameras.main.width / 2,
+            this.cameras.main.height - 100,
+            keyPressed,
+            {
+              font: "32px Arial",
+              fill: "#ff0000",
+            }
+          )
+          .setOrigin(0.5);
+
+        this.tweens.add({
+          targets: wrongText,
+          y: wrongText.y - 30,
+          alpha: 0,
+          duration: 500,
+          onComplete: () => wrongText.destroy(),
+        });
+
+        this.wrongLetters++;
+      }
+    }
+
+    updateComboText() {
+      if (this.comboCount > 1) {
+        this.comboText.setText(`Combo: ${this.comboCount}x`);
+        this.comboText.setFill(this.getComboColor());
+      } else {
+        this.comboText.setText("");
+      }
+    }
+
+    getComboColor() {
+      if (this.comboCount >= 20) return "#ff00ff";
+      if (this.comboCount >= 15) return "#ff0000";
+      if (this.comboCount >= 10) return "#ffaa00";
+      if (this.comboCount >= 5) return "#ffff00";
+      return "#ffffff"; // Default color for low combo
+    }
+
+    calculateAccuracy() {
+      const totalAttempts = this.correctLetters + this.wrongLetters;
+      return totalAttempts > 0
+        ? Math.round((this.correctLetters / totalAttempts) * 100)
+        : 100; // Accuracy is 100% if no attempts made
+    }
+
+    addVirtualKeyboard() {
+      const width = this.cameras.main.width;
+      const height = this.cameras.main.height;
+      const keyRows = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
+      const keySize = Math.min(width * 0.08, 50); // Adjust key size based on screen width
+      const padding = 5;
+      const keyboardY = height - keyRows.length * (keySize + padding) - 30; // Position keyboard lower
+
+      const keyboardContainer = this.add.container(0, keyboardY); // Anchor at top-left
+
+      // Add a background for the keyboard area (optional)
+      const keyboardBg = this.add.rectangle(
+        width / 2,
+        height - (height - keyboardY) / 2,
+        width,
+        height - keyboardY,
+        0x111111,
+        0.9
+      );
+      keyboardContainer.add(keyboardBg);
+
+      for (let r = 0; r < keyRows.length; r++) {
+        const row = keyRows[r];
+        const rowWidth = row.length * (keySize + padding) - padding;
+        const rowStartX = (width - rowWidth) / 2; // Center the row
+
+        for (let i = 0; i < row.length; i++) {
+          const keyChar = row[i];
+          const keyX = rowStartX + i * (keySize + padding);
+          const keyY = r * (keySize + padding);
+
+          const keyButton = this.add
+            .rectangle(
+              keyX + keySize / 2,
+              keyY + keySize / 2,
+              keySize,
+              keySize,
+              0x444444
+            )
+            .setInteractive({ useHandCursor: true });
+
+          const keyText = this.add
+            .text(keyX + keySize / 2, keyY + keySize / 2, keyChar, {
+              font: `${keySize * 0.5}px Arial`, // Scale font size with key size
+              fill: "#ffffff",
+            })
+            .setOrigin(0.5);
+
+          keyButton.on("pointerdown", () => {
+            // Simulate key press
+            this.handleKeyPress({ key: keyChar, preventDefault: () => {} });
+
+            // Visual feedback for key press
+            keyButton.setFillStyle(0x666666);
+            this.time.delayedCall(100, () => {
+              keyButton.setFillStyle(0x444444);
+            });
+          });
+
+          keyboardContainer.add(keyButton);
+          keyboardContainer.add(keyText);
+        }
+      }
+      // Ensure keyboard is drawn on top
+      keyboardContainer.setDepth(1);
+    }
+  }
+  //== End Game Scene ==
+
+  //== Start GameOver Scene ==
+  class GameOver extends Phaser.Scene {
+    constructor() {
+      super("GameOver");
+    }
+
+    init(data) {
+      this.score = data.score || 0;
+      this.level = data.level || 1;
+      this.accuracy = data.accuracy !== undefined ? data.accuracy : 100; // Default to 100 if not provided
+      // Check for new high score status explicitly
+      this.isNewHighScore =
+        this.score > 0 && this.score === gameState.highScore;
+    }
+
+    create() {
+      // Ensure the latest high score is available
+      loadGameState();
+
+      const width = this.cameras.main.width;
+      const height = this.cameras.main.height;
+
+      // Background
+      this.add.rectangle(0, 0, width, height, 0x000033).setOrigin(0);
+
+      // Game over title
+      this.add
+        .text(width / 2, height / 6, "Game Over", {
+          font: "48px Arial",
+          fill: "#ffffff",
+        })
+        .setOrigin(0.5);
+
+      // Score display
+      this.add
+        .text(width / 2, height / 3, `Score: ${this.score}`, {
+          font: "32px Arial",
+          fill: "#ffffff",
+        })
+        .setOrigin(0.5);
+
+      // High score display
+      this.add
+        .text(
+          width / 2,
+          height / 3 + 50,
+          `High Score: ${gameState.highScore}`,
+          {
+            font: "24px Arial",
+            fill: "#ffffff",
+          }
+        )
+        .setOrigin(0.5);
+
+      // New high score message (if applicable)
+      if (this.isNewHighScore) {
+        const highScoreText = this.add
+          .text(width / 2, height / 3 + 90, "New High Score!", {
+            font: "28px Arial",
+            fill: "#ffff00",
+          })
+          .setOrigin(0.5);
+
+        // Animation for new high score
+        this.tweens.add({
+          targets: highScoreText,
+          scale: 1.2,
+          duration: 500,
+          yoyo: true,
+          repeat: -1,
+        });
+      }
+
+      // Level and accuracy display
+      this.add
+        .text(width / 2, height / 2, `Level: ${this.level}`, {
+          font: "24px Arial",
+          fill: "#ffffff",
+        })
+        .setOrigin(0.5);
+
+      this.add
+        .text(width / 2, height / 2 + 40, `Accuracy: ${this.accuracy}%`, {
+          font: "24px Arial",
+          fill: "#ffffff",
+        })
+        .setOrigin(0.5);
+
+      // Play again button (restart current level)
+      const playAgainButton = this.add
+        .text(width / 2, (height * 2) / 3, "Play Again", {
+          font: "32px Arial",
+          fill: "#ffffff",
+          padding: { x: 20, y: 10 },
+          backgroundColor: "#1a6b00",
+        })
+        .setOrigin(0.5)
+        .setInteractive({ useHandCursor: true })
+        .on("pointerover", () => playAgainButton.setStyle({ fill: "#ff0" }))
+        .on("pointerout", () => playAgainButton.setStyle({ fill: "#ffffff" }))
+        .on("pointerdown", () => {
+          this.scene.start("Game", { level: this.level });
+        });
+
+      // Main menu button
+      const menuButton = this.add
+        .text(width / 2, (height * 2) / 3 + 70, "Main Menu", {
+          font: "28px Arial",
+          fill: "#ffffff",
+          padding: { x: 15, y: 8 },
+          backgroundColor: "#004080",
+        })
+        .setOrigin(0.5)
+        .setInteractive({ useHandCursor: true })
+        .on("pointerover", () => menuButton.setStyle({ fill: "#ff0" }))
+        .on("pointerout", () => menuButton.setStyle({ fill: "#ffffff" }))
+        .on("pointerdown", () => {
+          this.scene.start("MainMenu");
+        });
+
+      // Challenge message/Next level button
+      // Assuming max level is 3 for now
+      if (this.level < 3) {
+        const nextLevelButton = this.add
+          .text(
+            width / 2,
+            (height * 2) / 3 + 140,
+            `Try Level ${this.level + 1}`,
+            {
+              font: "24px Arial",
+              fill: "#ffffff",
+              padding: { x: 10, y: 5 },
+              backgroundColor: "#884400", // Orange color for challenge
+            }
+          )
+          .setOrigin(0.5)
+          .setInteractive({ useHandCursor: true })
+          .on("pointerover", () => nextLevelButton.setStyle({ fill: "#ff0" }))
+          .on("pointerout", () => nextLevelButton.setStyle({ fill: "#ffffff" }))
+          .on("pointerdown", () => {
+            // Update the default level for next time the game starts from MainMenu
+            gameState.currentLevel = this.level + 1;
+            saveGameState(); // Save the updated default level
+            this.scene.start("Game", { level: this.level + 1 });
+          });
+      }
+    }
+  }
+  //== End GameOver Scene ==
+
+  // Initialize game state from local storage
+  initGameState();
+
+  // Game configuration
+  const config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 600,
+    backgroundColor: "#000033",
+    parent: "game-container",
+    scale: {
+      mode: Phaser.Scale.FIT,
+      autoCenter: Phaser.Scale.CENTER_BOTH,
+    },
+    physics: {
+      default: "arcade",
+      arcade: {
+        gravity: { y: 0 },
+        debug: false, // Set to true for physics debugging
+      },
+    },
+    // Add all scene classes directly
+    scene: [Boot, MainMenu, Game, GameOver],
+  };
+
+  // Initialize game
+  const game = new Phaser.Game(config);
+
+  // Handle visibility changes for mobile
+  document.addEventListener("visibilitychange", () => {
+    if (!game || !game.scene) return; // Ensure game and scene manager are initialized
+
+    if (document.hidden) {
+      // Pause active scenes when tab/app is not visible
+      game.scene.getScenes(true).forEach((scene) => {
+        // Check if scene has physics and pause it
+        if (scene.physics && scene.physics.world) {
+          scene.physics.world.pause();
+        }
+        // Check if scene has time and pause it
+        if (scene.time) {
+          scene.time.paused = true;
+        }
+        // Also use Phaser's scene pause mechanism
+        if (scene.scene.key && game.scene.isActive(scene.scene.key)) {
+          game.scene.pause(scene.scene.key);
+          // Add a flag to indicate the scene was paused due to visibility change
+          scene.wasPausedByVisibility = true;
+        }
+      });
+    } else {
+      // Resume scenes that were paused due to visibility change
+      game.scene.getScenes(false).forEach((scene) => {
+        // Iterate over all scenes (active and inactive)
+        if (scene.wasPausedByVisibility) {
+          if (scene.scene.key && game.scene.isPaused(scene.scene.key)) {
+            game.scene.resume(scene.scene.key);
+          }
+          // Resume physics if it exists
+          if (scene.physics && scene.physics.world) {
+            scene.physics.world.resume();
+          }
+          // Resume time if it exists
+          if (scene.time) {
+            scene.time.paused = false;
+          }
+          // Reset the flag
+          scene.wasPausedByVisibility = false;
+        }
+      });
+    }
+  });
+</script>

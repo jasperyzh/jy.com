@@ -3,7 +3,7 @@ pubDate: 230831
 title: "Mastering the Art of Habit Formation: A Deep Dive into Atomic Habits"
 description: Drawing insights from James Clear's "Atomic Habits". Learn practical tips and real-world applications to improve your habits and your life.
 tags: ["general", "webdev"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png" 
 category: "Curiosity"
 ---

@@ -3,7 +3,7 @@ pubDate: 221215
 title: Disabling Right-Click on Your Website
 description: Learn how to prevent the right-click action on your website.
 tags: ["general", "webdev"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png" 
 category: "Curiosity"
 ---

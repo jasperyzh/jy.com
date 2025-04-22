@@ -177,7 +177,7 @@ To find components using these animations:
   }
   article {
     h1 {
-      font-size: var(--font-size-4xl, 2.25rem);
+      font-size: var(--font-size-2xl, 1.75rem);
       line-height: 1.15;
       font-weight: 700;
       margin-bottom: 1.5rem;
@@ -412,8 +412,19 @@ To find components using these animations:
   background-position: 0 0;
   background-repeat: repeat-x;
 }
-/* utility classes */
 
+/* elements */
+
+.youtube-embed iframe {
+  /* .ratio.ratio-16x9 */
+  aspect-ratio: 16/ 9;
+  width: 100%;
+  border-radius: var(--radius);
+  margin-block: 1rem;
+  border: 6px double #131313;
+}
+
+/* utility classes */
 .stretched-link {
   position: absolute;
   top: 0;
@@ -431,42 +442,46 @@ To find components using these animations:
 }
 
 /* layout */
+
 .container--grid {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: 1fr repeat(5, minmax(0, 2fr));
   gap: 1rem;
   width: 100%;
-}
-
-.container--grid > * {
-  grid-column: 1 / -1;
-}
-
-.posts-grid {
-  grid-column: 1 /-1;
-
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 2rem 1rem;
-
   & > * {
-    grid-column: 1/-1;
+    grid-column: 1 / -1;
   }
 
-  @media (min-width: 1024px) {
-    grid-column: 2 /-1;
-
-    & > * {
-      grid-column: span 2;
+  & > .header--page {
+    h1 {
+      font-size: 3rem;
+    }
+    @media (min-width: 1024px) {
+      grid-column: 3 / -1;
     }
   }
-}
 
-.header--page {
-  h1 {
-    font-size: 3rem;
+  & > aside {
+    @media (min-width: 1024px) {
+      grid-column: 1 / 3;
+      grid-row: 2 / span 3;
+
+      padding-top: 1rem;
+      padding-right: 2rem;
+    }
   }
-  @media (min-width: 1024px) {
-    grid-column: 2 / span 3;
+
+  & > .posts-grid {
+    @media (min-width: 1024px) {
+      grid-column: 3 / -1;
+    }
+
+    display: grid;
+    grid-template-columns: subgrid;
+    gap: 2rem;
+
+    & > * {
+      grid-column: 1/-1;
+    }
   }
 }

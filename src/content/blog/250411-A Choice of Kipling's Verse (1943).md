@@ -3,7 +3,7 @@ pubDate: 250411
 title: If—
 description: If you can keep your head when all about you
 tags: ["poem"]
-draft: 0
+draft: 1
 thumbnail: "/thumbnails/blog/250411-a-choice-of-kiplings-verse-1943.svg" 
 category: "Curiosity"
 ---

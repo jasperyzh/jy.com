@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import SketchPage from "@/layouts/SketchPage.astro";
+import PageSketch from "@/layouts/PageSketch.astro";
 import { getAllCategories, unslugify, getSketchFullUrl, slugify, getTagUrl } from "@/utils/sketchUtils";
 
 // Generate static paths for all categories
@@ -46,7 +46,7 @@ tags.forEach(tag => {
 export const prerender = true;
 ---
 
-<SketchPage
+<PageSketch
   title={title}
   description={`Collection of code sketches in the ${category} category`}
   pageSubtitle={`Category: ${category}`}

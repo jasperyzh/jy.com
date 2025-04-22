@@ -3,7 +3,7 @@ pubDate: 230821
 title: "UXUI Design: KISS"
 description: "Dive into UI/UX design with the world's shortest course! Learn user flow, wireframing, design systems, and more in just minutes. 🎨 #webdesign #quickguide"
 tags: ["general", "webdev"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png" 
 category: "Curiosity"
 ---

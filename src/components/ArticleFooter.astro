@@ -1,6 +1,7 @@
 ---
 // ArticleFooter.astro - Component for article footer with navigation and sharing
 import { Button } from "@/components/starwind/button";
+import { Icon } from "astro-icon/components";
 
 interface Props {
   returnUrl?: string;
@@ -8,26 +9,23 @@ interface Props {
   title?: string;
 }
 
-const { 
-  returnUrl = "/sketches", 
+const {
+  returnUrl = "/sketches",
   returnLabel = "Back to Sketches",
-  title = ""
+  title = "",
 } = Astro.props;
 ---
 
 <footer>
-  <Button variant="outline" size="sm" onclick="history.back()">
-    <i class="bi bi-arrow-left mr-2"></i> {returnLabel}
-  </Button>
-
-  <div class="flex gap-2">
+  <div class="flex">
+    <Button variant="ghost" size="sm">Share me:</Button>
     <Button
       size="sm"
       variant="ghost"
       aria-label="Share on Twitter"
       onclick={`window.open('https://twitter.com/intent/tweet?url=${encodeURIComponent(Astro.url.href)}&text=${encodeURIComponent(title)}', '_blank')`}
     >
-      <i class="bi bi-twitter text-lg"></i>
+      <Icon name="bi:twitter" />
     </Button>
     <Button
       size="sm"
@@ -35,7 +33,7 @@ const {
       aria-label="Share on Facebook"
       onclick={`window.open('https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(Astro.url.href)}', '_blank')`}
     >
-      <i class="bi bi-facebook text-lg"></i>
+      <Icon name="bi:facebook" />
     </Button>
     <Button
       size="sm"
@@ -43,7 +41,7 @@ const {
       aria-label="Share on LinkedIn"
       onclick={`window.open('https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.href)}', '_blank')`}
     >
-      <i class="bi bi-linkedin text-lg"></i>
+      <Icon name="bi:linkedin" />
     </Button>
     <Button
       size="sm"
@@ -52,23 +50,11 @@ const {
       title="More sharing options"
       onclick={`window.open('https://www.addtoany.com/share?url=${encodeURIComponent(Astro.url.href)}&title=${encodeURIComponent(title)}', '_blank')`}
     >
-      <i class="bi bi-share text-lg"></i>
+      <Icon name="bi:share" />
     </Button>
   </div>
+  <Button variant="outline" size="sm" onclick="history.back()">
+    <Icon name="bi:arrow-left" />
+    {returnLabel}
+  </Button>
 </footer>
-
-<style>
-  footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-block: 1rem;
-  }
-
-  @media (max-width: 640px) {
-    footer {
-      flex-direction: column;
-      gap: 1rem;
-    }
-  }
-</style> 

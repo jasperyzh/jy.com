@@ -3,7 +3,7 @@ pubDate: 250412
 title: "AI Trends & My Take & Perspective"
 description: "Exploring how creative coding bridges art and technology, fostering innovation and new forms of digital expression."
 tags: ["web-development", "ai", "technology", "p5js"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png"
 category: "Web Development"
 ---

@@ -3,7 +3,7 @@ pubDate: 000000
 title: Setup for my webdev
 description: Describe how everything was setup, how to improve further as next step?
 tags: ["general", "webdev"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png" 
 category: "Curiosity"
 ---

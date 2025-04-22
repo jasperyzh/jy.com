@@ -1,0 +1,43 @@
+import Badge from "@/components/starwind/badge";
+import { formatForUrl } from "@/utils/blogUtils";
+
+interface Props {
+  tags: string[];
+  tagCounts?: Record<string, number>;
+  activeTag?: string; 
+  baseUrl?: string;
+}
+
+const { 
+  tags = [], 
+  tagCounts = {}, 
+  activeTag = "",
+  baseUrl = "/blog"
+} = Astro.props;
+
+<div class="tag-cloud">
+  <h3 class="text-lg font-medium mb-4">Tags</h3>
+  <div class="flex flex-wrap gap-2">
+    {tags.map((tag) => (
+      <Badge 
+        href={`${baseUrl}/tag/${formatForUrl(tag)}`}
+        variant={activeTag === tag ? "default" : "outline"} 
+        size="sm"
+        class={activeTag === tag ? "bg-primary" : ""}
+      >
+        {tag}
+        {tagCounts && tagCounts[tag] && (
+          <span class="ml-1 text-xs text-gray-500 dark:text-gray-400">
+            ({tagCounts[tag]})
+          </span>
+        )}
+      </Badge>
+    ))}
+  </div>
+</div>
+
+<style>
+  .tag-cloud {
+    margin: 1rem 0;
+  }
+</style> 

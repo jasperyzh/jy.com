@@ -14,13 +14,19 @@ export async function getStaticPaths() {
   const allPosts = await getCollection("ob_blog");
 
   // Log all post IDs for debugging
-  const postIds = allPosts.map((post) => post.id);
-  console.log("All blog post IDs:", postIds);
+  // const postIds = allPosts.map((post) => post.data.draft);
+  // console.log("All blog post IDs:", postIds);
 
   // Filter out draft posts (unless in development)
-  const publishedPosts = import.meta.env.DEV
-    ? allPosts
-    : allPosts.filter((post) => !post.data.draft);
+  // const publishedPosts = import.meta.env.DEV
+  //   ? allPosts
+  //   : allPosts.filter((post) => {
+  //       return !post.data.draft;
+  //     });
+  const publishedPosts = allPosts.filter((post) => {
+    return !post.data.draft;
+  });
+  // console.log(publishedPosts.map((post) => post.data.draft));
 
   // Generate paths for each post using clean URLs
   const paths = publishedPosts.map((entry) => {

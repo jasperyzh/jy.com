@@ -1,0 +1,145 @@
+---
+/**
+ * Reusable sidebar component for blog and sketches pages
+ */
+import Badge from "@/components/starwind/badge";
+import Button from "@/components/starwind/button";
+import { formatForUrl } from "@/utils/blogUtils";
+
+export interface SidebarProps {
+  /** Type of sidebar: 'blog', 'sketch', or 'portfolio' */
+  type?: "blog" | "sketch" | "portfolio";
+  /** Base URL for the "All" button */
+  baseUrl?: string;
+  /** Tags to display */
+  tags?: string[];
+  /** Count of items per tag */
+  tagCounts?: Record<string, number>;
+
+  showCounts?: boolean;
+
+  showHref?: boolean;
+  /** Categories (for sketches) */
+  categories?: string[];
+  /** Count of items per category */
+  categoryCounts?: Record<string, number>;
+  /** Currently active tag */
+  activeTag?: string;
+  /** Currently active category */
+  activeCategory?: string;
+  /** Function to format tag URL */
+  formatTagUrl?: (tag: string) => string;
+  /** Function to format category URL */
+  formatCategoryUrl?: (category: string) => string;
+  /** Total count of all items */
+  allItemsCount?: number;
+  /** Maximum number of tags to display */
+  maxTags?: number;
+}
+
+const {
+  type = "blog",
+  baseUrl = type === "blog" ? "/blog" : type === "portfolio" ? "/portfolio" : "/sketches",
+  tags = [],
+  tagCounts = {},
+  showCounts = true,
+  showHref = true,
+  categories = [],
+  categoryCounts = {},
+  activeTag = "",
+  activeCategory = "",
+  formatTagUrl = (tag) => `${baseUrl}/tag/${tag}`,
+  formatCategoryUrl = (category) => `${baseUrl}/category/${category}`,
+  allItemsCount = 0,
+  maxTags = type === "blog" ? 99 : 99,
+} = Astro.props;
+
+const isBlog = type === "blog";
+const isPortfolio = type === "portfolio";
+const allButtonLabel = isBlog 
+  ? "All Posts" 
+  : isPortfolio
+  ? "All Projects"
+  : "All Sketches";
+const isAllActive = isBlog ? !activeTag : !activeCategory && !activeTag;
+---
+
+<aside class={`${isBlog || isPortfolio ? "hidden lg:block" : ""}`}>
+  <ul class="flex flex-row gap-2 lg:flex-col lg:items-end flex-wrap">
+    <li>
+      <Button href={baseUrl} variant={isAllActive ? "default" : "outline"}>
+        {allButtonLabel}
+        <!-- {allItemsCount > 0 && (
+          <span class="text-xs text-gray-500 dark:text-gray-400">
+            {allItemsCount}
+          </span>
+        )} -->
+      </Button>
+    </li>
+
+    <!-- Categories -->
+    {
+      (!isBlog) &&
+        categories.map((category) => (
+          <li>
+            <Button
+              href={showHref ? formatCategoryUrl(category) : undefined}
+              variant={activeCategory === category ? "default" : "outline"}
+              class={activeCategory === category ? "border-primary" : ""}
+            >
+              {category}
+              {showCounts !== false && (
+
+              <span class="text-xs text-gray-500 dark:text-gray-400">
+                {categoryCounts[category]}
+              </span>
+              )}
+            </Button>
+          </li>
+        ))
+    }
+  </ul>
+
+  <hr class="max-w-16 my-4 lg:ms-auto" />
+
+  <!-- Tags -->
+  <ul>
+    <div
+      class={`flex flex-wrap gap-2 lg:justify-end hidden lg:flex max-w-1/2 ms-auto`}
+    >
+      {
+        tags.slice(0, maxTags).map((tag) => (
+          <li>
+            <Badge
+              href={showHref ? `/${isBlog ? "blog" : isPortfolio ? "portfolio" : "sketches"}/tag/${formatForUrl(tag)}` : undefined  }
+              variant={activeTag === tag ? "default" : "outline"}
+              size="sm"
+              class={activeTag === tag ? "bg-primary" : ""}
+            >
+              {tag}
+              {showCounts && (
+                <span class="ml-1 text-xs text-gray-500 dark:text-gray-400">
+                  ({tagCounts[tag]})
+                </span>
+              )}
+            </Badge>
+          </li>
+        ))
+      }
+    </div>
+    <!-- {
+      tags.length > maxTags && (
+        <li class="flex justify-end my-2">
+          <Button
+            href={`${baseUrl}/tags`}
+            variant="outline"
+            size="sm"
+            class="text-sm"
+          >
+            View all tags...
+          </Button>
+        </li>
+      )
+    } -->
+  </ul>
+</aside>

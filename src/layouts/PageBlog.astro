@@ -1,0 +1,118 @@
+---
+import Layout from "@/layouts/BaseLayout.astro";
+import Pagination from "@/components/Pagination.astro";
+import CardPost from "@/components/CardPost.astro";
+import { formatYymmddDate } from "@/utils/formatDate";
+import { getBlogFilename, formatForUrl } from "@/utils/blogUtils";
+import PageSidebar from "@/layouts/PageSidebar.astro";
+
+// Define props with default values
+interface Props {
+  title?: string;
+  description?: string;
+  pageSubtitle?: string;
+  currentPage?: number;
+  totalPages?: number;
+  prevUrl?: string | null;
+  nextUrl?: string | null;
+  paginatedPosts?: any[];
+  tags?: string[];
+  tagCounts?: Record<string, number>;
+  baseUrl?: string;
+  allPostsCount?: number;
+  activeTag?: string;
+}
+
+const {
+  title = "Blog - Articles & Insights",
+  description = "Insights, tutorials, and thoughts on web development, creative coding, and more.",
+  pageSubtitle = "",
+  currentPage = 1,
+  totalPages = 1,
+  prevUrl = null,
+  nextUrl = null,
+  paginatedPosts = [],
+  tags = [],
+  tagCounts = {},
+  baseUrl = "/blog",
+  allPostsCount = 0,
+  activeTag = "",
+} = Astro.props;
+---
+
+<Layout title={title} description={description}>
+  <div class="container container--grid mx-auto my-6 px-4 max-w-7xl">
+    <header class="header--page">
+      <h1>Blog</h1>
+      <p>
+        Insights, tutorials, and thoughts on web development, creative coding,
+        and more.
+      </p>
+      <!-- {pageSubtitle && (
+        <div class="mt-4 inline-block text-lg font-medium px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-md">
+          {pageSubtitle}
+        </div>
+      )} -->
+    </header>
+
+    <!-- Use PageSidebar component -->
+    <PageSidebar
+      type="blog"
+      baseUrl="/blog"
+      tags={tags}
+      tagCounts={tagCounts}
+      activeTag={activeTag}
+      allItemsCount={allPostsCount}
+      formatTagUrl={(tag) => `/blog/tag/${formatForUrl(tag)}`}
+    />
+
+    <!-- Blog Posts Grid -->
+    <section class="posts-grid">
+      {
+        paginatedPosts.map((post) => (
+          <CardPost
+            title={post.data.title}
+            description={post.data.description || "No description available"}
+            date={formatYymmddDate(post.data.pubDate || new Date())}
+            tags={post.data.tags || []}
+            category={post.data.category}
+            url={`/blog/${getBlogFilename(post)}`}
+            thumbnail={post.data.thumbnail || "/img/placeholder.png"}
+            showThumbnail={false}
+            categoryUrlPrefix="/blog/category"
+            tagUrlPrefix="/blog/tag"
+            type="blog"
+          />
+        ))
+      }
+    </section>
+
+    <!-- Empty State -->
+    {paginatedPosts.length === 0 && (
+      <div class="text-center py-12">
+        <div class="text-6xl mb-4">📝</div>
+        <h3 class="text-2xl font-bold mb-2">No posts found</h3>
+        <p class="text-slate-600 dark:text-slate-300">
+          There are no posts available at the moment. Please check back later.
+        </p>
+      </div>
+    )}
+
+    {
+      /* Pagination controls */
+      totalPages > 1 && (
+        <div class="pagination grid grid-cols-subgrid !col-start-2 !col-span-5 my-8">
+          <div class="self-center col-span-5">
+            <Pagination
+              prevUrl={prevUrl}
+              nextUrl={nextUrl}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              baseUrl={baseUrl}
+            />
+          </div>
+        </div>
+      )
+    }
+  </div>
+</Layout> 

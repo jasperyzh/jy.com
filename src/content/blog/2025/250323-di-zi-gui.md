@@ -3,7 +3,7 @@ pubDate: 250323
 title: "Di Zi Gui (弟子规) - Rules for Students and Children"
 description: "Di Zi Gui is a traditional Chinese text for children that outlines the standards for being a good student and child. It was written during the Qing Dynasty."
 tags: ["philosophy", "education", "chinese-classics"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png"
 category: "Curiosity"
 ---

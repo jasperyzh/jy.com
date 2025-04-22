@@ -3,7 +3,7 @@ pubDate: 230614
 title: Optimizing Google Fonts for Speed and Security
 description: Google Fonts is an amazing resource that many web developers rely on for their projects
 tags: ["general", "webdev"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png" 
 category: "Curiosity"
 ---

@@ -3,7 +3,7 @@ pubDate: 250323
 title: "Malaysia's Economic Landscape: A Brief Overview"
 description: "An analysis of Malaysia's economy, examining its strengths, challenges, and potential for growth in the global market."
 tags: ["Malaysia", "Economy", "Development"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png"
 category: "Curiosity"
 ---

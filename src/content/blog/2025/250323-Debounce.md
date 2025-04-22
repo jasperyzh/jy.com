@@ -3,7 +3,7 @@ pubDate: 250323
 title: "Understanding Debounce: A Practical Guide"
 description: "Learn how debounce functions help control event frequency in web applications for better performance and user experience."
 tags: ["JavaScript", "Web Development", "Performance", "UI/UX"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png"
 category: "Web Development"
 ---

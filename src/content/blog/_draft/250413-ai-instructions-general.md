@@ -3,7 +3,7 @@ pubDate: 250413
 title: "AI Agent (Cursor) Memory Bank Implementation Guide"
 description: An instruction guide and templates for setting up a memory-bank to use with cursor's AI Agents
 tags: ["general", "webdev", "ai"]
-draft: 0
+draft: 1
 thumbnail: "/thumbnails/blog/250413-ai-instructions-general.svg" 
 category: "Web Development"
 ---
@@ -13,7 +13,7 @@ category: "Web Development"
 title: AI Instructions (General)
 description: General Guidelines for AI agents to generate and edit the project documentation.
 pubDate: 250413 *(Consistent YYMMDD format)*
-draft: 0
+draft: 1
 ---
 ```
 

@@ -3,7 +3,7 @@ pubDate: 230615
 title: Streamlining .WebP Image Conversion & Serving for WordPress Websites
 description: Do you feel restricted by webp plugins? Discover a do-it-yourself method to incorporate .webp format into your site.
 tags: ["general", "webdev"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png" 
 category: "Curiosity"
 ---

@@ -3,7 +3,7 @@ pubDate: 241212
 title: "Why I Chose Astro.js for My Web Development Journey"
 description: "An exploration of Astro.js's benefits for content-focused websites, comparing it with other frameworks and explaining why it's ideal for modern web development."
 tags: ["Web Development", "Astro.js", "JavaScript", "Performance"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png"
 category: "Web Development"
 ---

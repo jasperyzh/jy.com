@@ -3,7 +3,7 @@ pubDate: 000000
 title: Simplify Subjects
 description: How could we simplify and improves study guides for our kids?
 tags: ["general", "webdev"]
-draft: 0
+draft: 1
 thumbnail: "/img/placeholder.png" 
 category: "Curiosity"
 ---
