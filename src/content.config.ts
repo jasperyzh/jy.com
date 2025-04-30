@@ -19,7 +19,7 @@ const ob_blog = defineCollection({
         "For best SEO results, please keep the description under 160 characters."
       ), // The description of the post with SEO-friendly character limit
     // pubDate: z.coerce.date(), // Automatically converts date strings or numbers to Date objects
-    
+
     pubDate: z.preprocess(
       (arg) => formatYymmddDate(arg as string | number | Date),
       z.date()
@@ -30,12 +30,12 @@ const ob_blog = defineCollection({
       .default(false), // Supports both boolean and number for `draft`, defaults to false
     tags: z.array(z.string()), // Now required
     thumbnail: z.string(), // Required thumbnail image URL or path
-    category: z.enum([
-      "Web Development", 
-      "Workflow", 
-      "Curiosity", 
-      "Generative Art",
-    ]), // Required category from preset list
+    // category: z.enum([
+    //   "Web Development",
+    //   "Workflow",
+    //   "Curiosity",
+    //   "Generative Art",
+    // ]), // Required category from preset list
   }),
 });
 
@@ -47,23 +47,26 @@ const docs = defineCollection({
   }),
   schema: z.object({
     title: z.string(),
-    description: z.string().max(
-      160,
-      "For best SEO results, please keep the description under 160 characters."
-    ),
+    description: z
+      .string()
+      .max(
+        160,
+        "For best SEO results, please keep the description under 160 characters."
+      ),
     pubDate: z.preprocess(
       (arg) => formatYymmddDate(arg as string | number | Date),
       z.date()
     ),
-    draft: z.union([z.boolean(), z.number()])
+    draft: z
+      .union([z.boolean(), z.number()])
       .transform((value) => Boolean(value))
-      .default(false)
+      .default(false),
   }),
 });
 
 // Define resume collection
 const resume = defineCollection({
-  type: 'data',
+  type: "data",
   schema: z.object({
     contactInfo: z.object({
       name: z.string(),
@@ -72,7 +75,7 @@ const resume = defineCollection({
       website: z.string(),
       github: z.string(),
       linkedin: z.string(),
-      location: z.string()
+      location: z.string(),
     }),
     summary: z.string(),
     professionalExperience: z.array(
@@ -81,14 +84,14 @@ const resume = defineCollection({
         company: z.string(),
         period: z.string(),
         description: z.string(),
-        highlights: z.array(z.string())
+        highlights: z.array(z.string()),
       })
     ),
     keyProjects: z.array(
       z.object({
         name: z.string(),
         description: z.string(),
-        highlights: z.array(z.string())
+        highlights: z.array(z.string()),
       })
     ),
     personalAchievements: z.array(z.string()),
@@ -99,7 +102,7 @@ const resume = defineCollection({
       backendTechnologies: z.array(z.string()),
       tools: z.array(z.string()),
       designSoftware: z.array(z.string()),
-      databases: z.array(z.string())
+      databases: z.array(z.string()),
     }),
     additionalCompetencies: z.array(z.string()),
     education: z.array(
@@ -107,17 +110,17 @@ const resume = defineCollection({
         degree: z.string(),
         institution: z.string(),
         year: z.string(),
-        highlights: z.array(z.string())
+        highlights: z.array(z.string()),
       })
     ),
     languages: z.array(
       z.object({
         language: z.string(),
-        proficiency: z.string()
+        proficiency: z.string(),
       })
     ),
-    interests: z.array(z.string())
-  })
+    interests: z.array(z.string()),
+  }),
 });
 
 // Define portfolio collection
@@ -134,14 +137,19 @@ const portfolio = defineCollection({
     thumbnail: z.string(),
     category: z.string(),
     tags: z.array(z.string()),
-    draft: z.boolean().default(false),
-    images: z.array(z.object({
-      src: z.string(),
-      width: z.number().default(1920),
-      height: z.number().default(1080),
-      caption: z.string().optional()
-    }))
-  })
+    draft: z
+      .union([z.boolean(), z.number()])
+      .transform((value) => Boolean(value))
+      .default(false),
+    images: z.array(
+      z.object({
+        src: z.string(),
+        width: z.number().default(1920),
+        height: z.number().default(1080),
+        caption: z.string().optional(),
+      })
+    ),
+  }),
 });
 
 // Define sketches collection
@@ -164,7 +172,9 @@ const sketches = defineCollection({
     ),
     category: z.string(),
     tags: z.array(z.string()),
-    status: z.enum(["idea", "wip", "completed", "archived"]).default("completed"),
+    status: z
+      .enum(["idea", "wip", "completed", "archived"])
+      .default("completed"),
     thumbnail: z.string().optional(),
     liveUrl: z.string().optional(),
     layout: z.string().optional(),

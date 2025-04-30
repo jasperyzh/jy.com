@@ -2,7 +2,7 @@
 title: Server Setup Guide
 description: Documentation on server setup options from shared hosting to Vercel and Docker deployments.
 pubDate: 250405
-draft: 0
+draft: 1
 ---
 
 # Server Setup Guide

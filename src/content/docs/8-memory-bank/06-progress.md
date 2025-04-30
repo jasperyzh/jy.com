@@ -2,7 +2,7 @@
 title: Progress Tracker
 description: Project status, maintenance logs, milestones, feature status, knowledge gaps, and next actions.
 pubDate: 250416
-draft: 0
+draft: 1
 ---
 
 # Progress Tracker

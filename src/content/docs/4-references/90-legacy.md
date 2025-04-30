@@ -3,7 +3,7 @@ title: Legacy of Web Development
 description: Here lies the graveyard of the bygone days of... 2016–2022?
 pubDate: 250412
 lastUpdated: 250412
-draft: 0
+draft: 1
 tags: ["web-development", "legacy"]
 ---
 

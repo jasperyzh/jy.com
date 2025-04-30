@@ -1,0 +1,295 @@
+---
+layout: "@/layouts/PostLayout.astro"
+title: "Camera Filter & Timelapse App"
+description: "A web application for capturing photos with filters and creating timelapses, perfect for habit tracking and progress visualization"
+date: 250424
+category: "Web Development"
+tags: ["JavaScript", "Camera API", "Canvas", "Image Processing", "Web App"]
+status: "wip"
+thumbnail: "/thumbnails/sketches/250424-camera-filter.svg"
+draft: 1
+---
+
+import CameraFilter from "./250424-camera-filter.astro";
+
+<CameraFilter />
+
+---
+
+Okay, let's break down how you can implement camera access, photo capture, and apply effects like pixelation and fun filters in a web app, with the idea of using it for a habit tracker timelapse.
+
+The core technologies you'll use are:
+
+1.  **HTML5 MediaDevices API (`getUserMedia`):** To access the user's camera.
+2.  **HTML `<video>` element:** To display the live camera stream.
+3.  **HTML `<canvas>` element:** The workhorse for capturing frames, manipulating pixel data, and applying effects.
+4.  **JavaScript:** To control the process, access APIs, and perform image manipulation.
+
+Here’s a step-by-step approach and how to handle the effects:
+
+**1. Setting up Camera Access and Capture**
+
+*   **HTML:**
+
+    ```html
+    <video id="cameraFeed" autoplay playsinline></video>
+    <button id="startCamera">Start Camera</button>
+    <button id="takePhoto" disabled>Take Photo</button>
+    <canvas id="photoCanvas" style="display: none;"></canvas> <!-- Canvas for processing -->
+    <img id="processedPhoto" style="max-width: 100%;"> <!-- Display processed image -->
+    ```
+
+*   **JavaScript (Basic Camera and Capture):**
+
+    ```javascript
+    const video = document.getElementById('cameraFeed');
+    const startCameraButton = document.getElementById('startCamera');
+    const takePhotoButton = document.getElementById('takePhoto');
+    const canvas = document.getElementById('photoCanvas');
+    const processedPhoto = document.getElementById('processedPhoto');
+    const context = canvas.getContext('2d');
+
+    let mediaStream = null; // To hold the camera stream
+
+    startCameraButton.addEventListener('click', async () => {
+        try {
+            // Request camera access
+            mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+            video.srcObject = mediaStream;
+            video.onloadedmetadata = () => {
+                video.play();
+                takePhotoButton.disabled = false; // Enable photo button once stream loads
+                startCameraButton.disabled = true;
+            };
+        } catch (err) {
+            console.error('Error accessing camera: ', err);
+            alert('Could not access camera. Please check permissions.');
+        }
+    });
+
+    takePhotoButton.addEventListener('click', () => {
+        if (!mediaStream) return;
+
+        // Set canvas dimensions to match video feed dimensions
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        // Draw the current video frame onto the canvas
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // At this point, the photo is on the canvas.
+        // Now you can apply effects to the canvas content.
+        // --- Apply Effects Here ---
+        applyPixelateEffect(canvas, 10); // Example: apply pixelate with block size 10
+        // applyCuteFilter(canvas); // Example: apply a fun filter
+
+        // Display the processed image
+        processedPhoto.src = canvas.toDataURL('image/png');
+
+        // You would typically store this dataURL or send it to a server
+        // processedPhoto.style.display = 'block'; // Show the processed image
+        // video.style.display = 'none'; // Hide the video feed temporarily
+    });
+
+    // Remember to stop the stream when the user leaves the page or doesn't need it
+    window.addEventListener('beforeunload', () => {
+        if (mediaStream) {
+            mediaStream.getTracks().forEach(track => track.stop());
+        }
+    });
+    ```
+
+**2. Applying Effects (Using Canvas)**
+
+Effects are applied by manipulating the pixels drawn on the `<canvas>`.
+
+**a) Pixelated / Mosaic Effect:**
+
+The simplest way to achieve this using canvas is to draw the image at a smaller size onto a temporary canvas, and then draw that *scaled-up* onto the final canvas using `nearest-neighbor` scaling (which canvas does by default for scaling up small things). A more common method for a classic pixel grid is to sample colors in blocks and fill the blocks.
+
+*   **Method 1 (Simple Scaling - results vary depending on browser scaling):**
+
+    ```javascript
+    function applyPixelateSimple(canvas, pixelSize) {
+        const context = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+
+        // Create a temporary canvas scaled down
+        const tempCanvas = document.createElement('canvas');
+        const tempContext = tempCanvas.getContext('2d');
+
+        // Calculate scaled down dimensions
+        const scaledWidth = width / pixelSize;
+        const scaledHeight = height / pixelSize;
+
+        tempCanvas.width = scaledWidth;
+        tempCanvas.height = scaledHeight;
+
+        // Draw the original image onto the small canvas
+        tempContext.drawImage(canvas, 0, 0, scaledWidth, scaledHeight);
+
+        // Now draw the tiny image back onto the original canvas, scaled up
+        // Canvas default scaling often provides a pixelated look when scaling small images up
+        context.clearRect(0, 0, width, height); // Clear original content
+        context.imageSmoothingEnabled = false; // Ensure sharp pixel edges (important!)
+        context.drawImage(tempCanvas, 0, 0, width, height);
+        context.imageSmoothingEnabled = true; // Reset for future drawing
+    }
+    ```
+
+*   **Method 2 (Block Sampling - More Control):** This method iterates through the image in blocks and fills each block with a single color sampled from within that block (e.g., the top-left pixel or the average color).
+
+    ```javascript
+    function applyPixelateEffect(canvas, pixelSize) {
+        const context = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+
+        // Get the pixel data from the current canvas state
+        const imageData = context.getImageData(0, 0, width, height);
+        const data = imageData.data; // This is a Uint8ClampedArray R,G,B,A, R,G,B,A...
+
+        // Create new ImageData for the output
+        const outputImageData = context.createImageData(width, height);
+        const outputData = outputImageData.data;
+
+        for (let y = 0; y < height; y += pixelSize) {
+            for (let x = 0; x < width; x += pixelSize) {
+                // Calculate the index of the top-left pixel of the current block
+                const pixelIndex = (y * width + x) * 4;
+
+                // Get the color of the top-left pixel (R, G, B, A)
+                const r = data[pixelIndex];
+                const g = data[pixelIndex + 1];
+                const b = data[pixelIndex + 2];
+                const a = data[pixelIndex + 3]; // Keep original alpha
+
+                // Fill the entire block (pixelSize x pixelSize) in the output data
+                for (let blockY = 0; blockY < pixelSize; blockY++) {
+                    for (let blockX = 0; blockX < pixelSize; blockX++) {
+                        // Calculate the index for the pixel within the block
+                        const currentPixelIndex = ((y + blockY) * width + (x + blockX)) * 4;
+
+                        // Make sure we don't go out of bounds
+                        if (currentPixelIndex < outputData.length) {
+                             outputData[currentPixelIndex] = r;
+                             outputData[currentPixelIndex + 1] = g;
+                             outputData[currentPixelIndex + 2] = b;
+                             outputData[currentPixelIndex + 3] = a;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Put the modified pixel data back onto the canvas
+        context.putImageData(outputImageData, 0, 0);
+    }
+    ```
+    *Note: Method 2 is generally preferred for consistent pixelation across different browsers and control over block size.*
+
+**b) Cutesy / Fun Filters:**
+
+There are several ways to do this:
+
+*   **Using `CanvasRenderingContext2D.filter` (Easiest!):** The Canvas API supports applying CSS filter effects directly.
+
+    ```javascript
+    function applyCuteFilter(canvas) {
+        const context = canvas.getContext('2d');
+        // Example filters:
+        // context.filter = 'sepia(1)'; // Sepia tone
+        // context.filter = 'grayscale(1)'; // Black and white
+        // context.filter = 'contrast(200%)'; // High contrast
+        // context.filter = 'hue-rotate(90deg)'; // Shift colors
+        // context.filter = 'blur(5px)'; // Blur
+        // You can combine filters:
+        context.filter = 'sepia(0.5) hue-rotate(45deg) brightness(1.2)'; // A "warm and colorful" feel
+
+        // Redraw the image onto itself with the filter applied.
+        // You'll need to save/restore the context state if applying multiple things
+        // or applying filters selectively.
+        const tempCanvas = document.createElement('canvas');
+        const tempContext = tempCanvas.getContext('2d');
+        tempCanvas.width = canvas.width;
+        tempCanvas.height = canvas.height;
+        tempContext.drawImage(canvas, 0, 0); // Draw current canvas content to temp
+        context.clearRect(0,0,canvas.width, canvas.height); // Clear original
+        context.filter = 'sepia(0.5) hue-rotate(45deg) brightness(1.2)'; // Set the filter *before* drawing
+        context.drawImage(tempCanvas, 0, 0); // Draw the original content back with filter
+        context.filter = 'none'; // Reset filter for subsequent drawings
+    }
+    ```
+    This is the most straightforward method for common filters.
+
+*   **Manual Pixel Manipulation:** For custom effects not available via CSS filters (like adding overlays, specific color adjustments, artistic effects), you'd use `getImageData` and `putImageData` similar to the pixelation example, but modify the R, G, B, A values differently.
+
+    ```javascript
+    function applyCustomColorShift(canvas) {
+        const context = canvas.getContext('2d');
+        const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+
+        for (let i = 0; i < data.length; i += 4) {
+            // Example: Boost red channel, slightly reduce green and blue for a warm tint
+            data[i] = Math.min(255, data[i] * 1.1 + 20); // Red
+            data[i + 1] = Math.max(0, data[i + 1] * 0.9); // Green
+            data[i + 2] = Math.max(0, data[i + 2] * 0.9); // Blue
+            // data[i + 3] is Alpha (keep as is usually)
+        }
+
+        context.putImageData(imageData, 0, 0);
+    }
+
+    function addOverlay(canvas, overlayImageUrl) {
+         const context = canvas.getContext('2d');
+         const overlayImage = new Image();
+         overlayImage.onload = () => {
+             // Draw the overlay image on top of the existing canvas content
+             // Adjust position and size as needed
+             context.drawImage(overlayImage, 0, 0, canvas.width, canvas.height);
+             // Note: Drawing like this is additive. If you need to apply it before
+             // other effects, you'd restructure the drawing order.
+         };
+         overlayImage.src = overlayImageUrl;
+    }
+    ```
+    Manual manipulation gives maximum control but is more complex.
+
+**3. Combining into a Timelapse**
+
+This is a separate step after you've captured and processed multiple photos over time.
+
+*   **Storage:** You'll need to store the captured images. The `canvas.toDataURL('image/png')` gives you a Base64 string of the image data.
+    *   **Client-side:** You could store these Data URLs in `localStorage` or `indexedDB`, but capacity limits make this impractical for many photos, especially high-resolution ones.
+    *   **Server-side (Recommended):** Convert the `canvas.toBlob('image/png', ...)` and upload the blob to your server. Store them in a database or cloud storage (like AWS S3, Google Cloud Storage). This is necessary for long-term storage, syncing across devices, and server-side video generation.
+
+*   **Timelapse Generation:**
+    *   **Client-side (GIF):** Libraries like `gif.js` can take a series of images (or draw frames from your stored dataURLs onto a canvas repeatedly) and generate an animated GIF in the browser. This is suitable for shorter, lower-quality timelapses.
+    *   **Server-side (Video - MP4/WebM):** Send the sequence of images (or their URLs) to your server. Use a robust video processing library like **FFmpeg** (which runs as a command-line tool on the server) to compile the images into a video file (MP4, WebM). This is the standard way to create higher-quality timelapses. FFmpeg commands are powerful but require server setup. (Libraries like `fluent-ffmpeg` in Node.js can help wrap FFmpeg commands).
+
+**Workflow for Habit Tracker:**
+
+1.  User schedules or manually triggers a photo snapshot via the app.
+2.  App accesses camera, displays feed.
+3.  User takes photo.
+4.  App captures frame to canvas.
+5.  App applies selected pixelate effect (with chosen block size) and/or fun filter using the canvas context.
+6.  App gets the processed image data (e.g., `canvas.toBlob`).
+7.  App uploads the image blob to the server, associating it with the user and the specific habit/timestamp.
+8.  Over time, the server accumulates a collection of images for that habit.
+9.  When the user wants to see the timelapse, the server retrieves the images (in chronological order).
+10. The server uses FFmpeg to compile the images into a video file at a specified frame rate.
+11. The server sends the resulting video file URL back to the client for playback.
+
+**Key Considerations:**
+
+*   **User Permissions:** You *must* ask the user for camera permission using `getUserMedia`. Browsers handle the prompt. Your code should gracefully handle denial.
+*   **Performance:** Canvas pixel manipulation (`getImageData`/`putImageData`) can be CPU-intensive, especially on large images or older devices. `ctx.filter` is generally faster as it's often hardware-accelerated.
+*   **Mobile vs. Desktop:** Camera access and video dimensions can vary. `playsinline` is important for mobile iOS browsers to play video within the page.
+*   **Error Handling:** What happens if the camera fails? What if storage is full?
+*   **Image Quality/Resolution:** Decide on the resolution you need. Higher resolution means larger files and more processing. You might capture at camera resolution but process/store at a lower, fixed size.
+*   **UI/UX:** Provide clear feedback to the user (camera is on, photo taken, effect applied, processing...).
+
+This combination of HTML5 APIs and JavaScript gives you powerful capabilities right in the browser for handling camera input and applying visual effects before storing or further processing the images. For the timelapse generation and robust storage, a server-side component is highly recommended.

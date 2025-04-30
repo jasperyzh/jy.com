@@ -2,7 +2,7 @@
 title: My Digital Tools
 description: Complete reference to all my digital tools.
 pubDate: 250406
-draft: 0
+draft: 1
 ---
 
 ## links to docs

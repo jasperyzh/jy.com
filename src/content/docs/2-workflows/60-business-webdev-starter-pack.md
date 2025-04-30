@@ -2,7 +2,7 @@
 title: Business x WebDev Starter Pack
 description: Helpful Notes and Articles that would help businesses
 pubDate: 250412
-draft: 0
+draft: 1
 ---
 
 # Business x WebDev Starter Pack

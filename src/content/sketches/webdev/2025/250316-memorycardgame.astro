@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { audioPlayer } from "@/scripts/custom-tone.js";
+import { audioPlayer } from "@/utils/custom-tone.js";
 ---
 
 <BaseLayout title="Memory Card Game">
@@ -271,7 +271,7 @@ import { audioPlayer } from "@/scripts/custom-tone.js";
     computed,
     onUnmounted,
   } from "vue/dist/vue.esm-bundler.js";
-  import { audioPlayer } from "@/scripts/custom-tone.js";
+  import { audioPlayer } from "@/utils/custom-tone.js";
 
   // Confetti function
   function createConfetti() {

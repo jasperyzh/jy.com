@@ -2,7 +2,7 @@
 title: Syncing Obsidian's note with website project using rsync
 description: How to make sure content stay the same at both end
 pubDate: 250409
-draft: 0
+draft: 1
 ---
 
 

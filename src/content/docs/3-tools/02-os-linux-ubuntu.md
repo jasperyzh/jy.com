@@ -2,7 +2,7 @@
 title: Linux-Ubuntu
 description: why I choose linux?
 pubDate: 250409
-draft: 0
+draft: 1
 ---
 
 # Linux/Ubuntu as My Operating System

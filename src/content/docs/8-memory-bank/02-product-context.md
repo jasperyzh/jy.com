@@ -2,7 +2,7 @@
 title: Product Context
 description: The "Why" behind the project - purpose, goals, audience, and success metrics.
 pubDate: 240726
-draft: 0
+draft: 1
 ---
 
 # Product Context

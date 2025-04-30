@@ -2,7 +2,7 @@
 title: SSH (Secure Shell Protocol)
 description: working with remote computers
 pubDate: 250408
-draft: 0
+draft: 1
 ---
 
 # SSH (Secure Shell Protocol)

@@ -5,7 +5,7 @@ date: "2024-02-01" # Assuming a default date, update if needed
 thumbnail: "https://picsum.photos/id/252/1920/1080"
 category: "Mobile Development"
 tags: ["React Native", "TypeScript", "AWS"]
-draft: false
+draft: 1
 images:
   - src: "https://picsum.photos/id/252/1920/1080"
     width: 1920

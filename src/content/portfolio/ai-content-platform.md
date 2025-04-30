@@ -5,7 +5,7 @@ date: "2024-03-01" # Assuming a default date, update if needed
 thumbnail: "https://picsum.photos/id/256/1920/1080"
 category: "Machine Learning"
 tags: ["Python", "TensorFlow", "FastAPI"]
-draft: false
+draft: 1
 images:
   - src: "https://picsum.photos/id/256/1920/1080"
     width: 1920

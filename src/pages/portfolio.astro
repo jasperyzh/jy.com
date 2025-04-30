@@ -22,7 +22,7 @@ const allPortfolioItems = await getCollection("portfolio");
 
 // Filter out draft items (unless in development)
 const publishedPortfolioItems = import.meta.env.DEV
-  ? allPortfolioItems
+  ? allPortfolioItems.filter((item) => !item.data.draft)
   : allPortfolioItems.filter((item) => !item.data.draft);
 
 // Sort projects by date (newest to oldest)

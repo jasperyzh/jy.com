@@ -2,6 +2,7 @@
 import Layout from "@/layouts/BaseLayout.astro";
 import { SITE_DESCRIPTION } from "../consts";
 import LandingPage from "@/components/LandingPage.astro";
+import HeroExplosion from "./demo/demo-hero-explosion.astro";
 
 // Redirect to coming-soon page in production
 const isProduction = import.meta.env.PROD;
@@ -10,8 +11,12 @@ const isProduction = import.meta.env.PROD;
 <Layout title="Home" description={SITE_DESCRIPTION}>
   {isProduction && <script>window.location.href = "/coming-soon";</script>}
 
-
-  <LandingPage />
+  <section class="bg-slate-800 py-6 overflow-hidden">
+    <div class="container mx-auto flex justify-center">
+      <HeroExplosion />
+    </div>
+  </section>
+  <!-- <LandingPage /> -->
   <!-- Header Section -->
   <!-- <header class="bg-white dark:bg-gray-900 py-8 px-4">
     <div class="max-w-4xl mx-auto">

@@ -2,7 +2,7 @@
 title: DIY Home Server
 description: Why you need this?
 pubDate: 250406
-draft: 0
+draft: 1
 ---
 
 # DIY Home Server

@@ -5,7 +5,7 @@ date: "2023-03-01" # Assuming a default date, update if needed
 thumbnail: "https://picsum.photos/id/248/1920/1080"
 category: "UI/UX Design"
 tags: ["Vue.js", "D3.js", "Firebase"]
-draft: false
+draft: 1
 images:
   - src: "https://picsum.photos/id/248/1920/1080"
     width: 1920

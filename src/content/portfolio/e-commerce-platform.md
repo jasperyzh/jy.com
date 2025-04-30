@@ -5,7 +5,7 @@ date: "2023-02-01" # Assuming a default date, update if needed
 thumbnail: "https://picsum.photos/id/240/1920/1080"
 category: "Full Stack Development"
 tags: ["React", "Node.js", "MongoDB"]
-draft: false
+draft: 1
 images:
   - src: "https://picsum.photos/id/240/1920/1080"
     width: 1920

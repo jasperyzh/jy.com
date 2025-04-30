@@ -1,0 +1,564 @@
+---
+// src/content/sketches/webdev/2025/250428-css-tricks.astro
+const title = "CSS PRO Tips & Tricks";
+const description = "Demonstrations of 10 CSS tips and tricks based on a video by Coding to Go.";
+const tags = ["css", "web development", "frontend", "demo"];
+---
+
+    <style is:inline>
+        /* Basic Styles - Applied globally for this demo page */
+         body { /* Scope to a potential page wrapper if needed, or keep global */
+            font-family: sans-serif;
+            line-height: 1.6;
+            /* margin: 0; */ /* Usually handled by layout */
+            /* padding: 20px; */ /* Usually handled by layout */
+            /* background-color: #f4f4f4; */ /* Usually handled by layout */
+            /* color: #333; */ /* Usually handled by layout */
+        }
+
+         h1,
+         h2 {
+            text-align: center;
+            color: #333; /* Or inherit from layout */
+        }
+
+         h2 {
+            margin-top: 40px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+
+         section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+         figure {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #e9e9e9;
+            border-left: 5px solid #007bff;
+            border-radius: 4px;
+        }
+
+         figcaption {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+
+         .demo-box {
+            padding: 20px;
+            border: 1px solid #ccc;
+            margin-top: 15px;
+            background-color: #fff;
+            border-radius: 4px;
+            min-height: 50px; /* Ensure visibility */
+            box-sizing: border-box; /* Include padding/border in dimensions */
+        }
+
+        /* --- Tip Specific Styles --- */
+
+        /* Tip 1: resize */
+         .resize-demo {
+            overflow: auto; /* Required for resize */
+            resize: both; /* Can be horizontal, vertical, or both */
+            width: 200px;
+            height: 100px;
+            min-width: 100px;
+            min-height: 50px;
+            max-width: 400px;
+            max-height: 300px;
+            background-color: #d4edda; /* Light green */
+        }
+
+        /* Tip 2: Neumorphism / Soft UI */
+         .neumorphism-demo {
+            background-color: #e0e0e0; /* Slightly off-white background */
+            width: 200px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            box-shadow: 5px 5px 10px #bebebe,
+                       -5px -5px 10px #ffffff;
+        }
+
+         .neumorphism-inset-demo {
+             background-color: #e0e0e0; /* Slightly off-white background */
+            width: 200px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            box-shadow: inset 5px 5px 10px #bebebe,
+                        inset -5px -5px 10px #ffffff;
+        }
+         .neumorphism-demo:hover,
+         .neumorphism-inset-demo:hover {
+             box-shadow: 3px 3px 6px #bebebe,
+                         -3px -3px 6px #ffffff;
+                         /* Slightly change on hover */
+        }
+
+
+        /* Tip 3: CSS-only interactive (:checked) */
+         .css-only-checkbox-demo .hidden-content {
+            display: none; /* Initially hidden */
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #ffecb3; /* Light yellow */
+            border: 1px dashed #e6a700;
+        }
+
+         .css-only-checkbox-demo input[type="checkbox"] {
+            display: none; /* Hide the actual checkbox */
+        }
+
+         .css-only-checkbox-demo label {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+         .css-only-checkbox-demo label:hover {
+            background-color: #0056b3;
+        }
+
+        /* Use the ~ (general sibling) combinator */
+         .css-only-checkbox-demo input[type="checkbox"]:checked ~ .hidden-content {
+            display: block; /* Show when checkbox is checked */
+        }
+
+
+        /* Tip 4: Responsive Sizing (min(), max(), clamp()) */
+         .sizing-demo {
+            width: clamp(200px, 60%, 700px); /* min, preferred, max */
+            background-color: #cfe2ff; /* Light blue */
+            text-align: center;
+            margin: 0 auto; /* Center the block element */
+        }
+
+        /* Tip 5: Glassmorphism (backdrop-filter) */
+         .glass-container {
+            position: relative; /* Needed to stack elements */
+            width: 100%;
+            height: 200px;
+            background-image: url('/img/bg_rotate.jpg'); /* Placeholder image */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            overflow: hidden; /* Contain glass effect */
+        }
+
+         .glass-element {
+            background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
+            border: 1px solid rgba(255, 255, 255, 0.4); /* Semi-transparent border */
+            border-right-color: rgba(255, 255, 255, 0.2);
+            border-bottom-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            /* The magic happens here */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); /* Safari support */
+            color: #333; /* Text color for contrast */
+            text-align: center;
+        }
+
+         /* Tip 6: :not(), :has() */
+          .selectors-demo button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #eee;
+         }
+          .selectors-demo button:not(:first-child) {
+            margin-left: 0; /* Remove default margin */
+            margin-top: 10px; /* Add margin to all except first */
+            display: block; /* Make others block to show margin effect */
+         }
+           .selectors-demo button:has(span) { /* Example: Style buttons with a span inside */
+            background-color: #a0c4ff; /* Light blue */
+            font-weight: bold;
+         }
+
+         /* :has(:checked) simple dark mode example */
+          .dark-mode-container {
+            border: 1px dashed #ccc;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+            background-color: #fff;
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+         }
+          .dark-mode-container label {
+             margin-right: 10px;
+             cursor: pointer;
+         }
+          .dark-mode-container input[type="checkbox"] {
+             margin-right: 5px;
+             vertical-align: middle; /* Align checkbox better */
+         }
+
+         /* Use :has to style children based on checkbox state in parent */
+          .dark-mode-container:has(input[type="checkbox"]:checked) {
+             background-color: #333;
+             color: #eee;
+             border-color: #555; /* Adjust border for dark mode */
+         }
+          .dark-mode-container:has(input[type="checkbox"]:checked) .dark-mode-content {
+             color: #eee; /* Ensure content text color changes */
+         }
+
+
+        /* Tip 7: Gradient Text */
+         .gradient-text-demo h3 {
+            font-size: 2.5em;
+            font-weight: bold;
+            text-align: center;
+            /* Apply gradient as background */
+            background-image: linear-gradient(to right, red, lime);
+            /* Clip the background to the text */
+            -webkit-background-clip: text; /* For Safari */
+            background-clip: text;
+            /* Make the text color transparent */
+            color: transparent;
+            /* For older browsers or fallback */
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Tip 8: CSS-only Dropdown (:focus-within) */
+         .dropdown-container {
+            position: relative;
+            display: inline-block; /* Or block if needed */
+            border: 1px solid #ccc; /* Visual aid for the container */
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+         .dropdown-trigger {
+            padding: 10px 15px;
+            background-color: #28a745; /* Green */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            outline: none; /* Remove default focus outline if desired, but better to style it */
+        }
+        /* Style focus state for accessibility */
+         .dropdown-trigger:focus-visible {
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.5);
+        }
+
+
+         .dropdown-content {
+            position: absolute;
+            top: 100%; /* Position below the trigger */
+            left: 0;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            display: none; /* Hidden by default */
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 5px; /* Space between trigger and dropdown */
+        }
+
+         .dropdown-content a {
+            color: black;
+            padding: 8px 0;
+            text-decoration: none;
+            display: block;
+        }
+        /* Style focus state for accessibility */
+         .dropdown-content a:focus-visible {
+            background-color: #e9e9e9;
+            outline: 2px solid #007bff;
+            outline-offset: -2px;
+        }
+
+
+         .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Show the dropdown content when the container or any element inside it is focused */
+         .dropdown-container:focus-within .dropdown-content {
+            display: block;
+        }
+
+         /* Tip 9: CSS Counters */
+          .counter-demo {
+            /* Reset the counter on the parent container */
+            counter-reset: heading-counter;
+         }
+
+          .counter-demo h3 {
+            /* Increment the counter for each h3 element */
+            counter-increment: heading-counter;
+            margin-top: 15px;
+            margin-bottom: 5px;
+         }
+
+          .counter-demo h3::before {
+            /* Display the counter value before the heading text */
+            content: counter(heading-counter) ". ";
+            font-weight: bold;
+            color: #007bff; /* Blue */
+            margin-right: 5px;
+         }
+
+         /* Tip 10: Scroll Snap */
+          .scroll-snap-wrapper {
+            width: 100%;
+            max-width: 400px; /* Limit width for demo */
+            height: 150px;
+            overflow-x: scroll; /* Enable horizontal scrolling */
+            display: flex; /* Arrange cards in a row */
+            scroll-snap-type: x mandatory; /* Snap horizontally, must land on a snap point */
+            -webkit-scroll-snap-type: x mandatory; /* Safari support */
+            border: 1px solid #999; /* Darker border */
+            border-radius: 8px;
+            margin: 0 auto; /* Center the wrapper */
+            background-color: #f0f0f0; /* Light background for wrapper */
+         }
+
+          .scroll-snap-card {
+            flex: 0 0 100%; /* Prevent shrinking, take up full wrapper width */
+            width: 100%; /* Explicit width */
+            height: 100%; /* Match wrapper height */
+            border-right: 1px solid #ccc; /* Separator */
+            box-sizing: border-box; /* Include border/padding in size */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+            scroll-snap-align: center; /* Snap point is the center of the element */
+            -webkit-scroll-snap-align: center; /* Safari support */
+            background-color: #f8d7da; /* Light red for contrast */
+            color: #721c24; /* Darker text for contrast */
+         }
+          .scroll-snap-card:last-child {
+             border-right: none; /* No border on the last card */
+         }
+          .scroll-snap-card:nth-child(even) { /* Changed from odd for better initial contrast */
+             background-color: #d1ecf1; /* Light blue for contrast */
+             color: #0c5460; /* Darker text for contrast */
+         }
+
+          footer {
+             text-align: center;
+             margin-top: 40px;
+             font-size: 0.9em;
+             color: #777;
+         }
+
+    </style>
+
+    <div class="css-tricks-page"> {/* Optional wrapper to help scope styles if needed */}
+        <h1>{title}</h1>
+
+        <section>
+            <h2>Tip 1: CSS `resize` Property</h2>
+            <figure>
+                <figcaption>
+                    The `resize` CSS property allows users to control the height and width of an element. You can specify `horizontal`, `vertical`, or `both`. It only works on elements with an `overflow` value other than `visible` (e.g., `auto`, `hidden`, `scroll`).
+                </figcaption>
+                <div class="demo-box resize-demo">
+                    You can resize this box by clicking and dragging its bottom-right corner.
+                    <br/><br/>
+                    Requires `overflow: auto;` (or similar).
+                </div>
+            </figure>
+        </section>
+
+         <section>
+            <h2>Tip 2: Neumorphism / Soft UI</h2>
+            <figure>
+                <figcaption>
+                    Create a soft, pressed or extruded look using multiple `box-shadow`s on a background that is slightly different from the surrounding area. Use one shadow with positive offsets (darker) and another with negative offsets (lighter) to simulate light from a specific direction (e.g., top-left). Adding the `inset` keyword reverses the effect, making it look carved in.
+                </figcaption>
+                <div class="demo-box neumorphism-demo">
+                    Neumorphism (Extruded)
+                </div>
+                <div class="demo-box neumorphism-inset-demo" style="margin-top: 20px;">
+                     Neumorphism (Pressed / Inset)
+                </div>
+            </figure>
+        </section>
+
+        <section>
+            <h2>Tip 3: CSS-only Interactive Elements (:checked)</h2>
+            <figure>
+                <figcaption>
+                    By pairing a hidden checkbox with a label (using the `for` attribute), you can simulate user interactions without JavaScript. The `:checked` pseudo-class on the checkbox allows you to style sibling or subsequent elements based on the checkbox's state using combinators like `+` or `~`.
+                </figcaption>
+                <div class="demo-box css-only-checkbox-demo">
+                    <input type="checkbox" id="toggle-content" />
+                    <label for="toggle-content">Click to Toggle Content</label>
+
+                    <div class="hidden-content">
+                        This content appears when the checkbox is checked, controlled purely by CSS!
+                    </div>
+                </div>
+            </figure>
+        </section>
+
+        <section>
+            <h2>Tip 4: Responsive Sizing with `min()`, `max()`, `clamp()`</h2>
+            <figure>
+                <figcaption>
+                    Simplify responsive sizing properties like `width`, `min-width`, and `max-width` into a single line using CSS functions.
+                    `min(value1, value2, ...)` returns the smallest value. Useful for `max-width` combined with a fluid unit (e.g., `width: min(800px, 90%);` - width is 800px until 90% of parent is smaller).
+                    `max(value1, value2, ...)` returns the largest value. Useful for `min-width` (e.g., `width: max(300px, 50%);` - width is 50% until 50% of parent is larger than 300px).
+                    `clamp(min, preferred, max)` is a shorthand combining all three (e.g., `width: clamp(300px, 60%, 700px);` - width is 60%, but never smaller than 300px or larger than 700px).
+                </figcaption>
+                <div class="demo-box sizing-demo">
+                    This box uses `width: clamp(200px, 60%, 700px);`. Resize your browser window to see how it adapts between the min (200px) and max (700px) values, trying to stay at 60%.
+                </div>
+            </figure>
+        </section>
+
+        <section>
+            <h2>Tip 5: Glassmorphism (`backdrop-filter`)</h2>
+            <figure>
+                <figcaption>
+                    Create a translucent, frosted glass effect on elements positioned over other content (like an image). Apply a semi-transparent background color to the element, then use the `backdrop-filter` property with functions like `blur()`. This property applies graphical effects to the area *behind* the element. Note: Browser support varies, especially older ones.
+                </figcaption>
+                <div class="glass-container">
+                    <div class="glass-element">
+                        <h3>Glass Effect</h3>
+                        <p>Look at the background image behind this element through the blur.</p>
+                    </div>
+                </div>
+            </figure>
+        </section>
+
+        <section>
+            <h2>Tip 6: Powerful Selectors (`:not()`, `:has()`)</h2>
+            <figure>
+                <figcaption>
+                    `:not(selector)` excludes elements that match the provided selector from the current selection (e.g., `li:not(:last-child)` selects all list items except the last one).
+                    `:has(selector)` selects an element if *any* of its descendants (or itself) match the provided selector. It can act as a "parent selector" (e.g., `div:has(p)` selects divs that contain a paragraph). Note: `:has()` support is relatively recent in browsers.
+                </figcaption>
+                <div class="demo-box selectors-demo">
+                    <h4>Using `:not()`:</h4>
+                    <button>Button 1 (First Child)</button>
+                    <button>Button 2 (:not(:first-child))</button>
+                    <button>Button 3 (:not(:first-child))</button>
+
+                    <h4 style="margin-top: 20px;">Using `:has()`:</h4>
+                    <button>Plain Button</button>
+                    <button>Button With <span>Span</span> (:has(span))</button>
+                    <button>Button With <i>Icon</i> (:has(i))</button>
+
+                     <h4 style="margin-top: 20px;">Using `:has(:checked)` for a simple theme toggle:</h4>
+                     <div class="dark-mode-container">
+                         <input type="checkbox" id="dark-mode-toggle" />
+                         <label for="dark-mode-toggle">Enable Dark Mode (CSS Only)</label>
+                         <div class="dark-mode-content">
+                             This container and its contents change style when the checkbox inside it is checked, thanks to `:has(:checked)` on the parent.
+                         </div>
+                     </div>
+                </div>
+            </figure>
+        </section>
+
+        <section>
+            <h2>Tip 7: Gradient Text</h2>
+            <figure>
+                <figcaption>
+                    Apply gradients to text by using a gradient as the element's `background-image`, then clipping the background to the shape of the text using `background-clip: text`. Finally, set the text `color` (or `-webkit-text-fill-color`) to `transparent` so the clipped background is visible. Requires vendor prefixes for full compatibility.
+                </figcaption>
+                 <div class="demo-box gradient-text-demo">
+                     <h3>Gradient Text Effect</h3>
+                 </div>
+            </figure>
+        </section>
+
+        <section>
+            <h2>Tip 8: CSS-only Dropdown (`:focus-within`)</h2>
+            <figure>
+                <figcaption>
+                    While `:focus` works for clicking a trigger element, it fails when you click an element *inside* the dropdown, as the trigger loses focus. The `:focus-within` pseudo-class solves this by applying styles when the element itself *or any of its descendants* has focus. This allows you to keep a dropdown visible when the user interacts with its content. Ensure interactive elements inside are focusable (like links or buttons).
+                </figcaption>
+                 <div class="demo-box">
+                     <div class="dropdown-container">
+                         <button class="dropdown-trigger">CSS Dropdown (Click or Tab)</button>
+                         <div class="dropdown-content">
+                             <a href="#">Link 1</a>
+                             <a href="#">Link 2</a>
+                             <a href="#">Link 3</a>
+                         </div>
+                     </div>
+                     <p style="margin-top: 20px;">Click the button, then click or tab to one of the links inside the dropdown. It stays open because the container has `:focus-within`.</p>
+                 </div>
+            </figure>
+        </section>
+
+         <section>
+            <h2>Tip 9: CSS Counters</h2>
+            <figure>
+                <figcaption>
+                    Automatically number elements (like headings or list items) using CSS counters.
+                    `counter-reset: counter-name;` initializes or resets a counter, typically on a parent element.
+                    `counter-increment: counter-name;` increases the counter's value on each occurrence of the selected element.
+                    `content: counter(counter-name);` displays the counter's current value, often used with `:before` or `:after` pseudo-elements.
+                </figcaption>
+                 <div class="demo-box counter-demo">
+                    <h3>First Heading</h3>
+                    <p>Some content here.</p>
+                    <h3>Second Heading</h3>
+                    <p>More content.</p>
+                    <h3>Third Heading</h3>
+                 </div>
+            </figure>
+        </section>
+
+         <section>
+            <h2>Tip 10: Scroll Snap</h2>
+            <figure>
+                <figcaption>
+                    Create smooth, controlled scrolling experiences where the scroll position "snaps" to specific points, ensuring elements align perfectly in the viewport (like a carousel or swiper).
+                    Apply `scroll-snap-type: x mandatory;` (or `y mandatory`, `x proximity`, etc.) to the scrolling *container*. `mandatory` means it *must* land on a snap point; `proximity` means it only snaps if close enough.
+                    Apply `scroll-snap-align: start;` (or `center`, `end`) to the *child* elements within the container. This defines where the snap point is relative to the element.
+                </figcaption>
+                 <div class="demo-box">
+                     <div class="scroll-snap-wrapper">
+                        <div class="scroll-snap-card">Card 1</div>
+                        <div class="scroll-snap-card">Card 2</div>
+                        <div class="scroll-snap-card">Card 3</div>
+                        <div class="scroll-snap-card">Card 4</div>
+                        <div class="scroll-snap-card">Card 5</div>
+                     </div>
+                      <p style="margin-top: 20px; text-align: center;">Scroll the box above horizontally. Notice how it snaps into place.</p>
+                 </div>
+            </figure>
+        </section>
+
+
+         <footer>
+             <p>
+                 Demonstrations based on the video "These CSS PRO Tips & Tricks Will Blow Your Mind!"
+                 by <a href="https://www.youtube.com/@CodingToGo" target="_blank" rel="noopener noreferrer">Coding to Go</a>.
+             </p>
+         </footer>
+    </div>

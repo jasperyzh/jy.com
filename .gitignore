@@ -30,5 +30,4 @@ pnpm-debug.log*
 # copied content
 # src/content/blog/
 
-scripts/
 .vercel

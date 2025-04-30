@@ -2,7 +2,7 @@
 title: Tech Context
 description: Technologies, setup, constraints, dependencies, and development environment.
 pubDate: 250408
-draft: 0
+draft: 1
 ---
 
 ### **5. `techContext.md` (Toolbox)**

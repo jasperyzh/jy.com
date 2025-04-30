@@ -2,7 +2,7 @@
 title: Enabling Video Thumbnails in Nautilus (aka Explorer) on Ubuntu
 description: Enabling Video Thumbnails in Nautilus on Ubuntu
 pubDate: 250410
-draft: 0
+draft: 1
 ---
 
 # Enabling Video Thumbnails in Nautilus on Ubuntu

@@ -2,7 +2,7 @@
 title: Quick Copy Prompt into Clipboard with hotkeys for repetitive tasks
 description: Have prompt ready with hotkey
 pubDate: 250410
-draft: 0
+draft: 1
 ---
 
 I have 2 hotkeys to that copy text right into the clipboard ready to use:

@@ -1,0 +1,521 @@
+<div class="hero-section">
+  <div class="hero-content">
+    <h1 id="main-title">Your Awesome Title</h1>
+    <h2 id="subtitle">A Catchy Subtitle Here</h2>
+    <p id="intro-paragraph">
+      Hello there! This is a brief introduction about myself. I love creating
+      things and exploring new ideas. This little experiment is a fun way to
+      play with text and interactivity on the web. Hope you enjoy moving the
+      words around!
+    </p>
+  </div>
+
+  <div class="button-container">
+    <button id="bomb-button">BOMB!</button>
+    <button id="reset-button">Reset</button>
+  </div>
+</div>
+<style is:inline>
+ 
+  .hero-section {
+    text-align: center;
+    padding: 20px;
+    width: 90%;
+    max-width: 800px;
+    position: relative; /* Needed for calculating positions */
+    user-select: none; /* Prevent text selection */
+    cursor: pointer; /* Indicate interactivity */
+  }
+
+  .hero-content {
+    margin-bottom: 40px;
+  }
+
+  /* Style for individual text spans (words) */
+  .hero-content span {
+    display: inline-block; /* Allows transform to work correctly */
+    margin: 0 2px; /* Add small spacing between words */
+    white-space: nowrap; /* Keep words from breaking inside span */
+    transition:
+      transform 0.3s ease-out,
+      opacity 0.5s ease-out; /* Smooth transition for movement and fade */
+    will-change: transform, opacity; /* Hint to browser for performance */
+    pointer-events: none; /* Let mouse events pass through to the container */
+    position: relative; /* Ensure stacking context for transforms */
+    z-index: 1; /* Ensure text is above background */
+  }
+
+  /* Remove margin for the first span of each line or block */
+  .hero-content h1 span:first-child,
+  .hero-content h2 span:first-child,
+  .hero-content p span:first-child {
+    margin-left: 0;
+  }
+
+  h1 {
+    font-size: 3em;
+    margin-bottom: 0.5em;
+    color: #00ffff; /* Cyan */
+  }
+
+  h2 {
+    font-size: 1.5em;
+    margin-bottom: 1.5em;
+    color: #ff00ff; /* Magenta */
+  }
+
+  p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: #00ff00; /* Green */
+  }
+
+  .button-container {
+    margin-top: 20px;
+  }
+
+  button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 1em;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+
+  #bomb-button {
+    background-color: #ff0000; /* Red */
+    color: white;
+  }
+
+  #bomb-button:hover {
+    background-color: #cc0000;
+  }
+
+  #reset-button {
+    background-color: #007bff; /* Blue */
+    color: white;
+  }
+
+  #reset-button:hover {
+    background-color: #0056b3;
+  }
+</style>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const heroSection = document.querySelector<HTMLElement>(".hero-section");
+    const heroContent = document.querySelector<HTMLElement>(".hero-content");
+    const bombButton = document.getElementById("bomb-button") as HTMLButtonElement | null;
+    const resetButton = document.getElementById("reset-button") as HTMLButtonElement | null;
+
+    // Ensure essential elements exist before proceeding
+    if (!heroSection || !heroContent || !bombButton || !resetButton) {
+      console.error("Essential hero elements not found!");
+      return;
+    }
+
+    const mainTitleElement = document.getElementById("main-title");
+    const subtitleElement = document.getElementById("subtitle");
+    const introParagraphElement = document.getElementById("intro-paragraph");
+
+    if (!mainTitleElement || !subtitleElement || !introParagraphElement) {
+        console.error("Text content elements not found!");
+        return;
+    }
+
+    const textElements = [mainTitleElement, subtitleElement, introParagraphElement];
+
+    // Store original HTML to reset
+    const originalHTML = {
+      h1: mainTitleElement.innerHTML,
+      h2: subtitleElement.innerHTML,
+      p: introParagraphElement.innerHTML,
+    };
+
+    let allSpans: HTMLSpanElement[] = []; // Array to hold all the individual word spans
+
+    // Function to wrap each word in a span
+    function wrapWordsInSpans(element: HTMLElement) {
+      const text = element.textContent?.trim() ?? ''; // Handle potential null
+      if (!text) return; // If text is empty, do nothing
+      const words = text.split(/\s+/); // Split by one or more whitespace characters
+      const wrappedWords = words
+        .map((word) => `<span class="interactive-word">${word}</span>`)
+        .join(" ");
+      element.innerHTML = wrappedWords;
+      // Collect the newly created spans
+      element.querySelectorAll<HTMLSpanElement>("span.interactive-word").forEach((span) => {
+         if (span) allSpans.push(span);
+      });
+    }
+
+    // Function to apply the wrapping and collect spans
+    function initializeTextSpans() {
+      allSpans = []; // Clear previous spans
+      textElements.forEach((element) => {
+        wrapWordsInSpans(element);
+      });
+      console.log(`Initialized ${allSpans.length} word spans.`); // Log span count
+      
+      // Verify our spans have correct styling
+      if (allSpans.length > 0) {
+        console.log("First span style:", allSpans[0].style);
+        // Force apply initial style
+        allSpans.forEach(span => {
+          span.style.display = "inline-block";
+          span.style.position = "relative";
+          span.style.transform = "translate3d(0, 0, 0)";
+          span.style.transition = "transform 0.3s ease-out, opacity 0.5s ease-out";
+        });
+      }
+    }
+
+    // Store the final positions of exploded text for reverse animation
+    let explodedPositions: { x: number; y: number; rotate: number; scale: number }[] = [];
+    
+    // Track interaction intensity to increase chaos over time
+    let interactionCount = 0;
+    const MAX_INTERACTIONS = 20; // Number of interactions before maximum chaos
+    let spanChaosFactors: { shift: number; rotate: number; scale: number; interactionCount: number }[] = [];
+
+    // Function to initialize or reset chaos factors for each span
+    function initializeChaosFactors() {
+      spanChaosFactors = allSpans.map(() => ({
+        shift: 0,
+        rotate: 0,
+        scale: 1,
+        interactionCount: 0 // Track interactions per word
+      }));
+      interactionCount = 0;
+    }
+
+    // --- Swipe Interaction ---
+    let isSwiping = false;
+
+    function applyDisplacement(event: MouseEvent | TouchEvent) {
+      // Explicitly check heroContent again to satisfy linter inside this scope
+      if (!heroContent) return;
+      console.log("Apply displacement called"); // Log function call
+
+      let clientX: number | null = null;
+      let clientY: number | null = null;
+
+      // Check if it's a touch event
+      if (event instanceof TouchEvent || (window.TouchEvent && event instanceof TouchEvent)) {
+        if (event.touches && event.touches.length > 0) {
+            clientX = event.touches[0].clientX;
+            clientY = event.touches[0].clientY;
+        }
+      } 
+      // Check if it's a mouse event (and not a touch event masquerading)
+      else if ('clientX' in event && 'clientY' in event) { 
+         clientX = event.clientX;
+         clientY = event.clientY;
+      }
+
+      if (clientX === null || clientY === null) return; // No valid coordinates
+
+      // Get container position and size once per event
+      const containerRect = heroContent.getBoundingClientRect(); // Already null-checked heroContent
+      let appliedTransform = false; // Flag to check if any transform is applied
+
+      // Access allSpans inside this function with its index
+      allSpans.forEach((span, i) => {
+        const rect = span.getBoundingClientRect();
+        // Calculate the center of the span relative to the viewport
+        const spanCenterX = rect.left + rect.width / 2;
+        const spanCenterY = rect.top + rect.height / 2;
+
+        // Calculate distance and direction from pointer to span center
+        const deltaX = spanCenterX - clientX!;
+        const deltaY = spanCenterY - clientY!;
+        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+        // Define displacement force based on distance (closer = stronger force)
+        const maxDisplacement = 60; // Maximum pixels to displace a word (increased from 30)
+        const influenceRadius = 150; // Pixels radius around pointer where words are affected
+
+        if (distance < influenceRadius) {
+          // Calculate displacement based on how close the pointer is to the influence edge
+          // As distance goes from 0 to influenceRadius, force goes from 1 to 0
+          const force = Math.pow((influenceRadius - distance) / influenceRadius, 1.5); // Added exponential curve for more dramatic effect
+
+          // Apply displacement in the direction away from the pointer
+          const displaceX = (deltaX / distance) * maxDisplacement * force;
+          const displaceY = (deltaY / distance) * maxDisplacement * force;
+
+          // Apply the transform. We use translate3d for potential hardware acceleration
+          span.style.transform = `translate3d(${displaceX}px, ${displaceY}px, 0)`;
+          span.style.transitionDuration = "0s"; // Remove transition while actively moving
+          
+          // If we moved this span significantly, increase its personal chaos factor
+          if (Math.abs(displaceX) > 0.5 || Math.abs(displaceY) > 0.5) {
+            // This span was affected - increase its chaos
+            if (!spanChaosFactors[i]) {
+              spanChaosFactors[i] = { shift: 0, rotate: 0, scale: 1, interactionCount: 0 };
+            }
+            
+            // Increase this span's personal interaction count
+            spanChaosFactors[i].interactionCount = Math.min(
+              MAX_INTERACTIONS,
+              spanChaosFactors[i].interactionCount + 0.1
+            );
+            
+            if (Math.abs(displaceX) > 0.1 || Math.abs(displaceY) > 0.1) {
+                console.log(`Span displace: X=${displaceX.toFixed(2)}, Y=${displaceY.toFixed(2)}`); // Log displacement
+                appliedTransform = true;
+            }
+          }
+          
+        } else {
+          // When pointer is outside influence radius, let CSS transition handle return
+          // We don't apply any transform here as this will be handled in removeDisplacement
+        }
+      });
+      
+      // Track that an interaction occurred
+      if (appliedTransform) {
+        // Only count it as a new interaction if significant movement happened
+        interactionCount = Math.min(MAX_INTERACTIONS, interactionCount + 0.05);
+        console.log(`Interaction intensity: ${interactionCount.toFixed(2)}/${MAX_INTERACTIONS}`);
+      }
+    }
+
+    function removeDisplacement() {
+      console.log("Remove displacement called"); // Log function call
+            
+      allSpans.forEach((span, i) => {
+        // Get or initialize this span's chaos factors
+        if (!spanChaosFactors[i]) {
+          spanChaosFactors[i] = { shift: 0, rotate: 0, scale: 1, interactionCount: 0 };
+        }
+        
+        // Use this specific span's interaction count for its chaos level
+        const spanInteractionCount = spanChaosFactors[i].interactionCount;
+        const chaosLevel = spanInteractionCount / MAX_INTERACTIONS;
+        
+        // Only apply chaos if this specific span has been interacted with
+        if (chaosLevel > 0) {
+          // Calculate new chaos values with some randomness 
+          // but also persistence (building on previous values)
+          let chaosFactor = spanChaosFactors[i];
+          
+          // Add new random shifts that get more extreme with more interactions
+          const maxShiftX = 30 * chaosLevel; 
+          const maxShiftY = 30 * chaosLevel;
+          const maxRotate = 180 * chaosLevel; // up to 180 degrees
+          const minScale = Math.max(0.5, 1 - (0.5 * chaosLevel)); // shrink to 50% at most
+          const maxScale = 1 + (0.5 * chaosLevel); // grow to 150% at most
+          
+          // Update chaos with persistence (keep some of previous chaos)
+          chaosFactor.shift = chaosFactor.shift * 0.8 + (Math.random() - 0.5) * maxShiftX;
+          chaosFactor.rotate = chaosFactor.rotate * 0.8 + (Math.random() - 0.5) * maxRotate;
+          
+          // For scale, we want to be more careful to avoid making text disappear completely
+          const randomScaleFactor = Math.random() * (maxScale - minScale) + minScale;
+          chaosFactor.scale = (chaosFactor.scale * 0.9) + (randomScaleFactor * 0.1);
+          
+          // Maximum chaos makes letters randomly flip
+          const flipX = chaosLevel > 0.7 && Math.random() > 0.7 ? 'scaleX(-1)' : '';
+          const flipY = chaosLevel > 0.8 && Math.random() > 0.8 ? 'scaleY(-1)' : '';
+          
+          // Apply the transform with the accumulated chaos
+          span.style.transform = `
+            translate3d(${chaosFactor.shift}px, ${chaosFactor.shift}px, 0)
+            rotate(${chaosFactor.rotate}deg)
+            scale(${chaosFactor.scale})
+            ${flipX} ${flipY}
+          `;
+          
+          // At higher chaos levels, randomly change colors and blur
+          if (chaosLevel > 0.4) {
+            const blurAmount = Math.min(10, Math.random() * 10 * (chaosLevel - 0.4));
+            if (Math.random() > 0.7) {
+              const hue = Math.floor(Math.random() * 360);
+              span.style.color = `hsl(${hue}, 100%, 50%)`;
+              span.style.textShadow = `0 0 ${blurAmount}px rgba(255,255,255,0.7)`;
+            } else {
+              span.style.filter = `blur(${blurAmount}px)`;
+            }
+          }
+        } else {
+          // No chaos for this span - return to normal position
+          span.style.transform = "translate3d(0, 0, 0)";
+        }
+        
+        span.style.transitionDuration = "0.6s"; // Slightly longer transition for return
+      });
+    }
+
+    // Add mouse/touch listeners to the container
+    heroSection.addEventListener("mousemove", applyDisplacement);
+    heroSection.addEventListener("mouseleave", removeDisplacement);
+
+    heroSection.addEventListener(
+      "touchmove",
+      (event) => {
+        event.preventDefault(); // Prevent scrolling while touching over the hero
+        applyDisplacement(event);
+      },
+      { passive: false }
+    ); // passive: false is needed for preventDefault
+
+    heroSection.addEventListener("touchend", removeDisplacement);
+    heroSection.addEventListener("touchcancel", removeDisplacement);
+
+    // --- Bomb Interaction ---
+    bombButton.addEventListener("click", () => {
+      // Explicitly check heroContent again to satisfy linter inside this scope
+      if (!heroContent) return;
+      
+      // Remove swipe listeners temporarily
+      heroSection.removeEventListener("mousemove", applyDisplacement);
+      heroSection.removeEventListener("mouseleave", removeDisplacement);
+      heroSection.removeEventListener("touchmove", applyDisplacement);
+      heroSection.removeEventListener("touchend", removeDisplacement);
+      heroSection.removeEventListener("touchcancel", removeDisplacement);
+
+      const containerRect = heroContent.getBoundingClientRect(); // Already null-checked heroContent
+      const containerCenterX = containerRect.left + containerRect.width / 2;
+      const containerCenterY = containerRect.top + containerRect.height / 2;
+
+      allSpans.forEach((span) => {
+        const rect = span.getBoundingClientRect();
+        const spanCenterX = rect.left + rect.width / 2;
+        const spanCenterY = rect.top + rect.height / 2;
+
+        // Calculate vector from container center to span center
+        const deltaX = spanCenterX - containerCenterX;
+        const deltaY = spanCenterY - containerCenterY;
+        const angle = Math.atan2(deltaY, deltaX); // Angle in radians
+
+        // Randomize force and direction slightly
+        const forceMagnitude = Math.random() * 500 + 200; // Random force between 200 and 700px (increased from 300+100)
+        const displaceX =
+          Math.cos(angle + (Math.random() - 0.5) * 0.5) * forceMagnitude; // Add slight angle randomness
+        const displaceY =
+          Math.sin(angle + (Math.random() - 0.5) * 0.5) * forceMagnitude;
+
+        // Apply large transform, rotation, scale, and fade out
+        const randomDuration = Math.random() * 1 + 0.5;
+        const randomRotation = Math.random() * 720 - 360;
+        const randomScale = Math.random() * 0.5 + 0.5;
+        
+        span.style.transition = `transform ${randomDuration}s ease-out, opacity ${Math.random() * 0.5 + 0.5}s ease-out`; // Longer, randomized transition
+        span.style.transform = `translate3d(${displaceX}px, ${displaceY}px, 0) rotate(${randomRotation}deg) scale(${randomScale})`; // Random rotation and scale
+        span.style.opacity = "0";
+        
+        // Store the explosion end position for reverse animation
+        explodedPositions.push({
+          x: displaceX,
+          y: displaceY,
+          rotate: randomRotation,
+          scale: randomScale
+        });
+      });
+
+      // Disable buttons after bomb
+      bombButton.disabled = true;
+      resetButton.disabled = true;
+
+      // Re-enable buttons after explosion animation finishes
+      setTimeout(() => {
+        bombButton.disabled = false;
+        resetButton.disabled = false;
+      }, 1500); // Roughly matches the max explosion animation duration
+    });
+
+    // --- Reset Interaction ---
+    resetButton.addEventListener("click", () => {
+      // Check if we're resetting after an explosion
+      const isAfterExplosion = explodedPositions.length > 0;
+      
+      if (isAfterExplosion) {
+        // For explosion reset, we'll do a reverse animation
+        
+        // First make all spans visible again but keep them at their exploded positions
+        allSpans.forEach((span, i) => {
+          // Get the exploded position for this span
+          const explodedPos = explodedPositions[i] || { x: 0, y: 0, rotate: 0, scale: 1 };
+          
+          // Set starting position (the exploded position)
+          span.style.transform = `translate3d(${explodedPos.x}px, ${explodedPos.y}px, 0) rotate(${explodedPos.rotate}deg) scale(${explodedPos.scale})`;
+          span.style.opacity = "0";
+          
+          // Force a reflow to ensure the browser registers the starting position
+          span.offsetHeight;
+          
+          // Now set a long transition and move back to origin
+          span.style.transition = "transform 1.5s cubic-bezier(0.25, 0.1, 0.25, 1.4), opacity 1.2s ease-in, color 1.2s ease-in, text-shadow 1.2s ease-in, filter 1.2s ease-in";
+          span.style.transform = "translate3d(0, 0, 0) rotate(0deg) scale(1)";
+          span.style.opacity = "1";
+          span.style.color = ""; // Reset to default color
+          span.style.textShadow = ""; // Remove any text shadow
+          span.style.filter = ""; // Remove any filter
+        });
+        
+        // Clear the explosion state after using it
+        explodedPositions = [];
+        
+        // Reset chaos factors
+        initializeChaosFactors();
+        
+        // Re-add listeners after animation completes
+        setTimeout(() => {
+          // Re-add swipe listeners
+          heroSection.addEventListener("mousemove", applyDisplacement);
+          heroSection.addEventListener("mouseleave", removeDisplacement);
+          heroSection.addEventListener(
+            "touchmove",
+            (event) => {
+              event.preventDefault();
+              applyDisplacement(event);
+            },
+            { passive: false }
+          );
+          heroSection.addEventListener("touchend", removeDisplacement);
+          heroSection.addEventListener("touchcancel", removeDisplacement);
+        }, 1500);
+      } else {
+        // If not after explosion, do the normal reset
+        // Restore original HTML structure
+        if (mainTitleElement) mainTitleElement.innerHTML = originalHTML.h1;
+        if (subtitleElement) subtitleElement.innerHTML = originalHTML.h2;
+        if (introParagraphElement) introParagraphElement.innerHTML = originalHTML.p;
+
+        // Re-initialize spans and collect them
+        initializeTextSpans();
+
+        // Ensure all spans are visible and in their original position with default transition
+        allSpans.forEach((span) => {
+          span.style.transition =
+            "transform 0.3s ease-out, opacity 0.5s ease-out";
+          span.style.transform = "translate3d(0, 0, 0)";
+          span.style.opacity = "1";
+          // Clear any inline transition duration set during bomb/swipe
+          span.style.transitionDuration = "";
+        });
+
+        // Re-add swipe listeners
+        heroSection.addEventListener("mousemove", applyDisplacement);
+        heroSection.addEventListener("mouseleave", removeDisplacement);
+        heroSection.addEventListener(
+          "touchmove",
+          (event) => {
+            event.preventDefault();
+            applyDisplacement(event);
+          },
+          { passive: false }
+        );
+        heroSection.addEventListener("touchend", removeDisplacement);
+        heroSection.addEventListener("touchcancel", removeDisplacement);
+      }
+    });
+
+    // --- Initial Setup ---
+    // Wrap words when the page loads
+    initializeTextSpans();
+    initializeChaosFactors();
+  });
+</script>

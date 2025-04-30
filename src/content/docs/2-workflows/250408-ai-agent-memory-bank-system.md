@@ -2,7 +2,7 @@
 title: AI Agent Memory Bank System
 description: A structured documentation system providing AI assistants with persistent project context to improve consistency and effectiveness.
 pubDate: 250408
-draft: 0
+draft: 1
 ---
 
 ### notes

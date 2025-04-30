@@ -2,7 +2,7 @@
 title: Implementing SEO Metadata in Astro.js
 description: A guide to properly implementing meta title, description, OG image, and following best practices for SEO in Astro.js projects
 pubDate: 250410
-draft: 0
+draft: 1
 ---
 
 # Implementing SEO Metadata in Astro.js

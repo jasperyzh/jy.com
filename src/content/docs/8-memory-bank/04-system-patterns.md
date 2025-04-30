@@ -2,7 +2,7 @@
 title: System Patterns
 description: Architecture, key technical decisions, design patterns, and components.
 pubDate: 250408
-draft: 0
+draft: 1
 ---
 ### **4. `systemPatterns.md` (How We Build)**
 ```markdown

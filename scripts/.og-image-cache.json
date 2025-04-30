@@ -1,0 +1,428 @@
+{
+  "src/content/sketches/creative-coding/2025/250124-mesh_gradient.mdx": {
+    "lastModified": 1745146696373.6353,
+    "outputPath": "public/thumbnails/sketches/250124-mesh_gradient.svg",
+    "title": "Mesh Gradient",
+    "format": "svg"
+  },
+  "src/content/sketches/creative-coding/2025/250402-undo_technique.mdx": {
+    "lastModified": 1745146696369.6353,
+    "outputPath": "public/thumbnails/sketches/250402-undo_technique.svg",
+    "title": "Simple Drawing with Undo/Redo",
+    "format": "svg"
+  },
+  "src/content/sketches/creative-coding/2025/250414-generative_grids.mdx": {
+    "lastModified": 1745146696363.6353,
+    "outputPath": "public/thumbnails/sketches/250414-generative_grids.svg",
+    "title": "Generative Grids",
+    "format": "svg"
+  },
+  "src/content/sketches/creative-coding/2025/250417-perlin_noise.mdx": {
+    "lastModified": 1745146696371.6353,
+    "outputPath": "public/thumbnails/sketches/250417-perlin_noise.svg",
+    "title": "Perlin Noise Fundamentals",
+    "format": "svg"
+  },
+  "src/content/sketches/creative-coding/2025/250418-poisson_disc_sampling.mdx": {
+    "lastModified": 1745146696363.6353,
+    "outputPath": "public/thumbnails/sketches/250418-poisson_disc_sampling.svg",
+    "title": "Poisson-Disc Sampling",
+    "format": "svg"
+  },
+  "src/content/sketches/webdev/2025/250102-cssgrid.mdx": {
+    "lastModified": 1744878443677.0527,
+    "outputPath": "public/thumbnails/sketches/250102-cssgrid.svg",
+    "title": "CSS Grid",
+    "format": "svg"
+  },
+  "src/content/sketches/webdev/2025/250409-device-motion-orientation.mdx": {
+    "lastModified": 1745146696363.6353,
+    "outputPath": "public/thumbnails/sketches/250409-device-motion-orientation.svg",
+    "title": "Interactive Snowglobe",
+    "format": "svg"
+  },
+  "src/content/sketches/webdev/2025/250410-digital-marketing-infographic.mdx": {
+    "lastModified": 1744875954246.3699,
+    "outputPath": "public/thumbnails/sketches/250410-digital-marketing-infographic.svg",
+    "title": "Digital Marketing Statistics Infographic",
+    "format": "svg"
+  },
+  "src/content/sketches/webdev/2025/250410-things-to-consider-web-design.mdx": {
+    "lastModified": 1744875950401.315,
+    "outputPath": "public/thumbnails/sketches/250410-things-to-consider-web-design.svg",
+    "title": "Key Considerations for Modern Web Design",
+    "format": "svg"
+  },
+  "src/content/sketches/webdev/2025/250412-lead-collection-with-google-sheet.mdx": {
+    "lastModified": 1744875940982.1802,
+    "outputPath": "public/thumbnails/sketches/250412-lead-collection-with-google-sheet.svg",
+    "title": "Simple Lead Collection with Google Sheets",
+    "format": "svg"
+  },
+  "src/content/sketches/webdev/2025/250414-webdesign-exercise.mdx": {
+    "lastModified": 1745147121183.3982,
+    "outputPath": "public/thumbnails/sketches/250414-webdesign-exercise.svg",
+    "title": "Web Design Exercise",
+    "format": "svg"
+  },
+  "src/content/sketches/webdev/2025/250417-vanilla-js-app.mdx": {
+    "lastModified": 1745170750916.5266,
+    "outputPath": "public/thumbnails/sketches/250417-vanilla-js-app.svg",
+    "title": "Coffee Masters - Vanilla JS App",
+    "format": "svg"
+  },
+  "src/content/sketches/webdev/2025/250428-css-tricks.mdx": {
+    "lastModified": 1745934037082.2168,
+    "outputPath": "public/thumbnails/sketches/250428-css-tricks.svg",
+    "title": "CSS Tricks Showcase",
+    "format": "svg"
+  },
+  "src/content/sketches/webdev/2025/250428-motion-one.mdx": {
+    "lastModified": 1745934033803.1555,
+    "outputPath": "public/thumbnails/sketches/250428-motion-one.svg",
+    "title": "Motion One: Spring Animation Demo",
+    "format": "svg"
+  },
+  "src/content/sketches/webdev/app-idea/250424-camera-filter.mdx": {
+    "lastModified": 1745425449706.5164,
+    "outputPath": "public/thumbnails/sketches/250424-camera-filter.svg",
+    "title": "Camera Filter & Timelapse App",
+    "format": "svg"
+  },
+  "src/content/sketches/webdev/completed/250412-blog-post-generative-thumbnail.mdx": {
+    "lastModified": 1744875919377.8704,
+    "outputPath": "public/thumbnails/sketches/250412-blog-post-generative-thumbnail.svg",
+    "title": "Generating Blog Post Thumbnails with SVG in Astro",
+    "format": "svg"
+  },
+  "src/content/sketches/webdev/completed/250417-sample-sketch.mdx": {
+    "lastModified": 1744875916823.8337,
+    "outputPath": "public/thumbnails/sketches/sample-sketch-thumb.svg",
+    "title": "Sample Web Development Sketch",
+    "format": "svg"
+  },
+  "src/content/sketches/webdev/games-design/250417-quizgame-education.mdx": {
+    "lastModified": 1745146696329.6353,
+    "outputPath": "public/thumbnails/sketches/250417-quizgame-education.svg",
+    "title": "LearnLand - Children's Educational App",
+    "format": "svg"
+  },
+  "src/content/sketches/webdev/games-design/250419-flashcards.mdx": {
+    "lastModified": 1745147041626.5288,
+    "outputPath": "public/thumbnails/sketches/250419-flashcards.svg",
+    "title": "Flashcards Template",
+    "format": "svg"
+  },
+  "src/content/sketches/webdev/games-design/250421-phaser-typing-game.mdx": {
+    "lastModified": 1745166736056.749,
+    "outputPath": "public/thumbnails/sketches/250421-phaser-typing-game.svg",
+    "title": "Phaser Typing Game",
+    "format": "svg"
+  },
+  "src/content/blog/2025/250217-OnePageOneTopic.md": {
+    "lastModified": 1745219068371.336,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "One-Page-One-Topic",
+    "format": "png"
+  },
+  "src/content/blog/2025/250323-Debounce.md": {
+    "lastModified": 1745219068371.336,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Understanding Debounce: A Practical Guide",
+    "format": "png"
+  },
+  "src/content/blog/2025/250323-di-zi-gui.md": {
+    "lastModified": 1745219068378.3362,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Di Zi Gui (弟子规) - Rules for Students and Children",
+    "format": "png"
+  },
+  "src/content/blog/2025/250323-malaysia-of-economy.md": {
+    "lastModified": 1745219068373.3362,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Malaysia's Economic Landscape: A Brief Overview",
+    "format": "png"
+  },
+  "src/content/blog/2025/250323-malaysia-past.md": {
+    "lastModified": 1745219068378.3362,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Malaysia's Path: From Colonial Rule to Modern Nation",
+    "format": "png"
+  },
+  "src/content/blog/2025/250323-why-creative-coding.md": {
+    "lastModified": 1745219068371.336,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Why Creative Coding Matters",
+    "format": "png"
+  },
+  "src/content/blog/2025/250404-Sharing my workflow progress.md": {
+    "lastModified": 1745219068371.336,
+    "outputPath": "public/thumbnails/blog/bunny.png",
+    "title": "Sharing my workflow progress",
+    "format": "png"
+  },
+  "src/content/blog/2025/250406-using-bash-to-sync-obsidian-astro-content.md": {
+    "lastModified": 1744011254892.3357,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Using rsync to synchronize content between astro.js and obsidian.md",
+    "format": "png"
+  },
+  "src/content/blog/2025/250409-astrojs-coming-soon-page-on-vercel.md": {
+    "lastModified": 1745219068378.3362,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Creating a Coming Soon Page with Astro.js and Vercel",
+    "format": "png"
+  },
+  "src/content/blog/2025/250410-globalization-next-era.md": {
+    "lastModified": 1745933542101.3533,
+    "outputPath": "public/thumbnails/blog/bg_rotate.jpg",
+    "title": "Tariffs & Next Era After Globalization",
+    "format": "jpg"
+  },
+  "src/content/blog/2025/Building GPT for my EDM Music Journey.md": {
+    "lastModified": 1745219068378.3362,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Building GPT for my EDM Music Journey",
+    "format": "png"
+  },
+  "src/content/blog/2025/Malaysia's History Exploration.md": {
+    "lastModified": 1745219068378.3362,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Malaysia's History Exploration",
+    "format": "png"
+  },
+  "src/content/blog/2025/On capturing my processing work - ccapturejs.md": {
+    "lastModified": 1745219068378.3362,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "BlogTemplateTitle",
+    "format": "png"
+  },
+  "src/content/blog/2025/Setup for Blog & Portfolio.md": {
+    "lastModified": 1745933549211.4731,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "BlogTemplateTitle",
+    "format": "png"
+  },
+  "src/content/blog/2025/Setup for my generative art.md": {
+    "lastModified": 1745219068373.3362,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "BlogTemplateTitle",
+    "format": "png"
+  },
+  "src/content/blog/2025/Setup for my webdev.md": {
+    "lastModified": 1745219068378.3362,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Setup for my webdev",
+    "format": "png"
+  },
+  "src/content/blog/2025/Setup for website development.md": {
+    "lastModified": 1745933551741.5156,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "BlogTemplateTitle",
+    "format": "png"
+  },
+  "src/content/blog/2025/Simplify Subjects for my kids.md": {
+    "lastModified": 1745219068378.3362,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Simplify Subjects",
+    "format": "png"
+  },
+  "src/content/blog/2025/The Malaysian's Favourite Clock.md": {
+    "lastModified": 1745219068373.3362,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "The Malaysian's Favorite Clock",
+    "format": "png"
+  },
+  "src/content/blog/2025/Unlocking the World of Shaders with P5.js - A Beginner's Guide.md": {
+    "lastModified": 1745219068373.3362,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Unlocking the World of Shaders with P5.js: A Beginner's Guide",
+    "format": "png"
+  },
+  "src/content/blog/2025/What & Why Bursa Malaysia.md": {
+    "lastModified": 1745219068379.3364,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Bursa Malaysia: 5-Minute Beginner's Guide",
+    "format": "png"
+  },
+  "src/content/blog/2025/blog_template.md": {
+    "lastModified": 1745933545184.4053,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "BlogTemplateTitle",
+    "format": "png"
+  },
+  "src/content/blog/250411-A Choice of Kipling's Verse (1943).md": {
+    "lastModified": 1745219068371.336,
+    "outputPath": "public/thumbnails/blog/250411-a-choice-of-kiplings-verse-1943.svg",
+    "title": "If—",
+    "format": "svg"
+  },
+  "src/content/blog/250429-my-ongoing-journey.md": {
+    "lastModified": 1745932310956.197,
+    "outputPath": "public/thumbnails/blog/250429-my-ongoing-journey.svg",
+    "title": "My Ongoing Journey",
+    "format": "svg"
+  },
+  "src/content/blog/_draft/221212-how_should_i_start_my_blog.md": {
+    "lastModified": 1745219068387.3367,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Embarking on Your Blogging Journey: A Starter Guide",
+    "format": "png"
+  },
+  "src/content/blog/_draft/221215-disable_right_click.md": {
+    "lastModified": 1745219068387.3367,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Disabling Right-Click on Your Website",
+    "format": "png"
+  },
+  "src/content/blog/_draft/230606-personal_website_progress.md": {
+    "lastModified": 1745219068379.3364,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Personal Website Progress 2023",
+    "format": "png"
+  },
+  "src/content/blog/_draft/230609-figma_crash_course.md": {
+    "lastModified": 1745219068405.3372,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Figma Crash Course: Unlocking Core Features",
+    "format": "png"
+  },
+  "src/content/blog/_draft/230614-optimizing_google_fonts.md": {
+    "lastModified": 1745219068405.3372,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Optimizing Google Fonts for Speed and Security",
+    "format": "png"
+  },
+  "src/content/blog/_draft/230615-manual_bulk_webp_image_for_wordpress.md": {
+    "lastModified": 1745219068387.3367,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Streamlining .WebP Image Conversion & Serving for WordPress Websites",
+    "format": "png"
+  },
+  "src/content/blog/_draft/230618-block_website_access_via_htpasswd.md": {
+    "lastModified": 1745219068387.3367,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Securing Your WordPress Staging Site with Basic Password Protection",
+    "format": "png"
+  },
+  "src/content/blog/_draft/230618-ga4_how_to_conversion.md": {
+    "lastModified": 1745219068387.3367,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "How to Configure GA4 Goals and Conversions",
+    "format": "png"
+  },
+  "src/content/blog/_draft/230711-wordpress_conditional_tags.md": {
+    "lastModified": 1745219068387.3367,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Understanding WordPress Conditional Tags",
+    "format": "png"
+  },
+  "src/content/blog/_draft/230713-wordpress_conditional_tags copy.md": {
+    "lastModified": 1745219068387.3367,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Importing Data from a CSV File: A Guide for WordPress Developers",
+    "format": "png"
+  },
+  "src/content/blog/_draft/230718-form_data_to_google_sheet.md": {
+    "lastModified": 1745219068387.3367,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Creating a Simple Form to Google Sheets Database",
+    "format": "png"
+  },
+  "src/content/blog/_draft/230723-premature_optimization.md": {
+    "lastModified": 1745219068387.3367,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Premature Optimization: A Developer's Guide",
+    "format": "png"
+  },
+  "src/content/blog/_draft/230821-UXUI_kiss.md": {
+    "lastModified": 1745219068387.3367,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "UXUI Design: KISS",
+    "format": "png"
+  },
+  "src/content/blog/_draft/230831-atomic_habit.md": {
+    "lastModified": 1745219068387.3367,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Mastering the Art of Habit Formation: A Deep Dive into Atomic Habits",
+    "format": "png"
+  },
+  "src/content/blog/_draft/231126-mvp of blog and portfolio.md": {
+    "lastModified": 1745219068405.3372,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "MVP of Blog & Portfolio",
+    "format": "png"
+  },
+  "src/content/blog/_draft/231202-nice_ai_art.md": {
+    "lastModified": 1745219068405.3372,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Nice AI Art",
+    "format": "png"
+  },
+  "src/content/blog/_draft/231204-circles_goes_wiggling.md": {
+    "lastModified": 1745219068405.3372,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Sketch of circles wiggling.",
+    "format": "png"
+  },
+  "src/content/blog/_draft/240505-new_chapter.md": {
+    "lastModified": 1745219068379.3364,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "New Chapter for Career",
+    "format": "png"
+  },
+  "src/content/blog/_draft/241016-kise.md": {
+    "lastModified": 1745219068387.3367,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Keep it Simple, Essential | Focusing on What Really Matters",
+    "format": "png"
+  },
+  "src/content/blog/_draft/241126-inertia.md": {
+    "lastModified": 1745219068387.3367,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Inertia, Keep Going, Keep Rolling",
+    "format": "png"
+  },
+  "src/content/blog/_draft/241205-rabbit holes goes on forever.md": {
+    "lastModified": 1745219068387.3367,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Down the Rabbit Hole: The Endless Journey of Learning",
+    "format": "png"
+  },
+  "src/content/blog/_draft/241212-Why I Chose Astro.js for My Web Development Journey.md": {
+    "lastModified": 1745219068379.3364,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Why I Chose Astro.js for My Web Development Journey",
+    "format": "png"
+  },
+  "src/content/blog/_draft/250323-how-to-start-creative-coding.md": {
+    "lastModified": 1745219068390.3367,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Why Creative Coding Matters",
+    "format": "png"
+  },
+  "src/content/blog/_draft/250323-why-creative-coding.md": {
+    "lastModified": 1745219068387.3367,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Why Creative Coding Matters",
+    "format": "png"
+  },
+  "src/content/blog/_draft/250412-ai-trends-my-take-perspective.md": {
+    "lastModified": 1745219068405.3372,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "AI Trends & My Take & Perspective",
+    "format": "png"
+  },
+  "src/content/blog/_draft/250412-no-code-web-dev.md": {
+    "lastModified": 1745219068387.3367,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "No-code Website Design & Development",
+    "format": "png"
+  },
+  "src/content/blog/_draft/250413-ai-instructions-general.md": {
+    "lastModified": 1745219068387.3367,
+    "outputPath": "public/thumbnails/blog/250413-ai-instructions-general.svg",
+    "title": "AI Agent (Cursor) Memory Bank Implementation Guide",
+    "format": "svg"
+  }
+}

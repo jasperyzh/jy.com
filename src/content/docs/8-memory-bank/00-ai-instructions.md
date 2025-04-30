@@ -2,7 +2,7 @@
 title: AI Instructions
 description: Guidelines for AI agents to effectively work with this project.
 pubDate: 250408
-draft: 0
+draft: 1
 ---
 
 # AI Agent Instructions - jasperyong.com

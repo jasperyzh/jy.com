@@ -16,7 +16,7 @@ const { date, title, description, tags } = Astro.props;
 <header>
   {date && <FormattedDate date={formatYymmddDate(date)} />}
   {title && <h1>{title}</h1>}
-  {description && <p>{description}</p>}
+  {description && <p class="italic text-balance">{description}</p>}
   <div class="flex flex-wrap items-center text-sm">
     {
       tags && tags.length > 0 && (

@@ -2,7 +2,7 @@
 title: How to use LocalStorage for UI State Persistence
 description: Learn how to implement collapsible sections with localStorage to remember user preferences
 pubDate: 250410
-draft: 0
+draft: 1
 ---
 
 # Creating Collapsible Sections with LocalStorage Persistence

@@ -23,7 +23,7 @@ export async function getStaticPaths() {
 
   // Filter out draft posts (unless in development)
   const publishedDocs = import.meta.env.DEV
-    ? allDocs
+    ? allDocs.filter((doc) => !doc.data.draft)
     : allDocs.filter((doc) => !doc.data.draft);
 
   // Generate paths for each document
