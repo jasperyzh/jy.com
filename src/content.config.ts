@@ -94,15 +94,15 @@ const resume = defineCollection({
         highlights: z.array(z.string()),
       })
     ),
-    personalAchievements: z.array(z.string()),
-    professionalPhilosophy: z.string(),
+    personalAchievements: z.array(z.string()).optional(),
+    professionalPhilosophy: z.string().optional(),
     technicalExpertise: z.object({
       languages: z.array(z.string()),
       frontendTechnologies: z.array(z.string()),
       backendTechnologies: z.array(z.string()),
       tools: z.array(z.string()),
       designSoftware: z.array(z.string()),
-      databases: z.array(z.string()),
+      databases: z.array(z.string()).optional(),
     }),
     additionalCompetencies: z.array(z.string()),
     education: z.array(
@@ -149,6 +149,7 @@ const portfolio = defineCollection({
         caption: z.string().optional(),
       })
     ),
+    order: z.number().optional(),
   }),
 });
 

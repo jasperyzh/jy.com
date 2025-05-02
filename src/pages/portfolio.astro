@@ -1,7 +1,8 @@
 ---
 import Layout from "@/layouts/BaseLayout.astro";
 import { Badge } from "@/components/starwind/badge";
-import { Button } from "@/components/starwind/button";
+import ContactCTA from "@/components/ContactCTA.astro";
+
 import {
   Card,
   CardContent,
@@ -12,6 +13,9 @@ import {
 } from "@/components/starwind/card";
 import PageSidebar from "@/layouts/PageSidebar.astro";
 import { formatForUrl } from "@/utils/blogUtils";
+
+import FormattedDate from "@/components/FormattedDate.astro";
+import { formatYymmddDate } from "@/utils/formatDate";
 
 import { SITE_TITLE } from "../consts";
 import { getCollection, type CollectionEntry } from "astro:content";
@@ -27,9 +31,20 @@ const publishedPortfolioItems = import.meta.env.DEV
 
 // Sort projects by date (newest to oldest)
 const sortedProjects = publishedPortfolioItems.sort((a, b) => {
-    const dateA = new Date(a.data.date);
-    const dateB = new Date(b.data.date);
-    return dateB.getTime() - dateA.getTime();
+  // Primary sort: by 'order' property (ascending), treat missing order as high value
+  const orderA = a.data.order ?? Infinity;
+  const orderB = b.data.order ?? Infinity;
+
+  console.log(orderA, orderB);
+
+  if (orderA !== orderB) {
+    return orderA - orderB;
+  }
+
+  // Secondary sort: by date (descending - newest first) if orders are equal or missing
+  const dateA = new Date(a.data.date);
+  const dateB = new Date(b.data.date);
+  return dateB.getTime() - dateA.getTime();
 });
 
 // Extract all unique tags and categories with counts
@@ -46,11 +61,12 @@ publishedPortfolioItems.forEach((item) => {
       tagCounts[tag] = (tagCounts[tag] || 0) + 1;
     });
   }
-  
+
   // Process categories
   if (item.data.category) {
     allCategories.add(item.data.category);
-    categoryCounts[item.data.category] = (categoryCounts[item.data.category] || 0) + 1;
+    categoryCounts[item.data.category] =
+      (categoryCounts[item.data.category] || 0) + 1;
   }
 });
 
@@ -79,102 +95,104 @@ const sortedCategories = Array.from(allCategories).sort();
       categoryCounts={categoryCounts}
       allItemsCount={publishedPortfolioItems.length}
       formatTagUrl={(tag) => `/portfolio/tag/${formatForUrl(tag)}`}
-      formatCategoryUrl={(category) => `/portfolio/category/${formatForUrl(category)}`}
+      formatCategoryUrl={(category) =>
+        `/portfolio/category/${formatForUrl(category)}`}
     />
-      
+
     <!-- Portfolio grid -->
     <section class="posts-grid">
       {
         sortedProjects.map((project, projectIndex) => (
-          <Card class="card hover:border-primary/50 transition-colors overflow-hidden group">
-            <CardHeader class="p-0 mb-3">
-              {project.data.thumbnail && (
+          <Card class="card hover:border-primary/50 transition-colors overflow-hidden group lg:!col-span-3">
+            {project.data.thumbnail && (
+              <figure class="overflow-hidden">
                 <img
                   src={project.data.thumbnail}
                   alt={project.data.title}
-                  class="aspect-[4/3] w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
+                  class="object-cover w-full h-full aspect-[4/3] transform group-hover:scale-104 transition-transform duration-200"
                   loading="lazy"
                 />
-              )}
-            </CardHeader>
-            <CardContent class="pb-1">
-              <span class="text-sm text-gray-500 dark:text-gray-400 my-2 block">
-                 {new Date(project.data.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
-              </span>
-              <CardTitle class="text-balance mb-2">{project.data.title}</CardTitle>
-              {project.data.description && (
-                <CardDescription class="text-balance">
-                  {project.data.description}
-                </CardDescription>
-              )}
-            </CardContent>
-            <CardFooter class="flex-col items-start pb-4">
-               {project.data.category && (
-                  <Badge variant="outline" class="mb-3">{project.data.category}</Badge>
-               )}
-               {project.data.tags && project.data.tags.length > 0 && (
-                <div class="flex flex-wrap gap-1 mb-3">
-                  {project.data.tags.slice(0, 3).map((tag) => (
-                    <Badge>{tag}</Badge>
-                  ))}
-                  {project.data.tags.length > 3 && (
-                    <span class="text-xs text-gray-500 dark:text-gray-400">
-                      +{project.data.tags.length - 3} more
-                    </span>
+              </figure>
+            )}
+
+            <div class="card-content pb-5 md:py-4">
+              <CardHeader class="py-0">
+                {/* <time class={`font-mono text-lg `}>
+                  {project.data.date &&
+                    formatYymmddDate(project.data.date).toLocaleDateString(
+                      "en-US",
+                      {
+                        year: "numeric",
+                        month: "long",
+                      }
+                    )}
+                </time> */}
+                <CardTitle class="text-balance mb-2">
+                  {project.data.title}
+                </CardTitle>
+              </CardHeader>
+
+              <CardContent class="pb-1">
+                {project.data.description && (
+                  <CardDescription class="text-balance mb-4">
+                    {project.data.description}
+                  </CardDescription>
+                )}
+              </CardContent>
+              <CardFooter class="flex-col items-start py-0">
+                <div class="flex flex-wrap gap-2">
+                  {project.data.category && (
+                    <Badge variant="ghost" size="lg">
+                      {project.data.category}
+                    </Badge>
                   )}
+                  {project.data.tags &&
+                    project.data.tags.length > 0 &&
+                    project.data.tags.map((tag) => (
+                      <Badge>{tag}</Badge>
+                    ))}
                 </div>
-               )}
-               {/* Make the entire card clickable as a gallery trigger */}
-               <a
-                 href="#"
-                 data-project-index={projectIndex}
-                 class="stretched-link gallery-trigger"
-                 aria-label={`View gallery for ${project.data.title}`}
-               />
-            </CardFooter>
+              </CardFooter>
+            </div>
+            <a
+              href="#"
+              data-project-index={projectIndex}
+              class="stretched-link gallery-trigger"
+              aria-label={`View gallery for ${project.data.title}`}
+            />
           </Card>
         ))
       }
     </section>
 
-    <!-- Contact CTA -->
-    <section
-      class="text-white text-center md:m-16 my-16 p-12 rounded-lg shadow-lg bg-gradient-to-br from-slate-700 to-slate-800"
-    >
-      <h2 class="text-4xl font-bold mb-4">Interested in working together?</h2>
-      <p class="text-lg mb-8">
-        Let's discuss your project and bring your ideas to life.
-      </p>
-      <Button size="lg" href="mailto:jasper.yzh@gmail.com" target="_blank" class="inline-flex items-center">
-        <Icon name="bi:envelope-fill" class="h-5 w-5 me-2" /> 
-        <span>Get in Touch</span>
-      </Button>
-    </section>
+    <ContactCTA />
 
     <!-- Hidden container with all project images for PhotoSwipe -->
     <div class="hidden">
       <div class="pswp-gallery-all">
         {
-          sortedProjects.map((project, projectIndex) =>
-            project.data.images && project.data.images.map((image, imageIndex) => (
-              <a
-                href={image.src}
-                data-pswp-width={image.width}
-                data-pswp-height={image.height}
-                data-global-index={imageIndex + projectIndex * 100}
-                data-project-index={projectIndex}
-                data-image-index={imageIndex}
-                class="gallery-item-hidden"
-                data-pswp-caption={`<div class="pswp__title">${project.data.title}</div><div class="pswp__description">${image.caption || ""}</div>`}
-              >
-                <img
-                  src={image.src}
-                  alt={image.caption || `Image for ${project.data.title}`}
-                  loading="lazy"
-                  class="hidden"
-                />
-              </a>
-            ))
+          sortedProjects.map(
+            (project, projectIndex) =>
+              project.data.images &&
+              project.data.images.map((image, imageIndex) => (
+                <a
+                  href={image.src}
+                  data-pswp-width={image.width}
+                  data-pswp-height={image.height}
+                  data-global-index={imageIndex + projectIndex * 100}
+                  data-project-index={projectIndex}
+                  data-image-index={imageIndex}
+                  class="gallery-item-hidden"
+                  data-pswp-caption={`<div class="pswp__title">${project.data.title}</div><div class="pswp__description">${image.caption || ""}</div>`}
+                >
+                  <img
+                    src={image.src}
+                    alt={image.caption || `Image for ${project.data.title}`}
+                    loading="lazy"
+                    class="hidden"
+                  />
+                </a>
+              ))
           )
         }
       </div>
@@ -236,61 +254,59 @@ const sortedCategories = Array.from(allCategories).sort();
       });
 
       // Add click handlers to all gallery triggers (the card links)
-      document
-        .querySelectorAll(".gallery-trigger")
-        .forEach((item) => {
-          item.addEventListener("click", (e) => {
-            e.preventDefault();
+      document.querySelectorAll(".gallery-trigger").forEach((item) => {
+        item.addEventListener("click", (e) => {
+          e.preventDefault();
 
-            // Get the project index
-            const projectIndex = item.getAttribute("data-project-index");
-            if (!projectIndex) return;
+          // Get the project index
+          const projectIndex = item.getAttribute("data-project-index");
+          if (!projectIndex) return;
 
-            // Find starting index for this project
-            const startIndex = projectStartIndices[projectIndex] || 0;
+          // Find starting index for this project
+          const startIndex = projectStartIndices[projectIndex] || 0;
 
-            // Create new PhotoSwipe instance with all images
-            const pswp = new PhotoSwipe({
-              dataSource: allGalleryItems,
-              appendToEl: document.body,
-              index: startIndex,
-              closeOnVerticalDrag: true,
-              loop: true,
-              padding: { top: 20, bottom: 20, left: 20, right: 20 },
-            });
-
-            // Add custom caption
-            pswp.on("uiRegister", () => {
-              if (pswp.ui) {
-                pswp.ui.registerElement({
-                  name: "custom-caption",
-                  order: 9,
-                  isButton: false,
-                  appendTo: "root",
-                  html: "",
-                  onInit: (el) => {
-                    pswp.on("change", () => {
-                      if (
-                        pswp.currSlide &&
-                        pswp.currIndex >= 0 &&
-                        pswp.currIndex < allGalleryItems.length
-                      ) {
-                        const currentItem = allGalleryItems[pswp.currIndex];
-                        if (currentItem && currentItem.caption) {
-                          el.innerHTML = currentItem.caption;
-                        } else {
-                          el.innerHTML = "";
-                        }
-                      }
-                    });
-                  },
-                });
-              }
-            });
-
-            pswp.init();
+          // Create new PhotoSwipe instance with all images
+          const pswp = new PhotoSwipe({
+            dataSource: allGalleryItems,
+            appendToEl: document.body,
+            index: startIndex,
+            closeOnVerticalDrag: true,
+            loop: true,
+            padding: { top: 20, bottom: 20, left: 20, right: 20 },
           });
+
+          // Add custom caption
+          pswp.on("uiRegister", () => {
+            if (pswp.ui) {
+              pswp.ui.registerElement({
+                name: "custom-caption",
+                order: 9,
+                isButton: false,
+                appendTo: "root",
+                html: "",
+                onInit: (el) => {
+                  pswp.on("change", () => {
+                    if (
+                      pswp.currSlide &&
+                      pswp.currIndex >= 0 &&
+                      pswp.currIndex < allGalleryItems.length
+                    ) {
+                      const currentItem = allGalleryItems[pswp.currIndex];
+                      if (currentItem && currentItem.caption) {
+                        el.innerHTML = currentItem.caption;
+                      } else {
+                        el.innerHTML = "";
+                      }
+                    }
+                  });
+                },
+              });
+            }
+          });
+
+          pswp.init();
         });
+      });
     } catch (error) {
       console.error("Failed to initialize PhotoSwipe:", error);
     }
@@ -351,45 +367,3 @@ const sortedCategories = Array.from(allCategories).sort();
     object-fit: contain;
   }
 </style>
-
-<!-- <style>
-  .posts-grid {
-    display: grid;
-    /* Use subgrid to align items within the parent grid defined in BaseLayout */
-    grid-template-columns: subgrid;
-    grid-column: 1 / -1;
-    gap: 1.5rem; /* Add gap between cards */
-
-    /* Default to 1 column */
-    & > * {
-        grid-column: auto / span 12;
-    }
-
-    /* 2 columns on medium screens */
-    @media (min-width: 768px) {
-      & > * {
-        grid-column: auto / span 6;
-      }
-    }
-
-    /* 3 columns on large screens */
-    @media (min-width: 1024px) {
-      /* Account for sidebar */
-      grid-column: 4 / -1;
-      
-      & > * {
-        grid-column: auto / span 1;
-      }
-    }
-  }
-
-  .card {
-    /* Ensure cards fill the grid cell height */
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-  .card > *:last-child {
-      margin-top: auto; /* Push footer to bottom */
-  }
-</style> -->

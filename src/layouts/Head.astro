@@ -15,9 +15,18 @@ const {
 } = Astro.props as Props;
 
 // Construct full title with site name if not already included
-const pageTitle = title !== SITE_TITLE && !title?.includes(SITE_TITLE) 
-  ? `${title} | ${SITE_TITLE}` 
-  : title;
+let pageTitle: string;
+
+if (title === "Home") {
+  // Special case for homepage: Site Title | Home
+  pageTitle = `${SITE_TITLE} | ${title}`;
+} else if (title && title !== SITE_TITLE && !title.includes(SITE_TITLE)) {
+  // Other pages: Page Title | Site Title
+  pageTitle = `${title} | ${SITE_TITLE}`;
+} else {
+  // Default case (e.g., when title is undefined or already SITE_TITLE)
+  pageTitle = title || SITE_TITLE; // Use title if provided, otherwise default to SITE_TITLE
+}
 
 // Ensure image URL is absolute
 const imageUrl = new URL(image, Astro.url);

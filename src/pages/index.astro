@@ -2,172 +2,241 @@
 import Layout from "@/layouts/BaseLayout.astro";
 import { SITE_DESCRIPTION } from "../consts";
 import LandingPage from "@/components/LandingPage.astro";
-import HeroExplosion from "./demo/demo-hero-explosion.astro";
+// import HeroExplosion from "./demo/demo-hero-explosion.astro";
+import Button from "@/components/starwind/button/Button.astro";
+import { Icon } from "astro-icon/components";
 
 // Redirect to coming-soon page in production
 const isProduction = import.meta.env.PROD;
 ---
 
 <Layout title="Home" description={SITE_DESCRIPTION}>
-  {isProduction && <script>window.location.href = "/coming-soon";</script>}
+  <!-- {isProduction && <script>window.location.href = "/coming-soon";</script>} -->
 
-  <section class="bg-slate-800 py-6 overflow-hidden">
+  <!-- <section class="bg-slate-800 py-6 overflow-hidden">
     <div class="container mx-auto flex justify-center">
       <HeroExplosion />
     </div>
-  </section>
+  </section> -->
+
   <!-- <LandingPage /> -->
   <!-- Header Section -->
-  <!-- <header class="bg-white dark:bg-gray-900 py-8 px-4">
-    <div class="max-w-4xl mx-auto">
-      <h1 class="text-6xl font-normal leading-16">
-        An attempt to understand <span class="block"
-          >web development, design</span
-        > and everything in between
-      </h1>
-      <div class="mt-4 text-gray-600 dark:text-gray-400">
-        <span>A collection of work and thoughts by</span>
-        <a
-          href="/about"
-          class="border-b border-gray-400 ml-1 dark:hover:text-white"
-          >Jasper Yong</a
+
+  <main class="my-6 lg:mb-16">
+    <!-- Section 1: Intro -->
+    <section class="intro grid-container">
+      <h1
+        class="heading-with-number text-5xl md:text-7xl lg:text-8xl font-medium col-start-2 md:col-start-1"
+        data-number="1.1"
+      >
+        <span class="inline-block tracking-wider align-baseline">Building.</span
         >
-      </div>
-    </div>
-  </header> -->
+        <span class="inline-block tracking-wider align-baseline"
+          >Exploring.</span
+        >
+        <span class="inline-block tracking-wider align-baseline">Sharing.</span>
+      </h1>
+      <p
+        class="text-sm text-gray-500 col-span-6 text-right lg:col-start-5 lg:col-span-2 lg:mt-[-3rem] lg:px-4 row-start-2 self-end justify-self-end text-balance"
+      >
+        While not in front of a keyboard,
+        <br />I'm probably out enjoying the sun,
+        <br />or cleaning up the house.
+      </p>
 
-  <!-- Introduction Section -->
-  <!-- <section
-    class="bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-8 px-4"
-  >
-    <div class="max-w-4xl mx-auto">
-      <div class="md:grid md:grid-cols-6 md:gap-8">
-        <div class="md:col-span-4 mb-6 md:mb-0 text-lg">
-          <p>
-            Welcome to my digital space. I'm Jasper Yong, a developer and
-            designer exploring the intersection of technology, aesthetics, and
-            problem-solving. This site serves as my personal hub – a collection
-            of projects, technical writings from my notes, and experiments in
-            creative coding.
-          </p>
-          <p>
-            Here, I document my journey in understanding web development, design
-            principles, and everything in between.
-          </p>
-        </div>
-        <div class="md:col-span-2">
-          <div
-            class="aspect-square bg-gray-200 dark:bg-gray-700 flex items-center justify-center"
-          >
-            <span class="text-gray-400 dark:text-gray-500">Portrait</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section> -->
+      <hr class="col-span-6 border-0" />
 
-  <!-- Principles Section -->
-  <!-- <section
-    class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 py-8 px-4"
-  >
-    <div class="max-w-4xl mx-auto">
-      <div class="mb-8">
-        <h2 class="text-2xl font-normal dark:text-white mb-2">
-          Dieter Rams' Ten Principles
+      <p class="mb-6 leading-7 col-span-6 md:col-span-4">
+        Welcome. I'm Jasper, a Full-Stack Developer, Creative Coder, and
+        lifelong learner navigating the intersection of technology, creativity,
+        and intentional living. This is where I share my professional portfolio,
+        creative coding experiments, and reflections on the craft and the
+        journey of living well.
+      </p>
+
+      <div class="flex flex-wrap gap-4 mb-6 col-span-6">
+        <Button href="/sketches" variant="primary">Explore My Work</Button>
+        <Button href="/blog" variant="secondary">Read the Blog</Button>
+      </div>
+
+      <!-- <hr class="col-span-6 my-4 border-0" /> -->
+    </section>
+
+    <!-- <hr class="col-span-6 my-5" /> -->
+
+    <section class="the-designer grid-container !mt-12 md:!mt-4">
+      <figure
+        class="w-40 h-40 md:w-56 md:h-56 bg-gray-300 rounded-full mx-auto md:mx-0 self-center align-center col-span-2 col-start-1 row-start-1 md:row-start-1 md:row-span-2"
+      >
+        <img
+          src="/img/placeholder.png"
+          alt="The Designer Portrait"
+          class="w-full h-full object-cover rounded-full"
+        />
+      </figure>
+
+      <header class="col-start-3 col-span-4 md:col-span-4 row-start-1">
+        <hr class="col-span-6 my-6" />
+        <h2 class="heading-with-number !text-4xl font-medium" data-number="1.2">
+          Learning, Living Well
         </h2>
-        <p class="text-gray-600 dark:text-gray-400">
-          Back in the early 1980s, Dieter Rams asked himself an important
-          question: "Is my design good design?" Since good design can't be
-          measured in a finite way, he set about expressing the ten most
-          important principles for what he considered was good design.
+        <p class="text-gray-500 italic">(Wow, where I heard that before?)</p>
+      </header>
+
+      <div
+        class="the-designer__intro col-span-6 md:col-span-4 col-start-1 lg:col-start-3"
+      >
+        <p class="mb-6 leading-7">
+          My professional path began with a passion for crafting digital
+          experiences, honed over nearly a decade building robust web solutions.
+          Alongside this technical expertise, a deeper reflection on personal
+          growth and purpose has become a central drive. This site is born from
+          that ongoing journey – a commitment to continuous learning, building
+          foundational knowledge, and sharing the process.
+        </p>
+        <p>
+          It's about finding clarity through structure, whether that's in clean
+          code, efficient systems, meaningful documentation, or simply
+          articulating a thought through writing.
         </p>
       </div>
+    </section>
 
-      <div class="md:grid md:grid-cols-2 md:gap-6 mb-8">
+    <section class="what-you-discover grid-container">
+      <hr class="col-span-6 my-4 border-0" />
+      <header class="col-span-4">
+        <hr class="col-span-6 my-6" />
+        <h2 class="heading-with-number !text-4xl font-medium" data-number="1.3">
+          What You'll Discover
+        </h2>
+        <p class="text-gray-500 italic">
+          Explore the pillars of my work and thoughts
+        </p>
+      </header>
+
+      <!-- <h3 class="mt-12 mb-6">Good design is...</h3> -->
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8 col-span-6"
+      >
+        <!-- Card 3: Creative Code -->
         <div
-          class="mb-6 md:mb-0 aspect-square bg-gray-100 dark:bg-gray-800 flex items-center justify-center"
+          class="p-6 rounded-lg border shadow-sm hover:shadow-md transition-shadow duration-200"
         >
-          <span class="text-gray-400 dark:text-gray-500"
-            >Dieter Rams Portrait</span
-          >
+          <Icon name="bi:code-slash" class="w-6 h-6 mb-2 text-red-500" />
+          <h3 class="text-lg font-semibold mb-2">Creative Code</h3>
+          <p class="text-sm text-gray-600">
+            Experiments and explorations at the intersection of code, art, and
+            design – bringing ideas to life visually.
+          </p>
         </div>
+        <!-- Card 1: Blog -->
         <div
-          class="aspect-square bg-gray-100 dark:bg-gray-800 flex items-center justify-center"
+          class="p-6 rounded-lg border shadow-sm hover:shadow-md transition-shadow duration-200"
         >
-          <span class="text-gray-400 dark:text-gray-500">Braun Products</span>
+          <Icon name="bi:book" class="w-6 h-6 mb-2 text-blue-500" />
+          <h3 class="text-lg font-semibold mb-2">Blog</h3>
+          <p class="text-sm text-gray-600">
+            Reflections on technology, creativity, learning, and the practice of
+            living well. My space for sharing insights and navigating the
+            journey.
+          </p>
+        </div>
+        <!-- Card 4: Documentation -->
+        <div
+          class="p-6 rounded-lg border shadow-sm hover:shadow-md transition-shadow duration-200 row-start-2"
+        >
+          <Icon name="bi:journal-text" class="w-6 h-6 mb-2 text-green-500" />
+          <h3 class="text-lg font-semibold mb-2">Documentation</h3>
+          <p class="text-sm text-gray-600">
+            My personal blueprint for managing knowledge, building systems, and
+            detailing workflows in tech and beyond.
+          </p>
+        </div>
+        <!-- Card 2: Portfolio -->
+        <div
+          class="p-6 rounded-lg border shadow-sm hover:shadow-md transition-shadow duration-200 row-start-2"
+        >
+          <Icon name="bi:briefcase" class="w-6 h-6 mb-2 text-purple-500" />
+          <h3 class="text-lg font-semibold mb-2">Portfolio</h3>
+          <p class="text-sm text-gray-600">
+            A curated selection of professional full-stack web development
+            projects and impactful solutions I've built.
+          </p>
+        </div>
+        <!-- Card 5: Resume -->
+        <div
+          class="p-6 rounded-lg border shadow-sm hover:shadow-md transition-shadow duration-200 row-start-2"
+        >
+          <Icon
+            name="bi:file-earmark-person"
+            class="w-6 h-6 mb-2 text-yellow-500"
+          />
+          <h3 class="text-lg font-semibold mb-2">Resume</h3>
+          <p class="text-sm text-gray-600">
+            A summary of my professional background, experience, and technical
+            expertise.
+          </p>
         </div>
       </div>
+    </section>
+  </main>
 
-      <h3 class="text-xl font-normal dark:text-white mb-6">
-        Good design is...
-      </h3>
-
-      <div>
-        {
-          principles.map((principle) => (
-            <div class="border-t border-gray-200 dark:border-gray-700 py-6">
-              <div class="flex">
-                <span class="text-sm text-gray-400 dark:text-gray-500 w-12">
-                  {principle.number}
-                </span>
-                <div>
-                  <h3 class="text-lg  dark:text-white mb-2">
-                    {principle.title}
-                  </h3>
-                  <p class="text-gray-600 dark:text-gray-300">
-                    {principle.description}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Add number circles to heading elements
+      const headings = document.querySelectorAll(".heading-with-number");
+      headings.forEach((h2) => {
+        const number = h2.getAttribute("data-number"); // Use getAttribute instead of dataset
+        if (number) {
+          const numberSpan = document.createElement("span");
+          numberSpan.classList.add(
+            "bg-red-500",
+            "text-white",
+            "rounded-full",
+            "w-6",
+            "h-6",
+            "md:w-7",
+            "md:h-7", // Slightly larger on medium screens
+            "flex",
+            "items-center",
+            "justify-center",
+            "text-xs",
+            "font-bold",
+            "mr-3",
+            "flex-shrink-0", // Prevent shrinking,
+            "heading-with-number__span"
+          );
+          numberSpan.textContent = number;
+          h2.insertBefore(numberSpan, h2.firstChild);
         }
-      </div>
-    </div>
-  </section> -->
+      });
+    });
+  </script>
 
-  <!-- Work Section -->
-  <!-- <section
-    id="work"
-    class="bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-8 px-4"
-  >
-    <div class="max-w-4xl mx-auto">
-      <h2 class="text-2xl font-normal dark:text-white mb-8">Selected Work</h2>
-      <div class="md:grid md:grid-cols-2 md:gap-6">
-        {
-          projects.map((project) => (
-            <a href={project.href} class="block mb-8 group">
-              <div class="aspect-video bg-white dark:bg-gray-700 mb-2" />
-              <h3 class="text-lg  dark:text-white group-hover:underline">
-                {project.title}
-              </h3>
-            </a>
-          ))
-        }
-      </div>
-    </div>
-  </section> -->
+  <style is:inline>
+    /* 6-column grid layout */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 1rem;
+      width: 100%;
+      max-width: 1024px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+  </style>
 
-  <!-- Quote Section -->
-  <!-- <section
-    class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 py-8 px-4"
-  >
-    <div class="max-w-4xl mx-auto">
-      <blockquote class="text-xl font-normal text-gray-800 dark:text-gray-200">
-        "We designers, we don't work in a vacuum. We need business people. We
-        are not the fine artists we are often confused with. Today you find few
-        companies that take design seriously, as I see it."
-        <footer class="mt-4 text-lg text-gray-600 dark:text-gray-400">
-          — Dieter Rams
-        </footer>
-      </blockquote>
-    </div>
-  </section> -->
+  <style is:global>
+    /* heading-with-number */
+    h1.heading-with-number,
+    h2.heading-with-number {
+      position: relative;
+    }
+    h1.heading-with-number > span.heading-with-number__span,
+    h2.heading-with-number > span.heading-with-number__span {
+      position: absolute;
+      left: -3rem;
+      top: 0.5rem;
+    }
+  </style>
 </Layout>
-
-<style>
-  /* Add minimal base styles if needed */
-  section {
-    scroll-margin-top: 2rem;
-  }
-</style>

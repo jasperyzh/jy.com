@@ -5,11 +5,9 @@ pubDate: 250406
 draft: 1
 ---
 
-# My Personal Website
+## My Personal Website
 
-- documentation: https://rsync.samba.org/documentation.html
-## Why you need one?
+describe goal of my personal website:
+- a long-term project for my growth
+- the main hub and record for my journal, coding, learning and more
 
-
-
-### How to keep it simple and effortless to maintain?

@@ -8,33 +8,20 @@
     "linkedin": "https://www.linkedin.com/in/jaspery/",
     "location": "Kuala Lumpur, Malaysia"
   },
-  "summary": "Dedicated Full-Stack Web Developer with 9+ years of experience across Full-Stack Web and back-end development. Proficient in crafting responsive, user-centric web solutions for diverse industries. Proven ability in team leadership, optimize SEO, and manage project effectively. Passionate about delivering engaging web experiences and continuously expanding expertise in the latest technologies.",
-
+  "summary": "Dedicated Full-Stack Web Developer with 9+ years of experience spanning front-end, back-end, and full-stack development. Proven track record in leading teams, significantly boosting SEO performance, and effectively managing complex projects and concept to launch. Passionate about leveraging modern technologies to build engaging, user-centric web solutions and continuously exploring the intersection of technology, creativity, and effective knowledge systems.",
   "professionalExperience": [
     {
       "role": "Full-Stack Web Developer",
       "company": "Fishermen Analytics",
       "period": "Aug 2015 - May 2024",
-      "description": "Collaborate with startups and SMEs to develop and maintain websites and web applications using modern technologies.",
+      "description": "Partnered with startups and SMEs to architect, develop, and maintain scalable web applications and websites utilizing modern full-stack technologies.",
       "highlights": [
-        "Website Design & Development: Develop and maintain responsive websites using HTML, CSS, JavaScript, and WordPress. Optimized performance and reliability for seamless user experiences.",
-        "SEO & Analytics: Increased average SEO scores from 50 to 80+, boosting search engine visibility. Leveraged analytics to enhance user engagement.",
-        "Team Leadership: Lead a small team of developers and designers in delivering web solutions, from email templates to full-fledged websites with CMS. Implemented organizational tools, improving team communication and efficiency.",
-        "Project management: Managed projects for clients like Yayasan Petronas, Petrosains, Paramount Property, Taylor U",
-        "UI/UX improvements: Collaborated with content and design teams to enhance UI/UX, increasing user retention. Streamlined navigation and improve SEO consistency across all platforms. ",
-        "Multimedia Proficiency: Beyond web development, frequently assisted with graphic design, video editing tasks, showcasing versatility and supporting team success. Provide tech support, helping colleagues solve challenges in unfamiliar technical areas."
-      ]
-    },
-    {
-      "role": "Frontend Web Developer",
-      "company": "Tech Solutions Inc.",
-      "period": "June 2017 - Dec 2018",
-      "description": "Participated in the development and maintenance of web applications for corporate clients, leveraging modern JavaScript frameworks.",
-      "highlights": [
-        "Collaborated in agile teams to deliver high-quality web solutions",
-        "Implemented responsive UI components using React and state management",
-        "Integrated with RESTful APIs and GraphQL endpoints",
-        "Optimized applications for performance across devices"
+        "<strong>Website Design & Development</strong> – Developed and optimized responsive, user-centric websites and applications with HTML, CSS, JavaScript, and WordPress, enhancing performance and reliability.",
+        "<strong>SEO & Analytics</strong> – Spearheaded SEO initiatives, increasing average site scores from 50 to 80+% and significantly boosting organic search visibility. Analyzed user data to inform design and content strategies that improved engagement.",
+        "<strong>Team Leadership</strong> – Led a small cross-functional team of developers and designers, overseeing project delivery for diverse web solutions from ideation to deployment. Introduced organizational tools and pratices that enhanced team communication and efficiency.",
+        "<strong>Project management</strong> – Managed the full lifecycle of web development projects for key clients including Yayasan Petronas, Petrosains, Methodist College Kuala Lumpur, ensuring timely and on-budget delivery.",
+        "<strong>UI/UX improvements</strong> – Collaborated closely with design teams to implement UI/UX enhancements, improving user retention and engagement. Streamlined navigation and standardized SEO practices across client platforms.",
+        "<strong>Multimedia Proficiency</strong> – Apply versatile skills beyond web development,  assisting with multimedia tasks (design, video editing) to support project goals and providing technical mentorship to colleagues navigating new technologies."
       ]
     }
   ],
@@ -69,52 +56,54 @@
     },
     {
       "name": "BersatuForMakan - Fishermen x BFM Campaign",
-      "description": "Contributed to a collaborative campaign with BFM 89.9 to highlight Malaysia's rich culinary heritage after the omission from Netflix's Street Food series.",
+      "description": "Led the technical execution for a collaborative campaign (Fishermen x BFM 89.9), designing and developing a dedicated microsite from concept to launch.",
       "highlights": [
-        "Developed a dedicated microsite that played a key role in driving campaign success",
-        "With a modest budget of RM2000, reached almost 3 million people and generated RM700k in earned media",
-        "Achieved a 628% increase in engagement and sixfold growth in followers, providing significant PR mileage for BFM"
+        "Achieved exceptional results on a modest RM2000 budget, reached nearly 3 million people and generated RM700k in earned media value.",
+        "Drove a 628% increase in engagement and sixfold follower growth, delivered significant PR impact and visibility for the partner organization."
       ]
     }
   ],
 
-  "personalAchievements": [
-    "Self-Taught Developer: Successfully self-taught to become a seasoned full-stack web developer, continuously expanding expertise in the latest technologies and industry best practices",
-    "Team Leadership: Groomed junior developers, instilling best practices and reducing onboarding time. Pitched new project management processes that improved team cohesion and efficiency",
-    "Project Management: Managed projects from concept to launch, delivering on time and implementing agile methodologies for improved team productivity"
-  ],
-
-  "professionalPhilosophy": "I am passionate about continuous learning and creating impactful, user-centric solutions through cutting-edge technology. I value simplicity and clarity in design, and approach UX challenges with both philosophical and creative problem-solving. I strive for a balance in work and life through interests like music, woodworking, and art. Currently exploring AI integration in web development.",
+  "professionalPhilosophy": "Driven by a passion for continuous learning and building impactful, user-centric solutions at the intersection of technology and creative problem-solving.",
 
   "technicalExpertise": {
     "languages": ["HTML", "CSS", "JavaScript", "TypeScript", "PHP"],
     "frontendTechnologies": [
       "AstroJS",
-      "Vue.js",
       "TailwindCSS",
-      "BootstrapCSS",
       "WordPress",
-      "React"
+      "p5.js",
+      "BootstrapCSS",
+      "Vue.js",
+      "React",
+      "Phaser3"
     ],
-    "backendTechnologies": ["Node.js", "Express", "REST API Design"],
-    "tools": [
+    "backendTechnologies": [
       "Git / GitHub",
-      "Linux",
-      "Bash",
+      "Node.js / NPM",
+      "MySQL",
+      "CI/CD",
+      "Vercel",
       "Docker",
+      "Express",
+      "PostgreSQL"
+    ],
+    "tools": [
+      "Linux",
       "Obsidian.md",
-      "Cursor/ Windsurf",
-      "AI-Tools"
+      "Bash",
+      "VS Code",
+      "Cursor",
+      "Google Workspace",
+      "Postman",
+      "Windsurf"
     ],
     "designSoftware": [
       "Figma",
-      "Penpot",
-      "Adobe Photoshop",
-      "Adobe Illustrator",
-      "GIMP",
-      "Inkscape"
-    ],
-    "databases": ["PostgreSQL", "MySQL"]
+      "Adobe Photoshop / Illustrator",
+      "GIMP / Inkscape",
+      "Canva"
+    ]
   },
 
   "additionalCompetencies": [
@@ -147,15 +136,15 @@
   ],
 
   "languages": [
-    { "language": "English", "proficiency": "Fluent" },
-    { "language": "Mandarin", "proficiency": "Fluent" },
-    { "language": "Bahasa Malaysia", "proficiency": "Basic" }
+    { "language": "English", "proficiency": "90" },
+    { "language": "Mandarin", "proficiency": "80" },
+    { "language": "Bahasa Malaysia", "proficiency": "60" }
   ],
 
   "interests": [
-    "Continuous learning, self-improvement, and building",
-    "Generative Art and Creative Coding",
-    "Philosophy, Economics, and History",
+    "Exploring Generative Art and Creative Coding",
+    "Reading Philosophy, Economics, and History",
+    "Building Personal Knowledge Management Systems",
     "Exploring emerging technologies in web development"
   ]
 }

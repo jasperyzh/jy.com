@@ -1,5 +1,6 @@
 ---
 import Layout from "@/layouts/BaseLayout.astro";
+import ContactCTA from "@/components/ContactCTA.astro";
 
 import { getEntry } from "astro:content";
 import { Icon } from "astro-icon/components";
@@ -25,7 +26,6 @@ const {
   summary,
   professionalExperience,
   keyProjects,
-  personalAchievements,
   professionalPhilosophy,
   technicalExpertise,
   additionalCompetencies,
@@ -113,34 +113,34 @@ const {
     <main class="p-0 md:p-4 space-y-10">
       <!-- Professional Summary -->
       <section>
+        <hr class="col-span-6 my-6" />
         <h2>Professional Summary</h2>
-        <p class="text-lg">{summary}</p>
+        <p class="text-lg leading-8">{summary}</p>
       </section>
 
       <!-- Professional Experience -->
       <section>
+        <hr class="col-span-6 my-6" />
         <h2>Professional Experience</h2>
         <div class="space-y-6">
           {
             professionalExperience.map((experience) => (
-              <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+              <div class=" p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
                 <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-3 gap-2">
-                  <h3 class="text-xl font-bold">{experience.role}</h3>
+                  <h3 class="text-xl font-bold mb-3">{experience.role}</h3>
                   <div class="flex items-center gap-2">
-                    <span class="text-gray-600">{experience.company}</span>
+                    <span class=" text-lg">{experience.company}</span>
                     <Badge variant="outline">{experience.period}</Badge>
                   </div>
                 </div>
 
-                <p class="text-gray-700 mb-4">{experience.description}</p>
+                {/* <p class=" mb-5">{experience.description}</p> */}
 
-                <div class="space-y-4">
+                <ul class="space-y-4 ps-4">
                   {experience.highlights.map((highlight) => (
-                    <div>
-                      <p class="text-gray-700">{highlight}</p>
-                    </div>
+                    <li set:html={highlight} />
                   ))}
-                </div>
+                </ul>
               </div>
             ))
           }
@@ -149,9 +149,8 @@ const {
 
       <!-- Key Projects -->
       <section>
-        <h2 class="text-2xl font-bold mb-4 pb-2 border-b border-gray-200">
-          Key Projects
-        </h2>
+        <hr class="col-span-6 my-6" />
+        <h2>Key Projects</h2>
 
         <div class="grid grid-cols-1 gap-6">
           {
@@ -173,41 +172,12 @@ const {
           }
         </div>
       </section>
-
-      <!-- Personal Achievements -->
-      <section>
-        <h2 class="text-2xl font-bold mb-4 pb-2 border-b border-gray-200">
-          Personal Achievements
-        </h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {
-            personalAchievements.map((achievement) => (
-              <div class="bg-white p-4 rounded-lg shadow-sm">
-                <p class="text-gray-700">{achievement}</p>
-              </div>
-            ))
-          }
-        </div>
-      </section>
-
-      <!-- Professional Philosophy -->
-      <section>
-        <h2 class="text-2xl font-bold mb-4 pb-2 border-b border-gray-200">
-          Professional Philosophy
-        </h2>
-
-        <div class="bg-white p-6 rounded-lg shadow-sm">
-          <p class="text-gray-700">{professionalPhilosophy}</p>
-        </div>
-      </section>
-
     </main>
 
     <!-- Sidebar -->
     <aside class="space-y-8">
       <!-- Technical Expertise -->
-      <section class="bg-gray-50 p-6 rounded-lg shadow-sm">
+      <section class="p-6 rounded-lg shadow-sm">
         <h2 class="text-xl font-bold mb-4 pb-2 border-b border-gray-200">
           Technical Expertise
         </h2>
@@ -217,8 +187,10 @@ const {
             <h3 class="font-semibold mb-3">Languages</h3>
             <div class="flex flex-wrap gap-2">
               {
-                technicalExpertise.languages.map((lang) => (
-                  <Badge>{lang}</Badge>
+                technicalExpertise.languages.map((lang, index) => (
+                  <Badge variant={index >= 3 ? "ghost" : "default"}>
+                    {lang}
+                  </Badge>
                 ))
               }
             </div>
@@ -228,8 +200,10 @@ const {
             <h3 class="font-semibold mb-3">Frontend Technologies</h3>
             <div class="flex flex-wrap gap-2">
               {
-                technicalExpertise.frontendTechnologies.map((tech) => (
-                  <Badge>{tech}</Badge>
+                technicalExpertise.frontendTechnologies.map((tech, index) => (
+                  <Badge variant={index >= 4 ? "ghost" : "default"}>
+                    {tech}
+                  </Badge>
                 ))
               }
             </div>
@@ -239,8 +213,10 @@ const {
             <h3 class="font-semibold mb-3">Backend Technologies</h3>
             <div class="flex flex-wrap gap-2">
               {
-                technicalExpertise.backendTechnologies.map((tech) => (
-                  <Badge>{tech}</Badge>
+                technicalExpertise.backendTechnologies.map((tech, index) => (
+                  <Badge variant={index >= 5 ? "ghost" : "default"}>
+                    {tech}
+                  </Badge>
                 ))
               }
             </div>
@@ -249,7 +225,13 @@ const {
           <div>
             <h3 class="font-semibold mb-3">Tools</h3>
             <div class="flex flex-wrap gap-2">
-              {technicalExpertise.tools.map((tool) => <Badge>{tool}</Badge>)}
+              {
+                technicalExpertise.tools.map((tool, index) => (
+                  <Badge variant={index >= 5 ? "ghost" : "default"}>
+                    {tool}
+                  </Badge>
+                ))
+              }
             </div>
           </div>
 
@@ -257,39 +239,28 @@ const {
             <h3 class="font-semibold mb-3">Design Software</h3>
             <div class="flex flex-wrap gap-2">
               {
-                technicalExpertise.designSoftware.map((software) => (
-                  <Badge>{software}</Badge>
+                technicalExpertise.designSoftware.map((software, index) => (
+                  <Badge variant={index >= 1 ? "ghost" : "default"}>
+                    {software}
+                  </Badge>
                 ))
               }
-            </div>
-          </div>
-
-          <div>
-            <h3 class="font-semibold mb-3">Databases</h3>
-            <div class="flex flex-wrap gap-2">
-              {technicalExpertise.databases.map((db) => <Badge>{db}</Badge>)}
             </div>
           </div>
         </div>
       </section>
 
       <!-- Additional Competencies -->
-      <section class="bg-gray-50 p-6 rounded-lg shadow-sm">
+      <section class="p-6 rounded-lg shadow-sm">
         <h2 class="text-xl font-bold mb-4 pb-2 border-b border-gray-200">
           Additional Competencies
         </h2>
 
-        <div class="space-y-3">
+        <div class="space-y-4">
           {
             additionalCompetencies.map((competency) => (
               <div class="flex justify-between items-center">
                 <span class="font-medium">{competency}</span>
-                <div class="w-1/2 bg-gray-200 rounded-full h-2">
-                  <div
-                    class="bg-blue-600 h-2 rounded-full skill-bar-inner"
-                    data-width="90%"
-                  />
-                </div>
               </div>
             ))
           }
@@ -297,7 +268,7 @@ const {
       </section>
 
       <!-- Education -->
-      <section class="bg-gray-50 p-6 rounded-lg shadow-sm">
+      <section class="p-6 rounded-lg shadow-sm">
         <h2 class="text-xl font-bold mb-4 pb-2 border-b border-gray-200">
           Education
         </h2>
@@ -307,11 +278,11 @@ const {
             education.map((edu) => (
               <div class="relative pl-6 before:content-[''] before:absolute before:left-0 before:top-2 before:w-3 before:h-3 before:bg-blue-600 before:rounded-full before:z-10 after:content-[''] after:absolute after:left-1.5 after:top-2 after:h-full after:w-px after:bg-gray-300 after:-z-10">
                 <h3 class="font-semibold">{edu.degree}</h3>
-                <p class="text-gray-600">{edu.institution}</p>
+                <p class="">{edu.institution}</p>
                 <p class="text-gray-500">({edu.year})</p>
                 <ul class="list-disc list-inside mt-2">
                   {edu.highlights.map((highlight) => (
-                    <li class="text-gray-600">{highlight}</li>
+                    <li class="">{highlight}</li>
                   ))}
                 </ul>
               </div>
@@ -321,51 +292,74 @@ const {
       </section>
 
       <!-- Languages -->
-      <section class="bg-gray-50 p-6 rounded-lg shadow-sm">
+      <section class="p-6 rounded-lg shadow-sm">
         <h2 class="text-xl font-bold mb-4 pb-2 border-b border-gray-200">
           Languages
         </h2>
 
-        <div class="space-y-3">
+        <div class="grid grid-cols-[auto,1fr] gap-x-4 gap-y-3 items-center">
           {
-            languages.map((lang) => (
-              <div class="flex justify-between items-center">
-                <span class="font-medium">{lang.language}</span>
-                <div class="w-1/2 bg-gray-200 rounded-full h-2">
+            languages.map((lang) => {
+              // Directly use the proficiency value from the JSON data
+              const proficiencyValue = parseInt(lang.proficiency, 10);
+              const widthPercentage = `${proficiencyValue}%`;
+
+              return (
+                <>
+                  {/* Column 1: Language Name */}
+                  <span class="font-medium text-right">{lang.language}</span>
+
+                  {/* Column 2: Progress Bar */}
                   <div
-                    class="bg-blue-600 h-2 rounded-full skill-bar-inner"
-                    data-width="90%"
-                  />
-                </div>
-              </div>
-            ))
+                    class="bg-gray-200 rounded-full h-2 overflow-hidden"
+                    role="progressbar"
+                    aria-valuenow={proficiencyValue}
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    aria-label={`${lang.language} proficiency: ${widthPercentage}`}
+                    title={`${lang.language} proficiency: ${widthPercentage}`}
+                  >
+                    <div
+                      class="bg-blue-600 h-2 rounded-full skill-bar-inner"
+                      style={`width: ${widthPercentage};`}
+                    />
+                  </div>
+                </>
+              );
+            })
           }
         </div>
       </section>
 
       <!-- Interests & Continuous Learning -->
-      <section class="bg-gray-50 p-6 rounded-lg shadow-sm">
+      <section class="p-6 rounded-lg shadow-sm">
         <h2 class="text-xl font-bold mb-4 pb-2 border-b border-gray-200">
-          Interests & Continuous Learning
+          Interests
         </h2>
 
         <div class="space-y-4">
-          <div>
-            <h3 class="font-semibold mb-3">Interests</h3>
-            <div class="flex flex-wrap gap-2">
-              {
-                interests.map((interest) => (
-                  <Badge variant="secondary">{interest}</Badge>
-                ))
-              }
-            </div>
-          </div>
+          {
+            interests.map((interest) => (
+              <div class="flex justify-between items-center">
+                <span class="font-medium">{interest}</span>
+              </div>
+            ))
+          }
         </div>
       </section>
+      <!-- <section>
+        <h2 class="text-2xl font-bold mb-4 pb-2 border-b border-gray-200">
+          Professional Philosophy
+        </h2>
+
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+          <p class="text-gray-700">{professionalPhilosophy}</p>
+        </div>
+      </section> -->
     </aside>
 
     <!-- QR Code Section -->
-    <section id="resume__cta" class="justify-self-center">
+    <!-- <section id="resume__cta" class="justify-self-center">
       <div
         class="bg-white p-6 rounded-lg shadow-sm flex flex-col md:flex-row justify-between items-center gap-6"
       >
@@ -384,7 +378,9 @@ const {
           </p>
         </div>
       </div>
-    </section>
+    </section> -->
+
+      <ContactCTA />
   </div>
 </Layout>
 
@@ -421,13 +417,13 @@ const {
   });
 </script>
 
-
 <style>
   /* default styles */
   h2 {
     font-size: var(--text-2xl);
     font-weight: var(--font-weight-bold);
-    border-bottom: 1px solid var(--color-gray-200);
+    margin-bottom: 1rem;
+    /* border-bottom: 1px solid var(--color-gray-200); */
   }
 
   .resume__container {

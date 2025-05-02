@@ -49,11 +49,11 @@ const todayYear = new Date().getFullYear();
 
 <div class="footer_container">
   <div class="hello_world">
-    <HelloGreeting class="text-white" />
+    <HelloGreeting class="text-white ps-0" />
 
-    <p class="text-balance text-lg text-gray-300">
-      I'm currently available for select projects.
-      <br />If you're interested in collaborating, please reach out.
+    <p class="text-lg text-gray-300">
+      Interested in collaborating, discussing ideas, or just saying hello?
+      <br />Let's Connect!
     </p>
   </div>
 
@@ -61,6 +61,7 @@ const todayYear = new Date().getFullYear();
     {
       email && (
         <Button
+        id="contact"
           href={`mailto:${email}`}
           variant="ghost"
           class="text-gray-300 hover:text-gray-500"
