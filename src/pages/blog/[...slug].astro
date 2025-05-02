@@ -11,7 +11,7 @@ import ArticleFooter from "@/components/ArticleFooter.astro";
 
 // Fetch all posts and generate paths for each post
 export async function getStaticPaths() {
-  const allPosts = await getCollection("ob_blog");
+  const allPosts = await getCollection("blog");
 
   // Log all post IDs for debugging
   // const postIds = allPosts.map((post) => post.data.draft);

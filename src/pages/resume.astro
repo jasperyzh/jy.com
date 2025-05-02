@@ -2,13 +2,10 @@
 import Layout from "@/layouts/BaseLayout.astro";
 import ContactCTA from "@/components/ContactCTA.astro";
 
-import { getEntry } from "astro:content";
 import { Icon } from "astro-icon/components";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/starwind/card";
@@ -16,10 +13,169 @@ import { Badge } from "@/components/starwind/badge";
 import { Button } from "@/components/starwind/button";
 
 // Get resume data from content collection
-const resumeEntry = await getEntry("resume", "index");
+/* const resumeEntry = await getEntry("resume", "index");
 if (!resumeEntry) {
   throw new Error("Resume data not found");
 }
+ */
+
+const resumeEntry = {
+  contactInfo: {
+    name: "Jasper Yong",
+    title: "Full-Stack Web Developer",
+    email: "jasper.yzh@gmail.com",
+    website: "jasperyong.com",
+    github: "https://github.com/jasperyzh/",
+    linkedin: "https://www.linkedin.com/in/jaspery/",
+    location: "Kuala Lumpur, Malaysia",
+  },
+  summary:
+    "Dedicated Full-Stack Web Developer with 9+ years of experience spanning front-end, back-end, and full-stack development. Proven track record in leading teams, significantly boosting SEO performance, and effectively managing complex projects and concept to launch. Passionate about leveraging modern technologies to build engaging, user-centric web solutions and continuously exploring the intersection of technology, creativity, and effective knowledge systems.",
+  professionalExperience: [
+    {
+      role: "Full-Stack Web Developer",
+      company: "Fishermen Analytics",
+      period: "Aug 2015 - May 2024",
+      description:
+        "Partnered with startups and SMEs to architect, develop, and maintain scalable web applications and websites utilizing modern full-stack technologies.",
+      highlights: [
+        "<strong>Website Design & Development</strong> – Developed and optimized responsive, user-centric websites and applications with HTML, CSS, JavaScript, and WordPress, enhancing performance and reliability.",
+        "<strong>SEO & Analytics</strong> – Spearheaded SEO initiatives, increasing average site scores from 50 to 80+% and significantly boosting organic search visibility. Analyzed user data to inform design and content strategies that improved engagement.",
+        "<strong>Team Leadership</strong> – Led a small cross-functional team of developers and designers, overseeing project delivery for diverse web solutions from ideation to deployment. Introduced organizational tools and pratices that enhanced team communication and efficiency.",
+        "<strong>Project management</strong> – Managed the full lifecycle of web development projects for key clients including Yayasan Petronas, Petrosains, Methodist College Kuala Lumpur, ensuring timely and on-budget delivery.",
+        "<strong>UI/UX improvements</strong> – Collaborated closely with design teams to implement UI/UX enhancements, improving user retention and engagement. Streamlined navigation and standardized SEO practices across client platforms.",
+        "<strong>Multimedia Proficiency</strong> – Apply versatile skills beyond web development,  assisting with multimedia tasks (design, video editing) to support project goals and providing technical mentorship to colleagues navigating new technologies.",
+      ],
+    },
+  ],
+
+  keyProjects: [
+    {
+      name: "YayasanPetronas.com.my - CSR Platform",
+      description:
+        "Developed and launched a CSR-focused website, enhancing the visibility of social initiatives and increasing donor engagement.",
+      highlights: [
+        "Leveraged intuitive UX design to ensure seamless navigation and engagement",
+        "Successfully drove awareness of the organization's activities",
+        "Culminated in a high-profile launch event led by Dr. Wan Azizah",
+      ],
+    },
+    {
+      name: "Petrosains.com.my - Nation's STEM Advocacy",
+      description:
+        "Redesigned and revamped the Petrosains website to better support STEM advocacy in Malaysia.",
+      highlights: [
+        "Created an overhauled and refreshed interface catering to diverse user groups from students to educators",
+        "Significantly enhanced visibility and accessibility of STEM resources",
+        "Increased community outreach and education content distribution",
+      ],
+    },
+    {
+      name: "ParamountProperty.my",
+      description:
+        "Managed and expanded the Paramount Property website portfolio, growing the number of projects from 10 to 15 over 7 years.",
+      highlights: [
+        "Collaborated with the in-house IT team to ensure continuous service improvement and uptime",
+        "Contributed to increased user satisfaction and efficiency",
+        "Supported sustained business growth through digital presence optimization",
+      ],
+    },
+    {
+      name: "BersatuForMakan - Fishermen x BFM Campaign",
+      description:
+        "Led the technical execution for a collaborative campaign (Fishermen x BFM 89.9), designing and developing a dedicated microsite from concept to launch.",
+      highlights: [
+        "Achieved exceptional results on a modest RM2000 budget, reached nearly 3 million people and generated RM700k in earned media value.",
+        "Drove a 628% increase in engagement and sixfold follower growth, delivered significant PR impact and visibility for the partner organization.",
+      ],
+    },
+  ],
+
+  professionalPhilosophy:
+    "Driven by a passion for continuous learning and building impactful, user-centric solutions at the intersection of technology and creative problem-solving.",
+
+  technicalExpertise: {
+    languages: ["HTML", "CSS", "JavaScript", "TypeScript", "PHP"],
+    frontendTechnologies: [
+      "AstroJS",
+      "TailwindCSS",
+      "WordPress",
+      "p5.js",
+      "BootstrapCSS",
+      "Vue.js",
+      "React",
+      "Phaser3",
+    ],
+    backendTechnologies: [
+      "Git / GitHub",
+      "Node.js / NPM",
+      "MySQL",
+      "CI/CD",
+      "Vercel",
+      "Docker",
+      "Express",
+      "PostgreSQL",
+    ],
+    tools: [
+      "Linux",
+      "Obsidian.md",
+      "Bash",
+      "VS Code",
+      "Cursor",
+      "Google Workspace",
+      "Postman",
+      "Windsurf",
+    ],
+    designSoftware: [
+      "Figma",
+      "Adobe Photoshop / Illustrator",
+      "GIMP / Inkscape",
+      "Canva",
+    ],
+  },
+
+  additionalCompetencies: [
+    "Advanced problem-solving and analytical thinking",
+    "Project planning and documentation methodology implementation",
+    "UI/UX design principles and best practices",
+    "Performance optimization techniques",
+    "Secure coding practices and implementation",
+    "Cross-browser compatibility and responsive design",
+  ],
+
+  education: [
+    {
+      degree: "BA (Hons) in Computer Games Design",
+      institution: "University of Teesside, UK",
+      year: "2010 - 2012",
+      highlights: ["Focus on Computer Games Design", "Documentation & Design"],
+    },
+    {
+      degree: "Diploma in Multimedia Design",
+      institution: "The One Academy, Malaysia",
+      year: "2006 - 2008",
+      highlights: [
+        "Art & Design Fundamentals",
+        "Multimedia Design Fundamentals",
+        "3D Animation Fundamentals",
+        "Web Design Fundamentals",
+      ],
+    },
+  ],
+
+  languages: [
+    { language: "English", proficiency: "90" },
+    { language: "Mandarin", proficiency: "80" },
+    { language: "Bahasa Malaysia", proficiency: "60" },
+  ],
+
+  interests: [
+    "Exploring Generative Art and Creative Coding",
+    "Reading Philosophy, Economics, and History",
+    "Building Personal Knowledge Management Systems",
+    "Exploring emerging technologies in web development",
+  ],
+};
 
 const {
   contactInfo,
@@ -32,7 +188,7 @@ const {
   education,
   languages,
   interests,
-} = resumeEntry.data;
+} = resumeEntry;
 ---
 
 <Layout title="Resume - Jasper Yong">
@@ -380,7 +536,7 @@ const {
       </div>
     </section> -->
 
-      <ContactCTA />
+    <ContactCTA />
   </div>
 </Layout>
 

@@ -24,7 +24,7 @@ draft: 1
 
 ## related posts
 
-- [[250323-why-creative-coding]]
+- [[250323-why-creative-coding 1]]
 - [[250323-how-to-start-creative-coding]]
 
 ## note

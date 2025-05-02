@@ -5,7 +5,7 @@ import type { CollectionEntry } from 'astro:content';
  * @param entry The blog collection entry
  * @returns The filename (e.g., "250410-things-to-consider-web-design")
  */
-export function getBlogFilename(entry: CollectionEntry<'ob_blog'>): string {
+export function getBlogFilename(entry: CollectionEntry<'blog'>): string {
   const parts = entry.id.split('/');
   return parts[parts.length - 1]; // Last part is the filename
 }
@@ -15,7 +15,7 @@ export function getBlogFilename(entry: CollectionEntry<'ob_blog'>): string {
  * @param entry The blog collection entry
  * @returns The full URL path (e.g., "/blog/250410-things-to-consider-web-design")
  */
-export function getBlogFullUrl(entry: CollectionEntry<'ob_blog'>): string {
+export function getBlogFullUrl(entry: CollectionEntry<'blog'>): string {
   return `/blog/${getBlogFilename(entry)}`;
 }
 
@@ -34,7 +34,7 @@ export function parseBlogUrl(url: string): string {
  * @param posts Array of blog entries
  * @returns Array of unique categories
  */
-export function getAllCategories(posts: CollectionEntry<'ob_blog'>[]): string[] {
+export function getAllCategories(posts: CollectionEntry<'blog'>[]): string[] {
   const categories = posts.map(post => post.data.category);
   return [...new Set(categories)].sort();
 }
@@ -44,7 +44,7 @@ export function getAllCategories(posts: CollectionEntry<'ob_blog'>[]): string[] 
  * @param posts Array of blog entries
  * @returns Array of unique tags
  */
-export function getAllTags(posts: CollectionEntry<'ob_blog'>[]): string[] {
+export function getAllTags(posts: CollectionEntry<'blog'>[]): string[] {
   const tags = posts.flatMap(post => post.data.tags || []);
   return [...new Set(tags)].sort();
 }

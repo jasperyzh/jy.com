@@ -1,0 +1,80 @@
+<div id="perfectLoopCanvas" class="flex justify-center mb-4"></div>
+<p class="text-center text-sm text-gray-500 mb-4">click to see the differences</p>
+
+<script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.js"></script>
+
+<script is:inline>
+
+  let x = 280;
+  let y = 280;
+  let angle = 90;
+  let dia = 20;
+
+  let palettes;
+  let currentPalette = 0;
+  let strokeColor;
+  let fillColor;
+  let outerStrokeColor;
+
+  function setup() {
+    var canvas = createCanvas(640, 640);
+    canvas.parent("perfectLoopCanvas"); // Tell p5 where to put the canvas
+
+    // Define color palettes [lineStroke, innerFill, outerStroke]
+    palettes = [
+      [color(255), color(255), color(255)], // White/White/White
+      [color(255, 204, 0), color(0, 139, 139), color(0, 191, 255)], // Yellow/Cyan/DeepSkyBlue
+      [color(255, 0, 255), color(0, 255, 0), color(255, 165, 0)], // Magenta/Green/Orange
+      [color(0, 191, 255), color(255, 165, 0), color(255, 0, 255)]  // DeepSkyBlue/Orange/Magenta
+    ];
+    
+    // Initialize colors
+    updateColors();
+  }
+  
+  function updateColors() {
+      strokeColor = palettes[currentPalette][0];
+      fillColor = palettes[currentPalette][1];
+      outerStrokeColor = palettes[currentPalette][2];
+  }
+
+  function mousePressed() {
+    // Check if the click is within the canvas bounds
+    if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) {
+      currentPalette = (currentPalette + 1) % palettes.length;
+      updateColors();
+    }
+  }
+
+  function draw() {
+    background("#131313");
+
+    translate(width / 2, height / 2);
+    rotate(radians(14.3 + angle / 3));
+    
+    for (let a = 0; a < 360; a += 10) {
+      push();
+
+      if (angle < 720) {
+        rotate(radians(a) * cos(radians(angle)));
+      } else {
+        rotate(radians(a));
+      }
+      stroke(strokeColor); // Use current stroke color
+      strokeWeight(3);
+
+      line(x * sin(radians(angle)), 0, 0, y - dia / 2);
+
+      noStroke();
+      fill(fillColor); // Use current fill color
+      ellipse(x * sin(radians(angle)), 0, dia / 2, dia / 2);
+
+      stroke(outerStrokeColor); // Use outer stroke color
+      // noFill();
+      ellipse(0, y, dia, dia);
+      pop();
+    }
+    angle = (angle + 1) % 720; // Ensure loop by using modulo
+  }
+
+</script>

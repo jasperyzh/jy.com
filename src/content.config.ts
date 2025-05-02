@@ -5,17 +5,20 @@ import { file, glob } from "astro/loaders"; // Not available with legacy API
 import { formatYymmddDate } from "@/utils/formatDate";
 
 // Define blog collection
-const ob_blog = defineCollection({
+const blog = defineCollection({
   loader: glob({
     pattern: "**/*.md",
-    base: "./src/content/blog",
+    base:
+      import.meta.env.MODE === "development"
+        ? import.meta.env.BASE_OBSIDIAN_BLOG
+        : "./src/content/blog",
   }),
   schema: z.object({
     title: z.string(), // The title of the post
     description: z
       .string()
       .max(
-        160,
+        220,
         "For best SEO results, please keep the description under 160 characters."
       ), // The description of the post with SEO-friendly character limit
     // pubDate: z.coerce.date(), // Automatically converts date strings or numbers to Date objects
@@ -43,7 +46,10 @@ const ob_blog = defineCollection({
 const docs = defineCollection({
   loader: glob({
     pattern: "**/*.md",
-    base: "./src/content/docs",
+    base:
+      import.meta.env.MODE === "development"
+        ? import.meta.env.BASE_OBSIDIAN_DOCS
+        : "./src/content/docs",
   }),
   schema: z.object({
     title: z.string(),
@@ -61,65 +67,6 @@ const docs = defineCollection({
       .union([z.boolean(), z.number()])
       .transform((value) => Boolean(value))
       .default(false),
-  }),
-});
-
-// Define resume collection
-const resume = defineCollection({
-  type: "data",
-  schema: z.object({
-    contactInfo: z.object({
-      name: z.string(),
-      title: z.string(),
-      email: z.string(),
-      website: z.string(),
-      github: z.string(),
-      linkedin: z.string(),
-      location: z.string(),
-    }),
-    summary: z.string(),
-    professionalExperience: z.array(
-      z.object({
-        role: z.string(),
-        company: z.string(),
-        period: z.string(),
-        description: z.string(),
-        highlights: z.array(z.string()),
-      })
-    ),
-    keyProjects: z.array(
-      z.object({
-        name: z.string(),
-        description: z.string(),
-        highlights: z.array(z.string()),
-      })
-    ),
-    personalAchievements: z.array(z.string()).optional(),
-    professionalPhilosophy: z.string().optional(),
-    technicalExpertise: z.object({
-      languages: z.array(z.string()),
-      frontendTechnologies: z.array(z.string()),
-      backendTechnologies: z.array(z.string()),
-      tools: z.array(z.string()),
-      designSoftware: z.array(z.string()),
-      databases: z.array(z.string()).optional(),
-    }),
-    additionalCompetencies: z.array(z.string()),
-    education: z.array(
-      z.object({
-        degree: z.string(),
-        institution: z.string(),
-        year: z.string(),
-        highlights: z.array(z.string()),
-      })
-    ),
-    languages: z.array(
-      z.object({
-        language: z.string(),
-        proficiency: z.string(),
-      })
-    ),
-    interests: z.array(z.string()),
   }),
 });
 
@@ -186,4 +133,4 @@ const sketches = defineCollection({
   }),
 });
 
-export const collections = { ob_blog, docs, resume, portfolio, sketches };
+export const collections = { blog, docs, portfolio, sketches };

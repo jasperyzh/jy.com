@@ -1,4 +1,10 @@
 {
+  "src/content/sketches/creative-coding/2024</200830-PerfectLoopSinCosine.mdx": {
+    "lastModified": 1746207365910.7756,
+    "outputPath": "public/thumbnails/sketches/200830-PerfectLoopSinCosine.svg",
+    "title": "Perfect Loop Sin Cosine",
+    "format": "svg"
+  },
   "src/content/sketches/creative-coding/2025/250124-mesh_gradient.mdx": {
     "lastModified": 1745146696373.6353,
     "outputPath": "public/thumbnails/sketches/250124-mesh_gradient.svg",
@@ -24,13 +30,13 @@
     "format": "svg"
   },
   "src/content/sketches/creative-coding/2025/250418-poisson_disc_sampling.mdx": {
-    "lastModified": 1745146696363.6353,
+    "lastModified": 1746002876465.648,
     "outputPath": "public/thumbnails/sketches/250418-poisson_disc_sampling.svg",
     "title": "Poisson-Disc Sampling",
     "format": "svg"
   },
   "src/content/sketches/webdev/2025/250102-cssgrid.mdx": {
-    "lastModified": 1744878443677.0527,
+    "lastModified": 1746002796245.111,
     "outputPath": "public/thumbnails/sketches/250102-cssgrid.svg",
     "title": "CSS Grid",
     "format": "svg"
@@ -60,31 +66,31 @@
     "format": "svg"
   },
   "src/content/sketches/webdev/2025/250414-webdesign-exercise.mdx": {
-    "lastModified": 1745147121183.3982,
+    "lastModified": 1746002760972.9297,
     "outputPath": "public/thumbnails/sketches/250414-webdesign-exercise.svg",
     "title": "Web Design Exercise",
     "format": "svg"
   },
   "src/content/sketches/webdev/2025/250417-vanilla-js-app.mdx": {
-    "lastModified": 1745170750916.5266,
+    "lastModified": 1746002756942.7915,
     "outputPath": "public/thumbnails/sketches/250417-vanilla-js-app.svg",
     "title": "Coffee Masters - Vanilla JS App",
     "format": "svg"
   },
   "src/content/sketches/webdev/2025/250428-css-tricks.mdx": {
-    "lastModified": 1745934037082.2168,
+    "lastModified": 1746002750658.5752,
     "outputPath": "public/thumbnails/sketches/250428-css-tricks.svg",
     "title": "CSS Tricks Showcase",
     "format": "svg"
   },
   "src/content/sketches/webdev/2025/250428-motion-one.mdx": {
-    "lastModified": 1745934033803.1555,
+    "lastModified": 1746002714321.2908,
     "outputPath": "public/thumbnails/sketches/250428-motion-one.svg",
     "title": "Motion One: Spring Animation Demo",
     "format": "svg"
   },
   "src/content/sketches/webdev/app-idea/250424-camera-filter.mdx": {
-    "lastModified": 1745425449706.5164,
+    "lastModified": 1746002808750.5193,
     "outputPath": "public/thumbnails/sketches/250424-camera-filter.svg",
     "title": "Camera Filter & Timelapse App",
     "format": "svg"
@@ -102,165 +108,33 @@
     "format": "svg"
   },
   "src/content/sketches/webdev/games-design/250417-quizgame-education.mdx": {
-    "lastModified": 1745146696329.6353,
+    "lastModified": 1746002841785.5742,
     "outputPath": "public/thumbnails/sketches/250417-quizgame-education.svg",
     "title": "LearnLand - Children's Educational App",
     "format": "svg"
   },
   "src/content/sketches/webdev/games-design/250419-flashcards.mdx": {
-    "lastModified": 1745147041626.5288,
+    "lastModified": 1746002838257.4631,
     "outputPath": "public/thumbnails/sketches/250419-flashcards.svg",
     "title": "Flashcards Template",
     "format": "svg"
   },
   "src/content/sketches/webdev/games-design/250421-phaser-typing-game.mdx": {
-    "lastModified": 1745166736056.749,
+    "lastModified": 1746002817143.7905,
     "outputPath": "public/thumbnails/sketches/250421-phaser-typing-game.svg",
     "title": "Phaser Typing Game",
     "format": "svg"
   },
-  "src/content/blog/2025/250217-OnePageOneTopic.md": {
-    "lastModified": 1745219068371.336,
-    "outputPath": "public/thumbnails/blog/placeholder.png",
-    "title": "One-Page-One-Topic",
-    "format": "png"
-  },
-  "src/content/blog/2025/250323-Debounce.md": {
-    "lastModified": 1745219068371.336,
-    "outputPath": "public/thumbnails/blog/placeholder.png",
-    "title": "Understanding Debounce: A Practical Guide",
-    "format": "png"
-  },
-  "src/content/blog/2025/250323-di-zi-gui.md": {
-    "lastModified": 1745219068378.3362,
-    "outputPath": "public/thumbnails/blog/placeholder.png",
-    "title": "Di Zi Gui (弟子规) - Rules for Students and Children",
-    "format": "png"
-  },
-  "src/content/blog/2025/250323-malaysia-of-economy.md": {
-    "lastModified": 1745219068373.3362,
-    "outputPath": "public/thumbnails/blog/placeholder.png",
-    "title": "Malaysia's Economic Landscape: A Brief Overview",
-    "format": "png"
-  },
-  "src/content/blog/2025/250323-malaysia-past.md": {
-    "lastModified": 1745219068378.3362,
-    "outputPath": "public/thumbnails/blog/placeholder.png",
-    "title": "Malaysia's Path: From Colonial Rule to Modern Nation",
-    "format": "png"
-  },
-  "src/content/blog/2025/250323-why-creative-coding.md": {
-    "lastModified": 1745219068371.336,
-    "outputPath": "public/thumbnails/blog/placeholder.png",
-    "title": "Why Creative Coding Matters",
-    "format": "png"
-  },
-  "src/content/blog/2025/250404-Sharing my workflow progress.md": {
-    "lastModified": 1745219068371.336,
-    "outputPath": "public/thumbnails/blog/bunny.png",
-    "title": "Sharing my workflow progress",
-    "format": "png"
-  },
-  "src/content/blog/2025/250406-using-bash-to-sync-obsidian-astro-content.md": {
-    "lastModified": 1744011254892.3357,
-    "outputPath": "public/thumbnails/blog/placeholder.png",
-    "title": "Using rsync to synchronize content between astro.js and obsidian.md",
-    "format": "png"
-  },
-  "src/content/blog/2025/250409-astrojs-coming-soon-page-on-vercel.md": {
-    "lastModified": 1745219068378.3362,
-    "outputPath": "public/thumbnails/blog/placeholder.png",
-    "title": "Creating a Coming Soon Page with Astro.js and Vercel",
-    "format": "png"
-  },
-  "src/content/blog/2025/250410-globalization-next-era.md": {
-    "lastModified": 1745933542101.3533,
-    "outputPath": "public/thumbnails/blog/bg_rotate.jpg",
-    "title": "Tariffs & Next Era After Globalization",
-    "format": "jpg"
-  },
-  "src/content/blog/2025/Building GPT for my EDM Music Journey.md": {
-    "lastModified": 1745219068378.3362,
-    "outputPath": "public/thumbnails/blog/placeholder.png",
-    "title": "Building GPT for my EDM Music Journey",
-    "format": "png"
-  },
-  "src/content/blog/2025/Malaysia's History Exploration.md": {
-    "lastModified": 1745219068378.3362,
-    "outputPath": "public/thumbnails/blog/placeholder.png",
-    "title": "Malaysia's History Exploration",
-    "format": "png"
-  },
-  "src/content/blog/2025/On capturing my processing work - ccapturejs.md": {
-    "lastModified": 1745219068378.3362,
-    "outputPath": "public/thumbnails/blog/placeholder.png",
-    "title": "BlogTemplateTitle",
-    "format": "png"
-  },
-  "src/content/blog/2025/Setup for Blog & Portfolio.md": {
-    "lastModified": 1745933549211.4731,
-    "outputPath": "public/thumbnails/blog/placeholder.png",
-    "title": "BlogTemplateTitle",
-    "format": "png"
-  },
-  "src/content/blog/2025/Setup for my generative art.md": {
-    "lastModified": 1745219068373.3362,
-    "outputPath": "public/thumbnails/blog/placeholder.png",
-    "title": "BlogTemplateTitle",
-    "format": "png"
-  },
-  "src/content/blog/2025/Setup for my webdev.md": {
-    "lastModified": 1745219068378.3362,
-    "outputPath": "public/thumbnails/blog/placeholder.png",
-    "title": "Setup for my webdev",
-    "format": "png"
-  },
-  "src/content/blog/2025/Setup for website development.md": {
-    "lastModified": 1745933551741.5156,
-    "outputPath": "public/thumbnails/blog/placeholder.png",
-    "title": "BlogTemplateTitle",
-    "format": "png"
-  },
-  "src/content/blog/2025/Simplify Subjects for my kids.md": {
-    "lastModified": 1745219068378.3362,
-    "outputPath": "public/thumbnails/blog/placeholder.png",
-    "title": "Simplify Subjects",
-    "format": "png"
-  },
-  "src/content/blog/2025/The Malaysian's Favourite Clock.md": {
-    "lastModified": 1745219068373.3362,
-    "outputPath": "public/thumbnails/blog/placeholder.png",
-    "title": "The Malaysian's Favorite Clock",
-    "format": "png"
-  },
-  "src/content/blog/2025/Unlocking the World of Shaders with P5.js - A Beginner's Guide.md": {
-    "lastModified": 1745219068373.3362,
-    "outputPath": "public/thumbnails/blog/placeholder.png",
-    "title": "Unlocking the World of Shaders with P5.js: A Beginner's Guide",
-    "format": "png"
-  },
-  "src/content/blog/2025/What & Why Bursa Malaysia.md": {
-    "lastModified": 1745219068379.3364,
-    "outputPath": "public/thumbnails/blog/placeholder.png",
-    "title": "Bursa Malaysia: 5-Minute Beginner's Guide",
-    "format": "png"
-  },
-  "src/content/blog/2025/blog_template.md": {
-    "lastModified": 1745933545184.4053,
-    "outputPath": "public/thumbnails/blog/placeholder.png",
-    "title": "BlogTemplateTitle",
-    "format": "png"
-  },
-  "src/content/blog/250411-A Choice of Kipling's Verse (1943).md": {
-    "lastModified": 1745219068371.336,
-    "outputPath": "public/thumbnails/blog/250411-a-choice-of-kiplings-verse-1943.svg",
-    "title": "If—",
-    "format": "svg"
-  },
-  "src/content/blog/250429-my-ongoing-journey.md": {
-    "lastModified": 1745932310956.197,
+  "src/content/blog/2025/250429-my-ongoing-journey.md": {
+    "lastModified": 1745934383893.8127,
     "outputPath": "public/thumbnails/blog/250429-my-ongoing-journey.svg",
     "title": "My Ongoing Journey",
+    "format": "svg"
+  },
+  "src/content/blog/2025/250502-wordpress-premium-theme-getting-started.md": {
+    "lastModified": 1746195513662.1511,
+    "outputPath": "public/thumbnails/blog/250502-wordpress-premium-theme-getting-started.svg",
+    "title": "Bought That Perfect WordPress Theme? Here's How to Actually Make It Look Like the Demo",
     "format": "svg"
   },
   "src/content/blog/_draft/221212-how_should_i_start_my_blog.md": {
@@ -282,7 +156,7 @@
     "format": "png"
   },
   "src/content/blog/_draft/230609-figma_crash_course.md": {
-    "lastModified": 1745219068405.3372,
+    "lastModified": 1746204854349.9792,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Figma Crash Course: Unlocking Core Features",
     "format": "png"
@@ -395,10 +269,40 @@
     "title": "Why I Chose Astro.js for My Web Development Journey",
     "format": "png"
   },
+  "src/content/blog/_draft/250217-OnePageOneTopic.md": {
+    "lastModified": 1745219068371.336,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "One-Page-One-Topic",
+    "format": "png"
+  },
+  "src/content/blog/_draft/250323-Debounce.md": {
+    "lastModified": 1745219068371.336,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Understanding Debounce: A Practical Guide",
+    "format": "png"
+  },
+  "src/content/blog/_draft/250323-di-zi-gui.md": {
+    "lastModified": 1745219068378.3362,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Di Zi Gui (弟子规) - Rules for Students and Children",
+    "format": "png"
+  },
   "src/content/blog/_draft/250323-how-to-start-creative-coding.md": {
     "lastModified": 1745219068390.3367,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Why Creative Coding Matters",
+    "format": "png"
+  },
+  "src/content/blog/_draft/250323-malaysia-of-economy.md": {
+    "lastModified": 1745219068373.3362,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Malaysia's Economic Landscape: A Brief Overview",
+    "format": "png"
+  },
+  "src/content/blog/_draft/250323-malaysia-past.md": {
+    "lastModified": 1745219068378.3362,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Malaysia's Path: From Colonial Rule to Modern Nation",
     "format": "png"
   },
   "src/content/blog/_draft/250323-why-creative-coding.md": {
@@ -406,6 +310,36 @@
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Why Creative Coding Matters",
     "format": "png"
+  },
+  "src/content/blog/_draft/250404-Sharing my workflow progress.md": {
+    "lastModified": 1745219068371.336,
+    "outputPath": "public/thumbnails/blog/bunny.png",
+    "title": "Sharing my workflow progress",
+    "format": "png"
+  },
+  "src/content/blog/_draft/250406-using-bash-to-sync-obsidian-astro-content.md": {
+    "lastModified": 1744011254892.3357,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Using rsync to synchronize content between astro.js and obsidian.md",
+    "format": "png"
+  },
+  "src/content/blog/_draft/250409-astrojs-coming-soon-page-on-vercel.md": {
+    "lastModified": 1745219068378.3362,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Creating a Coming Soon Page with Astro.js and Vercel",
+    "format": "png"
+  },
+  "src/content/blog/_draft/250410-globalization-next-era.md": {
+    "lastModified": 1745933542101.3533,
+    "outputPath": "public/thumbnails/blog/bg_rotate.jpg",
+    "title": "Tariffs & Next Era After Globalization",
+    "format": "jpg"
+  },
+  "src/content/blog/_draft/250411-A Choice of Kipling's Verse (1943).md": {
+    "lastModified": 1745219068371.336,
+    "outputPath": "public/thumbnails/blog/250411-a-choice-of-kiplings-verse-1943.svg",
+    "title": "If—",
+    "format": "svg"
   },
   "src/content/blog/_draft/250412-ai-trends-my-take-perspective.md": {
     "lastModified": 1745219068405.3372,
@@ -424,5 +358,77 @@
     "outputPath": "public/thumbnails/blog/250413-ai-instructions-general.svg",
     "title": "AI Agent (Cursor) Memory Bank Implementation Guide",
     "format": "svg"
+  },
+  "src/content/blog/_draft/Building GPT for my EDM Music Journey.md": {
+    "lastModified": 1745219068378.3362,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Building GPT for my EDM Music Journey",
+    "format": "png"
+  },
+  "src/content/blog/_draft/Malaysia's History Exploration.md": {
+    "lastModified": 1745219068378.3362,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Malaysia's History Exploration",
+    "format": "png"
+  },
+  "src/content/blog/_draft/On capturing my processing work - ccapturejs.md": {
+    "lastModified": 1745219068378.3362,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "BlogTemplateTitle",
+    "format": "png"
+  },
+  "src/content/blog/_draft/Setup for Blog & Portfolio.md": {
+    "lastModified": 1745933549211.4731,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "BlogTemplateTitle",
+    "format": "png"
+  },
+  "src/content/blog/_draft/Setup for my generative art.md": {
+    "lastModified": 1745219068373.3362,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "BlogTemplateTitle",
+    "format": "png"
+  },
+  "src/content/blog/_draft/Setup for my webdev.md": {
+    "lastModified": 1745219068378.3362,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Setup for my webdev",
+    "format": "png"
+  },
+  "src/content/blog/_draft/Setup for website development.md": {
+    "lastModified": 1745933551741.5156,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "BlogTemplateTitle",
+    "format": "png"
+  },
+  "src/content/blog/_draft/Simplify Subjects for my kids.md": {
+    "lastModified": 1745219068378.3362,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Simplify Subjects",
+    "format": "png"
+  },
+  "src/content/blog/_draft/The Malaysian's Favourite Clock.md": {
+    "lastModified": 1745219068373.3362,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "The Malaysian's Favorite Clock",
+    "format": "png"
+  },
+  "src/content/blog/_draft/Unlocking the World of Shaders with P5.js - A Beginner's Guide.md": {
+    "lastModified": 1745219068373.3362,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Unlocking the World of Shaders with P5.js: A Beginner's Guide",
+    "format": "png"
+  },
+  "src/content/blog/_draft/What & Why Bursa Malaysia.md": {
+    "lastModified": 1745219068379.3364,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Bursa Malaysia: 5-Minute Beginner's Guide",
+    "format": "png"
+  },
+  "src/content/blog/_draft/blog_template.md": {
+    "lastModified": 1745933545184.4053,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "BlogTemplateTitle",
+    "format": "png"
   }
 }

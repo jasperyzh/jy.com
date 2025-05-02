@@ -13,7 +13,7 @@ import { getBlogFilename } from "@/utils/blogUtils";
 export const POSTS_PER_PAGE = 12;
 
 // Get all blog posts
-const allPosts = await getCollection("ob_blog");
+const allPosts = await getCollection("blog");
 
 // Sort posts by date (newest first)
 const sortedPosts = allPosts.sort((a, b) => {

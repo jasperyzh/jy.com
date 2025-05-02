@@ -1,10 +1,10 @@
 ---
 pubDate: 250502
 title: Bought That Perfect WordPress Theme? Here's How to Actually Make It Look Like the Demo
-description: "Learn why your new WordPress premium theme doesn't look like the demo and how to fix it using demo, activation code and theme documentation."
-tags: ["WordPress", "Themes", "Web Development"]
+description: Learn why your new WordPress theme doesn't look like the demo and how to fix it by importing demo content using your activation code and following the documentation.
+tags: ["WordPress", "Themes", "Web Development", "Setup", "Demo Content", "Elementor"]
 draft: 0
-thumbnail: "/assets/images/blog/250502-wordpress-premium-theme-getting-started.svg"
+thumbnail: "/thumbnails/blog/250502-wordpress-premium-theme-getting-started.svg" 
 ---
 
 
@@ -41,6 +41,7 @@ While it's easily missed, you can usually find your code in a couple of key plac
 2. Check the email that you used to purchase the theme (the one tied to the theme marketplace's account)
 
 It's a great practice to save this code into your own documentation or password manager once you find it.
+
 
 ### Theme Documentation: Your Non-Negotiable Guide
 

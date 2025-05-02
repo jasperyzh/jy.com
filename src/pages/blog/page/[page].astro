@@ -13,7 +13,7 @@ import { POSTS_PER_PAGE } from "../index.astro";
 
 // Define props and generate static paths
 export async function getStaticPaths() {
-  const allPosts = await getCollection("ob_blog");
+  const allPosts = await getCollection("blog");
 
   // Sort posts by date (newest first)
   const sortedPosts = allPosts.sort((a, b) => {

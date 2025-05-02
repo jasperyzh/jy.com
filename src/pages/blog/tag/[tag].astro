@@ -7,7 +7,7 @@ import { formatForUrl, getBlogFilename } from "@/utils/blogUtils";
 // Generate static paths for all tags
 export async function getStaticPaths() {
   // Get blog posts
-  const blogPosts = await getCollection("ob_blog");
+  const blogPosts = await getCollection("blog");
   
   // Get all unique tags
   const tags = [...new Set(blogPosts.flatMap(post => post.data.tags || []))].sort();
