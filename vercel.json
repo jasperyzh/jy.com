@@ -10,12 +10,5 @@
   },
   "github": {
     "silent": true
-  },
-  "redirects": [
-    {
-      "source": "/((?!coming-soon).*)",
-      "destination": "/coming-soon",
-      "permanent": false
-    }
-  ]
+  }
 } 
