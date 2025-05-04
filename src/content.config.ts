@@ -27,6 +27,12 @@ const blog = defineCollection({
       (arg) => formatYymmddDate(arg as string | number | Date),
       z.date()
     ),
+    modDate: z
+      .preprocess(
+        (arg) => formatYymmddDate(arg as string | number | Date),
+        z.date()
+      )
+      .optional(),
     draft: z
       .union([z.boolean(), z.number()])
       .transform((value) => Boolean(value))
@@ -63,6 +69,12 @@ const docs = defineCollection({
       (arg) => formatYymmddDate(arg as string | number | Date),
       z.date()
     ),
+    modDate: z
+      .preprocess(
+        (arg) => formatYymmddDate(arg as string | number | Date),
+        z.date()
+      )
+      .optional(),
     draft: z
       .union([z.boolean(), z.number()])
       .transform((value) => Boolean(value))
@@ -114,10 +126,16 @@ const sketches = defineCollection({
         160,
         "For best SEO results, please keep the description under 160 characters."
       ),
-    date: z.preprocess(
+    pubDate: z.preprocess(
       (arg) => formatYymmddDate(arg as string | number | Date),
       z.date()
     ),
+    modDate: z
+      .preprocess(
+        (arg) => formatYymmddDate(arg as string | number | Date),
+        z.date()
+      )
+      .optional(),
     category: z.string(),
     tags: z.array(z.string()),
     status: z

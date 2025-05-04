@@ -35,6 +35,12 @@
     "title": "Poisson-Disc Sampling",
     "format": "svg"
   },
+  "src/content/sketches/creative-coding/250504-motion-on-cssgrid.mdx": {
+    "lastModified": 1746348191233.4631,
+    "outputPath": "public/thumbnails/sketches/250504-motion-on-cssgrid.svg",
+    "title": "Motion on CSS Grid",
+    "format": "svg"
+  },
   "src/content/sketches/webdev/2025/250102-cssgrid.mdx": {
     "lastModified": 1746002796245.111,
     "outputPath": "public/thumbnails/sketches/250102-cssgrid.svg",
@@ -77,6 +83,12 @@
     "title": "Coffee Masters - Vanilla JS App",
     "format": "svg"
   },
+  "src/content/sketches/webdev/2025/250424-camera-filter.mdx": {
+    "lastModified": 1746002808750.5193,
+    "outputPath": "public/thumbnails/sketches/250424-camera-filter.svg",
+    "title": "Camera Filter & Timelapse App",
+    "format": "svg"
+  },
   "src/content/sketches/webdev/2025/250428-css-tricks.mdx": {
     "lastModified": 1746002750658.5752,
     "outputPath": "public/thumbnails/sketches/250428-css-tricks.svg",
@@ -89,22 +101,22 @@
     "title": "Motion One: Spring Animation Demo",
     "format": "svg"
   },
-  "src/content/sketches/webdev/app-idea/250424-camera-filter.mdx": {
-    "lastModified": 1746002808750.5193,
-    "outputPath": "public/thumbnails/sketches/250424-camera-filter.svg",
-    "title": "Camera Filter & Timelapse App",
-    "format": "svg"
-  },
-  "src/content/sketches/webdev/completed/250412-blog-post-generative-thumbnail.mdx": {
+  "src/content/sketches/webdev/250412-blog-post-generative-thumbnail.mdx": {
     "lastModified": 1744875919377.8704,
     "outputPath": "public/thumbnails/sketches/250412-blog-post-generative-thumbnail.svg",
     "title": "Generating Blog Post Thumbnails with SVG in Astro",
     "format": "svg"
   },
-  "src/content/sketches/webdev/completed/250417-sample-sketch.mdx": {
+  "src/content/sketches/webdev/250417-sample-sketch.mdx": {
     "lastModified": 1744875916823.8337,
     "outputPath": "public/thumbnails/sketches/sample-sketch-thumb.svg",
     "title": "Sample Web Development Sketch",
+    "format": "svg"
+  },
+  "src/content/sketches/webdev/archived-completed/250504-motion.mdx": {
+    "lastModified": 1746382012913.4766,
+    "outputPath": "public/thumbnails/sketches/250504-motion.svg",
+    "title": "Syncing Shapes: Exploring Interval Animations with Motion One",
     "format": "svg"
   },
   "src/content/sketches/webdev/games-design/250417-quizgame-education.mdx": {
@@ -124,6 +136,12 @@
     "outputPath": "public/thumbnails/sketches/250421-phaser-typing-game.svg",
     "title": "Phaser Typing Game",
     "format": "svg"
+  },
+  "src/content/blog/2025/241016-keep-it-simple-essential.md": {
+    "lastModified": 1746344099389.0283,
+    "outputPath": "public/thumbnails/blog/placeholder.png",
+    "title": "Keep it Simple, Essential | Focusing on What Really Matters",
+    "format": "png"
   },
   "src/content/blog/2025/250429-my-ongoing-journey.md": {
     "lastModified": 1745934383893.8127,
@@ -156,7 +174,7 @@
     "format": "png"
   },
   "src/content/blog/_draft/230609-figma_crash_course.md": {
-    "lastModified": 1746204854349.9792,
+    "lastModified": 1746207775645.5825,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Figma Crash Course: Unlocking Core Features",
     "format": "png"
@@ -243,12 +261,6 @@
     "lastModified": 1745219068379.3364,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "New Chapter for Career",
-    "format": "png"
-  },
-  "src/content/blog/_draft/241016-kise.md": {
-    "lastModified": 1745219068387.3367,
-    "outputPath": "public/thumbnails/blog/placeholder.png",
-    "title": "Keep it Simple, Essential | Focusing on What Really Matters",
     "format": "png"
   },
   "src/content/blog/_draft/241126-inertia.md": {

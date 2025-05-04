@@ -1,7 +1,10 @@
 ---
 // ArticleContent.astro - Component for displaying article content in a styled container
+
+const { classes = "lg:max-w-2xl my-12 md:mx-auto overflow-x-auto" } =
+  Astro.props;
 ---
 
-<div class="content-wrapper lg:max-w-2xl my-12 md:mx-auto overflow-x-auto">
-    <slot />
+<div class={`content-wrapper ${classes}`}>
+  <slot />
 </div>

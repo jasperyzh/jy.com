@@ -1,0 +1,61 @@
+---
+layout: "@/layouts/PostFullWidthLayout.astro"
+title: "Syncing Shapes: Exploring Interval Animations with Motion One with CSS Grid"
+description: "From Instagram inspiration to synchronized box choreography - vibe-coding my way into looping animations with Motion One & CSS Grid"
+pubDate: "250504"
+modDate: "250505"
+category: "Web Development"
+tags: ["web development", "animation", "motion.js", "javascript"]
+status: "wip"
+thumbnail: "/thumbnails/sketches/250504-motion.svg"
+draft: 0
+---
+
+
+import Motion from "./250504-motion.astro";
+
+<Motion />
+
+<div class="prose max-w-7xl">
+## The Spark: Synchronized Motion... with CSS Grid?
+
+I stumbled upon this really slick animation ([https://www.instagram.com/p/DJKbriGC6Mk/](https://www.instagram.com/p/DJKbriGC6Mk/)). 
+What struck me was the multiple elements moving in unison, ordered sequence. It looked complex but incredibly smooth. 
+
+It made me realize that most of my animation work so far has been pretty basic – making individual element fade-in & slide-up. I have not been tackled animating a group in unison, while back in my mind I had some ideas of how to approach it, but never really sat down to do it.
+
+Also... does it work with CSS Grid?
+
+## In comes [Motion One](https://motion.dev/)
+
+My first thought for complex animation might typically be GSAP, but I could not pass the chance of using a library where it levelaged on native Web Animation API  (WAAPI)—basically lightweight, native, and browser-supported— I came across [Motion One](https://motion.dev/) by chance through a podcast [by Syntax with Matt Perry](https://www.youtube.com/watch?v=r6oXsC1gGHc)
+
+## Building the Blocks (and Boxes)
+
+I pretty much skim through the docs and examples, and then just copy/paste some samples to get started.
+
+
+The goal was clear: 
+1. get an element to move from one point to another using CSS Grid for composition.
+
+2. get a group of elements moving together, each transitioning into different positions at set intervals. For now each box will randomly move to a new position, but never step on the position of fellow boxes.
+
+3. get a group moves loop through state with predetermined patterns, then loop through these states continuously.
+
+Bonus: Add controls to play, pause (even mid-transition!), and reset the animation smoothly back to a starting grid.
+
+
+## Reality Check and Vibe Check
+
+Just as I was getting the boxes moving, I randomly bumped into this absolutely wild motion graphics piece.
+![https://www.youtube.com/watch?v=o1hggJOIY_c](https://www.youtube.com/watch?v=o1hggJOIY_c)
+
+The sheer amount of detail, the glitchy aesthetic, the complexity – it was insane. Seeing work like that can be a bit discouraging when you're still, quite literally, animating boxes on a screen.
+
+But hey, comparison is the thief of joy, right? While I'm not shredding intricate movie-level motion graphics (yet!), I managed to *vibe* out exactly what I set out to do. The boxes move in sync, hit their predetermined spots, loop through states, and respond to controls. 
+
+Motion One proved capable, and the core challenge was met. It's a solid foundation for more complex sequenced animations down the line. To be able to adjust the CSS Grid layout, resizing the container and see the animation update in real-time was a huge win.
+
+For now, this experiment was a success. Keep Going!
+
+</div>

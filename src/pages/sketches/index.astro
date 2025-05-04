@@ -12,9 +12,9 @@ const allSketches = await getCollection("sketches", ({ data }) => !data.draft);
 // Sort sketches by date (newest first)
 const sortedSketches = allSketches.sort((a, b) => {
   const dateA =
-    a.data.date instanceof Date ? a.data.date : new Date(a.data.date);
+    a.data.pubDate instanceof Date ? a.data.pubDate : new Date(a.data.pubDate);
   const dateB =
-    b.data.date instanceof Date ? b.data.date : new Date(b.data.date);
+    b.data.pubDate instanceof Date ? b.data.pubDate : new Date(b.data.pubDate);
   return dateB.getTime() - dateA.getTime();
 });
 

@@ -7,16 +7,18 @@ interface Props {
   returnUrl?: string;
   returnLabel?: string;
   title?: string;
+  classes?: string[];
 }
 
 const {
   returnUrl = "/sketches",
   returnLabel = "Back to Sketches",
   title = "",
+  classes = [],
 } = Astro.props;
 ---
 
-<footer>
+<footer class:list={classes}>
   <div class="flex">
     <Button variant="ghost" size="sm">Share me:</Button>
     <Button

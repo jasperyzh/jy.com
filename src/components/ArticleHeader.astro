@@ -8,12 +8,13 @@ interface Props {
   title?: string;
   description?: string;
   tags?: string[];
+  classes?: string[];
 }
 
-const { date, title, description, tags } = Astro.props;
+const { date, title, description, tags, classes } = Astro.props;
 ---
 
-<header>
+<header class:list={classes}>
   {date && <FormattedDate date={formatYymmddDate(date)} />}
   {title && <h1>{title}</h1>}
   {description && <p class="italic text-balance">{description}</p>}

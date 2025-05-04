@@ -1,0 +1,318 @@
+<div class="grid-container">
+  <div class="grid">
+    <!-- Grid elements will be created dynamically with JavaScript -->
+  </div>
+</div>
+
+<style>
+  .grid-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #f8f8f8;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 20vw);
+    grid-template-rows: repeat(5, 20vw);
+    gap: 10px;
+    position: relative;
+  }
+
+  .ellipse {
+    background: #000;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    place-self: center;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    will-change: transform;
+    transform-origin: center center;
+  }
+
+  .blue-circle {
+    background: #1e88e5;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    place-self: center;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    will-change: transform;
+    transform-origin: center center;
+  }
+
+  .gray-rect {
+    background: #9e9e9e;
+    place-self: center;
+    width: 100%;
+    height: 100%;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    will-change: transform;
+    transform-origin: center center;
+  }
+
+  /* Animation classes for tweening */
+  .to-center {
+    transform: translate(calc(100vw * 0.2), calc(100vw * 0.2)) scale(0.5) rotate(0deg) !important;
+    width: 10px !important;
+    height: 10px !important;
+  }
+  
+  .exploded {
+    transform: scale(1.2) rotate(var(--random-rotate)) !important;
+    width: 25px !important;
+    height: 25px !important;
+  }
+  
+  .reset {
+    transform: scale(1) rotate(var(--reset-rotate, 0deg)) !important;
+    width: 20px !important;
+    height: 20px !important;
+  }
+  
+  .blue-to-center {
+    transform: translate(calc(100vw * 0.2), calc(100vw * 0.2)) scale(0.5) !important;
+    width: 10px !important;
+    height: 10px !important;
+  }
+  
+  .blue-exploded {
+    transform: scale(1.5) rotate(var(--random-rotate)) !important;
+    width: 50px !important;
+    height: 50px !important;
+  }
+  
+  .blue-reset {
+    transform: scale(1) !important;
+    width: 45px !important;
+    height: 45px !important;
+  }
+  
+  .rect-to-center {
+    transform: translate(calc(100vw * 0.2), calc(100vw * 0.2)) scale(0.25) rotate(0deg) !important;
+    width: 40px !important;
+    height: 40px !important;
+  }
+  
+  .rect-exploded {
+    transform: rotate(var(--random-rotate)) !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+  
+  .rect-reset {
+    transform: rotate(5deg) !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+</style>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const grid = document.querySelector('.grid');
+    if (!grid) return; // Exit if grid not found
+    
+    // Define grid dimensions
+    const COLS = 3;
+    const ROWS = 5;
+    
+    // Get grid dimensions for transform calculations
+    const gridRect = grid.getBoundingClientRect();
+    const colWidth = gridRect.width / COLS;
+    const rowHeight = gridRect.height / ROWS;
+    
+    // Create grid items for all positions
+    for (let row = 1; row <= ROWS; row++) {
+      for (let col = 1; col <= COLS; col++) {
+        const position = `${col},${row}`;
+        
+        // Don't create ellipses on these positions
+        const excludedPositions = ['2,1', '2,5', '3,5'];
+        
+        if (!excludedPositions.includes(position)) {
+          // Create ellipse
+          const ellipse = document.createElement('div');
+          ellipse.classList.add('ellipse');
+          ellipse.dataset.position = position;
+          ellipse.style.gridColumn = col;
+          ellipse.style.gridRow = row;
+          ellipse.dataset.originalCol = col;
+          ellipse.dataset.originalRow = row;
+          grid.appendChild(ellipse);
+        }
+      }
+    }
+    
+    // Add blue circle - initially at position 2,4
+    const blueCircle = document.createElement('div');
+    blueCircle.classList.add('blue-circle');
+    blueCircle.style.gridColumn = 2;
+    blueCircle.style.gridRow = 4;
+    blueCircle.dataset.originalCol = 2;
+    blueCircle.dataset.originalRow = 4;
+    grid.appendChild(blueCircle);
+    
+    // Add gray rectangle - initially spanning from 1,2 to 2,3
+    const grayRect = document.createElement('div');
+    grayRect.classList.add('gray-rect');
+    grayRect.style.gridColumn = '1 / 3'; // span from col 1 to 3
+    grayRect.style.gridRow = '2 / 4';    // span from row 2 to 4
+    grayRect.dataset.originalGridColumn = '1 / 3';
+    grayRect.dataset.originalGridRow = '2 / 4';
+    grid.appendChild(grayRect);
+    
+    // Get all ellipses as array
+    const ellipses = Array.from(document.querySelectorAll('.ellipse'));
+    
+    // Animation states
+    const states = [
+      // State 1: Initial state
+      () => {
+        // Reset ellipses to their original positions
+        ellipses.forEach(ellipse => {
+          ellipse.style.backgroundColor = '#000';
+          ellipse.style.setProperty('--reset-rotate', '0deg');
+          ellipse.classList.remove('to-center', 'exploded');
+          ellipse.classList.add('reset');
+        });
+        
+        // Blue circle at 2,4
+        blueCircle.style.backgroundColor = '#1e88e5';
+        blueCircle.classList.remove('blue-to-center', 'blue-exploded');
+        blueCircle.classList.add('blue-reset');
+        
+        // Gray rect spanning 1,2 to 2,3
+        grayRect.style.backgroundColor = '#9e9e9e';
+        grayRect.classList.remove('rect-to-center', 'rect-exploded');
+        grayRect.classList.add('rect-reset');
+      },
+      
+      // State 2: All elements gather at col-2, row-2 with scaling to 10px
+      () => {
+        // Make ellipses visually move to center with transform
+        ellipses.forEach(ellipse => {
+          ellipse.style.backgroundColor = '#333';
+          ellipse.classList.remove('reset', 'exploded');
+          ellipse.classList.add('to-center');
+        });
+        
+        // Blue circle to center
+        blueCircle.style.backgroundColor = '#42a5f5';
+        blueCircle.classList.remove('blue-reset', 'blue-exploded');
+        blueCircle.classList.add('blue-to-center');
+        
+        // Gray rect to center
+        grayRect.style.backgroundColor = '#bdbdbd';
+        grayRect.classList.remove('rect-reset', 'rect-exploded');
+        grayRect.classList.add('rect-to-center');
+      },
+      
+      // State 3: Explode to random positions
+      () => {
+        // Move ellipses to random positions
+        ellipses.forEach(ellipse => {
+          // Set a random grid position first
+          const randomCol = Math.floor(Math.random() * COLS) + 1;
+          const randomRow = Math.floor(Math.random() * ROWS) + 1;
+          
+          ellipse.style.gridColumn = randomCol;
+          ellipse.style.gridRow = randomRow;
+          
+          // Set random rotation for transform
+          const randomRotate = Math.random() * 360;
+          ellipse.style.setProperty('--random-rotate', `${randomRotate}deg`);
+          
+          ellipse.style.backgroundColor = '#1a1a1a';
+          ellipse.classList.remove('to-center', 'reset');
+          ellipse.classList.add('exploded');
+        });
+        
+        // Blue circle to random position
+        const randomBlueCol = Math.floor(Math.random() * COLS) + 1;
+        const randomBlueRow = Math.floor(Math.random() * ROWS) + 1;
+        blueCircle.style.gridColumn = randomBlueCol;
+        blueCircle.style.gridRow = randomBlueRow;
+        
+        // Set random rotation
+        const randomBlueRotate = Math.random() * 360;
+        blueCircle.style.setProperty('--random-rotate', `${randomBlueRotate}deg`);
+        
+        blueCircle.style.backgroundColor = '#ff7043';
+        blueCircle.classList.remove('blue-to-center', 'blue-reset');
+        blueCircle.classList.add('blue-exploded');
+        
+        // Gray rect to random position and dimensions
+        const randomRectCol = Math.floor(Math.random() * (COLS - 1)) + 1;
+        const randomRectRow = Math.floor(Math.random() * (ROWS - 1)) + 1;
+        const randomSpanCol = Math.floor(Math.random() * (COLS - randomRectCol)) + 1;
+        const randomSpanRow = Math.floor(Math.random() * (ROWS - randomRectRow)) + 1;
+        
+        // Set a random grid area
+        grayRect.style.gridColumn = `${randomRectCol} / span ${randomSpanCol}`;
+        
+        // Set random rotation
+        const randomRectRotate = Math.random() * 45;
+        grayRect.style.setProperty('--random-rotate', `${randomRectRotate}deg`);
+        
+        grayRect.style.backgroundColor = '#757575';
+        grayRect.classList.remove('rect-to-center', 'rect-reset');
+        grayRect.classList.add('rect-exploded');
+      },
+      
+      // State 4: Return with staggered timing
+      () => {
+        // Staggered return for ellipses
+        setTimeout(() => {
+          ellipses.forEach((ellipse, i) => {
+            // Reset to original grid position
+            ellipse.style.gridColumn = ellipse.dataset.originalCol;
+            ellipse.style.gridRow = ellipse.dataset.originalRow;
+            
+            // Set rotation for the reset
+            ellipse.style.setProperty('--reset-rotate', `${i * 15}deg`);
+            
+            ellipse.style.backgroundColor = '#4d4d4d';
+            ellipse.classList.remove('to-center', 'exploded');
+            ellipse.classList.add('reset');
+          });
+        }, 100);
+        
+        // Blue circle returns
+        setTimeout(() => {
+          // Reset to original position
+          blueCircle.style.gridColumn = blueCircle.dataset.originalCol;
+          blueCircle.style.gridRow = blueCircle.dataset.originalRow;
+          
+          blueCircle.style.backgroundColor = '#66bb6a';
+          blueCircle.classList.remove('blue-to-center', 'blue-exploded');
+          blueCircle.classList.add('blue-reset');
+        }, 200);
+        
+        // Gray rect returns
+        setTimeout(() => {
+          // Reset to original position
+          grayRect.style.gridColumn = grayRect.dataset.originalGridColumn;
+          grayRect.style.gridRow = grayRect.dataset.originalGridRow;
+          
+          grayRect.style.backgroundColor = '#eeeeee';
+          grayRect.classList.remove('rect-to-center', 'rect-exploded');
+          grayRect.classList.add('rect-reset');
+        }, 300);
+      }
+    ];
+    
+    // Run the animation
+    let currentState = 0;
+    
+    // Initial state
+    states[currentState]();
+    
+    // Animation loop
+    setInterval(() => {
+      currentState = (currentState + 1) % states.length;
+      states[currentState]();
+    }, 1500);
+  });
+</script>

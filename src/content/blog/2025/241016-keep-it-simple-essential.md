@@ -3,12 +3,11 @@ pubDate: 241016
 title: Keep it Simple, Essential | Focusing on What Really Matters
 description: An exploration of 'Keep it Simple, Essential'—a step beyond the KISS principle. Learn how this approach helps identify what truly matters and why I adopted it.
 tags: ["Principle"]
-draft: 1
-thumbnail: "/img/placeholder.png" 
+draft: 0
+thumbnail: "/assets/images/placeholder.png" 
 category: "Curiosity"
 ---
 
-# Keep it Simple, Essential | Focusing on What Really Matters
 
 > [!summary] **TL;DR:**
 > Like "Keep it stupid, simple" with an extra steps to identify the important stuff.

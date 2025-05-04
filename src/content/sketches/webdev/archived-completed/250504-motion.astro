@@ -1,0 +1,879 @@
+<div class="container mx-auto">
+  <h2>Motion Demo</h2>
+  <p>This is a demo of motion effects.</p>
+
+  <section id="staggered-animation">
+    <h3>Staggered Animation</h3>
+    <ul class="example">
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+
+    <style>
+      ul.example {
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex: 0;
+        margin: 0;
+        padding: 0;
+      }
+
+      ul.example li {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        display: block;
+        background-color: #0cdcf7;
+        opacity: 0;
+        flex: 0 0 50px;
+      }
+    </style>
+  </section>
+
+  <section id="scroll-animation">
+    <h3>Bounce Ease</h3>
+    <div class="container__ease">
+      <div class="switch">
+        <div class="ball"></div>
+      </div>
+    </div>
+
+    <style>
+      .container__ease {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        /* min-height: 100vh; */
+      }
+
+      .switch {
+        width: 100px;
+        height: 200px;
+        background-color: #aaa;
+        display: flex;
+        align-items: flex-start;
+        border-radius: 50px;
+        padding: 10px;
+        cursor: pointer;
+      }
+
+      .ball {
+        width: 80px;
+        height: 80px;
+        background-color: #131313;
+        border-radius: 50%;
+        will-change: transform;
+      }
+    </style>
+  </section>
+
+  <section id="tween-animation">
+    <h3>Tween Animation (Rectangular Path)</h3>
+    <div class="flex flex-wrap">
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+    </div><div class="flex flex-wrap">
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+    </div><div class="flex flex-wrap">
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+    </div><div class="flex flex-wrap">
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+    </div>
+
+    <script>
+      import {
+        animate,
+        stagger,
+      } from "https://cdn.jsdelivr.net/npm/motion@12.9.0/+esm";
+
+      // From https://easings.net/#easeOutBounce
+      function bounceEase(x) {
+        const n1 = 7.5625;
+        const d1 = 2.75;
+
+        if (x < 1 / d1) {
+          return n1 * x * x;
+        } else if (x < 2 / d1) {
+          return n1 * (x -= 1.5 / d1) * x + 0.75;
+        } else if (x < 2.5 / d1) {
+          return n1 * (x -= 2.25 / d1) * x + 0.9375;
+        } else {
+          return n1 * (x -= 2.625 / d1) * x + 0.984375;
+        }
+      }
+
+      const bounce = {
+        duration: 1.2,
+        ease: bounceEase,
+      };
+
+      const spring = {
+        type: "spring",
+        stiffness: 700,
+        damping: 30,
+      };
+
+      const ball = document.querySelector(".ball");
+      const switchEl = document.querySelector(".switch");
+      let isOn = true;
+
+      switchEl.addEventListener("click", () => {
+        isOn = !isOn;
+
+        animate(ball, { y: isOn ? 0 : 120 }, isOn ? spring : bounce);
+      });
+
+      animate(
+        ".example li",
+        { opacity: 1, y: [50, 0] },
+        { delay: stagger(0.08) }
+      );
+
+      // Animate the box along a rectangular path
+      animate(
+        ".box",
+        {
+          // Keyframes for x, y, scale, and rotation
+          x: [0, 200, 200, 0, 0], // Move right, stay, move left, stay
+          y: [0, 0, 100, 100, 0], // Stay, move down, stay, move up
+          scale: [0.4, 1, 0.6, 1, 0.4], // Start small, grow, shrink slightly, grow, return to start
+          rotate: [0, 90, 180, 270, 360], // Rotate 360 degrees over the path
+          opacity: 1,
+        },
+        {
+          // Offset defines the timing of each keyframe relative to the duration
+          // Calculated based on a 200x100 rectangle for constant speed:
+          // Path lengths: 200, 100, 200, 100. Total: 600
+          // Offsets: 0, 200/600, (200+100)/600, (200+100+200)/600, (200+100+200+100)/600
+          offset: [0, 1 / 3, 0.5, 5 / 6, 1],
+          duration: 4, // Duration for one full loop (in seconds)
+          repeat: Infinity, // Repeat the animation indefinitely
+          ease: "circInOut", // Easing applied to all properties
+          delay: stagger(0.08),
+        }
+      );
+    </script>
+
+    <style>
+      .box {
+        width: 100px;
+        height: 100px;
+        background-color: #8df0cc;
+        border-radius: 10px;
+        transform: scale(0.4);
+      }
+    </style>
+  </section>
+
+  <section id="css-grid-animation">
+    <h3>CSS Grid Animation</h3>
+    <div class="container__path" style="rotate: -5deg">
+      <div class="box__cssgridmain"></div>
+      <div class="box__cssgrid"></div>
+      <div class="box__cssgrid"></div>
+      <div class="box__cssgrid"></div>
+      <div class="box__cssgrid"></div>
+      <div class="box__cssgrid"></div>
+      <div class="box__cssgrid"></div>
+      <div class="box__cssgrid"></div>
+      <div class="box__cssgrid"></div>
+      <div class="box__cssgrid"></div>
+    </div>
+    <style>
+      #css-grid-animation .container__path {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 200px);
+        gap: 1rem;
+
+        justify-items: center;
+        align-items: center;
+        .box__cssgrid {
+          background-color: orange;
+          border-radius: 10px;
+          width: 100px;
+          height: 100px;
+        }
+        .box__cssgridmain {
+          background-color: blue;
+          border-radius: 10px;
+          width: 80px;
+          height: 80px;
+          top: 0;
+          left: 0;
+          position: absolute;
+        }
+      }
+    </style>
+    <script>
+      import { animate } from "motion";
+
+      // Assert NodeListOf<Element> to NodeListOf<HTMLElement>
+      const triggerBoxes = document.querySelectorAll<HTMLElement>(
+        "#css-grid-animation .box__cssgrid"
+      );
+      // Assert Element | null to HTMLElement | null
+      const mainBox = document.querySelector<HTMLElement>(
+        "#css-grid-animation .box__cssgridmain"
+      );
+      // Assert Element | null to HTMLElement | null
+      const container = document.querySelector<HTMLElement>(
+        "#css-grid-animation .container__path"
+      );
+
+      if (mainBox && triggerBoxes.length > 0 && container) {
+        // Ensure container has relative or absolute positioning for offset calculations
+        // Now container is HTMLElement, so style is accessible
+        if (getComputedStyle(container).position === "static") {
+          container.style.position = "relative";
+        }
+
+        // Function to start the random tweening
+        const startRandomTween = () => {
+          // Select a random target box
+          const randomIndex = Math.floor(Math.random() * triggerBoxes.length);
+          // triggerBoxes is NodeListOf<HTMLElement>, so targetBox is HTMLElement
+          const targetBox = triggerBoxes[randomIndex];
+
+          // Get the target position relative to the container
+          // Now targetBox is HTMLElement, so offsetLeft/Top are accessible
+          const targetX = targetBox.offsetLeft;
+          const targetY = targetBox.offsetTop;
+
+          // Animate the main box to the target position
+          // mainBox is HTMLElement, animate should accept it
+          animate(
+            mainBox,
+            {
+              x: targetX,
+              y: targetY,
+              // scale: [0.4, 1, 0.6, 1, 0.4], // Start small, grow, shrink slightly, grow, return to start
+              rotate: [0, 90, 180, 270, 360], // Rotate 360 degrees over the path
+              opacity: 1,
+            },
+            {
+              duration: 0.3, // Duration of the tween
+              ease: "easeInOut", // Smooth easing
+            }
+          );
+        };
+
+        // Start the animation immediately
+        startRandomTween();
+
+        // Set an interval to trigger the animation periodically
+        setInterval(startRandomTween, 1200); // Change position every 2 seconds
+      } else {
+        if (!mainBox) console.error("Main box (.box__cssgridmain) not found.");
+        if (triggerBoxes.length === 0)
+          console.error("Trigger boxes (.box__cssgrid) not found.");
+        if (!container)
+          console.error("Container (.container__path) not found.");
+      }
+    </script>
+  </section>
+
+  <section id="css-grid-multiple">
+    <h3>Multiple Boxes CSS Grid Animation</h3>
+    <div class="controls">
+      <label for="num-cols">Cols:</label>
+      <input class="input" type="number" id="num-cols" value="12" min="1" />
+      <label for="num-rows">Rows:</label>
+      <input class="input" type="number" id="num-rows" value="12" min="1" />
+      <label for="num-boxes">Boxes:</label>
+      <input class="input" type="number" id="num-boxes" value="30" min="1" />
+      <button class="btn" id="update-grid-btn">Update Grid</button>
+    </div>
+    <div class="container__path--multiple" style="position: relative;">
+      <!-- Grid cells and moving boxes will be generated here -->
+    </div>
+    <style is:inline>
+      #css-grid-multiple .controls {
+        margin-bottom: 1rem;
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
+      #css-grid-multiple .controls input {
+        width: 50px;
+      }
+      #css-grid-multiple .container__path--multiple {
+        display: inline-grid;
+        /* grid-template-columns will be set by JS */
+        /* grid-template-rows will be set by JS */
+        gap: 0.5rem; /* Smaller gap for more boxes */
+        justify-items: center;
+        align-items: center;
+        min-width: 50%;
+        min-height: 300px; /* Ensure container has some height */
+        border: 1px dashed #ccc;
+        margin-top: 1rem;
+            overflow: auto; /* Required for resize */
+            resize: both;
+      }
+
+      #css-grid-multiple .box__cssgrid-multi {
+        background-color: #f0ad4e; /* Lighter orange */
+        border-radius: 5px;
+        width: 10px; /* Smaller target boxes */
+        height: 10px;
+      }
+
+      #css-grid-multiple .box__cssgridmain-multi {
+        background-color: #3498db; /* Different blue */
+        opacity: 0.8;
+        border-radius: 8px;
+        width: 40px; /* Smaller moving boxes */
+        height: 40px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        will-change: transform;
+        border: 2px solid white;
+      }
+    </style>
+    <script>
+      import { animate } from "motion";
+
+      const multiGridSection = document.getElementById("css-grid-multiple");
+      // Use type assertion for potentially null elements
+      const containerMulti = multiGridSection?.querySelector(
+        ".container__path--multiple"
+      ) as HTMLElement | null;
+      const numColsInput = multiGridSection?.querySelector(
+        "#num-cols"
+      ) as HTMLInputElement | null;
+      const numRowsInput = multiGridSection?.querySelector(
+        "#num-rows"
+      ) as HTMLInputElement | null;
+      const numBoxesInput = multiGridSection?.querySelector(
+        "#num-boxes"
+      ) as HTMLInputElement | null;
+      const updateBtn = multiGridSection?.querySelector(
+        "#update-grid-btn"
+      ) as HTMLButtonElement | null;
+
+      let movingBoxes: HTMLElement[] = [];
+      let targetBoxes: HTMLElement[] = [];
+      let animationInterval: NodeJS.Timeout | null = null; // Use NodeJS.Timeout for setInterval return type
+      // Map to track which target each mover is currently heading towards
+      const currentDestinations = new Map<HTMLElement, HTMLElement>();
+
+      function setupGrid() {
+        // Guard clauses with type checking
+        if (
+          !containerMulti ||
+          !numColsInput ||
+          !numRowsInput ||
+          !numBoxesInput
+        ) {
+          console.error(
+            "Initialization failed: One or more required elements not found."
+          );
+          return;
+        }
+
+        // Clear previous grid and boxes
+        containerMulti.innerHTML = "";
+        movingBoxes = [];
+        targetBoxes = [];
+        if (animationInterval) {
+          clearInterval(animationInterval);
+          animationInterval = null; // Reset interval ID
+        }
+
+        const numCols = parseInt(numColsInput.value, 10) || 3;
+        const numRows = parseInt(numRowsInput.value, 10) || 3;
+        const numMoving = parseInt(numBoxesInput.value, 10) || 5;
+
+        // Update grid styles
+        containerMulti.style.gridTemplateColumns = `repeat(${numCols}, 1fr)`;
+        containerMulti.style.gridTemplateRows = `repeat(${numRows}, 1fr)`; // Fixed row height
+
+        // Create target grid cells
+        for (let i = 0; i < numCols * numRows; i++) {
+          const cell = document.createElement("div") as HTMLElement; // Assert type
+          cell.className = "box__cssgrid-multi";
+          containerMulti.appendChild(cell);
+          targetBoxes.push(cell);
+        }
+
+        // Create moving boxes
+        for (let i = 0; i < numMoving; i++) {
+          const mover = document.createElement("div") as HTMLElement; // Assert type
+          mover.className = "box__cssgridmain-multi";
+          // Start at random positions initially for variety
+          // offsetWidth/Height are available on HTMLElement
+          const startX = Math.random() * containerMulti.offsetWidth;
+          const startY = Math.random() * containerMulti.offsetHeight;
+          mover.style.transform = `translate(${startX}px, ${startY}px)`;
+          containerMulti.appendChild(mover);
+          movingBoxes.push(mover);
+        }
+
+        // Clear destinations map
+        currentDestinations.clear();
+        startAnimationLoop();
+      }
+
+      function startAnimationLoop() {
+        if (animationInterval) clearInterval(animationInterval);
+
+        animationInterval = setInterval(() => {
+          if (
+            targetBoxes.length === 0 ||
+            movingBoxes.length === 0 ||
+            !containerMulti
+          )
+            return;
+
+          // Determine currently targeted cells
+          const targetedCells = new Set(currentDestinations.values());
+          // Find cells that are not current destinations
+          let availableCells = targetBoxes.filter(
+            (cell) => !targetedCells.has(cell)
+          );
+
+          movingBoxes.forEach((mover) => {
+            // If no available cells left (e.g., more movers than targets), skip this mover
+            if (availableCells.length === 0) {
+              // console.warn("No available target cells for mover.");
+              return;
+            }
+
+            // Select a random target box
+            const randomIndex = Math.floor(
+              Math.random() * availableCells.length
+            );
+            const newTarget = availableCells[randomIndex]; // newTarget is HTMLElement
+
+            // Mark this cell as taken for this interval tick by removing it from availableCells
+            availableCells.splice(randomIndex, 1);
+
+            // Store the new destination
+            currentDestinations.set(mover, newTarget);
+
+            // Get the target position relative to the container
+            // offset properties are available on HTMLElement
+            const targetX =
+              newTarget.offsetLeft +
+              newTarget.offsetWidth / 2 -
+              mover.offsetWidth / 2;
+            const targetY =
+              newTarget.offsetTop +
+              newTarget.offsetHeight / 2 -
+              mover.offsetHeight / 2;
+
+            animate(
+              mover, // mover is HTMLElement
+              {
+                x: targetX,
+                y: targetY,
+              },
+              {
+                duration: 0.8 + Math.random() * 0.2, // Randomize duration slightly
+                ease: "easeInOut",
+                // Add onComplete callback
+                onComplete: () => {
+                  // When animation finishes, remove the mover from destinations map
+                  // This implicitly frees up the target cell for future selections
+                  currentDestinations.delete(mover);
+                },
+              }
+            );
+          });
+        }, 1600); // Interval for changing targets
+      }
+
+      // Initial setup
+      if (multiGridSection) {
+        setupGrid();
+      }
+
+      // Update grid on button click
+      updateBtn?.addEventListener("click", setupGrid);
+    </script>
+  </section>
+
+  <section id="state-based-animation">
+    <h3>State-Based Synchronized Animation</h3>
+    <div class="controls">
+      <button id="play-resume-btn" class="btn">Play</button>
+      <button id="pause-reset-btn" class="btn btn-secondary">Pause & Reset</button>
+    </div>
+    <div
+      class="container__state-based"
+      style="position: relative; min-height: 400px; border: 1px solid skyblue; overflow: hidden;"
+    >
+      <!-- Moving boxes will be generated here -->
+    </div>
+    <style is:inline>
+      #state-based-animation .controls {
+        margin-bottom: 1rem;
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
+      #state-based-animation .box__state-mover {
+        background-color: #9b59b6; /* Purple */
+        border-radius: 50%; /* Circle */
+        width: 25px;
+        height: 25px;
+        position: absolute;
+        top: 0; /* Initial CSS position, JS transform will move it */
+        left: 0;
+        will-change: transform;
+        border: 1px solid white;
+        opacity: 0.8;
+      }
+    </style>
+    <script>
+      import { animate, stagger } from "motion";
+
+      const stateSection = document.getElementById("state-based-animation");
+      const containerState = stateSection?.querySelector(
+        ".container__state-based"
+      ) as HTMLElement | null;
+      const playBtn = stateSection?.querySelector(
+        "#play-resume-btn"
+      ) as HTMLButtonElement | null;
+      const pauseBtn = stateSection?.querySelector(
+        "#pause-reset-btn"
+      ) as HTMLButtonElement | null;
+
+      const NUM_BOXES = 60;
+      const BOX_SIZE = 25;
+      let stateMovingBoxes: HTMLElement[] = [];
+      let animationControl: ReturnType<typeof animate> | null = null;
+      let isStateAnimationPaused = false; // Track pause state manually
+
+      type Point = { x: number; y: number };
+
+      // --- Shape Generation Helpers ---
+      const containerW = containerState?.offsetWidth ?? 600; // Use container size or default
+      const containerH = containerState?.offsetHeight ?? 400;
+
+      // Helper to distribute points evenly along a path (array of points)
+      function distributePointsOnPath(pathPoints: Point[], numTargetPoints: number): Point[] {
+          if (!pathPoints || pathPoints.length < 2) return Array(numTargetPoints).fill({ x: containerW / 2, y: containerH / 2 }); // Default if path invalid
+
+          const distances: number[] = [0];
+          let totalLength = 0;
+          for (let i = 1; i < pathPoints.length; i++) {
+              const dx = pathPoints[i].x - pathPoints[i - 1].x;
+              const dy = pathPoints[i].y - pathPoints[i - 1].y;
+              const segmentLength = Math.sqrt(dx * dx + dy * dy);
+              totalLength += segmentLength;
+              distances.push(totalLength);
+          }
+
+          const distributedPoints: Point[] = [];
+          if (totalLength === 0) return Array(numTargetPoints).fill(pathPoints[0]); // Path has zero length
+
+          for (let i = 0; i < numTargetPoints; i++) {
+              const targetDist = (i / (numTargetPoints -1 )) * totalLength;
+              // Find which segment this distance falls into
+              let segmentIndex = distances.findIndex(d => d >= targetDist);
+              if (segmentIndex === -1) segmentIndex = distances.length - 1; // Should not happen if targetDist <= totalLength
+              if (segmentIndex === 0) segmentIndex = 1; // Start from the first segment
+
+              const distIntoSegment = targetDist - distances[segmentIndex - 1];
+              const segmentLength = distances[segmentIndex] - distances[segmentIndex - 1];
+              const t = segmentLength === 0 ? 0 : distIntoSegment / segmentLength;
+
+              const p1 = pathPoints[segmentIndex - 1];
+              const p2 = pathPoints[segmentIndex];
+              distributedPoints.push({ 
+                  x: p1.x + t * (p2.x - p1.x),
+                  y: p1.y + t * (p2.y - p1.y)
+              });
+          }
+           // Adjust to center points around their calculated position based on box size
+           return distributedPoints.map(p => ({ x: p.x - BOX_SIZE / 2, y: p.y - BOX_SIZE / 2 }));
+      }
+
+      // 1. READY STATE: Grid at top
+      const cols = Math.ceil(Math.sqrt(NUM_BOXES * (containerW/containerH)));
+      const rows = Math.ceil(NUM_BOXES / cols);
+      const readyGridSpacingX = (containerW - BOX_SIZE * cols) / (cols + 1);
+      const readyGridSpacingY = 15;
+      const READY_POSITIONS: Array<Point> = Array.from({ length: NUM_BOXES }, (_, i) => ({ 
+          x: readyGridSpacingX + (i % cols) * (BOX_SIZE + readyGridSpacingX),
+          y: readyGridSpacingY + Math.floor(i / cols) * (BOX_SIZE + readyGridSpacingY)
+      }));
+
+      // 2. STATE 1: Random Scatter
+      const STATE_RANDOM: Array<Point> = Array.from({ length: NUM_BOXES }, () => ({ 
+          x: Math.random() * (containerW - BOX_SIZE),
+          y: Math.random() * (containerH - BOX_SIZE)
+      }));
+
+      // 3. STATE 2: Square Outline
+      const squareSize = Math.min(containerW, containerH) * 0.7;
+      const sqTop = (containerH - squareSize) / 2;
+      const sqLeft = (containerW - squareSize) / 2;
+      const sqPath: Point[] = [
+          { x: sqLeft, y: sqTop },
+          { x: sqLeft + squareSize, y: sqTop },
+          { x: sqLeft + squareSize, y: sqTop + squareSize },
+          { x: sqLeft, y: sqTop + squareSize },
+          { x: sqLeft, y: sqTop } // Close the path
+      ];
+      const STATE_SQUARE = distributePointsOnPath(sqPath, NUM_BOXES);
+
+      // 4. STATE 3: Circle Outline
+      const circleRadius = Math.min(containerW, containerH) * 0.35;
+      const circCenterX = containerW / 2;
+      const circCenterY = containerH / 2;
+      const STATE_CIRCLE: Array<Point> = Array.from({ length: NUM_BOXES }, (_, i) => {
+          const angle = (i / NUM_BOXES) * 2 * Math.PI;
+          return { 
+              x: circCenterX + circleRadius * Math.cos(angle) - BOX_SIZE / 2, 
+              y: circCenterY + circleRadius * Math.sin(angle) - BOX_SIZE / 2
+          };
+      });
+
+      // 5. STATE 4: X Shape Outline
+      const xMargin = containerW * 0.15;
+      const yMargin = containerH * 0.15;
+      const xPath1: Point[] = [{x: xMargin, y: yMargin}, {x: containerW - xMargin, y: containerH - yMargin}];
+      const xPath2: Point[] = [{x: containerW - xMargin, y: yMargin}, {x: xMargin, y: containerH - yMargin}];
+      // Distribute half the points on each line
+      const halfBoxes = Math.floor(NUM_BOXES / 2);
+      const xPoints1 = distributePointsOnPath(xPath1, halfBoxes);
+      const xPoints2 = distributePointsOnPath(xPath2, NUM_BOXES - halfBoxes); // Remaining points
+      const STATE_X = [...xPoints1, ...xPoints2];
+
+      // 6. STATE 5: Manual Placeholders
+      const STATE_MANUAL: Array<Point> = Array.from({ length: NUM_BOXES }, () => ({ x: 0, y: 0 }));
+
+      // Define the explicit states as per the user's interval examples
+      const STATES: Array<Array<Point>> = [
+          STATE_RANDOM,
+          STATE_SQUARE,
+          STATE_CIRCLE,
+          STATE_X,
+          STATE_MANUAL
+      ];
+
+      // Function to immediately place boxes at given positions
+      function placeBoxes(positions: Array<Point>) {
+          stateMovingBoxes.forEach((box, i) => {
+              if (positions[i]) {
+                  animate(
+                      box,
+                      { x: positions[i].x, y: positions[i].y },
+                      { duration: 0 }
+                  );
+              }
+          });
+      }
+
+      // Function to create and play the state timeline
+      function createAndPlayTimeline() {
+          if (!containerState) return;
+          
+          // Stop existing timeline if any before creating a new one
+          if (animationControl) animationControl.stop();
+
+          // Setup state transitions with interval
+          let currentStateIndex = 0;
+          let isRunning = true;
+          let activeAnimations: Array<ReturnType<typeof animate>> = [];
+
+          // Define animation controls for the interval-based approach
+          const controls = {
+              play: () => { 
+                  isRunning = true; 
+                  // Resume all active animations
+                  activeAnimations.forEach(anim => anim.play());
+                  // If we're between states, start the next state
+                  if (activeAnimations.length === 0) {
+                      animateToNextState();
+                  }
+              },
+              pause: () => { 
+                  isRunning = false; 
+                  // Pause all active animations
+                  activeAnimations.forEach(anim => anim.pause());
+              },
+              stop: () => { 
+                  isRunning = false; 
+                  clearTimeout(timeoutId);
+                  // Stop all active animations
+                  activeAnimations.forEach(anim => anim.stop());
+                  activeAnimations = [];
+              },
+          };
+
+          let timeoutId: ReturnType<typeof setTimeout>;
+          // This function animates to the next state and sets up the next animation
+          function animateToNextState() {
+              if (!isRunning || !containerState) return;
+              
+              const targets = STATES[currentStateIndex];
+              
+              // Clear previous animations
+              activeAnimations = [];
+              
+              // Animate each box to its target position with tweening
+              stateMovingBoxes.forEach((box, index) => {
+                  if (index < targets.length) {
+                      const animation = animate(
+                          box, 
+                          { x: targets[index].x, y: targets[index].y }, 
+                          { 
+                              duration: 1.5, // Longer to see the animation
+                              ease: "easeInOut", // Clear easing
+                              onComplete: () => {
+                                  // Remove this animation from active list when done
+                                  const animIndex = activeAnimations.indexOf(animation);
+                                  if (animIndex !== -1) {
+                                      activeAnimations.splice(animIndex, 1);
+                                  }
+                              }
+                          }
+                      );
+                      // Store reference to this animation
+                      activeAnimations.push(animation);
+                  }
+              });
+
+              // Move to the next state after a delay
+              timeoutId = setTimeout(() => {
+                  // Increment state index and loop back to start if needed
+                  currentStateIndex = (currentStateIndex + 1) % STATES.length;
+                  // Continue the animation loop if still running
+                  if (isRunning) {
+                      animateToNextState();
+                  }
+              }, 2500); // Wait 2.5 seconds before moving to next state (duration + pause)
+          }
+
+          // Start the animation loop
+          animateToNextState();
+          
+          // Return controls that mimic the animation controls API
+          animationControl = controls as unknown as ReturnType<typeof animate>;
+          isStateAnimationPaused = false; // Mark as running
+
+          if(playBtn) playBtn.textContent = "Pause";
+      }
+
+      // Function to animate boxes back to ready positions
+      function animateToReadyPosition() {
+          if (!containerState) return;
+          
+          // Stop any ongoing animations first
+          if (animationControl) animationControl.stop();
+          
+          // Animate each box back to its ready position with a slight stagger for visual interest
+          stateMovingBoxes.forEach((box, index) => {
+              if (index < READY_POSITIONS.length) {
+                  animate(
+                      box, 
+                      { x: READY_POSITIONS[index].x, y: READY_POSITIONS[index].y }, 
+                      { 
+                          duration: 1.0, 
+                          ease: "easeInOut",
+                          delay: index * 0.02 // Very slight stagger for visual effect
+                      }
+                  );
+              }
+          });
+          
+          // Reset control variables
+          animationControl = null;
+          isStateAnimationPaused = false;
+          if(playBtn) playBtn.textContent = "Play";
+      }
+
+      // --- Initialization ---
+      function initializeStateAnimation() {
+          if (!containerState) {
+              console.error("State-based animation container not found.");
+              return;
+          }
+
+          // Clear existing boxes and state
+          containerState.innerHTML = '';
+          stateMovingBoxes = [];
+          if (animationControl) {
+              animationControl.stop();
+              animationControl = null;
+          }
+          isStateAnimationPaused = false;
+          if(playBtn) playBtn.textContent = "Play";
+
+          // Create the boxes
+          for (let i = 0; i < NUM_BOXES; i++) {
+              const mover = document.createElement('div');
+              mover.className = 'box__state-mover';
+              mover.style.width = `${BOX_SIZE}px`;
+              mover.style.height = `${BOX_SIZE}px`;
+              containerState.appendChild(mover);
+              stateMovingBoxes.push(mover);
+          }
+          // Place boxes in ready state initially
+          placeBoxes(READY_POSITIONS);
+      }
+
+      // Run initialization once on load
+      initializeStateAnimation();
+
+      // --- Event Listeners ---
+      playBtn?.addEventListener("click", () => {
+          if (!animationControl) {
+              // No animation running, start new timeline
+              createAndPlayTimeline();
+          } else if (isStateAnimationPaused) {
+              // Animation paused, resume it
+              animationControl.play();
+              isStateAnimationPaused = false;
+              playBtn.textContent = "Pause";
+          } else {
+              // Animation running, pause it
+              animationControl.pause();
+              isStateAnimationPaused = true;
+              playBtn.textContent = "Resume";
+          }
+      });
+
+      pauseBtn?.addEventListener("click", () => {
+          // Animate boxes back to ready positions instead of just placing them
+          animateToReadyPosition();
+      });
+    </script>
+  </section>
+</div>
+
+<style>
+  section {
+    border-radius: 10px;
+    border: 1px solid #0cdcf7;
+    padding: 1rem;
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+</style>

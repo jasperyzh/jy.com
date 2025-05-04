@@ -36,7 +36,7 @@ const {
 // Use frontmatter data if available, otherwise fall back to props
 const title = frontmatter?.title || propTitle;
 const description = frontmatter?.description || propDescription;
-const date = frontmatter?.date || propDate;
+const date = frontmatter?.pubDate || propDate;
 const category = frontmatter?.category || propCategory;
 const tags = frontmatter?.tags || propTags;
 const status = frontmatter?.status || propStatus;
@@ -54,9 +54,10 @@ const liveUrl = frontmatter?.liveUrl || propLiveUrl;
       title={title}
       description={description}
       tags={tags}
+      classes={["p-6 rounded-lg shadow-lg inline-block z-10 bg-white !static"]}
     />
 
-    <ArticleContent>
+    <ArticleContent classes="">
       <slot />
     </ArticleContent>
 
@@ -64,12 +65,12 @@ const liveUrl = frontmatter?.liveUrl || propLiveUrl;
       returnUrl="/sketches"
       returnLabel="Back to Sketches"
       title={title}
+      classes={["p-6 rounded-lg shadow-lg inline-block z-10 bg-white !static"]}
     />
   </article>
   <!-- </Article> END -->
 </BaseLayout>
 
-<slot />
 <style>
   article {
     grid-column: 1 / -1;

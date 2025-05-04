@@ -491,3 +491,33 @@ To find components using these animations:
     }
   }
 }
+
+
+.prose {
+  max-width: var(--container-5xl);
+  margin-inline: auto;
+}
+
+.btn {
+  @apply bg-primary text-primary-foreground px-4 py-2 rounded-md;
+}
+
+.btn:hover {
+  @apply bg-primary/80;
+}
+
+.btn:active {
+  @apply bg-primary/60;
+}
+
+.btn-secondary {
+  @apply bg-secondary text-secondary-foreground;
+}
+
+.btn-secondary:hover {
+  @apply bg-secondary/80;
+}
+
+.btn-secondary:active {
+  @apply bg-secondary/60;
+}

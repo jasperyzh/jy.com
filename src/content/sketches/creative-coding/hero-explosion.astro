@@ -222,6 +222,12 @@
 
       // Access allSpans inside this function with its index
       allSpans.forEach((span, i) => {
+        // Ensure spanChaosFactors exists for this index
+        if (!spanChaosFactors[i]) {
+          spanChaosFactors[i] = { shift: 0, rotate: 0, scale: 1, interactionCount: 0 };
+        }
+        const chaosFactor = spanChaosFactors[i]; // Reference for easier access
+
         const rect = span.getBoundingClientRect();
         // Calculate the center of the span relative to the viewport
         const spanCenterX = rect.left + rect.width / 2;
@@ -236,121 +242,119 @@
         const maxDisplacement = 60; // Maximum pixels to displace a word (increased from 30)
         const influenceRadius = 150; // Pixels radius around pointer where words are affected
 
+        let transformStyle = "translate3d(0, 0, 0)"; // Default transform
+        let displaceX = 0;
+        let displaceY = 0;
+
         if (distance < influenceRadius) {
           // Calculate displacement based on how close the pointer is to the influence edge
-          // As distance goes from 0 to influenceRadius, force goes from 1 to 0
           const force = Math.pow((influenceRadius - distance) / influenceRadius, 1.5); // Added exponential curve for more dramatic effect
 
           // Apply displacement in the direction away from the pointer
-          const displaceX = (deltaX / distance) * maxDisplacement * force;
-          const displaceY = (deltaY / distance) * maxDisplacement * force;
+          displaceX = (deltaX / distance) * maxDisplacement * force;
+          displaceY = (deltaY / distance) * maxDisplacement * force;
 
-          // Apply the transform. We use translate3d for potential hardware acceleration
-          span.style.transform = `translate3d(${displaceX}px, ${displaceY}px, 0)`;
-          span.style.transitionDuration = "0s"; // Remove transition while actively moving
-          
           // If we moved this span significantly, increase its personal chaos factor
           if (Math.abs(displaceX) > 0.5 || Math.abs(displaceY) > 0.5) {
-            // This span was affected - increase its chaos
-            if (!spanChaosFactors[i]) {
-              spanChaosFactors[i] = { shift: 0, rotate: 0, scale: 1, interactionCount: 0 };
-            }
-            
-            // Increase this span's personal interaction count
-            spanChaosFactors[i].interactionCount = Math.min(
+            // This span was affected - increase its chaos interaction count
+            chaosFactor.interactionCount = Math.min(
               MAX_INTERACTIONS,
-              spanChaosFactors[i].interactionCount + 0.1
+              chaosFactor.interactionCount + 0.2 // Increase chaos faster during interaction
             );
-            
+
             if (Math.abs(displaceX) > 0.1 || Math.abs(displaceY) > 0.1) {
                 console.log(`Span displace: X=${displaceX.toFixed(2)}, Y=${displaceY.toFixed(2)}`); // Log displacement
                 appliedTransform = true;
             }
           }
-          
+
+          // --- Apply Real-time Chaos Effects ---
+          const chaosLevel = chaosFactor.interactionCount / MAX_INTERACTIONS;
+
+          if (chaosLevel > 0) {
+              // Calculate instantaneous chaos values
+              const currentRotate = (Math.random() - 0.5) * 30 * chaosLevel; // Smaller, jittery rotation
+              const currentScale = 1 + (Math.random() - 0.5) * 0.4 * chaosLevel; // Slight scale jitter
+              const flipX = chaosLevel > 0.7 && Math.random() > 0.8 ? 'scaleX(-1)' : '';
+              const flipY = chaosLevel > 0.8 && Math.random() > 0.9 ? 'scaleY(-1)' : '';
+
+              // Combine displacement and instantaneous chaos transforms
+              transformStyle = `
+                translate3d(${displaceX}px, ${displaceY}px, 0)
+                rotate(${currentRotate}deg)
+                scale(${currentScale})
+                ${flipX} ${flipY}
+              `;
+
+              // Apply color/filter chaos based on level
+              if (chaosLevel > 0.3) {
+                  const blurAmount = Math.min(5, Math.random() * 8 * (chaosLevel - 0.2));
+                  if (Math.random() > 0.6) {
+                      const hue = Math.floor(Math.random() * 360);
+                      span.style.color = `hsl(${hue}, 100%, 60%)`;
+                      span.style.textShadow = `0 0 ${blurAmount}px rgba(255,255,255,0.5)`;
+                      span.style.filter = ""; // Reset filter if color changes
+                  } else {
+                      span.style.filter = `blur(${blurAmount}px)`;
+                      span.style.color = ""; // Reset color if blur changes
+                      span.style.textShadow = "";
+                  }
+              } else {
+                  // Reset color/filter if chaos is low
+                  span.style.color = "";
+                  span.style.textShadow = "";
+                  span.style.filter = "";
+              }
+          } else {
+              // Just apply displacement if no chaos yet
+              transformStyle = `translate3d(${displaceX}px, ${displaceY}px, 0)`;
+              span.style.color = "";
+              span.style.textShadow = "";
+              span.style.filter = "";
+          }
+
+          span.style.transitionDuration = "0s"; // Apply effects immediately
+
         } else {
-          // When pointer is outside influence radius, let CSS transition handle return
-          // We don't apply any transform here as this will be handled in removeDisplacement
+          // Pointer is outside influence radius for this span.
+          // Gradually reduce interaction count if not actively interacting
+          chaosFactor.interactionCount = Math.max(0, chaosFactor.interactionCount - 0.05);
+          const chaosLevel = chaosFactor.interactionCount / MAX_INTERACTIONS;
+
+          // Apply residual chaos (optional, could just reset to 0,0,0)
+           if (chaosLevel > 0.01) {
+              // Keep a slight jitter based on residual chaos
+              const residualRotate = (Math.random() - 0.5) * 5 * chaosLevel;
+              const residualScale = 1 + (Math.random() - 0.1) * 0.1 * chaosLevel;
+               transformStyle = `translate3d(0, 0, 0) rotate(${residualRotate}deg) scale(${residualScale})`;
+               span.style.transitionDuration = "0.1s"; // Smoothly settle
+           } else {
+               // Reset transform if chaos is negligible
+               transformStyle = "translate3d(0, 0, 0)";
+               span.style.transitionDuration = "0.3s"; // Standard return transition
+           }
+           // Reset visual styles when not under direct influence
+           span.style.color = "";
+           span.style.textShadow = "";
+           span.style.filter = "";
         }
-      });
-      
-      // Track that an interaction occurred
+
+        // Apply the calculated transform
+        span.style.transform = transformStyle;
+
+      }); // End forEach span
+
+      // Track that an interaction occurred (globally)
       if (appliedTransform) {
         // Only count it as a new interaction if significant movement happened
-        interactionCount = Math.min(MAX_INTERACTIONS, interactionCount + 0.05);
-        console.log(`Interaction intensity: ${interactionCount.toFixed(2)}/${MAX_INTERACTIONS}`);
+        interactionCount = Math.min(MAX_INTERACTIONS, interactionCount + 0.05); // Keep global count for reference if needed elsewhere
+        console.log(`Global Interaction intensity: ${interactionCount.toFixed(2)}/${MAX_INTERACTIONS}`);
       }
-    }
-
-    function removeDisplacement() {
-      console.log("Remove displacement called"); // Log function call
-            
-      allSpans.forEach((span, i) => {
-        // Get or initialize this span's chaos factors
-        if (!spanChaosFactors[i]) {
-          spanChaosFactors[i] = { shift: 0, rotate: 0, scale: 1, interactionCount: 0 };
-        }
-        
-        // Use this specific span's interaction count for its chaos level
-        const spanInteractionCount = spanChaosFactors[i].interactionCount;
-        const chaosLevel = spanInteractionCount / MAX_INTERACTIONS;
-        
-        // Only apply chaos if this specific span has been interacted with
-        if (chaosLevel > 0) {
-          // Calculate new chaos values with some randomness 
-          // but also persistence (building on previous values)
-          let chaosFactor = spanChaosFactors[i];
-          
-          // Add new random shifts that get more extreme with more interactions
-          const maxShiftX = 30 * chaosLevel; 
-          const maxShiftY = 30 * chaosLevel;
-          const maxRotate = 180 * chaosLevel; // up to 180 degrees
-          const minScale = Math.max(0.5, 1 - (0.5 * chaosLevel)); // shrink to 50% at most
-          const maxScale = 1 + (0.5 * chaosLevel); // grow to 150% at most
-          
-          // Update chaos with persistence (keep some of previous chaos)
-          chaosFactor.shift = chaosFactor.shift * 0.8 + (Math.random() - 0.5) * maxShiftX;
-          chaosFactor.rotate = chaosFactor.rotate * 0.8 + (Math.random() - 0.5) * maxRotate;
-          
-          // For scale, we want to be more careful to avoid making text disappear completely
-          const randomScaleFactor = Math.random() * (maxScale - minScale) + minScale;
-          chaosFactor.scale = (chaosFactor.scale * 0.9) + (randomScaleFactor * 0.1);
-          
-          // Maximum chaos makes letters randomly flip
-          const flipX = chaosLevel > 0.7 && Math.random() > 0.7 ? 'scaleX(-1)' : '';
-          const flipY = chaosLevel > 0.8 && Math.random() > 0.8 ? 'scaleY(-1)' : '';
-          
-          // Apply the transform with the accumulated chaos
-          span.style.transform = `
-            translate3d(${chaosFactor.shift}px, ${chaosFactor.shift}px, 0)
-            rotate(${chaosFactor.rotate}deg)
-            scale(${chaosFactor.scale})
-            ${flipX} ${flipY}
-          `;
-          
-          // At higher chaos levels, randomly change colors and blur
-          if (chaosLevel > 0.4) {
-            const blurAmount = Math.min(10, Math.random() * 10 * (chaosLevel - 0.4));
-            if (Math.random() > 0.7) {
-              const hue = Math.floor(Math.random() * 360);
-              span.style.color = `hsl(${hue}, 100%, 50%)`;
-              span.style.textShadow = `0 0 ${blurAmount}px rgba(255,255,255,0.7)`;
-            } else {
-              span.style.filter = `blur(${blurAmount}px)`;
-            }
-          }
-        } else {
-          // No chaos for this span - return to normal position
-          span.style.transform = "translate3d(0, 0, 0)";
-        }
-        
-        span.style.transitionDuration = "0.6s"; // Slightly longer transition for return
-      });
     }
 
     // Add mouse/touch listeners to the container
     heroSection.addEventListener("mousemove", applyDisplacement);
-    heroSection.addEventListener("mouseleave", removeDisplacement);
+    // heroSection.addEventListener("mouseleave", removeDisplacement); // No longer reset on leave
 
     heroSection.addEventListener(
       "touchmove",
@@ -361,20 +365,17 @@
       { passive: false }
     ); // passive: false is needed for preventDefault
 
-    heroSection.addEventListener("touchend", removeDisplacement);
-    heroSection.addEventListener("touchcancel", removeDisplacement);
+    // heroSection.addEventListener("touchend", removeDisplacement); // No longer reset on end
+    // heroSection.addEventListener("touchcancel", removeDisplacement); // No longer reset on cancel
 
     // --- Bomb Interaction ---
     bombButton.addEventListener("click", () => {
       // Explicitly check heroContent again to satisfy linter inside this scope
-      if (!heroContent) return;
+      if (!heroContent || !bombButton || !resetButton) return;
       
       // Remove swipe listeners temporarily
       heroSection.removeEventListener("mousemove", applyDisplacement);
-      heroSection.removeEventListener("mouseleave", removeDisplacement);
       heroSection.removeEventListener("touchmove", applyDisplacement);
-      heroSection.removeEventListener("touchend", removeDisplacement);
-      heroSection.removeEventListener("touchcancel", removeDisplacement);
 
       const containerRect = heroContent.getBoundingClientRect(); // Already null-checked heroContent
       const containerCenterX = containerRect.left + containerRect.width / 2;
@@ -417,17 +418,35 @@
 
       // Disable buttons after bomb
       bombButton.disabled = true;
-      resetButton.disabled = true;
+      resetButton.disabled = false;
 
       // Re-enable buttons after explosion animation finishes
-      setTimeout(() => {
-        bombButton.disabled = false;
-        resetButton.disabled = false;
-      }, 1500); // Roughly matches the max explosion animation duration
+      // Buttons will be re-enabled by the Reset button now
     });
 
     // --- Reset Interaction ---
     resetButton.addEventListener("click", () => {
+      console.log("Reset button clicked");
+
+      // Always perform a full reset
+
+      // Restore original HTML structure
+      if (mainTitleElement) mainTitleElement.innerHTML = originalHTML.h1;
+      if (subtitleElement) subtitleElement.innerHTML = originalHTML.h2;
+      if (introParagraphElement) introParagraphElement.innerHTML = originalHTML.p;
+
+      // Re-initialize spans, collect them, and reset chaos factors
+      initializeTextSpans();
+      initializeChaosFactors();
+      explodedPositions = []; // Clear any explosion data
+
+      // Ensure all spans are visible and reset styles immediately
+      // We use a slight delay before applying transition for the reset effect
+      allSpans.forEach((span) => {
+          span.style.transition = "none"; // Remove transition for immediate reset
+          span.style.transform = "translate3d(0, 0, 0)";
+          span.style.opacity = "1";
+          span.style.color = "";
       // Check if we're resetting after an explosion
       const isAfterExplosion = explodedPositions.length > 0;
       

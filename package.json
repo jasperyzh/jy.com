@@ -34,6 +34,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "lucide-react": "^0.483.0",
+    "motion": "^12.9.4",
     "photoswipe": "^5.4.4",
     "pinia": "^3.0.1",
     "pixi-filters": "^6.1.0",
