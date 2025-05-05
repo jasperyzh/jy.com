@@ -5,6 +5,7 @@ import LandingPage from "@/components/LandingPage.astro";
 // import HeroExplosion from "./demo/demo-hero-explosion.astro";
 import Button from "@/components/starwind/button/Button.astro";
 import { Icon } from "astro-icon/components";
+import LandingPortrait from "@/components/LandingPortrait.astro";
 
 // Redirect to coming-soon page in production
 // const isProduction = import.meta.env.PROD;
@@ -36,7 +37,7 @@ import { Icon } from "astro-icon/components";
       <span class="inline-block tracking-wider align-baseline">Sharing.</span>
     </h1>
 
-    <script is:inline>
+    <script>
       import { animate, stagger } from "motion";
 
       // Animate intro heading spans
@@ -81,13 +82,9 @@ import { Icon } from "astro-icon/components";
 
   <section class="the-designer grid-container !mt-12 md:!mt-4">
     <figure
-      class="w-40 h-40 md:w-56 md:h-56 bg-gray-300 rounded-full mx-auto md:mx-0 self-center align-center col-span-2 col-start-1 row-start-1 md:row-start-1 md:row-span-2"
+      class="aspect-square mx-auto md:mx-0 self-center align-center col-span-2 col-start-1 row-start-1 md:row-start-1 md:row-span-2 self-end"
     >
-      <img
-        src="/assets/images/placeholder.png"
-        alt="The Designer Portrait"
-        class="w-full h-full object-cover rounded-full"
-      />
+      <LandingPortrait />
     </figure>
 
     <header class="col-start-3 col-span-4 md:col-span-4 row-start-1">
@@ -95,7 +92,7 @@ import { Icon } from "astro-icon/components";
       <h2 class="heading-with-number !text-4xl font-medium" data-number="1.2">
         Learning, Living Well
       </h2>
-      <p class="text-gray-500 italic">(Wow, where I heard that before?)</p>
+      <p class="text-gray-200 italic">(Wow, where I heard that before?)</p>
     </header>
 
     <div
@@ -131,11 +128,11 @@ import { Icon } from "astro-icon/components";
 
     <!-- <h3 class="mt-12 mb-6">Good design is...</h3> -->
     <div
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8 col-span-6"
+      class="grid grid-cols-subgrid gap-6 mt-8 col-span-6 my-6"
     >
       <!-- Card 3: Creative Code -->
       <div
-        class="p-6 rounded-lg border shadow-sm hover:shadow-md transition-shadow duration-200"
+        class="col-span-6 lg:col-span-2 p-6 rounded-lg border shadow-sm hover:shadow-md transition-shadow duration-200"
       >
         <Icon name="bi:code-slash" class="w-6 h-6 mb-2 text-red-500" />
         <h3 class="text-lg font-semibold mb-2">Creative Code</h3>
@@ -146,7 +143,7 @@ import { Icon } from "astro-icon/components";
       </div>
       <!-- Card 1: Blog -->
       <div
-        class="p-6 rounded-lg border shadow-sm hover:shadow-md transition-shadow duration-200"
+        class="col-span-6 lg:col-span-2 p-6 rounded-lg border shadow-sm hover:shadow-md transition-shadow duration-200"
       >
         <Icon name="bi:book" class="w-6 h-6 mb-2 text-blue-500" />
         <h3 class="text-lg font-semibold mb-2">Blog</h3>
@@ -158,7 +155,7 @@ import { Icon } from "astro-icon/components";
       </div>
       <!-- Card 4: Documentation -->
       <div
-        class="p-6 rounded-lg border shadow-sm hover:shadow-md transition-shadow duration-200 row-start-2"
+        class="col-span-6 lg:col-span-2 p-6 rounded-lg border shadow-sm hover:shadow-md transition-shadow duration-200 lg:row-start-2"
       >
         <Icon name="bi:journal-text" class="w-6 h-6 mb-2 text-green-500" />
         <h3 class="text-lg font-semibold mb-2">Documentation</h3>
@@ -169,7 +166,7 @@ import { Icon } from "astro-icon/components";
       </div>
       <!-- Card 2: Portfolio -->
       <div
-        class="p-6 rounded-lg border shadow-sm hover:shadow-md transition-shadow duration-200 row-start-2"
+        class="col-span-6 lg:col-span-2 p-6 rounded-lg border shadow-sm hover:shadow-md transition-shadow duration-200 lg:row-start-2"
       >
         <Icon name="bi:briefcase" class="w-6 h-6 mb-2 text-purple-500" />
         <h3 class="text-lg font-semibold mb-2">Portfolio</h3>
@@ -180,7 +177,7 @@ import { Icon } from "astro-icon/components";
       </div>
       <!-- Card 5: Resume -->
       <div
-        class="p-6 rounded-lg border shadow-sm hover:shadow-md transition-shadow duration-200 row-start-2"
+        class="col-span-6 lg:col-span-2 p-6 rounded-lg border shadow-sm hover:shadow-md transition-shadow duration-200 lg:row-start-2"
       >
         <Icon
           name="bi:file-earmark-person"

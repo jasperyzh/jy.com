@@ -1,0 +1,276 @@
+<div id="portrait-sketch" class="w-full h-full rounded-full overflow-hidden"></div>
+
+<script>
+  // Wait for P5 to be loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    // Check if P5 is already loaded
+    if (!(window as any).p5) {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js';
+      script.onload = initSketch;
+      document.head.appendChild(script);
+    } else {
+      initSketch();
+    }
+  });
+
+  function initSketch() {
+    const container = document.getElementById('portrait-sketch');
+    if (container && (window as any).p5) {
+      new (window as any).p5(sketch, container);
+    }
+  }
+
+  function sketch(p) {
+    let portraitImg;
+    let minDensity = 55; // Minimum dots/columns across the *image width* (coarsest)
+    let maxDensity = 59; // Maximum dots/columns across the *image width* (finest)
+    let currentDensity; // Density used for drawing this frame
+    let targetDensity; // The random density value we are moving towards
+    let densityChangeInterval = 3; // Change target density every X frames (approx 0.66 seconds at 60fps)
+    let densityLerpSpeed = 0.55; // Speed at which currentDensity smooths towards targetDensity
+
+    let offsetRange = 15; // Max pixels the pattern will shift
+
+    let displayWidth, displayHeight, displayX, displayY; // Image display area properties on canvas
+
+    let minDotSizeFactor = 0.1; // Minimum radius as a factor of scaledDotSpacing/2 (helps hide very light areas)
+
+    // Animation variables for looping opacity
+    let animationSpeed = 0.03; // Speed of the opacity cycle (adjust as needed)
+    let animationPhaseFactor = 0.5; // Multiplier for position-based animation phase offset
+
+    // Fade variables for hover effect
+    let fadeTarget = 0; // 0: dots visible, image hidden; 1: image visible, dots hidden
+    let fadeProgress = 0.5; // Current interpolation progress (0 to 1)
+    let fadeSpeed = 0.48; // Speed of the fade transition
+
+    p.preload = function() {
+      // Load your portrait image
+      try {
+        portraitImg = p.loadImage('/assets/images/portrait.png');
+      } catch (error) {
+        console.error("Failed to load image:", error);
+      }
+    };
+
+    p.setup = function() {
+      p.frameRate(60);
+      // Make canvas match the portrait container size - will be square and responsive
+      const container = document.getElementById('portrait-sketch');
+      if (container) {
+        const size = Math.min(container.offsetWidth, container.offsetHeight);
+        p.createCanvas(size, size);
+      } else {
+        // Fallback size if container not found
+        p.createCanvas(300, 300);
+      }
+      p.pixelDensity(1); // Ensure consistent pixel reading
+      p.noStroke(); // Halftone dots won't have an outline
+
+      // Calculate the initial display size and position of the image area
+      calculateImageDisplay();
+
+      // Initialize target density and current density
+      targetDensity = p.random(minDensity, maxDensity);
+      currentDensity = targetDensity;
+
+      // Initial fade state
+      fadeProgress = 0; // Start with dots visible, image hidden
+      fadeTarget = 0;
+    };
+
+    p.draw = function() {
+      p.clear(); // Clear the canvas for transparency and animation
+
+      // If the image failed to load, display a message
+      if (!portraitImg || portraitImg.width === 0 || portraitImg.height === 0) {
+        p.textAlign(p.CENTER, p.CENTER);
+        p.textSize(20);
+        p.fill(50); // Dark gray text
+        if (!portraitImg) {
+          p.text("Loading image failed.", p.width / 2, p.height / 2);
+        } else {
+          p.text("Loading image...", p.width / 2, p.height / 2);
+        }
+        return; // Stop the rest of the draw loop
+      }
+
+      // --- Update parameters ---
+
+      // 1. Update random density (Glitch Effect)
+      if (p.frameCount % densityChangeInterval === 0) {
+        targetDensity = p.random(minDensity, maxDensity);
+      }
+      // Smoothly interpolate current density towards the target density
+      currentDensity = p.lerp(currentDensity, targetDensity, densityLerpSpeed);
+      // Ensure currentDensity stays within bounds even with interpolation
+      currentDensity = p.constrain(currentDensity, minDensity, maxDensity);
+
+      // 2. Update fade state (Mouse Hover Effect)
+      if (p.mouseX > 0 && p.mouseX < p.width && p.mouseY > 0 && p.mouseY < p.height) {
+        fadeTarget = 1; // Mouse is over, target image visible
+      } else {
+        fadeTarget = 0; // Mouse is out, target dots visible
+      }
+      // Smoothly interpolate the fade progress
+      fadeProgress = p.lerp(fadeProgress, fadeTarget, fadeSpeed);
+      // Ensure fadeProgress stays within bounds
+      fadeProgress = p.constrain(fadeProgress, 0, 1);
+
+      // 3. Calculate offset based on mouse/touch position (Minor Interaction)
+      let offsetX = 0;//p.map(p.mouseX, 0, p.width, -offsetRange, offsetRange);
+      let offsetY = 0;//p.map(p.mouseY, 0, p.height, -offsetRange, offsetRange);
+
+      // --- Draw the content ---
+
+      // Apply the offset translation to everything being drawn
+      p.push(); // Save the current drawing state
+      p.translate(offsetX, offsetY); // Shift the origin
+
+      // Calculate drawing properties based on the current density
+      // The number of dots across the *scaled display width* is currentDensity.
+      // So, the spacing on the canvas is displayWidth / currentDensity.
+      let scaledDotSpacing = displayWidth / currentDensity;
+
+      // Calculate the maximum radius based on the spacing
+      let maxRadius = scaledDotSpacing / 2;
+      let actualMinDotSize = maxRadius * minDotSizeFactor; // Minimum radius threshold
+
+      // --- Draw Halftone Dots (fading out with hover) ---
+      // Only draw dots if they are not almost completely faded out by the hover effect
+      if (fadeProgress < 0.99) { // If fadeProgress is near 1, the dotAlpha will be near 0 anyway
+        // Iterate over the grid positions on the CANVAS DISPLAY AREA
+        // Start drawing half a spacing unit in so dots are centered in cells
+        for (let canvasY = displayY + scaledDotSpacing / 2; canvasY < displayY + displayHeight; canvasY += scaledDotSpacing) {
+          for (let canvasX = displayX + scaledDotSpacing / 2; canvasX < displayX + displayWidth; canvasX += scaledDotSpacing) {
+
+            // --- Sample color from the original image ---
+            // Map the current canvas grid position (canvasX, canvasY) back to the
+            // corresponding pixel coordinates on the original image (imgX, imgY).
+            let imgX = p.map(canvasX, displayX, displayX + displayWidth, 0, portraitImg.width);
+            let imgY = p.map(canvasY, displayY, displayY + displayHeight, 0, portraitImg.height);
+
+            // Use get() to sample the pixel color at imgX, imgY safely
+            let c = portraitImg.get(p.floor(imgX), p.floor(imgY));
+            let r = c[0];
+            let g = c[1];
+            let b = c[2];
+            let alpha = c[3]; // Source pixel alpha
+            
+            // Calculate a grayscale value from the RGB. Simple average is common.
+            let gray = (r + g + b) / 3;
+
+            // Calculate brightness from the RGB values (ignore source alpha for brightness)
+            let bright = p.brightness(p.color(r, g, b));
+
+            // --- Determine dot size based on brightness ---
+            let radius = p.map(bright, 0, 255, maxRadius, 0);
+
+            // --- Skip drawing if source pixel is transparent or dot is too small ---
+            if (alpha === 0 || radius < actualMinDotSize) {
+              continue; // Skip to the next dot
+            }
+
+            // --- Calculate Animation Alpha (looping 0-1) ---
+            // Use the grid cell index for phase offset.
+            let gridX = (canvasX - displayX - scaledDotSpacing / 2) / scaledDotSpacing;
+            let gridY = (canvasY - displayY - scaledDotSpacing / 2) / scaledDotSpacing;
+            let animationPhase = (gridX + gridY) * animationPhaseFactor; // Combine grid position for phase
+
+            // Use a sine wave for looping 0-1 animation
+            let loopingAlpha = p.map(p.sin(p.frameCount * animationSpeed + animationPhase), -5, 1, 0, 1);
+
+            // --- Combine Animation Alpha and Fade Alpha ---
+            // The final alpha for the dot is the looping alpha multiplied by the inverse of the fade progress
+            let dotAlpha = loopingAlpha * (1 - fadeProgress);
+            
+            // --- Set dot color (Grayscale) and draw ---
+            p.fill(gray, gray, gray, dotAlpha * 255); // Alpha is 0-255
+            
+            // Draw the halftone dot at the calculated canvas grid position
+            p.rect(canvasX, canvasY, radius * 2 +p.width * 0.618* 0.618* 0.618* 0.618* 0.618* 0.618, radius * 2 % 9);
+          }
+        }
+      }
+
+      // --- Draw Original Image (fading in with hover) ---
+      // Draw this *after* the dots so it appears on top
+      // Only draw the image if it's not almost completely transparent
+      if (fadeProgress > 0.01) {
+        // Apply tint for fading (255 means original color, fadeProgress*255 is alpha 0-255)
+        p.tint(255, fadeProgress * 255);
+        p.image(portraitImg, displayX, displayY, displayWidth, displayHeight);
+        p.noTint(); // Reset tint so it doesn't affect subsequent drawings (like text if error occurs)
+      }
+
+      p.pop(); // Restore the original drawing state (removes the translation)
+    };
+
+    // Helper function to calculate the image display size and position for mapping
+    // This determines the rectangle on the canvas where the halftone represents the image.
+    function calculateImageDisplay() {
+      if (!portraitImg || portraitImg.width === 0 || portraitImg.height === 0) {
+        displayWidth = 0;
+        displayHeight = 0;
+        displayX = p.width / 2;
+        displayY = p.height / 2;
+        return;
+      }
+
+      let canvasRatio = p.width / p.height;
+      let imgRatio = portraitImg.width / portraitImg.height;
+
+      // Determine whether to fit the image area by canvas height or canvas width
+      if (canvasRatio > imgRatio) {
+        // Canvas is proportionally wider than the image, fit the image area's height
+        displayHeight = p.height;
+        displayWidth = p.height * imgRatio;
+      } else {
+        // Canvas is proportionally taller or same ratio, fit the image area's width
+        displayWidth = p.width;
+        displayHeight = p.width / imgRatio;
+      }
+
+      // Calculate the position to center the image area on the canvas
+      displayX = (p.width - displayWidth) / 2;
+      displayY = (p.height - displayHeight) / 2;
+    }
+
+    // Prevent default touch behavior (like scrolling) on the canvas
+    p.touchStarted = function() {
+      if (p.touches.length > 0) {
+        return false;
+      }
+    };
+
+    p.touchMoved = function() {
+      if (p.touches.length > 0) {
+        return false;
+      }
+    };
+
+    p.touchEnded = function() {
+      if (p.touches.length > 0) {
+        return false;
+      }
+    };
+
+    // Handle window resize
+    p.windowResized = function() {
+      const container = document.getElementById('portrait-sketch');
+      if (container) {
+        const size = Math.min(container.offsetWidth, container.offsetHeight);
+        p.resizeCanvas(size, size);
+        calculateImageDisplay();
+      }
+    };
+  }
+</script>
+
+<style>
+  #portrait-sketch {
+    width: 100%;
+    height: 100%;
+  }
+</style>
