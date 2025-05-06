@@ -23,8 +23,8 @@
 
   function sketch(p) {
     let portraitImg;
-    let minDensity = 55; // Minimum dots/columns across the *image width* (coarsest)
-    let maxDensity = 59; // Maximum dots/columns across the *image width* (finest)
+    let minDensity = 55/1.5; // Minimum dots/columns across the *image width* (coarsest)
+    let maxDensity = 59/1.5; // Maximum dots/columns across the *image width* (finest)
     let currentDensity; // Density used for drawing this frame
     let targetDensity; // The random density value we are moving towards
     let densityChangeInterval = 3; // Change target density every X frames (approx 0.66 seconds at 60fps)
@@ -189,7 +189,7 @@
             p.fill(gray, gray, gray, dotAlpha * 255); // Alpha is 0-255
             
             // Draw the halftone dot at the calculated canvas grid position
-            p.rect(canvasX, canvasY, radius * 2 +p.width * 0.618* 0.618* 0.618* 0.618* 0.618* 0.618, radius * 2 % 9);
+            p.rect(canvasX, canvasY, radius * 2 + p.width * 0.618* 0.618* 0.618* 0.618* 0.618* 0.618, radius * 2 % 15);
           }
         }
       }
@@ -239,21 +239,27 @@
 
     // Prevent default touch behavior (like scrolling) on the canvas
     p.touchStarted = function() {
-      if (p.touches.length > 0) {
+      // Only prevent default if touch is inside the canvas boundaries
+      if (p.mouseX > 0 && p.mouseX < p.width && p.mouseY > 0 && p.mouseY < p.height) {
         return false;
       }
+      return true;
     };
 
     p.touchMoved = function() {
-      if (p.touches.length > 0) {
+      // Only prevent default if touch is inside the canvas boundaries
+      if (p.mouseX > 0 && p.mouseX < p.width && p.mouseY > 0 && p.mouseY < p.height) {
         return false;
       }
+      return true;
     };
 
     p.touchEnded = function() {
-      if (p.touches.length > 0) {
+      // Only prevent default if touch is inside the canvas boundaries
+      if (p.mouseX > 0 && p.mouseX < p.width && p.mouseY > 0 && p.mouseY < p.height) {
         return false;
       }
+      return true;
     };
 
     // Handle window resize

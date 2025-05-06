@@ -1,138 +1,138 @@
 {
-  "src/content/sketches/creative-coding/2024</200830-PerfectLoopSinCosine.mdx": {
-    "lastModified": 1746207365910.7756,
-    "outputPath": "public/thumbnails/sketches/200830-PerfectLoopSinCosine.svg",
-    "title": "Perfect Loop Sin Cosine",
-    "format": "svg"
-  },
   "src/content/sketches/creative-coding/2025/250124-mesh_gradient.mdx": {
-    "lastModified": 1745146696373.6353,
+    "lastModified": 1746382363415.8625,
     "outputPath": "public/thumbnails/sketches/250124-mesh_gradient.svg",
     "title": "Mesh Gradient",
     "format": "svg"
   },
   "src/content/sketches/creative-coding/2025/250402-undo_technique.mdx": {
-    "lastModified": 1745146696369.6353,
+    "lastModified": 1746382363414.8625,
     "outputPath": "public/thumbnails/sketches/250402-undo_technique.svg",
     "title": "Simple Drawing with Undo/Redo",
     "format": "svg"
   },
   "src/content/sketches/creative-coding/2025/250414-generative_grids.mdx": {
-    "lastModified": 1745146696363.6353,
+    "lastModified": 1746382363411.862,
     "outputPath": "public/thumbnails/sketches/250414-generative_grids.svg",
     "title": "Generative Grids",
     "format": "svg"
   },
   "src/content/sketches/creative-coding/2025/250417-perlin_noise.mdx": {
-    "lastModified": 1745146696371.6353,
+    "lastModified": 1746382363411.862,
     "outputPath": "public/thumbnails/sketches/250417-perlin_noise.svg",
     "title": "Perlin Noise Fundamentals",
     "format": "svg"
   },
   "src/content/sketches/creative-coding/2025/250418-poisson_disc_sampling.mdx": {
-    "lastModified": 1746002876465.648,
+    "lastModified": 1746382363352.8552,
     "outputPath": "public/thumbnails/sketches/250418-poisson_disc_sampling.svg",
     "title": "Poisson-Disc Sampling",
     "format": "svg"
   },
   "src/content/sketches/creative-coding/250504-motion-on-cssgrid.mdx": {
-    "lastModified": 1746348191233.4631,
+    "lastModified": 1746382363352.8552,
     "outputPath": "public/thumbnails/sketches/250504-motion-on-cssgrid.svg",
     "title": "Motion on CSS Grid",
     "format": "svg"
   },
   "src/content/sketches/webdev/2025/250102-cssgrid.mdx": {
-    "lastModified": 1746002796245.111,
+    "lastModified": 1746382363377.8582,
     "outputPath": "public/thumbnails/sketches/250102-cssgrid.svg",
     "title": "CSS Grid",
     "format": "svg"
   },
   "src/content/sketches/webdev/2025/250409-device-motion-orientation.mdx": {
-    "lastModified": 1745146696363.6353,
+    "lastModified": 1746382363377.8582,
     "outputPath": "public/thumbnails/sketches/250409-device-motion-orientation.svg",
     "title": "Interactive Snowglobe",
     "format": "svg"
   },
   "src/content/sketches/webdev/2025/250410-digital-marketing-infographic.mdx": {
-    "lastModified": 1744875954246.3699,
+    "lastModified": 1746382363360.8562,
     "outputPath": "public/thumbnails/sketches/250410-digital-marketing-infographic.svg",
     "title": "Digital Marketing Statistics Infographic",
     "format": "svg"
   },
   "src/content/sketches/webdev/2025/250410-things-to-consider-web-design.mdx": {
-    "lastModified": 1744875950401.315,
+    "lastModified": 1746382363397.8606,
     "outputPath": "public/thumbnails/sketches/250410-things-to-consider-web-design.svg",
     "title": "Key Considerations for Modern Web Design",
     "format": "svg"
   },
   "src/content/sketches/webdev/2025/250412-lead-collection-with-google-sheet.mdx": {
-    "lastModified": 1744875940982.1802,
+    "lastModified": 1746382526004.5093,
     "outputPath": "public/thumbnails/sketches/250412-lead-collection-with-google-sheet.svg",
     "title": "Simple Lead Collection with Google Sheets",
     "format": "svg"
   },
   "src/content/sketches/webdev/2025/250414-webdesign-exercise.mdx": {
-    "lastModified": 1746002760972.9297,
+    "lastModified": 1746382534918.3857,
     "outputPath": "public/thumbnails/sketches/250414-webdesign-exercise.svg",
     "title": "Web Design Exercise",
     "format": "svg"
   },
   "src/content/sketches/webdev/2025/250417-vanilla-js-app.mdx": {
-    "lastModified": 1746002756942.7915,
+    "lastModified": 1746382567976.564,
     "outputPath": "public/thumbnails/sketches/250417-vanilla-js-app.svg",
     "title": "Coffee Masters - Vanilla JS App",
     "format": "svg"
   },
   "src/content/sketches/webdev/2025/250424-camera-filter.mdx": {
-    "lastModified": 1746002808750.5193,
+    "lastModified": 1746382555978.4233,
     "outputPath": "public/thumbnails/sketches/250424-camera-filter.svg",
     "title": "Camera Filter & Timelapse App",
     "format": "svg"
   },
   "src/content/sketches/webdev/2025/250428-css-tricks.mdx": {
-    "lastModified": 1746002750658.5752,
+    "lastModified": 1746382549683.819,
     "outputPath": "public/thumbnails/sketches/250428-css-tricks.svg",
     "title": "CSS Tricks Showcase",
     "format": "svg"
   },
   "src/content/sketches/webdev/2025/250428-motion-one.mdx": {
-    "lastModified": 1746002714321.2908,
+    "lastModified": 1746382540755.955,
     "outputPath": "public/thumbnails/sketches/250428-motion-one.svg",
     "title": "Motion One: Spring Animation Demo",
     "format": "svg"
   },
   "src/content/sketches/webdev/250412-blog-post-generative-thumbnail.mdx": {
-    "lastModified": 1744875919377.8704,
+    "lastModified": 1746382363360.8562,
     "outputPath": "public/thumbnails/sketches/250412-blog-post-generative-thumbnail.svg",
     "title": "Generating Blog Post Thumbnails with SVG in Astro",
     "format": "svg"
   },
   "src/content/sketches/webdev/250417-sample-sketch.mdx": {
-    "lastModified": 1744875916823.8337,
+    "lastModified": 1746382363334.853,
     "outputPath": "public/thumbnails/sketches/sample-sketch-thumb.svg",
     "title": "Sample Web Development Sketch",
     "format": "svg"
   },
+  "src/content/sketches/webdev/archived-completed/200830-PerfectLoopSinCosine.mdx": {
+    "lastModified": 1746382363352.8552,
+    "outputPath": "public/thumbnails/sketches/200830-PerfectLoopSinCosine.svg",
+    "title": "Perfect Loop Sin Cosine",
+    "format": "svg"
+  },
   "src/content/sketches/webdev/archived-completed/250504-motion.mdx": {
-    "lastModified": 1746382012913.4766,
+    "lastModified": 1746384231960.7917,
     "outputPath": "public/thumbnails/sketches/250504-motion.svg",
-    "title": "Syncing Shapes: Exploring Interval Animations with Motion One",
+    "title": "Syncing Shapes: Exploring Interval Animations with Motion One with CSS Grid",
     "format": "svg"
   },
   "src/content/sketches/webdev/games-design/250417-quizgame-education.mdx": {
-    "lastModified": 1746002841785.5742,
+    "lastModified": 1746382469493.7483,
     "outputPath": "public/thumbnails/sketches/250417-quizgame-education.svg",
     "title": "LearnLand - Children's Educational App",
     "format": "svg"
   },
   "src/content/sketches/webdev/games-design/250419-flashcards.mdx": {
-    "lastModified": 1746002838257.4631,
+    "lastModified": 1746382502072.1135,
     "outputPath": "public/thumbnails/sketches/250419-flashcards.svg",
     "title": "Flashcards Template",
     "format": "svg"
   },
   "src/content/sketches/webdev/games-design/250421-phaser-typing-game.mdx": {
-    "lastModified": 1746002817143.7905,
+    "lastModified": 1746382517855.7007,
     "outputPath": "public/thumbnails/sketches/250421-phaser-typing-game.svg",
     "title": "Phaser Typing Game",
     "format": "svg"
