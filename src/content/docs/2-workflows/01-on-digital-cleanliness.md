@@ -2,7 +2,7 @@
 title: On Digital Cleanliness
 description: The way of neat organization
 pubDate: 250504
-draft: 0
+draft: 1
 ---
 
 ## Personal Style
