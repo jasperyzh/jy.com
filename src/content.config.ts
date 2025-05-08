@@ -37,7 +37,15 @@ const blog = defineCollection({
       .union([z.boolean(), z.number()])
       .transform((value) => Boolean(value))
       .default(false), // Supports both boolean and number for `draft`, defaults to false
-    tags: z.array(z.string()), // Now required
+    tags: z.union([
+      z.array(z.string()),
+      z.string().transform((value) =>
+        value
+          .split(" ")
+          .filter((tag) => tag.startsWith("#"))
+          .map((tag) => tag.substring(1))
+      ),
+    ]), // Accepts both array of strings or hashtag format
     thumbnail: z.string(), // Required thumbnail image URL or path
     // category: z.enum([
     //   "Web Development",
@@ -95,7 +103,14 @@ const portfolio = defineCollection({
     updatedDate: z.string().or(z.date()).optional(),
     thumbnail: z.string(),
     category: z.string(),
-    tags: z.array(z.string()),
+    tags: z.union([
+      z.array(z.string()),
+      z.string().transform(value => 
+        value.split(' ')
+          .filter(tag => tag.startsWith('#'))
+          .map(tag => tag.substring(1))
+      )
+    ]), // Accepts both array of strings or hashtag format
     draft: z
       .union([z.boolean(), z.number()])
       .transform((value) => Boolean(value))
@@ -137,7 +152,15 @@ const sketches = defineCollection({
       )
       .optional(),
     category: z.string(),
-    tags: z.array(z.string()),
+    tags: z.union([
+      z.array(z.string()),
+      z.string().transform((value) =>
+        value
+          .split(" ")
+          .filter((tag) => tag.startsWith("#"))
+          .map((tag) => tag.substring(1))
+      ),
+    ]), // Accepts both array of strings or hashtag format
     status: z
       .enum(["idea", "wip", "completed", "archived"])
       .default("completed"),
