@@ -16,6 +16,52 @@ const { class: className, ...rest } = Astro.props;
     <slot />
   </article>
 </div>
+
+<script>
+  // Process Obsidian callouts in blockquotes
+  document.addEventListener('DOMContentLoaded', () => {
+    const blockquotes = document.querySelectorAll('blockquote');
+    
+    blockquotes.forEach(blockquote => {
+      const firstParagraph = blockquote.querySelector('p:first-child');
+      
+      if (firstParagraph && firstParagraph.textContent) {
+        const text = firstParagraph.textContent;
+        
+        // Match [!type] pattern
+        const calloutMatch = text.match(/\[\!(.*?)\]/);
+        
+        if (calloutMatch) {
+          const calloutType = calloutMatch[1].toLowerCase().trim();
+          blockquote.classList.add(`callout-${calloutType}`);
+          
+          // Replace the [!type] text with a styled heading
+          const newContent = firstParagraph.innerHTML.replace(
+            /\[\!(.*?)\]/, 
+            `<span class="callout-title">${calloutMatch[1]}</span>`
+          );
+          firstParagraph.innerHTML = newContent;
+        }
+        
+        // Handle TLDR sections (bold text after callout type)
+        const boldMatch = firstParagraph.querySelector('strong');
+        if (boldMatch) {
+          boldMatch.classList.add('callout-summary');
+        }
+        
+        // Handle footnote reference with ^ symbol
+        const footnoteMatch = blockquote.textContent && blockquote.textContent.match(/\^(\w+)$/);
+        if (footnoteMatch) {
+          const lastParagraph = blockquote.querySelector('p:last-child');
+          if (lastParagraph) {
+            lastParagraph.classList.add('callout-footnote');
+          }
+        }
+      }
+    });
+  });
+</script>
+
 <style>
   article {
     grid-column: 1 / -1;
@@ -32,6 +78,96 @@ const { class: className, ...rest } = Astro.props;
   article :global(.content-wrapper) {
     grid-column: 1 / -1; /* Full width on mobile */
     grid-row: 2;
+  }
+
+  /* Obsidian callout styling */
+  article :global(blockquote) {
+    border-left: 4px solid #d1d5db;
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+    background-color: #f9fafb;
+    border-radius: 0.375rem;
+  }
+
+  /* Dark mode for blockquotes */
+  :global(.dark) article :global(blockquote) {
+    border-left-color: #4b5563;
+    background-color: #1f2937;
+    color: #e5e7eb;
+  }
+
+  /* Different callout types */
+  article :global(blockquote.callout-summary),
+  article :global(blockquote.callout-tldr) {
+    border-left-color: #60a5fa;
+    background-color: #eff6ff;
+  }
+
+  :global(.dark) article :global(blockquote.callout-summary),
+  :global(.dark) article :global(blockquote.callout-tldr) {
+    border-left-color: #3b82f6;
+    background-color: #1e3a8a;
+  }
+
+  article :global(blockquote.callout-note) {
+    border-left-color: #a3e635;
+    background-color: #f7fee7;
+  }
+
+  :global(.dark) article :global(blockquote.callout-note) {
+    border-left-color: #84cc16;
+    background-color: #1a2e05;
+  }
+
+  article :global(blockquote.callout-warning) {
+    border-left-color: #fbbf24;
+    background-color: #fffbeb;
+  }
+
+  :global(.dark) article :global(blockquote.callout-warning) {
+    border-left-color: #f59e0b;
+    background-color: #422006;
+  }
+
+  article :global(blockquote.callout-danger) {
+    border-left-color: #ef4444;
+    background-color: #fee2e2;
+  }
+
+  :global(.dark) article :global(blockquote.callout-danger) {
+    border-left-color: #dc2626;
+    background-color: #450a0a;
+  }
+
+  /* Callout components styling */
+  article :global(.callout-title) {
+    display: inline-block;
+    font-weight: 600;
+    margin-right: 0.5rem;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    color: #4b5563;
+  }
+
+  :global(.dark) article :global(.callout-title) {
+    color: #d1d5db;
+  }
+
+  article :global(.callout-summary) {
+    display: inline-block;
+    margin-left: 0.25rem;
+  }
+
+  article :global(.callout-footnote) {
+    font-size: 0.875rem;
+    opacity: 0.8;
+    margin-top: 0.5rem;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    padding-top: 0.5rem;
+  }
+
+  :global(.dark) article :global(.callout-footnote) {
+    border-top-color: rgba(255,255,255,0.1);
   }
 
   article :global(footer) {

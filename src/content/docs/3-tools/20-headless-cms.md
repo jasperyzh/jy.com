@@ -16,5 +16,8 @@ draft: 1
 2. Docker quick setup
 3. add domain name
 ---
-### Headless CMS 
+### Headless OR scalable CMS 
+
+-> [[250315-Scalable CMS – Why It Matters]]
+
 ## Strapi?

@@ -6,7 +6,7 @@
     "dev": "astro dev",
     "build": "npm run generate-og && astro build",
     "build:prod": "cross-env NODE_ENV=production node remove-demo-pages.js && npm run generate-og && astro build",
-    "sync": "bash ./scripts/copy-projects-readme-to-obsidian.sh && bash ./scripts/copy-obsidian-blog-docs-to-projects.sh",
+    "sync": "bash ./scripts/copy-projects-readme-to-obsidian.sh && bash ./scripts/sync-obsidian-content.sh",
     "check": "astro check",
     "preview": "astro preview",
     "astro": "astro",

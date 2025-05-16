@@ -5,6 +5,7 @@ pubDate: 250423
 draft: 1
 ---
 
+- ![[250424-Language as a Weapon? Carlin on Euphemisms & Hiding Truth#^tldr]]
 
 ### [[250214-Simplicity – The Foundation of Good Writing|simplicity: make it clear]]
 

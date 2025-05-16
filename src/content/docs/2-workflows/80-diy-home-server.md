@@ -5,6 +5,7 @@ pubDate: 250406
 draft: 1
 ---
 
+
 # DIY Home Server
 
 ### my challenge: use windows, and remote access via linux (practice cross-platform usage)
@@ -30,3 +31,20 @@ draft: 1
 ### Best Practice
 
 #### 1-2-3 Backup (secondary, remote, cloud)
+
+## hardware of home-server
+
+- [[250505-Building Home Servers from Old Laptops]]
+
+## Helpful tools
+
+- [[82-rsync]]
+- [[84-ssh]]
+	- [[250506-Connect from Ubuntu to Windows 11 via SSH]]
+	- [[250506-Setting Up SSH Key Authentication (Windows 11 ↔ Ubuntu)]]
+
+## References
+- [ ] https://mutschler.dev/stuff/backup/
+
+
+---

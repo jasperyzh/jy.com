@@ -1,0 +1,230 @@
+<!-- using HTML, CSS, and JavaScript.
+
+This is a simple typing game that uses the Vim keybindings.
+
+like Mario Typing Game, its more an exercise web app game to practice vim motions.
+
+so it displays a text and the user has to type the text in the correct order.
+ 
+for examples: h j k l
+
+user have to go back and forth between j and k, going up and down like jumping jack.
+
+then user have to dodge the obstacles with h and l.
+
+
+
+ -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vim Typing Game</title>
+    <style>
+        body {
+            font-family: monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #game-container {
+            border: 2px solid #333;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 5px 5px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        #challenge-area {
+            font-size: 2em;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px dashed #ccc;
+            min-height: 50px;
+        }
+        #player-cursor {
+            width: 20px;
+            height: 20px;
+            background-color: blue;
+            position: relative; /* Or absolute depending on game design */
+            margin: 20px auto;
+            transition: transform 0.1s linear;
+        }
+        #feedback-area {
+            margin-top: 20px;
+            font-style: italic;
+            color: #555;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1>Vim Typing Practice</h1>
+        <div id="challenge-area">
+            <!-- Vim commands/text will appear here -->
+            <span>Press any key to start...</span>
+        </div>
+        <div id="player-cursor-area">
+             <!-- We can enhance this later -->
+            <div id="player-cursor"></div>
+        </div>
+        <div id="score-area">Score: <span id="score">0</span></div>
+        <div id="feedback-area">
+            <!-- Feedback like "Correct!" or "Try again!" -->
+        </div>
+    </div>
+
+    <script>
+        const challengeArea = document.getElementById('challenge-area');
+        const playerCursor = document.getElementById('player-cursor');
+        const scoreDisplay = document.getElementById('score');
+        const feedbackArea = document.getElementById('feedback-area');
+        
+        let currentChallenge = "";
+        let score = 0;
+        let gameStarted = false;
+
+        // Example challenges (sequences of h,j,k,l)
+        const challenges = [
+            "jjjkkhhll",
+            "hklhklhkl",
+            "jkhljkhl",
+            "llhhrrkkjj", // (r for reset/redo, placeholder)
+        ];
+        let currentChallengeIndex = 0;
+        let currentTypedIndex = 0;
+
+        function displayChallenge() {
+            if (currentChallengeIndex < challenges.length) {
+                currentChallenge = challenges[currentChallengeIndex];
+                if (challengeArea) challengeArea.innerHTML = ""; // Clear previous
+                for (let i = 0; i < currentChallenge.length; i++) {
+                    const charSpan = document.createElement('span');
+                    charSpan.textContent = currentChallenge[i];
+                    charSpan.id = `char-${i}`;
+                    if (challengeArea) challengeArea.appendChild(charSpan);
+                }
+                currentTypedIndex = 0;
+                updateFeedback("");
+            } else {
+                if (challengeArea) challengeArea.textContent = "All challenges completed!";
+                updateFeedback("Great job!");
+                gameStarted = false;
+            }
+        }
+
+        function updateScore(points) {
+            score += points;
+            if (scoreDisplay) scoreDisplay.textContent = score.toString();
+        }
+
+        function updateFeedback(message, type = "") {
+            if (feedbackArea) {
+                feedbackArea.textContent = message;
+                feedbackArea.className = type; // e.g., "correct" or "incorrect"
+            }
+        }
+        
+        function highlightCurrentChar() {
+            // Remove highlight from previous char
+            if (currentTypedIndex > 0) {
+                const prevCharEl = document.getElementById(`char-${currentTypedIndex - 1}`);
+                if (prevCharEl) prevCharEl.style.backgroundColor = "transparent";
+            }
+             // Highlight current char
+            const currentCharEl = document.getElementById(`char-${currentTypedIndex}`);
+            if (currentCharEl) {
+                currentCharEl.style.backgroundColor = "yellow";
+            }
+        }
+
+
+        function startGame() {
+            gameStarted = true;
+            score = 0;
+            updateScore(0); // Resets display
+            currentChallengeIndex = 0;
+            displayChallenge();
+            highlightCurrentChar();
+            updateFeedback("Game started! Type the highlighted sequence.");
+        }
+
+        document.addEventListener('keydown', (event) => {
+            if (!gameStarted) {
+                startGame();
+                return;
+            }
+
+            if (currentChallenge.length === 0) return;
+
+            const pressedKey = event.key.toLowerCase();
+            const expectedKey = currentChallenge[currentTypedIndex];
+
+            if (playerCursor && pressedKey === expectedKey) {
+                const charEl = document.getElementById(`char-${currentTypedIndex}`);
+                if (charEl) charEl.classList.add('correct');
+                
+                currentTypedIndex++;
+                highlightCurrentChar();
+                updateFeedback("Correct: " + pressedKey, "correct");
+                updateScore(10); // Add 10 points for a correct key
+
+                // Move player cursor (simple example)
+                switch(pressedKey) {
+                    case 'h':
+                        playerCursor.style.transform = `translateX(${(parseInt(playerCursor.style.transform.replace(/[^0-9-]/g, '') || '0') || 0) - 10}px)`;
+                        break;
+                    case 'l':
+                        playerCursor.style.transform = `translateX(${(parseInt(playerCursor.style.transform.replace(/[^0-9-]/g, '') || '0') || 0) + 10}px)`;
+                        break;
+                    case 'k':
+                        // For k and j, we might need a 2D representation or different visual feedback
+                        // For now, let's just log
+                        console.log("k pressed - (up)");
+                        break;
+                    case 'j':
+                        console.log("j pressed - (down)");
+                        break;
+                }
+
+
+                if (currentTypedIndex === currentChallenge.length) {
+                    updateFeedback("Challenge complete!", "correct");
+                    currentChallengeIndex++;
+                    setTimeout(() => { // Give a small delay before next challenge
+                        displayChallenge();
+                        highlightCurrentChar();
+                    }, 1000);
+                }
+            } else if (['h', 'j', 'k', 'l'].includes(pressedKey)) { // only penalize for vim keys
+                updateFeedback("Incorrect: " + pressedKey + " (expected " + expectedKey + ")", "incorrect");
+                updateScore(-5); // Subtract 5 points for an incorrect key
+                // Maybe add a visual indication of error on the specific char
+                const charEl = document.getElementById(`char-${currentTypedIndex}`);
+                if (charEl) {
+                    charEl.classList.remove('correct'); // remove if it was accidentally correct before
+                    charEl.classList.add('incorrect');
+                    setTimeout(() => charEl.classList.remove('incorrect'), 500); // Flash error
+                }
+            }
+            // Prevent default browser action for keys like 'h' (history) if needed
+            // if (['h', 'j', 'k', 'l'].includes(pressedKey)) {
+            //    event.preventDefault();
+            // }
+        });
+
+        // Initial call to set up the first message
+        // displayChallenge(); // Now called on first keydown
+    </script>
+</body>
+</html>

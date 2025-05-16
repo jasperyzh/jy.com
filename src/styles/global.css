@@ -1,7 +1,9 @@
 @import "tailwindcss";
 @import "./prism.css"; /* Import Prism CSS for syntax highlighting */
 
-/* @custom-variant dark (&:is(.dark *)); */
+/* Toggling dark mode manually instead of default: prefers-color-scheme */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* @plugin "tailwindcss-animate"; */
 /* @plugin "@tailwindcss/forms"; */
 /* @variant dark (&:where(.dark, .dark *)); */
@@ -491,7 +493,6 @@ To find components using these animations:
     }
   }
 }
-
 
 .prose {
   max-width: var(--container-5xl);

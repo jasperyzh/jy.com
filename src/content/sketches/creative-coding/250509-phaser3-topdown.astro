@@ -1,0 +1,753 @@
+<script is:inline src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js">
+</script>
+
+<div id="phaser-game" style="width: 800px; height: 600px; margin: 0 auto;"></div>
+
+<!-- <script src="js/PreloadScene.js"></script> -->
+<script is:inline>
+  class PreloadScene extends Phaser.Scene {
+    constructor() {
+      super("PreloadScene");
+    }
+
+    preload() {
+      console.log("PreloadScene: preload");
+      
+      // Create fallback textures if real assets are missing
+      this.createFallbackTextures();
+      
+      // Path to your player spritesheet
+      // For this example, I'm using a generic public domain character sprite
+      // "Pixel Adventure 1" by Pixel Frog. Assume we've extracted frames for different directions.
+      // In a real game, this would be a single sheet with all directions.
+      // We'll simulate this by loading one sheet and creating directional anims from it.
+      this.load.spritesheet("player_atlas", "/assets/sprites/player_sheet.png", { // Adjusted path
+        frameWidth: 32, // Adjust to your sprite's frame width
+        frameHeight: 32, // Adjust to your sprite's frame height
+      });
+      // Example: player_sheet.png might be:
+      // Row 0: Idle (frames 0-3 for down, up, left, right concepts)
+      // Row 1: Walk (frames 4-11 for down, up, left, right concepts, 2 frames each)
+      // Row 2: Attack (frames 12-15 for down, up, left, right concepts, 1 frame each)
+      // Row 3: Jump (frame 16)
+
+      // Placeholder for an NPC
+      this.load.image("npc_icon", "/assets/sprites/npc_icon.png"); // Adjusted path
+
+      // Handle asset loading errors
+      this.load.on('loaderror', function(fileObj) {
+        console.error('Error loading asset:', fileObj.src, '- ensure it exists in the public directory.');
+        // We will use fallback textures created during preload
+      }, this);
+
+      // Show loading progress (optional but good practice)
+      let loadingText = this.add
+        .text(
+          this.cameras.main.width / 2,
+          this.cameras.main.height / 2 - 50,
+          "Loading...",
+          {
+            font: "20px monospace",
+            fill: "#ffffff",
+          }
+        )
+        .setOrigin(0.5, 0.5);
+
+      let percentText = this.add
+        .text(this.cameras.main.width / 2, this.cameras.main.height / 2, "0%", {
+          font: "18px monospace",
+          fill: "#ffffff",
+        })
+        .setOrigin(0.5, 0.5);
+
+      this.load.on("progress", function (value) {
+        percentText.setText(parseInt(value * 100) + "%");
+      });
+
+      this.load.on("complete", function () {
+        loadingText.destroy();
+        percentText.destroy();
+        console.log("PreloadScene: complete");
+      });
+    }
+
+    createFallbackTextures() {
+      // Create a simple player spritesheet using canvas
+      const canvasPlayer = document.createElement('canvas');
+      canvasPlayer.width = 32 * 4; // 4 sprites wide 
+      canvasPlayer.height = 32 * 4; // 4 sprites high
+      const ctxPlayer = canvasPlayer.getContext('2d');
+      
+      // Create 16 different colored squares for player frames
+      const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00',
+                     '#ff00ff', '#00ffff', '#ff8800', '#8800ff',
+                     '#ff0088', '#88ff00', '#0088ff', '#880000',
+                     '#008800', '#000088', '#888800', '#880088'];
+                     
+      for (let y = 0; y < 4; y++) {
+        for (let x = 0; x < 4; x++) {
+          const idx = y * 4 + x;
+          ctxPlayer.fillStyle = colors[idx];
+          ctxPlayer.fillRect(x * 32, y * 32, 32, 32);
+          
+          // Add a direction indicator
+          ctxPlayer.fillStyle = '#ffffff';
+          // Draw different shapes based on row (idle, walk, attack, jump)
+          if (y === 0) { // Idle - circle
+            ctxPlayer.beginPath();
+            ctxPlayer.arc(x * 32 + 16, y * 32 + 16, 8, 0, Math.PI * 2);
+            ctxPlayer.fill();
+          } else if (y === 1) { // Walk - triangle
+            ctxPlayer.beginPath();
+            ctxPlayer.moveTo(x * 32 + 16, y * 32 + 8);
+            ctxPlayer.lineTo(x * 32 + 24, y * 32 + 24);
+            ctxPlayer.lineTo(x * 32 + 8, y * 32 + 24);
+            ctxPlayer.fill();
+          } else if (y === 2) { // Attack - X
+            ctxPlayer.beginPath();
+            ctxPlayer.moveTo(x * 32 + 10, y * 32 + 10);
+            ctxPlayer.lineTo(x * 32 + 22, y * 32 + 22);
+            ctxPlayer.moveTo(x * 32 + 22, y * 32 + 10);
+            ctxPlayer.lineTo(x * 32 + 10, y * 32 + 22);
+            ctxPlayer.lineWidth = 3;
+            ctxPlayer.stroke();
+          } else { // Jump - square
+            ctxPlayer.fillRect(x * 32 + 10, y * 32 + 10, 12, 12);
+          }
+        }
+      }
+      
+      // Create NPC texture
+      const canvasNPC = document.createElement('canvas');
+      canvasNPC.width = 32;
+      canvasNPC.height = 32;
+      const ctxNPC = canvasNPC.getContext('2d');
+      
+      // Green circle with a face
+      ctxNPC.fillStyle = '#00ff00';
+      ctxNPC.beginPath();
+      ctxNPC.arc(16, 16, 14, 0, Math.PI * 2);
+      ctxNPC.fill();
+      
+      // Eyes
+      ctxNPC.fillStyle = '#000000';
+      ctxNPC.beginPath();
+      ctxNPC.arc(10, 12, 3, 0, Math.PI * 2);
+      ctxNPC.arc(22, 12, 3, 0, Math.PI * 2);
+      ctxNPC.fill();
+      
+      // Smile
+      ctxNPC.beginPath();
+      ctxNPC.arc(16, 16, 8, 0, Math.PI);
+      ctxNPC.lineWidth = 2;
+      ctxNPC.stroke();
+      
+      // Add these canvas textures
+      this.textures.addCanvas('player_atlas_fallback', canvasPlayer);
+      this.textures.addCanvas('npc_icon_fallback', canvasNPC);
+    }
+
+    create() {
+      this.scene.start("GameScene");
+    }
+  }
+</script>
+<!-- <script src="js/GameScene.js"></script> -->
+<script is:inline>
+  class GameScene extends Phaser.Scene {
+    constructor() {
+      super("GameScene");
+      this.player = null;
+      this.cursors = null;
+      this.keys = {}; // For specific key presses
+      this.debugText = null;
+
+      // Player state and properties
+      this.playerState = "idle"; // 'idle', 'walking', 'sprinting', 'attacking', 'jumping', 'interacting'
+      this.facingDirection = "down"; // 'up', 'down', 'left', 'right'
+      this.walkSpeed = 100;
+      this.sprintSpeed = 180;
+      this.jumpTimer = 0; // Simple timer for jump duration
+      this.attackCooldown = 500; // Milliseconds
+      this.lastAttackTime = 0;
+      this.interactionTarget = null;
+    }
+
+    create() {
+      console.log("GameScene: create");
+      this.cameras.main.setBackgroundColor("#3c7844"); // Greenish background
+
+      // --- Player Setup ---
+      if (this.textures.exists('player_atlas')) {
+        // Use the real spritesheet if it exists
+        this.player = this.physics.add.sprite(100, 100, "player_atlas", 0);
+      } else if (this.textures.exists('player_atlas_fallback')) {
+        // Use our fallback spritesheet if available
+        console.warn("Player_atlas texture missing, using fallback spritesheet.");
+        this.player = this.physics.add.sprite(100, 100, "player_atlas_fallback", 0);
+      } else {
+        // Last resort - use a simple rectangle
+        console.error("No player textures available, using rectangle fallback.");
+        this.player = this.add.rectangle(100, 100, 32, 32, 0xff0000);
+        this.physics.add.existing(this.player);
+      }
+      
+      // Set collision with world bounds - only use body method for both sprite and rectangle
+      if (!this.player.body) {
+        this.player.body = new Phaser.Physics.Arcade.Body(this.physics.world, this.player);
+      }
+      this.player.body.setCollideWorldBounds(true);
+      
+      // Only setSize/setOffset if it's a sprite
+      if (this.player.setSize) {
+        this.player.setSize(20, 28).setOffset(6, 4);
+      }
+
+      // --- Animations ---
+      // Check if either real or fallback texture exists
+      const useFallbackTexture = !this.textures.exists('player_atlas') && this.textures.exists('player_atlas_fallback');
+      const hasPlayerTexture = this.textures.exists('player_atlas') || this.textures.exists('player_atlas_fallback');
+      
+      if (hasPlayerTexture) {
+        try {
+            // Use the appropriate texture key
+            const textureKey = useFallbackTexture ? 'player_atlas_fallback' : 'player_atlas';
+            
+            // IMPORTANT: Frame numbers here are EXAMPLES. Adjust to your spritesheet.
+            // Let's assume your spritesheet has:
+            // Idle: down (0), up (1), side (2) (we'll flip for left/right)
+            // Walk: down (4-5), up (6-7), side (8-9)
+            // Attack: down (12), up (13), side (14) (single frame for simplicity)
+            // Jump: down (16) (single frame)
+
+            // Idle Animations
+            this.anims.create({
+              key: "idle_down",
+              frames: this.anims.generateFrameNumbers(textureKey, {
+                start: 0,
+                end: 0,
+              }),
+              frameRate: 5,
+            });
+            this.anims.create({
+              key: "idle_up",
+              frames: this.anims.generateFrameNumbers(textureKey, {
+                start: 1,
+                end: 1,
+              }),
+              frameRate: 5,
+            });
+            this.anims.create({
+              key: "idle_side",
+              frames: this.anims.generateFrameNumbers(textureKey, {
+                start: 2,
+                end: 2,
+              }),
+              frameRate: 5,
+            });
+
+            // Walk Animations
+            this.anims.create({
+              key: "walk_down",
+              frames: this.anims.generateFrameNumbers(textureKey, {
+                start: 4,
+                end: 5,
+              }),
+              frameRate: 10,
+              repeat: -1,
+            });
+            this.anims.create({
+              key: "walk_up",
+              frames: this.anims.generateFrameNumbers(textureKey, {
+                start: 6,
+                end: 7,
+              }),
+              frameRate: 10,
+              repeat: -1,
+            });
+            this.anims.create({
+              key: "walk_side",
+              frames: this.anims.generateFrameNumbers(textureKey, {
+                start: 8,
+                end: 9,
+              }),
+              frameRate: 10,
+              repeat: -1,
+            });
+
+            // Attack Animations (play once)
+            this.anims.create({
+              key: "attack_down",
+              frames: this.anims.generateFrameNumbers(textureKey, {
+                start: 12,
+                end: 13,
+              }),
+              frameRate: 8,
+              repeat: 0,
+              // Ensure animation completes
+              hideOnComplete: false
+            });
+            this.anims.create({
+              key: "attack_up",
+              frames: this.anims.generateFrameNumbers(textureKey, {
+                start: 13,
+                end: 14,
+              }),
+              frameRate: 8,
+              repeat: 0,
+              hideOnComplete: false
+            });
+            this.anims.create({
+              key: "attack_side",
+              frames: this.anims.generateFrameNumbers(textureKey, {
+                start: 14,
+                end: 15,
+              }),
+              frameRate: 8,
+              repeat: 0,
+              hideOnComplete: false
+            });
+
+            // Jump Animation (single frame or short sequence)
+            this.anims.create({
+              key: "jump_down",
+              frames: this.anims.generateFrameNumbers(textureKey, {
+                start: 16,
+                end: 16,
+              }),
+              frameRate: 5,
+              repeat: 0,
+              hideOnComplete: false
+            });
+            // Add jump_up, jump_side if you have them
+
+            // Event listener for animation completion (e.g., after attack)
+            if (this.player.on) { // Check if player is a sprite and has 'on' method
+              // First remove any existing listeners to avoid duplicates
+              this.player.off('animationcomplete');
+              // Then add our listener
+              this.player.on("animationcomplete", this.onAnimationComplete, this);
+              console.log("Animation completion listener attached");
+            }
+        } catch (error) {
+            console.error("Error creating animations:", error);
+        }
+      } else {
+        console.warn("No player texture available, skipping animation creation.");
+      }
+
+      // --- Input Setup ---
+      this.cursors = this.input.keyboard.createCursorKeys();
+      this.keys.W = this.input.keyboard.addKey(
+        Phaser.Input.Keyboard.KeyCodes.W
+      );
+      this.keys.A = this.input.keyboard.addKey(
+        Phaser.Input.Keyboard.KeyCodes.A
+      );
+      this.keys.S = this.input.keyboard.addKey(
+        Phaser.Input.Keyboard.KeyCodes.S
+      );
+      this.keys.D = this.input.keyboard.addKey(
+        Phaser.Input.Keyboard.KeyCodes.D
+      );
+      this.keys.SPACE = this.input.keyboard.addKey(
+        Phaser.Input.Keyboard.KeyCodes.SPACE
+      ); // Attack
+      this.keys.SHIFT = this.input.keyboard.addKey(
+        Phaser.Input.Keyboard.KeyCodes.SHIFT
+      ); // Sprint
+      this.keys.E = this.input.keyboard.addKey(
+        Phaser.Input.Keyboard.KeyCodes.E
+      ); // Interact/Talk
+      // Using 'F' for jump as space is attack
+      this.keys.F = this.input.keyboard.addKey(
+        Phaser.Input.Keyboard.KeyCodes.F
+      ); // Jump
+
+      // --- Camera ---
+      this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
+      // this.cameras.main.setZoom(2); // Optional zoom
+
+      // --- Debug Console ---
+      this.debugText = this.add
+        .text(10, 10, "", {
+          font: "16px Monospace",
+          fill: "#ffffff",
+          backgroundColor: "rgba(0,0,0,0.7)",
+          padding: { x: 5, y: 5 },
+        })
+        .setScrollFactor(0)
+        .setDepth(100); // Keep on top and fixed
+
+      // --- Interactable NPC (Example) ---
+      if (this.textures.exists('npc_icon')) {
+        this.npc = this.physics.add.sprite(300, 150, "npc_icon");
+      } else if (this.textures.exists('npc_icon_fallback')) {
+        console.warn("Npc_icon texture missing, using fallback texture.");
+        this.npc = this.physics.add.sprite(300, 150, "npc_icon_fallback");
+      } else {
+        console.error("No NPC textures available, using rectangle fallback.");
+        this.npc = this.add.rectangle(300, 150, 32, 32, 0x00ff00);
+        this.physics.add.existing(this.npc);
+      }
+      
+      // Set immovable property on body, not directly on object
+      if (!this.npc.body) {
+        this.npc.body = new Phaser.Physics.Arcade.Body(this.physics.world, this.npc);
+      }
+      this.npc.body.setImmovable(true);
+      this.npc.name = "Friendly NPC";
+      this.physics.add.collider(this.player, this.npc);
+      
+      // Initialize debug event listener
+      this.setupDebugEventListener();
+    }
+
+    update(time, delta) {
+      const currentSpeed =
+        this.keys.SHIFT.isDown &&
+        (this.playerState === "walking" || this.playerState === "sprinting")
+          ? this.sprintSpeed
+          : this.walkSpeed;
+      let isMoving = false;
+
+      // Reset velocity on the body directly
+      this.player.body?.setVelocity(0);
+
+      // --- State Machine & Input Handling ---
+      switch (this.playerState) {
+        case "attacking":
+          // Player is locked in attack animation, no movement input
+          // Add a safety timeout in case animation events don't trigger properly
+          // If we've been in the attack state for more than attackCooldown ms, force back to idle
+          if (time > this.lastAttackTime + this.attackCooldown) {
+            console.log("Attack state timed out - resetting to idle");
+            this.playerState = "idle";
+            this.events.emit("debugEvent", "Attack state timeout - reset to idle");
+          }
+          break;
+        case "jumping":
+          // Player is in jump animation, minimal control
+          this.jumpTimer -= delta;
+          if (this.jumpTimer <= 0) {
+            this.playerState = "idle"; // Or transition to falling if you have that
+          }
+          // Potentially allow slight air control
+          // For a Zelda-like, jump might be a short hop, not high airtime
+          break;
+        case "interacting":
+          // Player is locked while interacting (e.g., dialogue box up)
+          // The interaction logic itself would change state back to idle
+          break;
+        default: // Handles 'idle', 'walking', 'sprinting'
+          // --- Movement ---
+          if (this.keys.A.isDown || this.cursors.left.isDown) {
+            this.player.body?.setVelocityX(-currentSpeed);
+            this.facingDirection = "left";
+            isMoving = true;
+          } else if (this.keys.D.isDown || this.cursors.right.isDown) {
+            this.player.body?.setVelocityX(currentSpeed);
+            this.facingDirection = "right";
+            isMoving = true;
+          }
+
+          if (this.keys.W.isDown || this.cursors.up.isDown) {
+            this.player.body?.setVelocityY(-currentSpeed);
+            this.facingDirection = "up"; // Prioritize up/down if diagonal
+            isMoving = true;
+          } else if (this.keys.S.isDown || this.cursors.down.isDown) {
+            this.player.body?.setVelocityY(currentSpeed);
+            this.facingDirection = "down";
+            isMoving = true;
+          }
+
+          // Normalize diagonal speed
+          if (
+            this.player.body?.velocity.x !== 0 &&
+            this.player.body?.velocity.y !== 0
+          ) {
+            this.player.body.velocity.normalize().scale(currentSpeed);
+          }
+
+          // --- Set Player State based on movement ---
+          if (isMoving) {
+            this.playerState = this.keys.SHIFT.isDown ? "sprinting" : "walking";
+          } else {
+            this.playerState = "idle";
+          }
+
+          // --- Actions ---
+          // Attack
+          if (
+            Phaser.Input.Keyboard.JustDown(this.keys.SPACE) &&
+            time > this.lastAttackTime + this.attackCooldown
+          ) {
+            console.log("Attack initiated");
+            this.playerState = "attacking";
+            this.lastAttackTime = time;
+            // Stop movement during attack
+            this.player.body?.setVelocity(0);
+            this.playAnimation(`attack_${this.facingDirection}`);
+            // Emit a debug event
+            this.events.emit(
+              "debugEvent",
+              `Attack initiated: ${this.facingDirection}`
+            );
+          }
+          // Jump
+          else if (Phaser.Input.Keyboard.JustDown(this.keys.F)) {
+            this.playerState = "jumping";
+            this.jumpTimer = 200; // Duration of jump "hang time" or animation
+            this.player.body?.setVelocity(0); // Stop horizontal movement for a simple hop
+            // Could add a small upward tween for visual effect
+            this.playAnimation(`jump_${this.facingDirection}` || `jump_down`); // Fallback to jump_down
+            this.events.emit("debugEvent", "Jump initiated");
+          }
+          // Interact
+          else if (Phaser.Input.Keyboard.JustDown(this.keys.E)) {
+            this.tryInteract();
+          }
+          break;
+      }
+
+      // --- Update Animations ---
+      // This logic runs if not in a state that locks animation (like attacking)
+      if (this.playerState !== "attacking" && this.playerState !== "jumping") {
+        if (isMoving) {
+          let animKey = `walk_${this.facingDirection}`;
+          if (
+            this.facingDirection === "left" ||
+            this.facingDirection === "right"
+          ) {
+            animKey = "walk_side"; // Use 'walk_side' for both left and right
+          }
+          this.playAnimation(animKey);
+          // Flip sprite for left/right walking if using a single side animation
+          if (this.player.setFlipX && typeof this.player.setFlipX === 'function') {
+            this.player.setFlipX(this.facingDirection === "left");
+          }
+        } else {
+          // Idle
+          let animKey = `idle_${this.facingDirection}`;
+          if (
+            this.facingDirection === "left" ||
+            this.facingDirection === "right"
+          ) {
+            animKey = "idle_side";
+          }
+          this.playAnimation(animKey);
+          if (this.player.setFlipX && typeof this.player.setFlipX === 'function') {
+            this.player.setFlipX(this.facingDirection === "left");
+          }
+        }
+      }
+
+      // --- Update Debug Info ---
+      this.updateDebugText(time);
+    }
+
+    playAnimation(key) {
+      try {
+        // Only try to play animation if player has the play method (is a sprite)
+        // and we have any texture (real or fallback)
+        const hasTexture = this.textures.exists('player_atlas') || this.textures.exists('player_atlas_fallback');
+        
+        if (this.player.play && hasTexture) {
+          // For attack animations, always play them even if they're the same key
+          // This ensures the animation restarts and completes, triggering the callback
+          const forceRestart = key.startsWith('attack_') || key.startsWith('jump_');
+          
+          // Only play if it's different from current animation or we're forcing restart
+          if (forceRestart || this.player.anims?.currentAnim?.key !== key) {
+            console.log(`Playing animation: ${key} (force: ${forceRestart})`);
+            this.player.play(key, forceRestart);
+            this.events.emit(
+              "debugEvent",
+              `Animation playing: ${key}, Frame: ${this.player.anims?.currentFrame?.index || 0}`
+            );
+          }
+        }
+      } catch (error) {
+        console.error("Error playing animation:", error);
+      }
+    }
+
+    onAnimationComplete(animation, frame) {
+      try {
+        console.log(`Animation complete callback fired: ${animation.key}`);
+        this.events.emit("debugEvent", `Animation completed: ${animation.key}`);
+        
+        // Check if it was an attack animation
+        if (animation.key.startsWith("attack_")) {
+          console.log("Attack animation finished, returning to idle state");
+          this.playerState = "idle"; // Revert to idle (or walking if keys are held)
+          this.events.emit("debugEvent", "Player state reset to idle after attack");
+        }
+        // Handle jump animation if it's a one-shot anim
+        if (animation.key.startsWith("jump_")) {
+          console.log("Jump animation finished");
+          // this.playerState = 'idle'; // Jump state is managed by timer in this example
+        }
+      } catch (error) {
+        console.error("Error in animation complete handler:", error);
+      }
+    }
+
+    tryInteract() {
+      try {
+        // Simple proximity check for interaction
+        const interactionDistance = 50; // pixels
+        
+        // Make this safer by checking for existence of properties
+        const playerX = this.player.x || 0;
+        const playerY = this.player.y || 0;
+        const npcX = this.npc.x || 0;
+        const npcY = this.npc.y || 0;
+        
+        if (
+          Phaser.Math.Distance.Between(
+            playerX, 
+            playerY,
+            npcX, 
+            npcY
+          ) < interactionDistance
+        ) {
+          this.playerState = "interacting";
+          this.player.body?.setVelocity(0); // Stop player
+          this.interactionTarget = this.npc;
+          this.events.emit("debugEvent", `Interacting with ${this.npc.name}`);
+          // In a real game, show a dialogue box. For now, just log and revert state after a delay.
+          this.showInteractionMessage(`Hello from ${this.npc.name}!`);
+
+          this.time.delayedCall(2000, () => {
+            if (
+              this.playerState === "interacting" &&
+              this.interactionTarget === this.npc
+            ) {
+              // Check if still interacting with same target
+              this.playerState = "idle";
+              this.interactionTarget = null;
+              this.events.emit("debugEvent", "Interaction ended.");
+              this.hideInteractionMessage();
+            }
+          });
+        } else {
+          this.events.emit("debugEvent", "Nothing to interact with.");
+        }
+      } catch (error) {
+        console.error("Error in tryInteract:", error);
+      }
+    }
+
+    showInteractionMessage(message) {
+      if (this.interactionMessage) this.interactionMessage.destroy();
+      this.interactionMessage = this.add
+        .text(
+          this.cameras.main.width / 2,
+          this.cameras.main.height - 50,
+          message,
+          {
+            font: "18px Monospace",
+            fill: "#000000",
+            backgroundColor: "#ffffff",
+            padding: { x: 10, y: 5 },
+            wordWrap: { width: this.cameras.main.width - 40 },
+          }
+        )
+        .setOrigin(0.5)
+        .setScrollFactor(0)
+        .setDepth(110);
+    }
+
+    hideInteractionMessage() {
+      if (this.interactionMessage) {
+        this.interactionMessage.destroy();
+        this.interactionMessage = null;
+      }
+    }
+
+    updateDebugText(time) {
+      try {
+        // Determine texture status
+        const hasRealTexture = this.textures.exists('player_atlas');
+        const hasFallbackTexture = this.textures.exists('player_atlas_fallback');
+        const textureStatus = hasRealTexture 
+          ? "Using real spritesheet" 
+          : (hasFallbackTexture ? "Using fallback spritesheet" : "Using rectangle fallback");
+        
+        const lines = [
+          `Player State: ${this.playerState}`,
+          `Facing: ${this.facingDirection}`,
+          `Coords: X ${this.player.x?.toFixed(0) || '?'}, Y ${this.player.y?.toFixed(0) || '?'}`,
+          `Velocity: VX ${this.player.body?.velocity.x?.toFixed(0) || '0'}, VY ${this.player.body?.velocity.y?.toFixed(0) || '0'}`,
+          `Speed Mod: ${this.keys.SHIFT.isDown && (this.playerState === "walking" || this.playerState === "sprinting") ? "Sprint" : "Walk"}`,
+          `Animation: ${this.player.anims?.currentAnim ? this.player.anims.currentAnim.key : "None"}`,
+          `Frame: ${this.player.anims?.currentFrame ? this.player.anims.currentFrame.index : "N/A"}`,
+          `Last Attack: ${((time - this.lastAttackTime) / 1000).toFixed(1)}s ago`,
+          `Jump Timer: ${this.jumpTimer.toFixed(0)}ms`,
+          `Interaction Target: ${this.interactionTarget ? this.interactionTarget.name : "None"}`,
+          `Type: ${this.player.type || 'Unknown'} (${textureStatus})`,
+        ];
+
+        // Log animation frame triggers (subscribing to an event we emit)
+        // This part is a bit more advanced for general frame triggers.
+        // Phaser itself emits 'animationstart', 'animationupdate', 'animationrepeat', 'animationcomplete' on the Sprite.
+        // For example, to log every frame update of an animation:
+        // this.player.on('animationupdate-walk_down', (anim, frame, gameObject) => {
+        //     console.log('walk_down frame:', frame.index);
+        // });
+        // For simplicity, the debug console shows current frame, and we emit custom 'debugEvent'.
+        this.debugText.setText(lines);
+      } catch (error) {
+        console.error("Error updating debug text:", error);
+        // Set a simplified version if there was an error
+        this.debugText?.setText(["DEBUG ERROR - See console for details"]);
+      }
+    }
+
+    // Listen to custom debug events
+    // This is a more explicit way to push messages to the debug console
+    // rather than trying to catch every single animation frame update directly in updateDebugText
+    // which can be noisy.
+    // Call this from create() after debugText is initialized.
+    setupDebugEventListener() {
+      let recentEvents = [];
+      const maxEvents = 3;
+      this.events.on("debugEvent", (message) => {
+        console.log(`DEBUG EVENT: ${message}`); // Also log to browser console
+        recentEvents.unshift(`EVT: ${message.substring(0, 40)}`); // Add to start, limit length
+        if (recentEvents.length > maxEvents) recentEvents.pop(); // Keep only last N events
+        // This assumes updateDebugText is structured to display these events
+        // For now, let's just update the main debugText with the latest event.
+        // A more robust solution would have a dedicated area in the debug panel.
+        // For this example, we'll just append to the existing debugText lines
+        // (This will make updateDebugText more complex, or we handle it separately)
+
+        // Simpler: just update a specific part of the debug text or log to console.
+        // The current updateDebugText covers most dynamic variables.
+        // Let's focus on logging specific one-off events to the browser console
+        // and the debug text will show the current state.
+      });
+    }
+  }
+</script>
+
+<!-- <script src="js/main.js"></script> -->
+<script is:inline>
+  const config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 600,
+    parent: "phaser-game", // Optional, if you have a div with this id
+    pixelArt: true, // Good for retro games
+    physics: {
+      default: "arcade",
+      arcade: {
+        debug: false, // Set to true for physics bodies outline
+      },
+    },
+    scene: [PreloadScene, GameScene],
+  };
+
+  const game = new Phaser.Game(config);
+</script>

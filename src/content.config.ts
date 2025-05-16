@@ -4,6 +4,15 @@ import { file, glob } from "astro/loaders"; // Not available with legacy API
 
 import { formatYymmddDate } from "@/utils/formatDate";
 
+// Helper function to transform Obsidian wiki image links to standard markdown
+// This can be used in other parts of the application if needed
+function processObsidianLinks(content) {
+  if (typeof content !== 'string') return content;
+  
+  // Replace Obsidian image syntax ![[filename.png]] with markdown ![](/blog/images/filename.png)
+  return content.replace(/!\[\[(.*?\.(?:png|jpg|jpeg|gif|svg))\]\]/g, '![](/blog/images/$1)');
+}
+
 // Define blog collection
 const blog = defineCollection({
   loader: glob({
