@@ -173,9 +173,13 @@ const sketches = defineCollection({
     status: z
       .enum(["idea", "wip", "completed", "archived"])
       .default("completed"),
-    thumbnail: z.string().optional(),
+    thumbnail: z.string(),
     liveUrl: z.string().optional(),
     layout: z.string().optional(),
+    sketchType: z.enum(["image", "video", "p5js"]).default("image"),
+    aspectRatio: z.enum(["1/1", "4/3"]).default("4/3"),
+    p5jsSrc: z.string().optional(),
+    videoSrc: z.string().optional(),
     draft: z
       .union([z.boolean(), z.number()])
       .transform((value) => Boolean(value))

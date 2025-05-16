@@ -1,4 +1,9 @@
-
+---
+title: Basic of Games Designs for Web
+description: An overview of Games Designs for Web.
+pubDate: 250513
+draft: 1
+---
 ### Phaser3/4
 
 -> [[250326-Game Development Learning Plan]]

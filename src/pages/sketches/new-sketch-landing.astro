@@ -1,0 +1,350 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+// Configuration
+export const INITIAL_SKETCHES_PER_PAGE = 9;
+export const SKETCHES_TO_LOAD_MORE = 6;
+
+// Get all sketches (excluding drafts) and sort them
+const allSketchesUnsorted = await getCollection("sketches", ({ data }) => !data.draft);
+const allSketches = allSketchesUnsorted.sort((a, b) => {
+  const dateA = new Date(a.data.pubDate);
+  const dateB = new Date(b.data.pubDate);
+  return dateB.getTime() - dateA.getTime();
+});
+
+// Extract categories for filtering
+const categories = [
+  ...new Set(allSketches.map((sketch) => sketch.data.category)),
+];
+
+// Placeholder sketches if no real sketches exist yet
+const placeholderSketches = allSketches.length > 0 ? [] : [
+  {
+    id: "placeholder-1",
+    slug: "#",
+    data: {
+      title: "Generative Art Experiment",
+      thumbnail: "https://placehold.co/600x600/e2e8f0/1e293b?text=Generative+Art",
+      category: "Creative Coding",
+      aspectRatio: "1/1",
+      sketchType: "image"
+    }
+  },
+  {
+    id: "placeholder-2",
+    slug: "#",
+    data: {
+      title: "Interactive Animation",
+      thumbnail: "https://placehold.co/800x600/f8fafc/475569?text=Animation",
+      category: "Animation",
+      aspectRatio: "4/3",
+      sketchType: "image"
+    }
+  },
+  {
+    id: "placeholder-3",
+    slug: "#",
+    data: {
+      title: "CSS Experiment",
+      thumbnail: "https://placehold.co/600x600/e0f2fe/0c4a6e?text=CSS+Exp",
+      category: "Web Development",
+      aspectRatio: "1/1",
+      sketchType: "image"
+    }
+  },
+  {
+    id: "placeholder-4",
+    slug: "#",
+    data: {
+      title: "P5.js Sketch",
+      thumbnail: "https://placehold.co/800x600/f0fdf4/14532d?text=P5js+Demo",
+      category: "Creative Coding",
+      aspectRatio: "4/3",
+      sketchType: "image"
+    }
+  },
+  {
+    id: "placeholder-5",
+    slug: "#",
+    data: {
+      title: "Particle System",
+      thumbnail: "https://placehold.co/600x800/fef2f2/7f1d1d?text=Particles",
+      category: "Creative Coding",
+      aspectRatio: "3/4",
+      sketchType: "image"
+    }
+  },
+  {
+    id: "placeholder-6",
+    slug: "#",
+    data: {
+      title: "WebGL Experiment",
+      thumbnail: "https://placehold.co/800x600/faf5ff/581c87?text=WebGL",
+      category: "Creative Coding",
+      aspectRatio: "4/3",
+      sketchType: "image"
+    }
+  }
+];
+
+// Combine real and placeholder sketches
+const displaySketches = allSketches.length > 0 ? allSketches : placeholderSketches;
+
+// For initial display
+const initialSketches = displaySketches.slice(0, INITIAL_SKETCHES_PER_PAGE);
+
+// Get unique categories including placeholder categories
+const allCategories = [
+  ...new Set([
+    ...categories,
+    ...placeholderSketches.map(sketch => sketch.data.category)
+  ])
+];
+---
+
+<BaseLayout title="Sketches & Experiments" description="A collection of code snippets, design experiments, interactive demos, and learning resources">
+  <main class="sketches-page">
+    <header class="page-header">
+      <h1>Sketches & Experiments</h1>
+      <p class="subtitle">A collection of code snippets, design experiments, interactive demos, and learning resources</p>
+    </header>
+
+    <div class="categories-filter">
+      <a href="#" class="filter-button active">All Sketches</a>
+      
+      {allCategories.slice(0, 4).map((category) => (
+        <a href={`#${category.toLowerCase().replace(/\s+/g, '-')}`} class="filter-button">
+          {category}
+        </a>
+      ))}
+    </div>
+
+    <div class="sketch-gallery-container">
+      <div class="sketch-gallery grid" id="sketch-gallery">
+        {initialSketches.map((sketch) => (
+          <div class="sketch-item" data-category={sketch.data.category}>
+            <a href={`/sketches/${sketch.slug}`} class="sketch-link">
+              <div class="sketch-content" style={`aspect-ratio: ${sketch.data.aspectRatio || "4/3"}`}>
+                <img src={sketch.data.thumbnail} alt={sketch.data.title} loading="lazy" />
+              </div>
+              <h3 class="sketch-title">{sketch.data.title}</h3>
+            </a>
+          </div>
+        ))}
+      </div>
+      
+      {displaySketches.length > INITIAL_SKETCHES_PER_PAGE && (
+        <div class="load-more-container">
+          <button id="load-more-sketches" class="load-more-button">Load More</button>
+        </div>
+      )}
+    </div>
+  </main>
+</BaseLayout>
+
+<script define:vars={{ displaySketches, INITIAL_SKETCHES_PER_PAGE, SKETCHES_TO_LOAD_MORE }}>
+  // Track currently loaded sketches
+  let currentSketchesCount = INITIAL_SKETCHES_PER_PAGE;
+  const gallery = document.getElementById('sketch-gallery');
+  const loadMoreButton = document.getElementById('load-more-sketches');
+  
+  // Filter functionality
+  const filterButtons = document.querySelectorAll('.filter-button');
+  filterButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      // Remove active class from all buttons
+      filterButtons.forEach(b => b.classList.remove('active'));
+      // Add active class to clicked button
+      btn.classList.add('active');
+      
+      const category = btn.getAttribute('href').replace('#', '');
+      filterSketches(category === 'all-sketches' ? null : category);
+    });
+  });
+  
+  function filterSketches(category) {
+    const items = document.querySelectorAll('.sketch-item');
+    items.forEach(item => {
+      if (!category || item.dataset.category.toLowerCase().replace(/\s+/g, '-') === category) {
+        item.style.display = 'block';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+  }
+  
+  // Load more functionality
+  if (loadMoreButton) {
+    loadMoreButton.addEventListener('click', () => {
+      // Get next batch of sketches
+      const nextSketches = displaySketches.slice(
+        currentSketchesCount,
+        currentSketchesCount + SKETCHES_TO_LOAD_MORE
+      );
+      
+      // Add sketches to gallery
+      for (const sketch of nextSketches) {
+        const sketchItem = document.createElement('div');
+        sketchItem.classList.add('sketch-item');
+        sketchItem.dataset.category = sketch.data.category.toLowerCase().replace(/\s+/g, '-');
+        
+        sketchItem.innerHTML = `
+          <a href="/sketches/${sketch.slug}" class="sketch-link">
+            <div class="sketch-content" style="aspect-ratio: ${sketch.data.aspectRatio || '4/3'}">
+              <img src="${sketch.data.thumbnail}" alt="${sketch.data.title}" loading="lazy" />
+            </div>
+            <h3 class="sketch-title">${sketch.data.title}</h3>
+          </a>
+        `;
+        
+        gallery.appendChild(sketchItem);
+      }
+      
+      // Update count
+      currentSketchesCount += nextSketches.length;
+      
+      // Hide button if all sketches loaded
+      if (currentSketchesCount >= displaySketches.length) {
+        loadMoreButton.style.display = 'none';
+      }
+    });
+  }
+</script>
+
+<style>
+  .sketches-page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+  
+  .page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  .page-header h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+  
+  .subtitle {
+    font-size: 1.2rem;
+    color: #4b5563;
+    max-width: 36rem;
+    margin: 0 auto;
+  }
+  
+  .categories-filter {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .filter-button {
+    padding: 0.5rem 1rem;
+    color: #4b5563;
+    text-decoration: none;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+  }
+  
+  .filter-button:hover {
+    color: #111827;
+    background-color: #f3f4f6;
+  }
+  
+  .filter-button.active {
+    background-color: #111827;
+    color: white;
+  }
+  
+  .sketch-gallery-container {
+    margin-bottom: 4rem;
+  }
+  
+  .sketch-gallery.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  /* Ensure 3 columns on larger screens */
+  @media (min-width: 1024px) {
+    .sketch-gallery.grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  .sketch-item {
+    background-color: #fff;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  }
+  
+  .sketch-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  .sketch-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  
+  .sketch-content {
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .sketch-content img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .sketch-title {
+    padding: 1rem;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  
+  .load-more-container {
+    text-align: center;
+    padding: 2rem 0;
+  }
+  
+  .load-more-button {
+    padding: 0.75rem 2rem;
+    background-color: #111827;
+    color: white;
+    border: none;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .load-more-button:hover {
+    background-color: #1f2937;
+  }
+</style>

@@ -35,6 +35,12 @@
     "title": "Motion on CSS Grid",
     "format": "svg"
   },
+  "src/content/sketches/creative-coding/250509-phaser3-topdown.mdx": {
+    "lastModified": 1747107425045.469,
+    "outputPath": "public/thumbnails/sketches/250509-phaser3-topdown.svg",
+    "title": "Phaser 3: Building a Top-Down Player Controller",
+    "format": "svg"
+  },
   "src/content/sketches/webdev/2025/250102-cssgrid.mdx": {
     "lastModified": 1746382363377.8582,
     "outputPath": "public/thumbnails/sketches/250102-cssgrid.svg",
@@ -107,6 +113,12 @@
     "title": "Sample Web Development Sketch",
     "format": "svg"
   },
+  "src/content/sketches/webdev/250514-vim-typing-game.mdx": {
+    "lastModified": 1747378669109.5361,
+    "outputPath": "public/thumbnails/sketches/250514-vim-typing-game.svg",
+    "title": "Vim Typing Game",
+    "format": "svg"
+  },
   "src/content/sketches/webdev/archived-completed/200830-PerfectLoopSinCosine.mdx": {
     "lastModified": 1746382363352.8552,
     "outputPath": "public/thumbnails/sketches/200830-PerfectLoopSinCosine.svg",
@@ -138,309 +150,327 @@
     "format": "svg"
   },
   "src/content/blog/2025/241016-keep-it-simple-essential.md": {
-    "lastModified": 1746344099389.0283,
+    "lastModified": 1746726631248.3276,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Keep it Simple, Essential | Focusing on What Really Matters",
     "format": "png"
   },
   "src/content/blog/2025/250429-my-ongoing-journey.md": {
-    "lastModified": 1745934383893.8127,
+    "lastModified": 1746726631253.3276,
     "outputPath": "public/thumbnails/blog/250429-my-ongoing-journey.svg",
     "title": "My Ongoing Journey",
     "format": "svg"
   },
   "src/content/blog/2025/250502-wordpress-premium-theme-getting-started.md": {
-    "lastModified": 1746195513662.1511,
+    "lastModified": 1746726631257.328,
     "outputPath": "public/thumbnails/blog/250502-wordpress-premium-theme-getting-started.svg",
     "title": "Bought That Perfect WordPress Theme? Here's How to Actually Make It Look Like the Demo",
     "format": "svg"
   },
+  "src/content/blog/2025/250506-golden-grid-and-digital-clarity.md": {
+    "lastModified": 1746726631245.3274,
+    "outputPath": "public/thumbnails/blog/250506-golden-grid-and-digital-clarity.svg",
+    "title": "Slowly & Surely",
+    "format": "svg"
+  },
   "src/content/blog/_draft/221212-how_should_i_start_my_blog.md": {
-    "lastModified": 1745219068387.3367,
+    "lastModified": 1746726631227.3271,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Embarking on Your Blogging Journey: A Starter Guide",
     "format": "png"
   },
   "src/content/blog/_draft/221215-disable_right_click.md": {
-    "lastModified": 1745219068387.3367,
+    "lastModified": 1746726631214.3267,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Disabling Right-Click on Your Website",
     "format": "png"
   },
   "src/content/blog/_draft/230606-personal_website_progress.md": {
-    "lastModified": 1745219068379.3364,
+    "lastModified": 1746726631238.3274,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Personal Website Progress 2023",
     "format": "png"
   },
   "src/content/blog/_draft/230609-figma_crash_course.md": {
-    "lastModified": 1746207775645.5825,
+    "lastModified": 1746726631036.3223,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Figma Crash Course: Unlocking Core Features",
     "format": "png"
   },
   "src/content/blog/_draft/230614-optimizing_google_fonts.md": {
-    "lastModified": 1745219068405.3372,
+    "lastModified": 1746726631056.3228,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Optimizing Google Fonts for Speed and Security",
     "format": "png"
   },
   "src/content/blog/_draft/230615-manual_bulk_webp_image_for_wordpress.md": {
-    "lastModified": 1745219068387.3367,
+    "lastModified": 1746726631197.3262,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Streamlining .WebP Image Conversion & Serving for WordPress Websites",
     "format": "png"
   },
   "src/content/blog/_draft/230618-block_website_access_via_htpasswd.md": {
-    "lastModified": 1745219068387.3367,
+    "lastModified": 1746726631211.3267,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Securing Your WordPress Staging Site with Basic Password Protection",
     "format": "png"
   },
   "src/content/blog/_draft/230618-ga4_how_to_conversion.md": {
-    "lastModified": 1745219068387.3367,
+    "lastModified": 1746726631191.3262,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "How to Configure GA4 Goals and Conversions",
     "format": "png"
   },
   "src/content/blog/_draft/230711-wordpress_conditional_tags.md": {
-    "lastModified": 1745219068387.3367,
+    "lastModified": 1746726631217.327,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Understanding WordPress Conditional Tags",
     "format": "png"
   },
   "src/content/blog/_draft/230713-wordpress_conditional_tags copy.md": {
-    "lastModified": 1745219068387.3367,
+    "lastModified": 1746726631185.326,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Importing Data from a CSV File: A Guide for WordPress Developers",
     "format": "png"
   },
   "src/content/blog/_draft/230718-form_data_to_google_sheet.md": {
-    "lastModified": 1745219068387.3367,
+    "lastModified": 1746726631142.325,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Creating a Simple Form to Google Sheets Database",
     "format": "png"
   },
   "src/content/blog/_draft/230723-premature_optimization.md": {
-    "lastModified": 1745219068387.3367,
+    "lastModified": 1746726631120.3242,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Premature Optimization: A Developer's Guide",
     "format": "png"
   },
   "src/content/blog/_draft/230821-UXUI_kiss.md": {
-    "lastModified": 1745219068387.3367,
+    "lastModified": 1746726631203.3264,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "UXUI Design: KISS",
     "format": "png"
   },
   "src/content/blog/_draft/230831-atomic_habit.md": {
-    "lastModified": 1745219068387.3367,
+    "lastModified": 1746726631176.3257,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Mastering the Art of Habit Formation: A Deep Dive into Atomic Habits",
     "format": "png"
   },
   "src/content/blog/_draft/231126-mvp of blog and portfolio.md": {
-    "lastModified": 1745219068405.3372,
+    "lastModified": 1746726631052.3225,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "MVP of Blog & Portfolio",
     "format": "png"
   },
   "src/content/blog/_draft/231202-nice_ai_art.md": {
-    "lastModified": 1745219068405.3372,
+    "lastModified": 1746726631062.3228,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Nice AI Art",
     "format": "png"
   },
   "src/content/blog/_draft/231204-circles_goes_wiggling.md": {
-    "lastModified": 1745219068405.3372,
+    "lastModified": 1746726631030.322,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Sketch of circles wiggling.",
     "format": "png"
   },
   "src/content/blog/_draft/240505-new_chapter.md": {
-    "lastModified": 1745219068379.3364,
+    "lastModified": 1746726631242.3274,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "New Chapter for Career",
     "format": "png"
   },
   "src/content/blog/_draft/241126-inertia.md": {
-    "lastModified": 1745219068387.3367,
+    "lastModified": 1746726631149.325,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Inertia, Keep Going, Keep Rolling",
     "format": "png"
   },
   "src/content/blog/_draft/241205-rabbit holes goes on forever.md": {
-    "lastModified": 1745219068387.3367,
+    "lastModified": 1746726631100.3237,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Down the Rabbit Hole: The Endless Journey of Learning",
     "format": "png"
   },
   "src/content/blog/_draft/241212-Why I Chose Astro.js for My Web Development Journey.md": {
-    "lastModified": 1745219068379.3364,
+    "lastModified": 1746726631230.3271,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Why I Chose Astro.js for My Web Development Journey",
     "format": "png"
   },
   "src/content/blog/_draft/250217-OnePageOneTopic.md": {
-    "lastModified": 1745219068371.336,
+    "lastModified": 1746726631094.3237,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "One-Page-One-Topic",
     "format": "png"
   },
   "src/content/blog/_draft/250323-Debounce.md": {
-    "lastModified": 1745219068371.336,
+    "lastModified": 1746726631180.326,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Understanding Debounce: A Practical Guide",
     "format": "png"
   },
   "src/content/blog/_draft/250323-di-zi-gui.md": {
-    "lastModified": 1745219068378.3362,
+    "lastModified": 1746726631075.3232,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Di Zi Gui (弟子规) - Rules for Students and Children",
     "format": "png"
   },
   "src/content/blog/_draft/250323-how-to-start-creative-coding.md": {
-    "lastModified": 1745219068390.3367,
+    "lastModified": 1746726631097.3237,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Why Creative Coding Matters",
     "format": "png"
   },
   "src/content/blog/_draft/250323-malaysia-of-economy.md": {
-    "lastModified": 1745219068373.3362,
+    "lastModified": 1746726631156.3252,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Malaysia's Economic Landscape: A Brief Overview",
     "format": "png"
   },
   "src/content/blog/_draft/250323-malaysia-past.md": {
-    "lastModified": 1745219068378.3362,
+    "lastModified": 1746726631047.3225,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Malaysia's Path: From Colonial Rule to Modern Nation",
     "format": "png"
   },
   "src/content/blog/_draft/250323-why-creative-coding.md": {
-    "lastModified": 1745219068387.3367,
+    "lastModified": 1746726631208.3267,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Why Creative Coding Matters",
     "format": "png"
   },
   "src/content/blog/_draft/250404-Sharing my workflow progress.md": {
-    "lastModified": 1745219068371.336,
+    "lastModified": 1746726631232.3271,
     "outputPath": "public/thumbnails/blog/bunny.png",
     "title": "Sharing my workflow progress",
     "format": "png"
   },
   "src/content/blog/_draft/250406-using-bash-to-sync-obsidian-astro-content.md": {
-    "lastModified": 1744011254892.3357,
+    "lastModified": 1746726631115.3242,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Using rsync to synchronize content between astro.js and obsidian.md",
     "format": "png"
   },
   "src/content/blog/_draft/250409-astrojs-coming-soon-page-on-vercel.md": {
-    "lastModified": 1745219068378.3362,
+    "lastModified": 1746726631131.3247,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Creating a Coming Soon Page with Astro.js and Vercel",
     "format": "png"
   },
   "src/content/blog/_draft/250410-globalization-next-era.md": {
-    "lastModified": 1745933542101.3533,
+    "lastModified": 1746726631108.324,
     "outputPath": "public/thumbnails/blog/bg_rotate.jpg",
     "title": "Tariffs & Next Era After Globalization",
     "format": "jpg"
   },
   "src/content/blog/_draft/250411-A Choice of Kipling's Verse (1943).md": {
-    "lastModified": 1745219068371.336,
+    "lastModified": 1746726631083.3232,
     "outputPath": "public/thumbnails/blog/250411-a-choice-of-kiplings-verse-1943.svg",
     "title": "If—",
     "format": "svg"
   },
   "src/content/blog/_draft/250412-ai-trends-my-take-perspective.md": {
-    "lastModified": 1745219068405.3372,
+    "lastModified": 1746726631065.323,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "AI Trends & My Take & Perspective",
     "format": "png"
   },
   "src/content/blog/_draft/250412-no-code-web-dev.md": {
-    "lastModified": 1745219068387.3367,
+    "lastModified": 1746726631162.3254,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "No-code Website Design & Development",
     "format": "png"
   },
   "src/content/blog/_draft/250413-ai-instructions-general.md": {
-    "lastModified": 1745219068387.3367,
+    "lastModified": 1746726631146.325,
     "outputPath": "public/thumbnails/blog/250413-ai-instructions-general.svg",
     "title": "AI Agent (Cursor) Memory Bank Implementation Guide",
     "format": "svg"
   },
   "src/content/blog/_draft/Building GPT for my EDM Music Journey.md": {
-    "lastModified": 1745219068378.3362,
+    "lastModified": 1746726631112.3242,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Building GPT for my EDM Music Journey",
     "format": "png"
   },
   "src/content/blog/_draft/Malaysia's History Exploration.md": {
-    "lastModified": 1745219068378.3362,
+    "lastModified": 1746726631044.3223,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Malaysia's History Exploration",
     "format": "png"
   },
   "src/content/blog/_draft/On capturing my processing work - ccapturejs.md": {
-    "lastModified": 1745219068378.3362,
+    "lastModified": 1746726631080.3232,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "BlogTemplateTitle",
     "format": "png"
   },
   "src/content/blog/_draft/Setup for Blog & Portfolio.md": {
-    "lastModified": 1745933549211.4731,
+    "lastModified": 1746726631127.3245,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "BlogTemplateTitle",
     "format": "png"
   },
   "src/content/blog/_draft/Setup for my generative art.md": {
-    "lastModified": 1745219068373.3362,
+    "lastModified": 1746726631165.3254,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "BlogTemplateTitle",
     "format": "png"
   },
   "src/content/blog/_draft/Setup for my webdev.md": {
-    "lastModified": 1745219068378.3362,
+    "lastModified": 1746726631170.3257,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Setup for my webdev",
     "format": "png"
   },
   "src/content/blog/_draft/Setup for website development.md": {
-    "lastModified": 1745933551741.5156,
+    "lastModified": 1746726631223.327,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "BlogTemplateTitle",
     "format": "png"
   },
   "src/content/blog/_draft/Simplify Subjects for my kids.md": {
-    "lastModified": 1745219068378.3362,
+    "lastModified": 1746726631059.3228,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Simplify Subjects",
     "format": "png"
   },
   "src/content/blog/_draft/The Malaysian's Favourite Clock.md": {
-    "lastModified": 1745219068373.3362,
+    "lastModified": 1746726631195.3262,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "The Malaysian's Favorite Clock",
     "format": "png"
   },
   "src/content/blog/_draft/Unlocking the World of Shaders with P5.js - A Beginner's Guide.md": {
-    "lastModified": 1745219068373.3362,
+    "lastModified": 1746726631135.3247,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Unlocking the World of Shaders with P5.js: A Beginner's Guide",
     "format": "png"
   },
   "src/content/blog/_draft/What & Why Bursa Malaysia.md": {
-    "lastModified": 1745219068379.3364,
+    "lastModified": 1746726631041.3223,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "Bursa Malaysia: 5-Minute Beginner's Guide",
     "format": "png"
   },
   "src/content/blog/_draft/blog_template.md": {
-    "lastModified": 1745933545184.4053,
+    "lastModified": 1746726631090.3235,
     "outputPath": "public/thumbnails/blog/placeholder.png",
     "title": "BlogTemplateTitle",
     "format": "png"
+  },
+  "src/content/blog/linux/250508-Fix That Annoying Scroll Bug When Switching Apps on GNOME.md": {
+    "lastModified": 1746726631027.322,
+    "outputPath": "public/thumbnails/blog/250508-Fix That Annoying Scroll Bug When Switching Apps on GNOME.svg",
+    "title": "Fix That Annoying Scroll Bug When Switching Apps on GNOME",
+    "format": "svg"
+  },
+  "src/content/blog/linux/250508-my-pop-shell-journey.md": {
+    "lastModified": 1746727717640.3323,
+    "outputPath": "public/thumbnails/blog/250508-my-pop-shell-journey.svg",
+    "title": "My Pop Shell Journey",
+    "format": "svg"
   }
 }
