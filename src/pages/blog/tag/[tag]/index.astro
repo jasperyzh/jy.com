@@ -47,6 +47,8 @@ uniqueTags.forEach((t) => {
     (post) => post.data.tags && post.data.tags.includes(t)
   ).length;
 });
+
+export const prerender = true;
 ---
 
 <Layout>

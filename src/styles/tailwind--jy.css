@@ -1,6 +1,6 @@
 @font-face {
   font-family: "Wendy-Neue";
-  src: url("/assets/Wendy-Neue.ttf") format("truetype");
+  src: url("/assets/fonts/Wendy-Neue.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -124,6 +124,21 @@
   time {
     @apply text-grey font-display-alt mb-2;
   }
+
+  .site--header {
+    @apply fixed top-0 left-0 right-0 z-100 container max-w-7xl py-2;
+  }
+
+  body > main {
+    @apply container max-w-7xl my-8;
+    
+    /* mt-20 mb-8 px-4 */
+    /* ; */
+  }
+
+  body > main > header {
+    /* @apply mb-8; */
+  }
 }
 
 @layer components {
@@ -238,7 +253,7 @@
       pointer-events: none;
       z-index: 1;
 
-      background-image: url(/assets/noise2-compressed.png);
+      background-image: url(/assets/noise--.png);
       background-repeat: repeat;
       background-size: 512px;
       mix-blend-mode: soft-light;
@@ -268,7 +283,7 @@
       pointer-events: none;
       z-index: -1;
 
-      background-image: url(/assets/noise2-compressed.png);
+      background-image: url(/assets/noise--.png);
       background-repeat: repeat;
       background-size: 512px;
       mix-blend-mode: screen;

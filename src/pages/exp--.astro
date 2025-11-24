@@ -5,13 +5,11 @@
 
 import Layout from "@/layouts/Layout.astro";
 
-import ScreenCapture from "@/components/Tool__ScreenCapture.astro";
-
 // Dynamically import all Astro pages from the `../pages` directory.
 // This creates an object where keys are file paths and values are functions to import the modules.
 const allPageImports = import.meta.glob("./**/*.{astro,mdx}");
 
-console.log(allPageImports);
+// console.log(allPageImports);
 
 const pages = Object.keys(allPageImports)
   .filter((filePath) => {
@@ -71,12 +69,15 @@ const pagesByDir = pages.reduce((acc, page) => {
 }, {});
 
 const sortedDirs = Object.keys(pagesByDir).sort();
+
+export const prerender = true;
+
+
 ---
 
 <Layout title="Home">
   <main class="container">
     <h1>exp--home_of_my_experiments</h1>
-    <ScreenCapture />
     <slot />
 
     <!-- <h2>Available Pages:</h2> -->

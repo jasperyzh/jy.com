@@ -20,7 +20,7 @@ import Layout from "@/layouts/Layout.astro";
 </script>
 <script is:inline type="module">
   import GUI from "https://cdn.jsdelivr.net/npm/lil-gui@0.19/+esm";
-  import HatchFill from "/dot_matrix/HatchFill.js";
+  import HatchFill from "/dailies/HatchFill.js";
 
   let font;
   let fontLoaded = false;
@@ -71,7 +71,7 @@ import Layout from "@/layouts/Layout.astro";
     // Supported formats: .ttf, .otf, .woff, .woff2
     // IMPORTANT: Font must have vector outlines (not bitmap fonts)
     // Most modern fonts work, but some older bitmap fonts may not support textToPoints()
-    font = loadFont('/fonts/Wendy-Neue.ttf');
+    font = loadFont('/assets/fonts/Wendy-Neue.ttf');
   };
 
   window.setup = function () {
@@ -91,7 +91,7 @@ import Layout from "@/layouts/Layout.astro";
       }
     } else {
       fontError = "Font not loaded. Check the file path in preload().\n" +
-                 "Make sure the font file exists at /public/fonts/Wendy-Neue.ttf";
+                 "Make sure the font file exists at /public/assets/fonts/Wendy-Neue.ttf";
     }
 
     const gui = new GUI();

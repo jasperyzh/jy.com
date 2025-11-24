@@ -1,109 +1,253 @@
-{
-  /*
-    # Darkmode: created for tailwind, and work without tailwind
+---
+/**
+ * DarkMode Component
+ *
+ * Simple, essential dark mode toggle with classless CSS.
+ * Exposes global `window.toggleTheme()` function for programmatic control.
+ *
+ * USAGE:
+ * ======
+ *
+ * 1. Use built-in button (default):
+ *    <DarkMode show_button={true} />
+ *    or simply: <DarkMode />
+ *
+ * 2. Hide button and use custom toggle:
+ *    <DarkMode show_button={false} />
+ *    <button onclick="window.toggleTheme()">Toggle Theme</button>
+ *
+ * 3. Custom button with inline handler:
+ *    <DarkMode show_button={false} />
+ *    <button id="my-theme-btn">Dark Mode</button>
+ *    <script>
+ *      document.getElementById('my-theme-btn').addEventListener('click', () => {
+ *        window.toggleTheme();
+ *      });
+ *    </script>
+ *
+ * 4. Custom button in Astro component:
+ *    <DarkMode show_button={false} />
+ *    <button id="custom-toggle">Theme</button>
+ *    <script>
+ *      document.getElementById('custom-toggle')?.addEventListener('click', window.toggleTheme);
+ *    </script>
+ *
+ * 5. Use with keyboard shortcut (via HotkeyManager):
+ *    Already configured in Layout.astro - Press '4' when console is open (backtick key)
+ *
+ * THEME MODES:
+ * ============
+ * The component cycles through three modes:
+ * - "light": Always light mode
+ * - "dark": Always dark mode
+ * - "system": Follows OS preference (default)
+ *
+ * GLOBAL API:
+ * ===========
+ * window.toggleTheme() - Cycles through theme modes (light → dark → system → light)
+ *
+ * STYLING:
+ * ========
+ * The built-in button uses CSS variables from Tailwind:
+ * - --color-grey: Button text color
+ * - --color-blue: Focus outline color
+ *
+ * Custom buttons can be styled however you like. The theme is applied via
+ * the 'dark' class on <html> element, which is handled by Tailwind's dark mode.
+ */
 
-    This inline script is crucial for preventing the "flash of unstyled content" (FOUC).
-    It runs before the page is rendered to apply the correct theme class to the <html> element.
-    SCRIPT 1: This inline script runs instantly to prevent the theme flash. IT IS CRUCIAL.
-  */
+interface DarkModeProps {
+  /** Show the default theme toggle button */
+  show_button?: boolean;
 }
+
+const { show_button = true } = Astro.props as DarkModeProps;
+---
+
+{
+  show_button && (
+    <button id="theme-toggle" aria-label="Toggle theme">
+      theme
+    </button>
+  )
+}
+
 <script is:inline>
-  const getTheme = () => {
-    // Priority: 1. localStorage, 2. System Preference, 3. Default to 'light'
-    if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
-      return localStorage.getItem("theme");
-    }
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      return "dark";
-    }
-    return "light";
-  };
+  // Prevent FOUC: Apply theme before page renders
+  (() => {
+    const getTheme = () => {
+      if (
+        typeof localStorage !== "undefined" &&
+        localStorage.getItem("theme")
+      ) {
+        return localStorage.getItem("theme");
+      }
+      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        return "dark";
+      }
+      return "light";
+    };
 
-  const theme = getTheme();
-
-  if (theme === "light") {
-    document.documentElement.classList.remove("dark");
-  } else {
-    document.documentElement.classList.add("dark");
-  }
+    const theme = getTheme();
+    document.documentElement.classList.toggle("dark", theme === "dark");
+  })();
 </script>
 
-<button id="theme-toggle"></button>
-
-{
-  /* SCRIPT 2: This script handles user interaction and runs after the page is interactive. */
-}
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const themeToggleBtn = document.getElementById("theme-toggle");
+  // Declare global type for TypeScript
+  declare global {
+    interface Window {
+      toggleTheme: () => string;
+    }
+  }
 
-    if (!themeToggleBtn) return;
+  (() => {
+    const THEME_MODES = ["light", "dark", "system"];
+    const STORAGE_KEY = "theme";
 
-    const themeModes = ["light", "dark", "system"];
-    let currentMode = localStorage.getItem("theme") || "system";
+    const getStoredTheme = () => {
+      return localStorage.getItem(STORAGE_KEY) || "system";
+    };
 
-    const setButtonText = (mode) => {
-      themeToggleBtn.textContent = `theme--${mode.charAt(0).toUpperCase() + mode.slice(1)}`;
+    const getSystemTheme = () => {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
     };
 
     const applyTheme = (mode) => {
-      // 1. Remove the theme from localStorage if we are in 'system' mode.
+      const isDark =
+        mode === "dark" || (mode === "system" && getSystemTheme() === "dark");
+
+      document.documentElement.classList.toggle("dark", isDark);
+
       if (mode === "system") {
-        localStorage.removeItem("theme");
+        localStorage.removeItem(STORAGE_KEY);
       } else {
-        localStorage.setItem("theme", mode);
+        localStorage.setItem(STORAGE_KEY, mode);
       }
 
-      // 2. Determine if the dark class should be applied.
-      const isDarkMode =
-        mode === "dark" ||
-        (mode === "system" &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches);
-
-      // 3. Apply the class to the root element.
-      document.documentElement.classList.toggle("dark", isDarkMode);
-
-      // 4. Update button text.
-      setButtonText(mode);
+      return mode;
     };
 
-    // Button click cycles through the modes.
-    themeToggleBtn.addEventListener("click", () => {
-      const currentIndex = themeModes.indexOf(currentMode);
-      const nextIndex = (currentIndex + 1) % themeModes.length;
-      currentMode = themeModes[nextIndex];
-      applyTheme(currentMode);
+    const cycleTheme = () => {
+      const current = getStoredTheme();
+      const currentIndex = THEME_MODES.indexOf(current);
+      const nextIndex = (currentIndex + 1) % THEME_MODES.length;
+      const nextMode = THEME_MODES[nextIndex];
+      return applyTheme(nextMode);
+    };
+
+    // Expose global toggle function
+    (window as Window & { toggleTheme: () => string }).toggleTheme = cycleTheme;
+
+    // Initialize button if present
+    document.addEventListener("DOMContentLoaded", () => {
+      const button = document.getElementById("theme-toggle");
+      if (button) {
+        const updateButtonText = (mode) => {
+          const label = mode.charAt(0).toUpperCase() + mode.slice(1);
+          button.textContent = `theme--${label}`;
+        };
+
+        button.addEventListener("click", () => {
+          const newMode = cycleTheme();
+          updateButtonText(newMode);
+        });
+
+        // Set initial button text
+        updateButtonText(getStoredTheme());
+      }
+
+      // Listen for system theme changes
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", (e) => {
+          const stored = localStorage.getItem(STORAGE_KEY);
+          if (!stored || stored === "system") {
+            document.documentElement.classList.toggle("dark", e.matches);
+          }
+        });
+
+      // Apply initial theme
+      applyTheme(getStoredTheme());
+
+      // Update custom theme button text based on current theme
+      function updateCustomThemeButton() {
+        const button = document.getElementById("custom-theme-toggle");
+        if (!button) return;
+
+        const getStoredTheme = () => {
+          return localStorage.getItem("theme") || "system";
+        };
+
+        const updateButtonText = (mode) => {
+          const label = mode.charAt(0).toUpperCase() + mode.slice(1);
+          button.textContent = `theme--${label}`;
+        };
+
+        // Add click handler to toggle theme and update button text
+        button.addEventListener("click", () => {
+          if (window.toggleTheme) {
+            window.toggleTheme();
+          }
+          // Update button text after theme toggle
+          setTimeout(() => {
+            updateButtonText(getStoredTheme());
+          }, 0);
+        });
+
+        // Set initial button text
+        updateButtonText(getStoredTheme());
+
+        // Listen for system theme changes
+        window
+          .matchMedia("(prefers-color-scheme: dark)")
+          .addEventListener("change", () => {
+            const stored = localStorage.getItem("theme");
+            if (!stored || stored === "system") {
+              updateButtonText("system");
+            }
+          });
+
+        // Listen for storage changes (when theme is changed elsewhere)
+        window.addEventListener("storage", (e) => {
+          if (e.key === "theme") {
+            updateButtonText(getStoredTheme());
+          }
+        });
+      }
+
+      // Initialize footer theme button 
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", updateCustomThemeButton);
+      } else {
+        updateCustomThemeButton();
+      }
     });
-
-    // Listen for OS theme changes and update if we are in 'system' mode.
-    window
-      .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", (e) => {
-        if (
-          localStorage.getItem("theme") === null ||
-          localStorage.getItem("theme") === "system"
-        ) {
-          document.documentElement.classList.toggle("dark", e.matches);
-        }
-      });
-
-    // Initialize the button text on page load.
-    applyTheme(currentMode);
-  });
+  })();
 </script>
 
-<!-- 
-This is the old way of doing things.
 <style is:global>
-  html body {
-    color: var(--color-dark, #222);
-    background-color: var(--color-light, #eee);
-    @apply transition-colors duration-300;
+  .btn--toggle,
+  #theme-toggle {
+    --transition: opacity 0.2s ease, color 0.2s ease;
 
-    &:where(.dark, .dark *) {
-      color: var(--color-light, #eee);
-      background-color: var(--color-dark, #222);
-    }
+    border: none;
+    /* background: transparent; */
+    cursor: pointer;
+    /* font-size: 0.875rem; */
+    /* color: var(--color-grey, #595959); */
+    transition: var(--transition);
+    /* padding: 0.25rem 0.5rem; */
   }
-</style> 
--->
+
+  #theme-toggle:hover {
+    opacity: 0.7;
+  }
+
+  #theme-toggle:focus-visible {
+    outline: 2px solid var(--color-blue, #3e87ae);
+    outline-offset: 2px;
+  }
+</style>

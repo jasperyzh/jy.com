@@ -1,7 +1,7 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 
-import cloudflare from "@astrojs/cloudflare";
+// import cloudflare from "@astrojs/cloudflare";
 
 import tailwindcss from "@tailwindcss/vite";
 
@@ -11,8 +11,8 @@ import icon from "astro-icon";
 
 // https://astro.build/config
 export default defineConfig({
-  output: "server", // Hybrid mode: mostly static with some server endpoints
-  adapter: cloudflare(),
+  // output: "server", // Hybrid mode: mostly static with some server endpoints
+  // adapter: cloudflare(),
   site: "https://jasperyong.com",
   // markdown: {
   //   syntaxHighlight: "prism",

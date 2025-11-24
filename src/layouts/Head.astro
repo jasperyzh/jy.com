@@ -19,7 +19,11 @@ let pageTitle: string;
 if (title === "Home") {
   // Special case for homepage: Site Title | Home
   pageTitle = `${SITE_CONFIG.site.title} | ${title}`;
-} else if (title && title !== SITE_CONFIG.site.title && !title.includes(SITE_CONFIG.site.title)) {
+} else if (
+  title &&
+  title !== SITE_CONFIG.site.title &&
+  !title.includes(SITE_CONFIG.site.title)
+) {
   // Other pages: Page Title | Site Title
   pageTitle = `${title} | ${SITE_CONFIG.site.title}`;
 } else {
@@ -74,14 +78,125 @@ const imageUrl = new URL(image, Astro.url);
   gtag("config", "G-LQ2S4M9E6S");
 </script>
 
-<!-- Google fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<!-- Local fonts -->
+<!--
+  FONT LOADING BEST PRACTICES
+  ===========================
+  
+  Why Local Fonts Instead of Google Fonts?
+  -----------------------------------------
+  - Performance: Eliminates external DNS lookup and reduces latency
+  - Privacy: No data sent to third-party services (Google)
+  - Reliability: Works offline and doesn't depend on external CDN availability
+  - Control: Full control over font files and loading strategy
+  
+  Preload Links - Why They Matter
+  --------------------------------
+  Preload hints tell the browser to fetch critical font files early in the page load process,
+  before they're actually needed. This is important because:
+  
+  1. Fonts are render-blocking resources - the browser won't render text until fonts are loaded
+  2. Without preload, fonts are only discovered when CSS is parsed, causing delays
+  3. Preload starts the download immediately, reducing First Contentful Paint (FCP) and
+     Largest Contentful Paint (LCP) metrics
+  4. We preload the most commonly used fonts (Regular weight) that appear above the fold
+  
+  The `crossorigin` attribute is required for fonts loaded from different origins, and is
+  recommended even for same-origin fonts to ensure proper CORS handling.
+  
+  font-display: swap - What It Does
+  -----------------------------------
+  The `font-display: swap` property controls how fonts are displayed during the loading phase:
+  
+  - Without swap: Browser shows invisible text (FOIT - Flash of Invisible Text) until font loads
+  - With swap: Browser immediately shows text using fallback font, then swaps to custom font
+               when it loads (FOUT - Flash of Unstyled Text)
+  
+  Benefits of swap:
+  - Users can read content immediately, improving perceived performance
+  - Better Core Web Vitals scores (especially LCP)
+  - Prevents layout shift when font finally loads (if fallback has similar metrics)
+  
+  Alternative values:
+  - `block`: 3s invisible text, then fallback (not recommended)
+  - `fallback`: 100ms invisible, then fallback for 3s, then swap
+  - `optional`: Similar to fallback but may not swap if slow connection
+  
+  Variable Fonts
+  --------------
+  Merriweather uses variable fonts, which contain multiple weights/styles in a single file.
+  This reduces HTTP requests and file size compared to loading separate files for each weight.
+  The font-weight range (300-900) allows any weight within that range to be used.
+-->
+<!-- Preload critical fonts -->
 <link
-  href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Ubuntu:wght@300;400;500;700&display=swap"
-  rel="stylesheet"
+  rel="preload"
+  href="/assets/fonts/Ubuntu/Ubuntu-Regular.ttf"
+  as="font"
+  type="font/ttf"
+  crossorigin
+/>
+<link
+  rel="preload"
+  href="/assets/fonts/Merriweather/Merriweather-VariableFont_opsz,wdth,wght.ttf"
+  as="font"
+  type="font/ttf"
+  crossorigin
 />
 
+<style>
+  /* Ubuntu font faces - Static fonts for specific weights */
+  @font-face {
+    font-family: "Ubuntu";
+    src: url("/assets/fonts/Ubuntu/Ubuntu-Light.ttf") format("truetype");
+    font-weight: 300; /* Light */
+    font-style: normal;
+    font-display: swap; /* Show fallback immediately, swap when loaded */
+  }
+
+  @font-face {
+    font-family: "Ubuntu";
+    src: url("/assets/fonts/Ubuntu/Ubuntu-Regular.ttf") format("truetype");
+    font-weight: 400; /* Regular - preloaded for above-the-fold content */
+    font-style: normal;
+    font-display: swap; /* Show fallback immediately, swap when loaded */
+  }
+
+  @font-face {
+    font-family: "Ubuntu";
+    src: url("/assets/fonts/Ubuntu/Ubuntu-Medium.ttf") format("truetype");
+    font-weight: 500; /* Medium */
+    font-style: normal;
+    font-display: swap; /* Show fallback immediately, swap when loaded */
+  }
+
+  @font-face {
+    font-family: "Ubuntu";
+    src: url("/assets/fonts/Ubuntu/Ubuntu-Bold.ttf") format("truetype");
+    font-weight: 700; /* Bold */
+    font-style: normal;
+    font-display: swap; /* Show fallback immediately, swap when loaded */
+  }
+
+  /* Merriweather variable font - Single file contains all weights 300-900 */
+  @font-face {
+    font-family: "Merriweather";
+    src: url("/assets/fonts/Merriweather/Merriweather-VariableFont_opsz,wdth,wght.ttf")
+      format("truetype-variations");
+    font-weight: 300 900; /* Variable font supports any weight in this range */
+    font-style: normal;
+    font-display: swap; /* Show fallback immediately, swap when loaded */
+  }
+
+  @font-face {
+    font-family: "Merriweather";
+    src: url("/assets/fonts/Merriweather/Merriweather-Italic-VariableFont_opsz,wdth,wght.ttf")
+      format("truetype-variations");
+    font-weight: 300 900; /* Variable font supports any weight in this range */
+    font-style: italic;
+    font-display: swap; /* Show fallback immediately, swap when loaded */
+  }
+</style>
 
 <!-- <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

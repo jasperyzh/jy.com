@@ -26,6 +26,8 @@ const todayYear = SITE_CONFIG.site.year;
 
 <footer class="site--footer noise-- bg-2a py-12">
   <div class="container card-- texture-- card--greylight">
+    
+    
     <div class="grid-- grid--content_sidebar">
       <div>
         <p class="text-4xl font-body font-medium tracking-tighter select-none">
@@ -51,9 +53,14 @@ const todayYear = SITE_CONFIG.site.year;
           }
         </ul>
         <hr class="my-8" />
+
+
         <p class="text-xs my-4">
           © {todayYear} jasperyong.com
         </p>
+      </div>
+      <div class="justify-self-end  ">
+        <slot />
       </div>
     </div>
   </div>

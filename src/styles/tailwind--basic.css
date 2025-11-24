@@ -49,20 +49,7 @@
     }
   }
 
-  .site--header {
-    @apply fixed top-0 left-0 right-0 z-100 container max-w-7xl py-2;
-  }
 
-  body > main {
-    @apply container max-w-7xl mt-20 mb-8 px-4;
-  }
-
-  body > main > header {
-    @apply mb-8;
-  }
-
-  .site--footer {
-  }
 
   /* default fonts */
   /* https://typescale.com/ */
