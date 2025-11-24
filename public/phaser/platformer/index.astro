@@ -1,0 +1,171 @@
+---
+import Layout from "@/layouts/Layout.astro";
+---
+
+<Layout>
+
+    <!-- Load Phaser3 from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+    
+    <style is:inline>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #2c3e50;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: #3498db;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 1px solid #3498db;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-link:hover {
+            background: #3498db;
+            color: white;
+        }
+        
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .game-canvas {
+            border: 2px solid #34495e;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        
+        .info-panel {
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .controls {
+            margin-bottom: 1rem;
+        }
+        
+        .controls h3 {
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .controls ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #3498db;
+        }
+        
+        .game-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+        
+        .feature {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        
+        .feature h4 {
+            margin: 0 0 0.5rem 0;
+            color: #f39c12;
+        }
+    </style>
+    <div class="header">
+        <a href="/phaser" class="back-link">← Back to Experiments</a>
+        <h1>🏃 2D Platformer</h1>
+        <p>Classic platformer mechanics with jumping, collecting, and level progression</p>
+    </div>
+    
+    <div class="game-container">
+        <div id="phaser-game" class="game-canvas"></div>
+        
+        <div class="info-panel">
+            <div class="controls">
+                <h3>🎮 Controls:</h3>
+                <ul>
+                    <li><strong>A/D or Arrow Keys:</strong> Move left/right</li>
+                    <li><strong>W or Space or Up Arrow:</strong> Jump</li>
+                    <li><strong>S or Down Arrow:</strong> Drop through platforms</li>
+                    <li><strong>R:</strong> Restart level</li>
+                </ul>
+            </div>
+            
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value" id="score">0</div>
+                    <div>Score</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="collected">0</div>
+                    <div>Collected</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="lives">3</div>
+                    <div>Lives</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="level">1</div>
+                    <div>Level</div>
+                </div>
+            </div>
+            
+            <div class="game-info">
+                <div class="feature">
+                    <h4>🎯 Objective</h4>
+                    <p>Collect all golden coins and reach the exit portal. Avoid falling off platforms or touching enemies!</p>
+                </div>
+                <div class="feature">
+                    <h4>⚡ Features</h4>
+                    <ul>
+                        <li>Arcade physics with gravity</li>
+                        <li>Jump mechanics and coyote time</li>
+                        <li>Collectible coins system</li>
+                        <li>Multiple platform types</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- Game Scripts -->
+    <!-- <script type="module" src="/src/js/platformer/game-config.js"></script>
+    <script type="module" src="/src/js/platformer/platformer-scene.js"></script>
+    <script type="module" src="/src/js/platformer/platformer-game.js"></script> -->
+</Layout>

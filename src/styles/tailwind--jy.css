@@ -1,0 +1,388 @@
+@font-face {
+  font-family: "Wendy-Neue";
+  src: url("/assets/Wendy-Neue.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ===== DESIGN TOKENS ===== */
+@theme {
+  --GR: 1.618;
+  --GRrem: 1.618rem;
+
+  --color-light: #eaeaea;
+  --color-dark: #2a2a2a;
+
+  --color-black: #131313;
+  --color-2a: #2a2a2a;
+  --color-grey: #595959;
+  --color-red: #dc725a;
+  --color-blue: #3e87ae;
+  --color-yellow: #cca560;
+  --color-green: #0bd8b6;
+  --color-milk: #e3edef;
+  --color-greylight: #818181;
+
+  --color-greylight: #ddd;
+
+  --color-primary: #888;
+  --color-secondary: #888;
+  --color-accent: #888;
+  --color-muted: #888;
+
+  --default-font-family: "Ubuntu", sans-serif;
+  --font-display: "Merriweather", serif;
+  --font-display-alt: "Wendy-Neue", sans-serif;
+
+  --shadow--: 6px 6px 8px rgba(42, 42, 42, 0.1618);
+  --shadow--inset: inset var(--shadow--);
+  --shadow--box: var(--shadow--);
+  --shadow--drop: drop-shadow(var(--shadow--));
+
+  /* setup */
+  --spacing-special: clamp(1rem, 3vw, 3rem);
+}
+
+/* ===== BASE STYLES ===== */
+@layer base {
+  main > section {
+    margin-block: calc(var(--spacing) * 20); /* 5rem */
+
+    & > header {
+      @apply margin-- padding--;
+    }
+  }
+
+  .h1,
+  h1,
+  .h2,
+  h2,
+  .h3,
+  h3,
+  .h4,
+  h4,
+  .h5,
+  h5,
+  .h6,
+  h6 {
+    font-family: var(--font-display);
+    line-height: 1.225;
+  }
+  p {
+    font-weight: var(--font-weight-thin);
+    line-height: var(--GRrem);
+    /* got it from .max-w-prose */
+    max-width: 65ch;
+
+    &.lead {
+      font-size: var(--text-2xl);
+      line-height: calc(var(--GRrem) * 1.15);
+    }
+  }
+
+  a {
+    @apply text-grey font-normal italic transition;
+
+    &:hover {
+      @apply text-blue;
+    }
+  }
+
+  hr {
+    border-top: 0;
+    border-bottom: dotted 2px;
+    border-color: var(--color-grey);
+    opacity: 0.25;
+  }
+
+  img {
+    @apply rounded;
+  }
+
+  pre {
+    @apply text-wrap text-xs;
+  }
+
+  .font-wendy {
+    font-family: var(--font-display-alt);
+  }
+
+  blockquote {
+    /* testing: @utility card-- (is this recommended?) */
+    @apply aspect-[4/3] max-w-xl flex flex-col justify-center;
+
+    & > p:first-child {
+      font-family: var(--font-display);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: 1rem;
+      font-size: clamp(var(--text-lg), 5vw, var(--text-3xl));
+      line-height: 1.2;
+    }
+  }
+
+  time {
+    @apply text-grey font-display-alt mb-2;
+  }
+}
+
+@layer components {
+  .card-- {
+    --card-bg: var(--color-greylight);
+    background-color: var(--card-bg, var(--color-blue));
+    margin-bottom: var(--GRrem);
+    box-shadow: var(--shadow--box);
+
+    @apply margin-- padding-- overflow-hidden rounded-3xl border-0;
+
+    /* variant */
+    &.card--white,
+    &.card--milk {
+      --card-bg: var(--color-milk);
+      @apply text-2a;
+    }
+    &.card--black {
+      --card-bg: var(--color-black);
+      @apply text-milk;
+    }
+    &.card--2a {
+      --card-bg: var(--color-2a);
+      @apply text-milk;
+    }
+    &.card--blue {
+      --card-bg: var(--color-blue);
+      @apply text-milk;
+    }
+    &.card--yellow {
+      --card-bg: var(--color-yellow);
+      @apply text-2a;
+    }
+    &.card--green {
+      --card-bg: var(--color-green);
+      @apply text-2a;
+    }
+    &.card--red {
+      --card-bg: var(--color-red);
+      @apply text-2a;
+    }
+    &.card--grey {
+      --card-bg: var(--color-grey);
+      @apply text-milk;
+    }
+    &.card--greylight {
+      --card-bg: var(--color-greylight);
+      @apply text-2a;
+    }
+    /*  &.card--dot {
+      @apply relative bg-transparent;
+      padding-bottom: 5rem;
+    }
+    &.card--dot::after {
+      content: "";
+      position: absolute;
+      inset: 0; Makes the pseudo-element cover the entire card
+      z-index: -1; Puts the pseudo-element behind the card's content
+
+      background-color: var(--card-bg, var(--color-milk));
+      border-radius: inherit; Inherits the border-radius from the parent card
+
+      --dot-size: 1rem;
+      --dot-position-x: calc(100% - 3rem); Horizontal position
+      --dot-position-y: calc(100% - 3rem); Vertical position
+
+      The mask property applied to the background layer
+      -webkit-mask-image: radial-gradient(
+        circle at var(--dot-position-x) var(--dot-position-y),
+        transparent var(--dot-size),
+        black calc(var(--dot-size) + 1px)
+      );
+      mask-image: radial-gradient(
+        circle at var(--dot-position-x) var(--dot-position-y),
+        transparent var(--dot-size),
+        black calc(var(--dot-size) + 1px)
+      );
+
+      This is a fallback/alternative composite mode for wider compatibility
+      -webkit-mask-composite: xor;
+
+      This tells the browser to subtract the circle from a solid mask
+      mask-composite: exclude;
+    }
+    &.card--dot > * {
+      position: relative;
+      z-index: 1;
+    } */
+  }
+
+  /* ===== TEXTURE OVERLAY ===== */
+  /* 
+   * Adds a subtle noise texture overlay to any element
+   * 
+   * Usage: <div class="texture--">Content</div>
+   * Custom opacity: <div class="texture--" style="--texture-opacity: 0.3;">Content</div>
+   * 
+   * Default opacity: 0.5
+   * Blend mode: soft-light (subtle grain effect)
+   */
+  .texture-- {
+    --texture-opacity: 0.5;
+    position: relative;
+
+    &::before {
+      content: " ";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+
+      background-image: url(/assets/noise2-compressed.png);
+      background-repeat: repeat;
+      background-size: 512px;
+      mix-blend-mode: soft-light;
+      opacity: var(--texture-opacity, 0.5);
+    }
+
+    & > * {
+      position: relative;
+      z-index: 2;
+    }
+  }
+
+  /* Universal Noise Overlay - applicable to any element */
+  /* .noise--animate for TV-static like effect */
+  .noise-- {
+    --noise---opacity: 0.3;
+    position: relative;
+    z-index: 0;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+
+      background-image: url(/assets/noise2-compressed.png);
+      background-repeat: repeat;
+      background-size: 512px;
+      mix-blend-mode: screen;
+      opacity: var(--noise---opacity, 1);
+      mask: linear-gradient(150deg, transparent 0%, white 86%, white 95%);
+      -webkit-mask: linear-gradient(
+        150deg,
+        transparent 0%,
+        white 86%,
+        white 95%
+      );
+    }
+
+    .noise--.noise--animate::before {
+      animation: noiseMove 0.3s infinite linear alternate;
+    }
+  }
+
+  .grid-- {
+    @apply grid--;
+  }
+
+  /* sm, md, lg, xl, 2xl */
+  @variant md {
+    /* @apply grid-cols-3; */
+
+    .grid--content_sidebar {
+      @apply grid--content_sidebar;
+    }
+    .grid--sidebar_content {
+      @apply grid--sidebar_content;
+    }
+    .grid--sidebar_content_sidebar {
+      @apply grid--sidebar_content_sidebar;
+    }
+    .grid--content {
+      @apply grid--content;
+    }
+    .grid--sidebar {
+      @apply grid--sidebar;
+    }
+  }
+
+  @keyframes noiseMove {
+    0% {
+      background-position: 50px 300px;
+    }
+    20% {
+      background-position: -100px 0;
+    }
+    40% {
+      background-position: 150px -50px;
+    }
+    60% {
+      background-position: 0 -200px;
+    }
+    80% {
+      background-position: -10px -80px;
+    }
+    100% {
+      background-position: 70px 90px;
+    }
+  }
+}
+
+@layer utilities {
+  .container {
+    @apply max-w-7xl; /* 1280px */
+  }
+  .rounded-- {
+    @apply rounded-3xl;
+  }
+  .shadow--inset {
+    box-shadow: var(--shadow--inset);
+  }
+  .shadow--drop {
+    filter: var(--shadow--drop);
+  }
+
+  .margin-- {
+    @apply margin--;
+  }
+  .padding-- {
+    @apply padding--;
+  }
+}
+
+@utility grid-- {
+  @apply grid grid-cols-1 gap-2;
+}
+
+@utility grid--content_sidebar {
+  grid-template-columns: minmax(0, 61.8fr) minmax(0, 38.2fr);
+}
+@utility grid--sidebar_content {
+  grid-template-columns: minmax(0, 38.2fr) minmax(0, 61.8fr);
+}
+@utility grid--sidebar_content_sidebar {
+  grid-template-columns: minmax(0, 38.2fr) minmax(0, 61.8fr) minmax(0, 38.2fr);
+}
+@utility grid--content {
+  width: 61.8%;
+  max-width: 1200px; /* for example */
+}
+@utility grid--sidebar {
+  width: 38.2%;
+  max-width: 600px; /* for example */
+}
+
+@utility margin-- {
+  margin-left: calc(var(--spacing-special) / pow(var(--GR), 4));
+  margin-right: calc(var(--spacing-special) / pow(var(--GR), 3));
+}
+
+@utility padding-- {
+  padding-inline: var(--spacing-special);
+}

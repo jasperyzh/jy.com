@@ -1,0 +1,112 @@
+---
+import { getCollection } from "astro:content";
+import { slugify, getBlogFilename } from "@/util/util--blog";
+import { parseDateYYMMDD } from "@/util/util--date";
+
+import Layout from "@/layouts/Layout.astro";
+
+import Sidebar from "@/components/blog--category_list.astro";
+import CardPost from "@/components/blog--post_card.astro";
+import Pagination from "@/components/blog--pagination.astro";
+
+export const POSTS_PER_PAGE = 4;
+
+export async function getStaticPaths({ paginate }) {
+  const allPosts = await getCollection("blog");
+  const publishedPosts = allPosts.filter((post) => !post.data.draft);
+
+  const tags = ["life", "art", "tech", "share"];
+
+  let paths = [];
+  tags.forEach((tag) => {
+    const tagPosts = publishedPosts
+      .filter((post) => post.data.tags?.includes(tag))
+      .sort((a, b) => {
+        const dateA = parseDateYYMMDD(a.data.pubDate || new Date());
+        const dateB = parseDateYYMMDD(b.data.pubDate || new Date());
+        return dateB.getTime() - dateA.getTime();
+      });
+
+    const paginatedResult = paginate(tagPosts, {
+      params: { tag: slugify(tag) },
+      pageSize: POSTS_PER_PAGE,
+      props: {
+        tag,
+        allPosts: publishedPosts,
+      },
+    });
+    paths = paths.concat(paginatedResult);
+  });
+
+  return paths;
+}
+
+const { page } = Astro.props;
+const {
+  data: paginatedPosts,
+  currentPage,
+  lastPage: totalPages,
+  url,
+} = page;
+const { tag } = page.props;
+const title = `Blog posts tagged with "${tag}"`;
+
+// For Sidebar
+const allTagsData = page.props.allPosts.flatMap((post) => post.data.tags || []);
+const uniqueTags = [...new Set(allTagsData)].sort();
+
+const tagCounts = {};
+uniqueTags.forEach((t) => {
+  tagCounts[t] = page.props.allPosts.filter(
+    (post) => post.data.tags && post.data.tags.includes(t)
+  ).length;
+});
+---
+
+<Layout>
+  <main>
+    <header>
+      <h1>{title}</h1>
+    </header>
+
+    <aside class="page--aside">
+      <Sidebar
+        type="blog"
+        baseUrl="/blog"
+        tags={uniqueTags}
+        tagCounts={tagCounts}
+        activeTag={tag}
+        allItemsCount={page.props.allPosts.length}
+        formatTagUrl={(t) => `/blog/tag/${slugify(t)}`}
+      />
+    </aside>
+
+    <section id="posts" class="--posts-grid grid--">
+      {
+        paginatedPosts.map((post) => (
+          <CardPost
+            date={parseDateYYMMDD(post.data.pubDate || new Date())}
+            thumbnail={post.data.thumbnail || "/assets/images/placeholder.png"}
+            title={post.data.title}
+            description={post.data.description || "No description available"}
+            url={`/blog/${getBlogFilename(post)}`}
+          />
+        ))
+      }
+    </section>
+
+    <section id="pagination">
+      {
+        totalPages > 1 && (
+          <Pagination
+            prevUrl={url.prev}
+            nextUrl={url.next}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            baseUrl={`/blog/tag/${slugify(tag)}`}
+          />
+        )
+      }
+    </section>
+  </main>
+</Layout>

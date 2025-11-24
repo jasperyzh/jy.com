@@ -1,0 +1,557 @@
+---
+// HotkeyManager.astro - Global hotkey manager component with console overlay
+---
+
+<div id="hotkey-console" style="display: none;">
+  <div class="console-header">Hotkeys</div>
+  <div id="hotkey-list" class="console-list"></div>
+</div>
+
+<script>
+  /**
+   * TypeScript Type Definitions
+   * ===========================
+   * 
+   * STEP 1: Define interfaces for data structures
+   * - ModifierKeys: Type-safe object for keyboard modifiers
+   * - HotkeyData: Structure for each registered hotkey
+   * - These provide autocomplete and catch errors at compile-time
+   */
+  interface ModifierKeys {
+    altKey?: boolean;
+    ctrlKey?: boolean;
+    shiftKey?: boolean;
+    metaKey?: boolean;
+  }
+
+  interface HotkeyData {
+    key: string;
+    description: string;
+    callback: (event: KeyboardEvent) => void;
+    preventDefault: boolean;
+    modifiers: ModifierKeys;
+    consoleOnly: boolean;
+  }
+
+  /**
+   * HotkeyManager - Global keyboard shortcut manager
+   * 
+   * BENEFITS OF TYPESCRIPT:
+   * 1. Type Safety: Prevents passing wrong types (e.g., string instead of function)
+   * 2. Autocomplete: IDE suggests available methods and properties
+   * 3. Documentation: Types serve as inline documentation
+   * 4. Refactoring: Safe renaming and restructuring
+   * 5. Early Error Detection: Catches bugs before runtime
+   */
+  class HotkeyManager {
+    // STEP 2: Type class properties
+    // - Explicitly declare types for all properties
+    // - Makes the class structure clear and prevents accidental type changes
+    // - Use definite assignment (!) for properties initialized in constructor
+    private static instance: HotkeyManager | null = null;
+    private hotkeys!: Map<string, HotkeyData>;
+    public menuVisible: boolean = false; // Public so it can be checked externally
+    private menuElement: HTMLElement | null = null;
+    private hotkeyListElement: HTMLElement | null = null;
+
+    constructor() {
+      if (HotkeyManager.instance) {
+        return HotkeyManager.instance;
+      }
+
+      // STEP 3: Initialize with explicit types
+      this.hotkeys = new Map<string, HotkeyData>();
+      this.menuVisible = false;
+      this.menuElement = null;
+      this.hotkeyListElement = null;
+
+      // Bind method to preserve 'this' context
+      this.handleKeyDown = this.handleKeyDown.bind(this);
+
+      if (typeof document !== 'undefined') {
+        document.addEventListener('keydown', this.handleKeyDown);
+      }
+
+      HotkeyManager.instance = this;
+    }
+
+    static getInstance(): HotkeyManager {
+      if (!HotkeyManager.instance) {
+        HotkeyManager.instance = new HotkeyManager();
+      }
+      return HotkeyManager.instance;
+    }
+
+    /**
+     * STEP 4: Type method parameters and return values
+     * - Each parameter has a type annotation
+     * - Return type is explicitly `void` (no return value)
+     * - Optional parameters use `?` or default values
+     */
+    register(
+      key: string,
+      description: string,
+      callback: (event: KeyboardEvent) => void,
+      preventDefault: boolean = true,
+      modifiers: ModifierKeys = {},
+      consoleOnly: boolean = false
+    ): void {
+      if (typeof callback !== 'function') {
+        console.warn(`HotkeyManager: Invalid callback for key "${key}"`);
+        return;
+      }
+
+      // Create a unique key identifier that includes modifiers
+      const keyId = this.getKeyId(key, modifiers);
+
+      this.hotkeys.set(keyId, {
+        key,
+        description,
+        callback,
+        preventDefault,
+        modifiers,
+        consoleOnly,
+      });
+
+      this.updateMenu();
+    }
+
+    /**
+     * STEP 5: Type helper methods
+     * - Input and output types are explicit
+     * - Makes it clear what the method expects and returns
+     */
+    private getKeyId(key: string, modifiers: ModifierKeys): string {
+      const mods: string[] = [];
+      if (modifiers.altKey) mods.push('Alt');
+      if (modifiers.ctrlKey) mods.push('Ctrl');
+      if (modifiers.shiftKey) mods.push('Shift');
+      if (modifiers.metaKey) mods.push('Meta');
+      return mods.length > 0 ? `${mods.join('+')}+${key}` : key;
+    }
+
+    unregister(key: string): void {
+      this.hotkeys.delete(key);
+      this.updateMenu();
+    }
+
+    /**
+     * STEP 6: Type event handlers
+     * - KeyboardEvent is a built-in DOM type
+     * - TypeScript knows all properties of the event object
+     * - Autocomplete works for event.altKey, event.key, etc.
+     */
+    private handleKeyDown(event: KeyboardEvent): void {
+      const key = event.key;
+      
+      // Check all registered hotkeys to find a match
+      for (const [keyId, hotkey] of this.hotkeys.entries()) {
+        // Check if the base key matches
+        if (hotkey.key !== key) continue;
+
+        // If this is a console-only hotkey, only trigger when console is open
+        if (hotkey.consoleOnly && !this.menuVisible) {
+          continue;
+        }
+
+        // If hotkey has modifiers, verify they match exactly
+        if (hotkey.modifiers && Object.keys(hotkey.modifiers).length > 0) {
+          // Check that all required modifiers are pressed
+          const requiredModsMatch = 
+            (!hotkey.modifiers.altKey || event.altKey) &&
+            (!hotkey.modifiers.ctrlKey || event.ctrlKey) &&
+            (!hotkey.modifiers.shiftKey || event.shiftKey) &&
+            (!hotkey.modifiers.metaKey || event.metaKey);
+          
+          // Check that no extra modifiers are pressed
+          const noExtraMods = 
+            (hotkey.modifiers.altKey || !event.altKey) &&
+            (hotkey.modifiers.ctrlKey || !event.ctrlKey) &&
+            (hotkey.modifiers.shiftKey || !event.shiftKey) &&
+            (hotkey.modifiers.metaKey || !event.metaKey);
+
+          if (!requiredModsMatch || !noExtraMods) continue;
+        } else {
+          // For hotkeys without modifiers, ensure no modifiers are pressed
+          if (event.altKey || event.ctrlKey || event.shiftKey || event.metaKey) {
+            continue;
+          }
+        }
+
+        // Match found!
+        if (hotkey.preventDefault) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        hotkey.callback(event);
+        return; // Only trigger the first match
+      }
+    }
+
+    toggleMenu(): void {
+      if (!this.menuElement) {
+        console.warn('HotkeyManager: Menu element not found');
+        return;
+      }
+
+      this.menuVisible = !this.menuVisible;
+      this.menuElement.style.display = this.menuVisible ? 'flex' : 'none';
+      this.updateMenu();
+    }
+
+    /**
+     * STEP 7: Type DOM element parameters
+     * - HTMLElement is the base type for all HTML elements
+     * - querySelector returns HTMLElement | null (handled with optional chaining)
+     */
+    setMenuElement(element: HTMLElement): void {
+      this.menuElement = element;
+      this.hotkeyListElement = element.querySelector('#hotkey-list');
+      this.updateMenu();
+    }
+
+    /**
+     * STEP 8: Type complex operations
+     * - Arrays are typed: [string, HotkeyData][]
+     * - TypeScript ensures we're working with the right data structures
+     */
+    private updateMenu(): void {
+      if (!this.hotkeyListElement) return;
+
+      this.hotkeyListElement.innerHTML = '';
+
+      if (this.hotkeys.size === 0) {
+        const item = document.createElement('div');
+        item.className = 'hotkey-item';
+        item.textContent = 'No hotkeys registered';
+        this.hotkeyListElement.appendChild(item);
+        return;
+      }
+
+      // Separate console-only and global hotkeys
+      // STEP 9: Type arrays explicitly
+      // - Tuple type [string, HotkeyData] represents key-value pairs
+      // - TypeScript ensures we only push the correct structure
+      const consoleHotkeys: [string, HotkeyData][] = [];
+      const globalHotkeys: [string, HotkeyData][] = [];
+
+      this.hotkeys.forEach((data: HotkeyData, keyId: string) => {
+        if (data.consoleOnly) {
+          consoleHotkeys.push([keyId, data]);
+        } else {
+          globalHotkeys.push([keyId, data]);
+        }
+      });
+
+      // Sort each group
+      consoleHotkeys.sort((a, b) => a[0].localeCompare(b[0]));
+      globalHotkeys.sort((a, b) => a[0].localeCompare(b[0]));
+
+      // Add console-only hotkeys first with a header
+      if (consoleHotkeys.length > 0) {
+        const header = document.createElement('div');
+        header.className = 'hotkey-section-header';
+        header.textContent = 'Console Actions (when console is open)';
+        this.hotkeyListElement.appendChild(header);
+
+        consoleHotkeys.forEach(([key, data]) => {
+          const item = document.createElement('div');
+          item.className = 'hotkey-item console-only';
+
+          const keySpan = document.createElement('span');
+          keySpan.className = 'hotkey-key';
+          keySpan.textContent = this.formatKey(key);
+
+          const descSpan = document.createElement('span');
+          descSpan.className = 'hotkey-desc';
+          descSpan.textContent = data.description;
+
+          item.appendChild(keySpan);
+          item.appendChild(descSpan);
+          if (this.hotkeyListElement) {
+            this.hotkeyListElement.appendChild(item);
+          }
+        });
+      }
+
+      // Add global hotkeys with a header
+      if (globalHotkeys.length > 0 && this.hotkeyListElement) {
+        const listElement = this.hotkeyListElement; // Store reference for type narrowing
+        
+        if (consoleHotkeys.length > 0) {
+          const separator = document.createElement('div');
+          separator.className = 'hotkey-section-header';
+          separator.textContent = 'Global Hotkeys';
+          listElement.appendChild(separator);
+        }
+
+        globalHotkeys.forEach(([key, data]) => {
+          const item = document.createElement('div');
+          item.className = 'hotkey-item';
+
+          const keySpan = document.createElement('span');
+          keySpan.className = 'hotkey-key';
+          keySpan.textContent = this.formatKey(key);
+
+          const descSpan = document.createElement('span');
+          descSpan.className = 'hotkey-desc';
+          descSpan.textContent = data.description;
+
+          item.appendChild(keySpan);
+          item.appendChild(descSpan);
+          listElement.appendChild(item);
+        });
+      }
+    }
+
+    /**
+     * STEP 10: Type return values and use Record type for objects
+     * - Record<string, string> means an object with string keys and string values
+     * - Return type is explicitly string
+     */
+    private formatKey(keyId: string): string {
+      // Parse keyId which might be "Alt+`" or just " "
+      const parts: string[] = keyId.split('+');
+      const key: string = parts[parts.length - 1];
+      
+      // Record type: object with string keys mapping to string values
+      const keyMap: Record<string, string> = {
+        ' ': 'Space',
+        'Escape': 'Esc',
+        'Enter': 'Enter',
+        'Backspace': 'Backspace',
+        'Tab': 'Tab',
+        'ArrowUp': '↑',
+        'ArrowDown': '↓',
+        'ArrowLeft': '←',
+        'ArrowRight': '→',
+      };
+
+      const formattedKey = keyMap[key] || key.toUpperCase();
+      
+      // Add modifier prefixes if present
+      if (parts.length > 1) {
+        const mods = parts.slice(0, -1);
+        return `${mods.join('+')}+${formattedKey}`;
+      }
+      
+      return formattedKey;
+    }
+
+    /**
+     * STEP 11: Type return values for public methods
+     * - Map<string, HotkeyData> is the exact return type
+     * - Callers know what structure to expect
+     */
+    getRegisteredKeys(): Map<string, HotkeyData> {
+      return new Map(this.hotkeys);
+    }
+
+    destroy(): void {
+      if (typeof document !== 'undefined') {
+        document.removeEventListener('keydown', this.handleKeyDown);
+      }
+      this.hotkeys.clear();
+      HotkeyManager.instance = null;
+    }
+  }
+
+  /**
+   * STEP 12: Type global window extensions
+   * - Extend Window interface to include our custom properties
+   * - TypeScript will recognize these properties globally
+   */
+  declare global {
+    interface Window {
+      HotkeyManager: typeof HotkeyManager;
+      hotkeyManager: HotkeyManager;
+    }
+  }
+
+  // Make available globally
+  window.HotkeyManager = HotkeyManager;
+
+  // Initialize when DOM is ready
+  (function(): void {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+    function init(): void {
+      const manager: HotkeyManager = HotkeyManager.getInstance();
+      const menuElement: HTMLElement | null = document.getElementById('hotkey-console');
+      
+      if (!menuElement) {
+        console.warn('HotkeyManager: Console element not found');
+        return;
+      }
+
+      // TypeScript now knows menuElement is not null after the check
+      manager.setMenuElement(menuElement);
+
+      // Register backtick to toggle menu
+      manager.register('`', 'Toggle console', () => {
+        manager.toggleMenu();
+      }, true);
+
+      // Expose manager globally
+      window.hotkeyManager = manager;
+
+      // Close menu on Escape (only when menu is visible)
+      manager.register('Escape', 'Close console', () => {
+        if (manager.menuVisible) {
+          manager.toggleMenu();
+        }
+      }, false);
+    }
+  })();
+</script>
+
+<style is:global>
+  #hotkey-console {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    max-width: 90vw;
+    max-height: 70vh;
+    background: rgba(26, 26, 26, 0.95);
+    border: 2px solid #444;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Courier New', Courier, monospace;
+    color: #ccc;
+    overflow: hidden;
+  }
+
+  .console-header {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 12px 16px;
+    border-bottom: 1px solid #444;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .console-list {
+    padding: 16px;
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  .hotkey-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 13px;
+  }
+
+  .hotkey-item:last-child {
+    border-bottom: none;
+  }
+
+  .hotkey-key {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-weight: bold;
+    color: #fff;
+    min-width: 60px;
+    text-align: center;
+    font-size: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .hotkey-desc {
+    color: #aaa;
+    margin-left: 16px;
+    flex: 1;
+  }
+
+  /* Scrollbar styling */
+  .console-list::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .console-list::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  .console-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+  }
+
+  .console-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  .hotkey-section-header {
+    padding: 12px 0 8px 0;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #888;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+
+  .hotkey-item.console-only {
+    background: rgba(255, 255, 255, 0.02);
+  }
+</style>
+
+
+<script>
+  // Register spacebar hotkey for recording toggle
+  function initHotkeys() {
+    if (window.hotkeyManager) {
+      // Global hotkeys
+      /* window.hotkeyManager.register(
+        " ",
+        "Toggle recording",
+        () => {
+          toggleRecord();
+        },
+        true
+      ); */
+
+      // Console-only hotkeys (only work when console is open)
+      window.hotkeyManager.register(
+        "1",
+        "Go to homepage",
+        () => {
+          window.location.href = "/";
+        },
+        true,
+        {},
+        true
+      ); // consoleOnly = true
+
+      // Add more console hotkeys here:
+      // window.hotkeyManager.register('2', 'Action 2', () => { ... }, true, {}, true);
+      // window.hotkeyManager.register('3', 'Action 3', () => { ... }, true, {}, true);
+      // ... and so on
+    } else {
+      // Retry if hotkeyManager isn't ready yet
+      setTimeout(initHotkeys, 100);
+    }
+  }
+
+  // Initialize hotkeys when DOM is ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initHotkeys);
+  } else {
+    initHotkeys();
+  }
+</script>

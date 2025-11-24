@@ -1,0 +1,37 @@
+---
+/**
+ * Sidebar component for blog pages
+ */
+import Button from "@/components/starwind/button";
+
+export interface SidebarProps {
+  /** Currently active category */
+  activeCategory?: string;
+}
+
+const { activeCategory = "" } = Astro.props;
+
+const categories = ["life", "art", "tech", "share"];
+const baseUrl = "/blog";
+const formatCategoryUrl = (category: string) => `${baseUrl}/tag/${category}`;
+---
+
+  <ul class="flex gap-2 lg:items-start flex-wrap">
+    {
+      categories.map((category) => (
+        <li>
+          <Button
+            size="sm"
+            href={formatCategoryUrl(category)}
+            variant={
+              activeCategory.toLowerCase() === category.toLowerCase()
+                ? "default"
+                : "outline"
+            }
+          >
+            {category.charAt(0).toUpperCase() + category.slice(1)}
+          </Button>
+        </li>
+      ))
+    }
+  </ul>

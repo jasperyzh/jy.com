@@ -1,0 +1,274 @@
+<style>
+  #controls {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+  }
+
+  button {
+    padding: 10px 20px;
+    cursor: pointer;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+  }
+
+  button:hover {
+    background: #555;
+  }
+  button.recording {
+    background: red;
+    animation: pulse 1s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+</style>
+
+<div id="controls">
+  <button id="btn-record">Start Video Record</button>
+</div>
+
+<script>
+  /**
+   * TypeScript Conversion for Screen Capture
+   * ========================================
+   *
+   * STEP 1: Define types for state variables
+   * - MediaRecorder: Browser API for recording media streams
+   * - Blob: Binary data chunks from recording
+   * - Explicit types prevent accidental type mismatches
+   */
+  let mediaRecorder: MediaRecorder | null = null;
+  let recordedChunks: Blob[] = [];
+  let isRecording: boolean = false;
+  let selectedMimeType: string = "video/webm"; // Track the selected format
+
+  /**
+   * STEP 2: Type async functions and DOM operations
+   * - async function returns Promise<void>
+   * - getElementById returns HTMLElement | null (need null check)
+   * - HTMLButtonElement is more specific than HTMLElement
+   * - TypeScript ensures we handle null cases
+   */
+  async function toggleRecord(): Promise<void> {
+    const btn: HTMLButtonElement | null = document.getElementById(
+      "btn-record"
+    ) as HTMLButtonElement | null;
+
+    if (!btn) {
+      console.error("Record button not found");
+      return;
+    }
+
+    if (!isRecording) {
+      try {
+        /**
+         * STEP 3: Type MediaStream and MediaRecorderOptions
+         * - getDisplayMedia returns Promise<MediaStream>
+         * - Use type assertion for cursor property (DisplayMediaStreamConstraints)
+         * - TypeScript autocompletes available options
+         */
+        const stream: MediaStream =
+          await navigator.mediaDevices.getDisplayMedia({
+            video: {
+              cursor: "always",
+              frameRate: 60,
+            } as MediaTrackConstraints & { cursor?: string },
+            audio: true,
+          });
+
+        /**
+         * STEP 3.5: Select best available video format
+         * Priority: MP4 (H.264) > VP9 WebM > Basic WebM
+         * MP4 is more widely compatible, VP9 is better compression
+         */
+        const formatPriority: string[] = [
+          "video/mp4", // MP4 with H.264 (best compatibility)
+          "video/webm; codecs=vp9", // VP9 WebM (good compression)
+          "video/webm", // Basic WebM (fallback)
+        ];
+
+        let selectedFormat: string | undefined;
+        for (const format of formatPriority) {
+          if (MediaRecorder.isTypeSupported(format)) {
+            selectedFormat = format;
+            break;
+          }
+        }
+
+        // Fallback to webm if nothing is supported (shouldn't happen in modern browsers)
+        if (!selectedFormat) {
+          selectedFormat = "video/webm";
+        }
+
+        selectedMimeType = selectedFormat;
+        const options: MediaRecorderOptions = {
+          mimeType: selectedFormat,
+        };
+
+        mediaRecorder = new MediaRecorder(stream, options);
+
+        /**
+         * STEP 4: Type event handlers
+         * - BlobEvent is the specific type for MediaRecorder data events
+         * - TypeScript knows event.data is a Blob
+         */
+        mediaRecorder.ondataavailable = (event: BlobEvent): void => {
+          if (event.data.size > 0) {
+            recordedChunks.push(event.data);
+          }
+        };
+
+        mediaRecorder.onstop = exportVideo;
+
+        // Type the MediaStreamTrack event
+        stream.getVideoTracks()[0].onended = (): void => {
+          if (isRecording) stopRecordingLogic();
+        };
+
+        mediaRecorder.start();
+        isRecording = true;
+        // TypeScript knows btn is not null after the check at function start
+        btn.innerText = "Stop Recording";
+        btn.classList.add("recording");
+      } catch (err) {
+        /**
+         * STEP 5: Type error handling
+         * - err is unknown type (could be Error, string, etc.)
+         * - Type guard ensures we handle it safely
+         */
+        console.error("Error:", err);
+        const errorMessage: string =
+          err instanceof Error ? err.message : String(err);
+        alert("Screen capture failed: " + errorMessage);
+      }
+    } else {
+      stopRecordingLogic();
+    }
+  }
+
+  /**
+   * STEP 6: Type cleanup functions
+   * - Return type void (no return value)
+   * - Type narrowing: after null check, TypeScript knows mediaRecorder is not null
+   * - MediaStreamTrack is the type for stream tracks
+   */
+  function stopRecordingLogic(): void {
+    const btn: HTMLButtonElement | null = document.getElementById(
+      "btn-record"
+    ) as HTMLButtonElement | null;
+
+    if (!btn) {
+      console.error("Record button not found");
+      return;
+    }
+
+    if (mediaRecorder && mediaRecorder.state !== "inactive") {
+      mediaRecorder.stop();
+      // TypeScript knows mediaRecorder.stream exists after the null check
+      mediaRecorder.stream
+        .getTracks()
+        .forEach((track: MediaStreamTrack): void => {
+          track.stop();
+        });
+    }
+    isRecording = false;
+    btn.innerText = "Start Video Record";
+    btn.classList.remove("recording");
+  }
+
+  /**
+   * STEP 7: Type file export functions
+   * - Blob constructor takes BlobPart[] (our recordedChunks)
+   * - HTMLAnchorElement is the specific type for <a> elements
+   * - TypeScript ensures we set the right properties
+   */
+  /**
+   * STEP 7: Type file export functions
+   * - Blob constructor takes BlobPart[] (our recordedChunks)
+   * - HTMLAnchorElement is the specific type for <a> elements
+   * - TypeScript ensures we set the right properties
+   * - Use the selected mime type for proper file extension
+   */
+  function exportVideo(): void {
+    // Determine file extension based on mime type
+    let fileExtension: string = "webm";
+    let fileName: string = "sketch-recording.webm";
+    
+    if (selectedMimeType.includes("mp4")) {
+      fileExtension = "mp4";
+      fileName = "sketch-recording.mp4";
+    } else if (selectedMimeType.includes("webm")) {
+      fileExtension = "webm";
+      fileName = "sketch-recording.webm";
+    }
+
+    const blob: Blob = new Blob(recordedChunks, { type: selectedMimeType });
+    const url: string = URL.createObjectURL(blob);
+    const a: HTMLAnchorElement = document.createElement("a");
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    URL.revokeObjectURL(url);
+    recordedChunks = [];
+  }
+
+  /**
+   * STEP 8: Type event listeners and initialization
+   * - addEventListener expects specific function signatures
+   * - TypeScript ensures callback types match
+   */
+  const recordButton: HTMLButtonElement | null = document.getElementById(
+    "btn-record"
+  ) as HTMLButtonElement | null;
+  if (recordButton) {
+    recordButton.addEventListener("click", toggleRecord);
+  }
+
+  /**
+   * STEP 9: Type hotkey registration
+   * - window.hotkeyManager is typed from HotkeyManager.astro
+   * - TypeScript knows the register method signature
+   * - Callback is typed as (event: KeyboardEvent) => void
+   */
+  function initHotkeys(): void {
+    if (window.hotkeyManager) {
+      // Global hotkeys
+      window.hotkeyManager.register(
+        "0",
+        "Toggle recording",
+        (): void => {
+          toggleRecord();
+        },
+        true,
+        {},
+        true  
+      );
+    } else {
+      // Retry if hotkeyManager isn't ready yet
+      setTimeout(initHotkeys, 100);
+    }
+  }
+
+  /**
+   * STEP 10: Type DOM ready checks
+   * - document.readyState is a specific string literal type
+   * - TypeScript ensures we handle all states correctly
+   */
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initHotkeys);
+  } else {
+    initHotkeys();
+  }
+</script>

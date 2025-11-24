@@ -1,0 +1,125 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout>
+  <!-- 
+    This is a working contact form. To receive email, 
+    Replace YOUR_ACCESS_KEY_HERE with your actual Access Key.
+
+    Create Access Key here 👉 https://web3forms.com/
+ -->
+
+  <section class="contact-section">
+    <div class="contact-intro">
+      <h2 class="contact-title">Get in Touch</h2>
+      <p class="contact-description">
+        Fill out the form below and we'll get back to you as soon as possible.
+      </p>
+    </div>
+
+    <form
+      class="contact-form"
+      action="https://api.web3forms.com/submit"
+      method="POST"
+    >
+      <input
+        type="hidden"
+        name="access_key"
+        value="2a527bf3-bd1e-4d1e-876e-e0576de19409"
+      />
+      <input
+        type="hidden"
+        name="subject"
+        value="New Contact Form Submission from Web3Forms"
+      />
+      <input type="hidden" name="from_name" value="My Website" />
+      <!-- More custom ization options available in the docs: https://docs.web3forms.com -->
+
+      <div class="form-group-container">
+        <div class="form-group">
+          <label for="name" class="form-label">Name</label>
+          <input
+            id="name"
+            name="name"
+            class="form-input"
+            placeholder="Your name"
+            type="text"
+          />
+        </div>
+        <div class="form-group">
+          <label for="email" class="form-label">Email</label>
+          <input
+            id="email"
+            name="email"
+            class="form-input"
+            placeholder="Your email"
+            type="email"
+          />
+        </div>
+        <div class="form-group">
+          <label for="phone" class="form-label">Phone</label>
+          <input
+            id="phone"
+            name="phone"
+            class="form-input"
+            placeholder="+1 (234) 56789"
+            type="text"
+          />
+        </div>
+        <div class="form-group">
+          <label for="message" class="form-label">Message</label>
+          <textarea
+            class="form-textarea"
+            id="message"
+            name="message"
+            placeholder="Your message"></textarea>
+        </div>
+      </div>
+      <button class="form-submit" type="submit">Send Message</button>
+    </form>
+  </section>
+</Layout>
+
+<script is:inline>
+  const form = document.getElementById("form");
+  const result = document.getElementById("result");
+
+  form.addEventListener("submit", function (e) {
+    const formData = new FormData(form);
+    e.preventDefault();
+
+    const object = Object.fromEntries(formData);
+    const json = JSON.stringify(object);
+
+    result.innerHTML = "Please wait...";
+
+    fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: json,
+    })
+      .then(async (response) => {
+        let json = await response.json();
+        if (response.status == 200) {
+          result.innerHTML = json.message;
+        } else {
+          console.log(response);
+          result.innerHTML = json.message;
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        result.innerHTML = "Something went wrong!";
+      })
+      .then(function () {
+        form.reset();
+        setTimeout(() => {
+          result.style.display = "none";
+        }, 3000);
+      });
+  });
+</script>

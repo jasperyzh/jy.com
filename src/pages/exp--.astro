@@ -1,0 +1,107 @@
+---
+// This page serves as the home page for the `exp--` project, listing all available Astro pages
+// dynamically. It uses `import.meta.glob` to find all `.astro` files within the `src/pages` directory
+// and generates links to them, organized by their directory structure.
+
+import Layout from "@/layouts/Layout.astro";
+
+import ScreenCapture from "@/components/Tool__ScreenCapture.astro";
+
+// Dynamically import all Astro pages from the `../pages` directory.
+// This creates an object where keys are file paths and values are functions to import the modules.
+const allPageImports = import.meta.glob("./**/*.{astro,mdx}");
+
+console.log(allPageImports);
+
+const pages = Object.keys(allPageImports)
+  .filter((filePath) => {
+    // Filter out specific files and directories that should not be listed on the home page.
+    // This includes:
+    // - Files within 'components' directories.
+    // - Files within '_exp' directories (likely archived or internal experiments).
+    // - The main 'Layout.astro' file.
+    // - 'Style.css' and 'readme.md' files.
+    // - Any file whose base name starts with an underscore (e.g., '_private-page.astro').
+    const fileName = filePath.split("/").pop();
+    const isRootIndex =
+      filePath === "./index.astro" || filePath === "index.astro";
+
+    return (
+      // !filePath.includes("components") &&
+      !isRootIndex && // Exclude root index.astro
+      !filePath.includes("404") &&
+      !filePath.includes("blog") &&
+      !filePath.includes("_exp") &&
+      !filePath.includes("_archived") &&
+      !filePath.includes("Layout.astro") &&
+      !filePath.includes("Style.css") &&
+      !filePath.includes("readme.md") &&
+      !fileName.startsWith("_")
+    );
+  })
+  .map((filePath) => {
+    // Construct the URL based on the file path
+    // Assuming files in src/pages/ map directly to root URLs
+    let url = filePath
+      .replace("../pages", "")
+      .replace(".astro", "")
+      .replace(".mdx", "")
+      .replace(".md", "");
+    if (url.endsWith("/index")) {
+      url = url.slice(0, -6); // Remove /index
+    }
+    if (url === "") {
+      url = "/";
+    }
+    return { url, file: filePath };
+  });
+
+// console.log(pages);
+
+const pagesByDir = pages.reduce((acc, page) => {
+  const pathParts = page.url.split("/").filter(Boolean);
+  const pageName = pathParts.pop() || "index";
+  const dirName = pathParts.join("/") || "root";
+
+  if (!acc[dirName]) {
+    acc[dirName] = [];
+  }
+  acc[dirName].push({ ...page, name: pageName });
+  return acc;
+}, {});
+
+const sortedDirs = Object.keys(pagesByDir).sort();
+---
+
+<Layout title="Home">
+  <main class="container">
+    <h1>exp--home_of_my_experiments</h1>
+    <ScreenCapture />
+    <slot />
+
+    <!-- <h2>Available Pages:</h2> -->
+    <section
+      class="grid lg:grid-cols-2 grid-flow-col grid-rows-[repeat(2,auto)] gap-4"
+    >
+      {
+        sortedDirs.map((dir) => {
+          const dirPages = pagesByDir[dir].sort((a, b) =>
+            a.name.localeCompare(b.name)
+          );
+          return (
+            <article>
+              <h3>{dir}</h3>
+              <ul>
+                {dirPages.map((page) => (
+                  <li>
+                    <a href={`/${page.url}`}>{page.name}</a>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          );
+        })
+      }
+    </section>
+  </main>
+</Layout>

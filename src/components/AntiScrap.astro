@@ -1,0 +1,177 @@
+---
+// @/src/pages/tools/AntiScrapingContact.astro
+// This component renders text onto a canvas with a subtle animation
+// to make it harder for bots to scrape the content.
+
+// related: [[250627-Website Contact Information Protection - Anti-Scraping Strategies]]
+
+export interface Props {
+  text: string; // The text to render (e.g., email or phone number)
+  width?: number; // Canvas width
+  height?: number; // Canvas height
+  fontSize?: number; // Font size in pixels
+  className?: string; // Optional CSS class for the canvas element
+}
+
+const {
+  text,
+  width = 280,
+  height = 40,
+  fontSize = 18,
+  className,
+} = Astro.props;
+
+// **SECURITY UPDATE:** Obfuscate the text by reversing it.
+// This prevents simple scrapers from reading the plaintext from the data attributes.
+const reversedText = text.split("").reverse().join("");
+
+// Generate a unique ID for the canvas to ensure scripts target the correct element.
+const canvasId = `canvas-${Math.random().toString(36).slice(2, 11)}`;
+---
+
+<div class="contact-container">
+  <button class="copy-- relative" type="button" data-r-copy-text={reversedText}>
+    <canvas
+      id={canvasId}
+      class:list={[className]}
+      width={width}
+      height={height}
+      data-r-text={reversedText}
+      data-font-size={fontSize}
+      aria-label="Contact information"
+      role="img"
+    >
+      <!-- Fallback content for browsers that don't support canvas -->
+      <!-- <p>Contact: {text}</p> -->
+      <!-- Noscript fallback for users with JavaScript disabled -->
+      <!-- <noscript>
+    <style>
+      #{canvasId} {
+        display: none; /* Hide canvas if JS is disabled */
+      }
+      .noscript-fallback {
+        font-family: monospace;
+        font-size: {fontSize}px;
+      }
+    </style>
+    
+  </noscript> -->
+      <!-- <p class="noscript-fallback">{text}</p> -->
+    </canvas>
+    <span
+      class="copy-text absolute bottom-0 right-0 px-2 py-1 opacity-60 text-sm"
+      >Copy</span
+    >
+  </button>
+</div>
+
+<script>
+  // This import is kept for other potential copy buttons, but the button in this component
+  // will now use custom logic to de-obfuscate the text before copying.
+  import "@/util/util--copy_clipboard.js";
+</script>
+
+<script define:vars={{ canvasId }}>
+  // Helper function to handle clipboard copy and provide feedback
+  const copyToClipboard = (textToCopy, button) => {
+    if (navigator.clipboard) {
+      navigator.clipboard
+        .writeText(textToCopy)
+        .then(() => {
+          const span = button.querySelector(".copy-text");
+          if (span) {
+            const originalText = span.textContent;
+            span.textContent = "Copied!";
+            setTimeout(() => {
+              span.textContent = originalText;
+            }, 1500);
+          }
+        })
+        .catch((err) => {
+          console.error("Could not copy text: ", err);
+        });
+    } else {
+      console.warn("Clipboard API not available.");
+    }
+  };
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // Canvas setup
+    const canvas = document.getElementById(canvasId);
+    if (!(canvas instanceof HTMLCanvasElement)) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      console.error("Canvas 2D context is not supported.");
+      return;
+    }
+
+    // **SECURITY UPDATE:** Read the reversed text and de-obfuscate it.
+    const reversedText = canvas.dataset.rText || "";
+    const text = reversedText.split("").reverse().join("");
+
+    const fontSize = parseInt(canvas.dataset.fontSize || "18", 10);
+    const { width, height } = canvas;
+
+    let frame = 0;
+    const amplitude = 1; // Wave height
+    const frequency = 0.05; // Wave speed
+
+    const getColor = () => {
+      // Inherit color from the parent element for better theme integration.
+      if (canvas.parentElement) {
+        const computedStyle = window.getComputedStyle(canvas.parentElement);
+        return computedStyle.color || "rgba(0, 0, 0, 0.9)";
+      }
+      // Fallback for safety.
+      return window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "rgba(255, 255, 255, 0.9)"
+        : "rgba(0, 0, 0, 0.9)";
+    };
+
+    const render = () => {
+      ctx.clearRect(0, 0, width, height);
+      ctx.font = `bold ${fontSize}px monospace`;
+      // ctx.fillStyle = getColor();
+      ctx.fillStyle = "rgba(13, 13, 13, 0.9)";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      const textWidth = ctx.measureText(text).width;
+      const startX = (width - textWidth) / 2;
+
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const charWidth = ctx.measureText(char).width;
+        const offsetX =
+          ctx.measureText(text.substring(0, i)).width + charWidth / 2;
+        const x = startX + offsetX;
+        const y =
+          height / 2 + Math.sin(frame * frequency + i * 0.4) * amplitude;
+        ctx.fillText(char, x, y);
+      }
+
+      frame++;
+      requestAnimationFrame(render);
+    };
+
+    render();
+
+    // Redraw on color scheme change.
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", render);
+
+    // **SECURITY UPDATE:** Handle the copy button click to de-obfuscate the text before copying.
+    const copyButton = document.querySelector(
+      `[data-r-copy-text="${reversedText}"]`
+    );
+    if (copyButton) {
+      copyButton.addEventListener("click", (e) => {
+        e.preventDefault(); // Prevent default button action if any
+        copyToClipboard(text, copyButton); // Use the de-obfuscated 'text' for copying
+      });
+    }
+  });
+</script>

@@ -1,0 +1,120 @@
+---
+/**
+ * Universal Card Component for Blog Posts and Sketches
+ */
+
+// import CardComponent from "./CardComponent.astro";
+
+import { formatDateYYMMDD } from "@/util/util--date";
+import { slugify } from "@/util/util--blog";
+import { Badge } from "@/components/starwind/badge";
+import type { HTMLAttributes } from "astro/types";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/starwind/card";
+import { Button } from "@/components/starwind/button";
+
+export interface CardProps extends HTMLAttributes<"div"> {
+  /** Post title */
+  title: string;
+  /** Post description */
+  description?: string;
+  /** Publication date */
+  date: Date;
+  /** Array of tags */
+  tags?: string[];
+  /** Category */
+  category?: string;
+  /** URL to the full content */
+  url: string;
+  /** Thumbnail image URL */
+  thumbnail?: string;
+  /** Thumbnail alt text */
+  thumbnailAlt?: string;
+  /** Maximum number of tags to display before showing +n */
+  maxVisibleTags?: number;
+  /** Show thumbnail image */
+  showThumbnail?: boolean;
+  /** Category URL prefix */
+  categoryUrlPrefix?: string;
+  /** Tag URL prefix */
+  tagUrlPrefix?: string;
+  /** Type of card: 'blog' or 'sketch' */
+  type?: "blog" | "sketch";
+}
+
+const {
+  title,
+  description,
+  date,
+  tags = [],
+  category,
+  url,
+  thumbnail,
+  thumbnailAlt,
+  maxVisibleTags = 3,
+  showThumbnail = true,
+  categoryUrlPrefix = "/blog/category",
+  tagUrlPrefix = "/blog/tag",
+  type = "blog",
+  ...restProps
+} = Astro.props;
+
+// Limit tags for display
+const visibleTags = tags.slice(0, maxVisibleTags);
+const hasMoreTags = tags.length > maxVisibleTags;
+const isSketch = type === "sketch";
+
+import { Debug } from "astro:components";
+---
+
+<Card slot="preview">
+  <!-- {
+      thumbnail && (
+        <figure>
+          <img
+            src={thumbnail}
+            alt={thumbnailAlt || title}
+            class="object-cover w-full h-full aspect-[4/3]"
+          />
+        </figure>
+      )
+    } -->
+  <CardHeader class="gap-y-2 p-0">
+    {date && <time>{formatDateYYMMDD(date)}</time>}
+    <a href={url} aria-label={`View ${title}`}>
+      <CardTitle class="text-2a">
+        {title}
+      </CardTitle>
+    </a>
+    <CardDescription class="text-grey">{description}</CardDescription>
+  </CardHeader>
+  <CardFooter class="p-0 pt-4">
+    <a href={url} aria-label={`View ${title}`}>Read more</a>
+
+    {
+      category && (
+        <Badge href={`${categoryUrlPrefix}/${category}`} size="sm">
+          {category}
+        </Badge>
+      )
+    }
+    {
+      visibleTags.map((tag) => (
+        <Badge
+          variant="outline"
+          href={`${tagUrlPrefix}/${slugify(tag)}`}
+          size="sm"
+        >
+          #{tag}
+        </Badge>
+      ))
+    }
+  </CardFooter>
+</Card>

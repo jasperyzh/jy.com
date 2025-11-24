@@ -1,0 +1,92 @@
+---
+import { SITE_CONFIG } from "@/consts";
+
+import { parseDateYYMMDD } from "@/util/util--date";
+import {
+  getAllPosts,
+  getAllTags,
+  getBlogFilename,
+  slugify,
+} from "@/util/util--blog";
+
+import Layout from "@/layouts/Layout.astro";
+import CategoryList from "@/components/blog--category_list.astro";
+
+import CardPost from "@/components/blog--post_card.astro";
+import Pagination from "@/components/blog--pagination.astro";
+
+import { getCollection } from "astro:content";
+
+const get_all_published_posts = await getCollection("blog", ({ data }) => {
+  return data.draft !== true;
+});
+
+const sort_published_posts_by_date = get_all_published_posts.sort((a, b) => {
+  const dateA = parseDateYYMMDD(a.data.created_date || new Date());
+  const dateB = parseDateYYMMDD(b.data.created_date || new Date());
+  return (dateB?.getTime() || 0) - (dateA?.getTime() || 0);
+});
+
+
+const paginatedPosts = sort_published_posts_by_date.slice(0, SITE_CONFIG.blog.posts_per_page);
+const totalPages = Math.ceil(sort_published_posts_by_date.length / SITE_CONFIG.blog.posts_per_page);
+const currentPage = 1;
+
+// everything
+const allTags = await getAllTags();
+const allPostsCount = (await getAllPosts()).length;
+
+const prevUrl = undefined;
+const nextUrl = totalPages > 1 ? "/blog/2" : undefined;
+
+export const prerender = true;
+
+---
+
+<Layout>
+  <main>
+    <header>
+      <h1>Blog</h1>
+    </header>
+
+    <aside class="page--aside">
+      <CategoryList
+        type="blog"
+        baseUrl="/blog"
+        tags={Object.keys(allTags)}
+        tagCounts={allTags}
+        activeTag=""
+        allItemsCount={allPostsCount}
+        formatTagUrl={(tag) => `/blog/tag/${slugify(tag)}`}
+      />
+    </aside>
+
+    <section id="posts" class="--posts-grid grid-- flex flex-col gap-2">
+      {
+        paginatedPosts.map((post) => (
+          <CardPost
+            date={parseDateYYMMDD(post.data.created_date || new Date())}
+            thumbnail={post.data.thumbnail || "/assets/images/placeholder.png"}
+            title={post.data.title}
+            description={post.data.description || "No description available"}
+            url={`/blog/${getBlogFilename(post)}`}
+          />
+        ))
+      }
+    </section>
+
+    <section id="pagination">
+      {
+        totalPages > 1 && (
+          <Pagination
+            prevUrl={prevUrl}
+            nextUrl={nextUrl}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            baseUrl="/blog"
+          />
+        )
+      }
+    </section>
+  </main>
+</Layout>

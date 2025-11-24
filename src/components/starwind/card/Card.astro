@@ -1,0 +1,14 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { tv } from "tailwind-variants";
+
+type Props = HTMLAttributes<"div">;
+
+const card = tv({ base: "card-- texture--" });
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<div class={card({ class: className })} {...rest}>
+	<slot />
+</div>

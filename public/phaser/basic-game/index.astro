@@ -1,0 +1,130 @@
+---
+import Layout from "@/layouts/Layout.astro";
+---
+
+<Layout>
+  <!-- Load Phaser3 from CDN -->
+  <script
+    is:inline
+    src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"
+  ></script>
+
+  <!-- Game Scripts -->
+  <script is:inline type="module" src="/phaser/basic-game/game-config.js"></script>
+  <script is:inline type="module" src="/phaser/basic-game/main-scene.js"></script>
+  <script is:inline type="module" src="/phaser/basic-game/basic-game.js"></script>
+  <style is:inline>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #2c3e50;
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1rem;
+      color: #3498db;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border: 1px solid #3498db;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .back-link:hover {
+      background: #3498db;
+      color: white;
+    }
+
+    .game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .game-canvas {
+      border: 2px solid #34495e;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .info-panel {
+      max-width: 800px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1.5rem;
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+    }
+
+    .controls {
+      margin-top: 1rem;
+    }
+
+    .controls h3 {
+      margin: 0 0 0.5rem 0;
+    }
+
+    .controls ul {
+      margin: 0;
+      padding-left: 1.5rem;
+    }
+
+    .stats {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #3498db;
+    }
+  </style>
+
+  <div class="header">
+    <a href="/phaser" class="back-link">← Back to Experiments</a>
+    <h1>🎮 Basic Phaser3 Game</h1>
+    <p>A simple bouncing ball game with physics and interactions</p>
+  </div>
+
+  <div class="game-container">
+    <div id="phaser-game" class="game-canvas"></div>
+
+    <div class="info-panel">
+      <div class="controls">
+        <h3>🎯 Controls & Features:</h3>
+        <ul>
+          <li><strong>Click/Tap:</strong> Add new bouncing balls</li>
+          <li><strong>Mouse Move:</strong> Balls are attracted to cursor</li>
+          <li><strong>Space:</strong> Reset all balls</li>
+          <li><strong>R:</strong> Change ball colors randomly</li>
+        </ul>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-value" id="ball-count">0</div>
+          <div>Active Balls</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="fps">60</div>
+          <div>FPS</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

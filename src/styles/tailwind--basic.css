@@ -1,0 +1,194 @@
+@theme {
+  --text-xs: 0.85rem;
+  --text-sm: 0.925rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.563rem;
+  --text-3xl: 1.953rem;
+  --text-4xl: 2.441rem;
+  --text-5xl: 3.052rem;
+  --text-6xl: 3.815rem;
+
+  --color-light: #eaeaea;
+  --color-dark: #2a2a2a;
+
+  --color-primary: #333;
+  --color-secondary: #888;
+  --color-accent: #888;
+  --color-muted: #888;
+
+  --default-font-family: "Ubuntu", sans-serif;
+  --font-display: "Merriweather", serif;
+
+  --animate--fade_in: fade_in 0.3s ease-out;
+  @keyframes fade_in {
+    0% {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  html body {
+    color: var(--color-dark, #222);
+    background-color: var(--color-light, #eee);
+    @apply transition-colors duration-300;
+
+    &:where(.dark, .dark *) {
+      color: var(--color-light, #eee);
+      background-color: var(--color-dark, #222);
+    }
+  }
+
+  .site--header {
+    @apply fixed top-0 left-0 right-0 z-100 container max-w-7xl py-2;
+  }
+
+  body > main {
+    @apply container max-w-7xl mt-20 mb-8 px-4;
+  }
+
+  body > main > header {
+    @apply mb-8;
+  }
+
+  .site--footer {
+  }
+
+  /* default fonts */
+  /* https://typescale.com/ */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .h1,
+  .h2,
+  .h3,
+  .h4,
+  .h5,
+  .h6 {
+    font-weight: var(--font-weight-bold);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+
+    /* @variant max-sm {
+      word-break: break-word;
+    } */
+  }
+
+  h1,
+  .h1 {
+    /* font-size: var(--text-6xl); */
+    font-size: clamp(var(--text-3xl), 10vw, var(--text-6xl));
+  }
+  h2,
+  .h2 {
+    /* font-size: var(--text-5xl); */
+    font-size: clamp(var(--text-2xl), 8vw, var(--text-5xl));
+  }
+  h3,
+  .h3 {
+    /* font-size: var(--text-4xl); */
+    font-size: clamp(var(--text-xl), 8vw, var(--text-4xl));
+  }
+  h4,
+  .h4 {
+    /* font-size: var(--text-3xl); */
+    font-size: clamp(var(--text-lg), 8vw, var(--text-3xl));
+  }
+  h5,
+  .h5 {
+    /* font-size: var(--text-2xl); */
+    font-size: clamp(var(--text-lg), 8vw, var(--text-2xl));
+  }
+  h6,
+  .h6 {
+    font-size: var(--text-lg);
+  }
+  p {
+    font-size: var(--text-base);
+    margin-bottom: 1rem;
+  }
+  small {
+    font-size: var(--text-sm);
+  }
+
+  a {
+    text-decoration: underline;
+    &:hover,
+    &:active {
+      text-decoration: none;
+    }
+  }
+
+  hr {
+    @apply my-12;
+
+    &.spacer {
+      @apply border-0 mt-0;
+    }
+  }
+
+  button {
+    @apply bg-primary text-white rounded cursor-pointer px-6 py-2 hover:opacity-90 transition-all duration-300;
+  }
+
+  article {
+    @apply mt-16;
+
+    ul {
+      @apply space-y-2 list-disc;
+    }
+    ol {
+      @apply space-y-2 list-decimal;
+    }
+    li {
+      @apply list-inside;
+    }
+
+  }
+}
+
+@layer components {
+  .card-- {
+    @apply border border-solid border-secondary p-8 rounded;
+
+    @variant dark {
+      @apply text-light;
+    }
+  }
+
+  .btn--primary {
+    @apply bg-primary;
+  }
+
+  .btn--secondary {
+    @apply bg-secondary;
+  }
+
+  .btn--sm {
+    @apply px-3 py-1.5 text-sm;
+  }
+  .btn--lg {
+    @apply px-8 py-3 text-lg;
+  }
+}
+
+@utility container {
+  margin-inline: auto;
+}
+
+@utility bg-primary {
+  background-color: rgb(var(--color-primary));
+}

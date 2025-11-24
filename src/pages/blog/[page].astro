@@ -1,0 +1,112 @@
+---
+/**
+ * Blog index and paginated pages (/blog, /blog/page/2, etc.)
+ * Fetches all posts and uses Astro's paginate function.
+ */
+// import { getAllPosts, getAllTags } from "@/utils/blog";
+
+import { SITE_CONFIG } from "@/consts";
+
+import { parseDateYYMMDD } from "@/util/util--date";
+import {
+  getAllPosts,
+  getAllTags,
+  getBlogFilename,
+  slugify,
+} from "@/util/util--blog";
+
+import Layout from "@/layouts/Layout.astro";
+import CategoryList from "@/components/blog--category_list.astro";
+
+import CardPost from "@/components/blog--post_card.astro";
+import Pagination from "@/components/blog--pagination.astro";
+
+import { getCollection } from "astro:content";
+
+import { Debug } from "astro:components";
+
+
+
+
+export async function getStaticPaths({ paginate }) {
+  const allPosts = await getCollection("blog", ({ data }) => {
+    return data.draft !== true;
+  });
+  const sortedPosts = allPosts.sort((a, b) => {
+    const dateA = parseDateYYMMDD(a.data.pubDate || new Date());
+    const dateB = parseDateYYMMDD(b.data.pubDate || new Date());
+    return dateB.getTime() - dateA.getTime();
+  });
+
+  const publishedPosts = sortedPosts.filter((post) => !post.data.draft);
+
+  // Paginate the posts, 10 per page
+  return paginate(publishedPosts, { pageSize: SITE_CONFIG.blog.posts_per_page });
+}
+
+const { page } = Astro.props;
+
+// Redirect /blog/1 to /blog
+if (page.currentPage === 1) {
+  return Astro.redirect("/blog", 301);
+}
+
+const { data: paginatedPosts, currentPage, lastPage: totalPages, url } = page;
+
+const allTags = await getAllTags();
+const allPostsCount = (await getAllPosts()).length;
+
+export const prerender = true;
+
+---
+
+<Layout>
+  <main>
+    <header>
+      <h1>Blog Page #{currentPage}</h1>
+    </header>
+
+    <aside class="page--aside">
+      <CategoryList
+        type="blog"
+        baseUrl="/blog"
+        tags={Object.keys(allTags)}
+        tagCounts={allTags}
+        activeTag=""
+        allItemsCount={allPostsCount}
+        formatTagUrl={(tag) => `/blog/tag/${slugify(tag)}`}
+      />
+    </aside>
+
+    <section id="posts" class="--posts-grid grid-- flex flex-col gap-2">
+      
+      {
+        paginatedPosts.map((post) => (
+          <CardPost
+            date={parseDateYYMMDD(post.data.pubDate || new Date())}
+            thumbnail={post.data.thumbnail || "/assets/images/placeholder.png"}
+            title={post.data.title}
+            description={post.data.description || "No description available"}
+            url={`/blog/${getBlogFilename(post)}`}
+          />
+        ))
+      }
+    </section>
+
+    <section id="pagination">
+      <Debug {page} />
+      <!-- {page} {paginatedPosts} {currentPage} {totalPages} {url} {allTags} {allPostsCount}  -->
+      {
+        totalPages > 1 && (
+          <Pagination
+            prevUrl={url.prev}
+            nextUrl={url.next}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            baseUrl="/blog"
+          />
+        )
+      }
+    </section>
+  </main>
+</Layout>

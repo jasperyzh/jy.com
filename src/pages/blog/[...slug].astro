@@ -1,0 +1,170 @@
+---
+import { getCollection, render } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+
+import { getBlogFilename, getBlogFullUrl } from "@/util/util--blog";
+import FormattedDate from "@/components/FormattedDate.astro";
+
+import { parseDateYYMMDD, formatDateYYMMDD } from "@/util/util--date";
+
+// Commented out until component is implemented
+
+// import ArticleHeader from "@/components/ArticleHeader.astro";
+// import ArticleContent from "@/components/ArticleContent.astro";
+// import ArticleFooter from "@/components/ArticleFooter.astro";
+
+// Fetch all posts and generate paths for each post
+export async function getStaticPaths() {
+  const allPosts = await getCollection("blog");
+
+  // Filter out draft posts
+  const publishedPosts = allPosts.filter((post) => {
+    return !post.data.draft;
+  });
+
+  // Sort posts by date (newest first)
+  const sortedPosts = publishedPosts.sort((a, b) => {
+    const dateA = a.data.created_date
+      ? parseDateYYMMDD(a.data.created_date) || new Date()
+      : new Date();
+    const dateB = b.data.created_date
+      ? parseDateYYMMDD(b.data.created_date) || new Date()
+      : new Date();
+    return dateB.getTime() - dateA.getTime();
+  });
+
+  // Generate paths for each post using clean URLs
+  const paths = sortedPosts.map((entry, index) => {
+    // Use just the filename for the URL, ignoring the directory structure
+    const cleanSlug = getBlogFilename(entry);
+
+    // Get previous and next posts (chronologically)
+    const nextPost = sortedPosts[index - 1]; // Newer post
+    const prevPost = sortedPosts[index + 1]; // Older post
+
+    return {
+      params: { slug: cleanSlug },
+      props: {
+        entry,
+        nextPost: nextPost || null,
+        prevPost: prevPost || null,
+      },
+    };
+  });
+
+  return paths;
+}
+
+const { entry, nextPost, prevPost } = Astro.props;
+const date = entry?.data.created_date
+  ? parseDateYYMMDD(entry.data.created_date)
+  : null;
+
+
+// Add prerender directive to fix the warning
+export const prerender = true;
+
+// Check if entry exists before rendering
+let Content;
+if (entry) {
+  const rendered = await render(entry);
+  Content = rendered.Content;
+} else {
+  console.error("Blog entry not found");
+}
+---
+
+<Layout
+  title={entry?.data.title || "Blog Post Not Found"}
+  description={entry?.data.description ||
+    "The requested blog post could not be found"}
+>
+  <main class="container">
+    {
+      entry ? (
+        <article class="mb-16">
+          <a class="block my-16" href="/blog">
+            {"<< Back to Blog"}
+          </a>
+          <header>
+            <div class="flex flex-wrap items-center gap-4 mb-4">
+             
+              {date && <time>{formatDateYYMMDD(date)}</time>}
+
+              {entry.data.tags &&
+                entry.data.tags.length > 0 &&
+                entry.data.tags.map((tag: string) => (
+                  <span class="badge-- ">{tag}</span>
+                ))}
+            </div>
+
+            {entry.data.description && (
+              <p class="italic text-xl text-balance mb-4">
+                {entry.data.description}
+              </p>
+            )}
+          </header>
+
+          <main>
+            {Content && <Content />}
+            {!Content && <p>Content could not be loaded</p>}
+          </main>
+        </article>
+      ) : (
+        <p>Blog Post Not Found</p>
+      )
+    }
+
+    <nav class="post-navigation flex justify-between items-center gap-4 my-16">
+      <div class="prev-post flex-1">
+        {
+          prevPost ? (
+            <a
+              href={getBlogFullUrl(prevPost)}
+              class="block p-4 border rounded hover:bg-greylight transition"
+            >
+              <span class="text-sm text-muted">← Older Post</span>
+              <p class="font-bold mt-1">{prevPost.data.title}</p>
+            </a>
+          ) : (
+            <div />
+          )
+        }
+      </div>
+
+      <div class="next-post flex-1 text-right">
+        {
+          nextPost ? (
+            <a
+              href={getBlogFullUrl(nextPost)}
+              class="block p-4 border rounded hover:bg-greylight transition"
+            >
+              <span class="text-sm text-muted">Newer Post →</span>
+              <p class="font-bold mt-1">{nextPost.data.title}</p>
+            </a>
+          ) : (
+            <div />
+          )
+        }
+      </div>
+    </nav>
+  </main>
+</Layout>
+
+<style>
+  @reference "../../styles/tailwind--.css";
+  article {
+    .badge-- {
+      @apply inline-block bg-greylight text-grey rounded px-2 py-1 text-xs;
+    }
+
+    .footnotes {
+      & * {
+        @apply text-xs text-muted;
+      }
+      li {
+        @apply list-inside;
+      }
+    }
+  }
+</style>

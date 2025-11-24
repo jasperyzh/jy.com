@@ -1,0 +1,136 @@
+---
+// @/components/Tool__ColorPalette.astro
+// This component displays a color swatch and provides buttons to copy the color's HEX and RGB codes.
+
+interface Props {
+  /** The HEX color code to display (e.g., "#ff0000"). */
+  hex: string;
+  class?: string;
+}
+
+const { hex, class: className } = Astro.props;
+
+/**
+ * Determines whether to use light or dark text based on the luminance of the background color
+ * for optimal contrast.
+ * @param hexColor The hex color string.
+ * @returns 'text-black' for light backgrounds, 'text-white' for dark backgrounds.
+ */
+const getTextColorClass = (hexColor: string): "text-black" | "text-white" => {
+  const cleanHex = hexColor.replace("#", "");
+  const r = parseInt(cleanHex.substring(0, 2), 16);
+  const g = parseInt(cleanHex.substring(2, 4), 16);
+  const b = parseInt(cleanHex.substring(4, 6), 16);
+  // Using the YIQ formula to determine perceived brightness.
+  const yiq = (r * 299 + g * 587 + b * 114) / 1000;
+  return yiq >= 128 ? "text-black" : "text-white";
+};
+
+const textColorClass = getTextColorClass(hex);
+const hexValue = hex.startsWith("#") ? hex : `#${hex}`;
+const cleanHex = hex.replace("#", "");
+---
+
+<figure
+  class:list={["colorpalette--", className, textColorClass]}
+  style={`background-color: ${hexValue};`}
+  data-hex={hexValue}
+>
+  <button class="copy--" data-copy-text={cleanHex}
+    ><span>#{cleanHex}</span></button
+  >
+  <button class="copy-- rgb-button" data-copy-text=""
+    ><span>rgb(...)</span></button
+  >
+</figure>
+
+<script>
+  /**
+   * Converts a HEX color string to an RGB string.
+   * @param {string} hex - The HEX color string (e.g., "#RRGGBB").
+   * @returns {string|null} The RGB string (e.g., "255, 87, 51") or null if invalid.
+   */
+  function hexToRgb(hex) {
+    // Expand shorthand form (e.g., "03F") to full form (e.g., "0033FF")
+    const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
+
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result
+      ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
+      : null;
+  }
+
+  /**
+   * Initializes all color palette components on the page.
+   * Finds each palette, converts its HEX value to RGB, and updates the RGB button.
+   */
+  function initializeColorPalettes() {
+    document.querySelectorAll(".colorpalette--").forEach((palette) => {
+      const hex = (palette as HTMLElement).dataset.hex;
+      if (hex) {
+        const rgb = hexToRgb(hex);
+        if (rgb) {
+          const rgbButton = palette.querySelector(".rgb-button");
+          if (rgbButton) {
+            rgbButton.textContent = `rgb(${rgb})`;
+            (rgbButton as HTMLElement).dataset.copyText = rgb;
+          }
+        }
+      }
+    });
+  }
+
+  // Run initialization on initial page load
+  initializeColorPalettes();
+
+  // Re-run for subsequent page navigations in Astro View Transitions
+  document.addEventListener("astro:page-load", initializeColorPalettes);
+</script>
+
+<!-- The util--copy_clipboard.js script is expected to be loaded elsewhere,
+     as it handles the click events for all elements with the 'copy--' class. -->
+<script src="@/util/util--copy_clipboard.js"></script>
+
+<style>
+
+  .colorpalette-- {
+    /* @apply aspect-square w-[168px] flex flex-col justify-end items-end gap-1 p-2 rounded; */
+    aspect-ratio: 1 / 1;
+    width: 168px;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    gap: 0.25rem;
+    padding: var(--spacing);
+    border-radius: var(--radius-sm);
+  }
+  .colorpalette-- button {
+    /* Reset the base styles you don't want */
+    background: none; /* Crucial: reset the button background */
+    border: 1px solid currentColor;
+    padding: 0.25rem 0.5rem;
+    /* Make sure the text color is inherited */
+    color: inherit;
+
+    &.copy-- {
+      /* @apply rounded border border-current bg-transparent px-2 py-1 text-xs opacity-80 transition hover:bg-white/20 hover:opacity-100; */
+      border-radius: var(--radius-sm);
+      border: 1px solid currentColor;
+      background: transparent;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      opacity: 0.8;
+      transition: background-color 0.2s ease, opacity 0.2s ease;
+      &:hover {
+      cursor: pointer;
+    }
+
+    &.copy--.copied {
+      /* @apply border-green-500 bg-green-500 text-white; */
+      border-color: var(--color-green);
+      background-color: var(--color-green);
+      color: var(--color-white);
+    }
+  }
+</style>

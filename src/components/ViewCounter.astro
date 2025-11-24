@@ -1,0 +1,72 @@
+---
+/**
+ * View Counter Component
+ * 
+ * Displays and tracks view counts for blog posts using the API endpoint.
+ * Automatically increments view count on page load.
+ * 
+ * Props:
+ * - slug: string (required) - The blog post slug
+ * 
+ * Usage:
+ * <ViewCounter slug={post.slug} />
+ */
+
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+---
+
+<div class="view-counter" data-slug={slug}>
+  <span class="view-count">— views</span>
+</div>
+
+<script>
+  // Track views for all view counter instances on the page
+  document.addEventListener('DOMContentLoaded', async () => {
+    const viewCounters = document.querySelectorAll('.view-counter');
+
+    viewCounters.forEach(async (counter) => {
+      const slug = counter.getAttribute('data-slug');
+      if (!slug) return;
+
+      const countElement = counter.querySelector('.view-count');
+      if (!countElement) return;
+
+      try {
+        // Increment view count
+        const response = await fetch(`/api/views/${slug}`, {
+          method: 'POST',
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          countElement.textContent = `${data.views} views`;
+        }
+      } catch (error) {
+        console.error('Failed to update view count:', error);
+        countElement.textContent = '— views';
+      }
+    });
+  });
+</script>
+
+<style>
+  .view-counter {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-grey);
+  }
+
+  .view-count {
+    font-variant-numeric: tabular-nums;
+  }
+</style>
+
+
+
+

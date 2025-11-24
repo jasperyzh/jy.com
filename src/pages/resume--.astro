@@ -1,0 +1,442 @@
+---
+// src/pages/resume.astro
+
+import "@/styles/tailwind--.css";
+// import "@/styles/tailwind--basic.css";
+// import "@/styles/tailwind--jy.css";
+import LayoutBase from "@/layouts/LayoutBase.astro";
+import { marked } from "marked";
+
+// const content = marked.parse(markdown);
+const mainContent = marked.parse(`
+# John Doe
+<p class="text-base font-normal text-grey mb-2">Senior Frontend Developer</p>
+<p class="text-xs text-grey leading-relaxed max-w-none">A passionate developer with over 10 years of experience in creating modern and responsive web applications, with a focus on performance and user experience.</p>
+
+
+Dedicated Full-Stack Web Developer with 9+ years of experience spanning front-end, back-end, and full-stack development. Proven track record in leading teams, significantly boosting SEO performance, and effectively managing complex projects and concept to launch. 
+Passionate about leveraging modern technologies to build engaging, user-centric web solutions and continuously exploring the intersection of technology, creativity, and effective knowledge systems.
+
+
+**Website Design & Development** – Developed and optimized responsive, user-centric websites and applications with HTML, CSS, JavaScript, and WordPress, enhancing performance and reliability.
+
+**SEO & Analytics** – Spearheaded SEO initiatives, increasing average site scores from 50 to 80+% and significantly boosting organic search visibility. Analyzed user data to inform design and content strategies that improved engagement.
+
+**Team Leadership** – Led a small cross-functional team of developers and designers, overseeing project delivery for diverse web solutions from ideation to deployment. Introduced organizational tools and pratices that enhanced team communication and efficiency.
+
+**Project management** – Managed the full lifecycle of web development projects for key clients including Yayasan Petronas, Petrosains, Methodist College Kuala Lumpur, ensuring timely and on-budget delivery.
+
+**UI/UX improvements** – Collaborated closely with design teams to implement UI/UX enhancements, improving user retention and engagement. Streamlined navigation and standardized SEO practices across client platforms.
+
+**Multimedia Proficiency** – Apply versatile skills beyond web development, assisting with multimedia tasks (design, video editing) to support project goals and providing technical mentorship to colleagues navigating new technologies.
+## Professional Experience
+
+###  Web Developer at Fishermen Analytics Sdn. Bhd.
+*2016 - 2024*
+- Led a team of 5 developers in the creation of a new e-commerce platform, resulting in a 20% increase in sales.
+- Architected and implemented a scalable frontend using React and TypeScript.
+- Improved application performance by 30% through code optimization and lazy loading.
+- Mentored junior developers and conducted code reviews to ensure code quality.
+
+## Projects
+
+### Personal Portfolio Website
+<p class="text-xs text-grey mb-1.5">A personal website to showcase my work and blog about tech.</p>
+
+- Built with Astro, Tailwind CSS, and TypeScript.
+- Integrated with a headless CMS for blog content.
+- Deployed on Vercel with a CI/CD pipeline.
+
+## Education
+
+### BA (Hons) in Computer Games Design
+Teesside University, UK | 2009–2012
+
+### Diploma in Multimedia Design
+The One Academy, MY | 2006–2008
+
+- Simplicity & Essentialism
+- Continuous Learning & Iterative
+
+- Advanced problem-solving and analytical thinking, Problem-Solving & Systems Thinking, Knowledge Work
+- Project planning and documentation methodology implementation, Documentation and Note-taking, Knowledge Management Systems
+
+- Design Principles, UI/UX design principles and best practices, Creativity exploration - Exploring Generative Art and Creative Coding
+- Performance optimization techniques, Secure coding practices and implementation, Cross-browser compatibility and responsive design, Web security mindset
+---
+- Interests: DIY, Learning, Exploring emerging technologies related & adjacent to web technology.
+
+
+`);
+
+const asideContent = marked.parse(`
+## Contact
+<ul class="list-none !ms-0">
+    <li><strong>Email:</strong> john.doe@email.com</li>
+    <li><strong>Phone:</strong> (123) 456-7890</li>
+    <li><strong>Website:</strong> johndoe.dev</li>
+    <li><strong>LinkedIn:</strong> linkedin.com/in/johndoe</li>
+</ul>
+
+## Technical Skills
+<div class="flex flex-wrap gap-1.5">
+  <span class="bg-grey/10 text-2a text-xs font-medium px-2 py-0.5 rounded print:border print:border-grey/30">JavaScript</span>
+  <span class="bg-grey/10 text-2a text-xs font-medium px-2 py-0.5 rounded print:border print:border-grey/30">React</span>
+  <span class="bg-grey/10 text-2a text-xs font-medium px-2 py-0.5 rounded print:border print:border-grey/30">TypeScript</span>
+  <span class="bg-grey/10 text-2a text-xs font-medium px-2 py-0.5 rounded print:border print:border-grey/30">Node.js</span>
+  <span class="bg-grey/10 text-2a text-xs font-medium px-2 py-0.5 rounded print:border print:border-grey/30">Tailwind CSS</span>
+  <span class="bg-grey/10 text-2a text-xs font-medium px-2 py-0.5 rounded print:border print:border-grey/30">HTML5 & CSS3</span>
+</div>
+
+## Languages
+- English
+- Mandarin
+- Bahasa Malaysia
+`);
+---
+
+<LayoutBase title="Resume">
+  <div id="resume-container" class="bg-milk p-4 sm:p-8 print:p-0">
+    <div
+      class="mx-auto bg-white print:shadow-none"
+      style="width: 210mm; min-height: 297mm;"
+    >
+      <article
+        class="px-12 py-16 text-2a print:text-2a h-full resume-article"
+        style="font-family: var(--default-font-family);"
+      >
+        <div class="grid-- grid--content_sidebar">
+          <!-- Main Content (2/3) -->
+          <main class="col-span-1">
+            <div set:html={mainContent} />
+          </main>
+
+          <!-- Sidebar (1/3) -->
+          <div class="col-span-1">
+            <aside
+              class="bg-milk/30 print:bg-milk/30 p-4 rounded-lg print:rounded-none"
+            >
+              <div set:html={asideContent} />
+            </aside>
+          </div>
+        </div>
+
+        <hr class="my-8 border-dashed border-grey/20" />
+        <h2 class="text-center text-lg font-bold text-grey mb-4">
+          Original HTML Version (for reference, to be removed)
+        </h2>
+
+        <div class="grid-- grid--content_sidebar">
+          <!-- Main Content (2/3) -->
+          <main class="col-span-1">
+            <header class="mb-5">
+              <h1
+                class="text-2xl font-bold text-black mb-1"
+                style="font-family: var(--font-display); line-height: 1.2;"
+              >
+                John Doe
+              </h1>
+              <p class="text-base font-normal text-grey mb-2">
+                Senior Frontend Developer
+              </p>
+              <p class="text-xs text-grey leading-relaxed max-w-none">
+                A passionate developer with over 10 years of experience in
+                creating modern and responsive web applications, with a focus on
+                performance and user experience.
+              </p>
+            </header>
+
+            <section class="mb-5">
+              <h2
+                class="text-sm font-bold border-b border-grey/20 pb-1 mb-3 text-black"
+                style="font-family: var(--font-display); letter-spacing: 0.02em;"
+              >
+                Professional Experience
+              </h2>
+
+              <div class="mb-3 break-inside-avoid">
+                <h3 class="text-sm font-semibold text-black mb-0.5">
+                  Lead Developer at Tech Solutions Inc.
+                </h3>
+                <p class="text-xs text-grey mb-1.5">Jan 2018 - Present</p>
+                <ul
+                  class="list-disc list-inside text-2a space-y-0.5 text-xs leading-relaxed"
+                >
+                  <li>
+                    Led a team of 5 developers in the creation of a new
+                    e-commerce platform, resulting in a 20% increase in sales.
+                  </li>
+                  <li>
+                    Architected and implemented a scalable frontend using React
+                    and TypeScript.
+                  </li>
+                  <li>
+                    Improved application performance by 30% through code
+                    optimization and lazy loading.
+                  </li>
+                  <li>
+                    Mentored junior developers and conducted code reviews to
+                    ensure code quality.
+                  </li>
+                </ul>
+              </div>
+
+              <div class="break-inside-avoid mb-3">
+                <h3 class="text-sm font-semibold text-black mb-0.5">
+                  Frontend Developer at Web Innovators
+                </h3>
+                <p class="text-xs text-grey mb-1.5">Jun 2014 - Dec 2017</p>
+                <ul
+                  class="list-disc list-inside text-2a space-y-0.5 text-xs leading-relaxed"
+                >
+                  <li>
+                    Developed and maintained user interfaces for various client
+                    websites.
+                  </li>
+                  <li>
+                    Collaborated with designers to translate mockups into
+                    functional components.
+                  </li>
+                  <li>
+                    Introduced and mentored the team on modern frontend
+                    frameworks like Vue.js.
+                  </li>
+                </ul>
+              </div>
+            </section>
+
+            <section class="mb-5">
+              <h2
+                class="text-sm font-bold border-b border-grey/20 pb-1 mb-3 text-black"
+                style="font-family: var(--font-display); letter-spacing: 0.02em;"
+              >
+                Projects
+              </h2>
+              <div class="break-inside-avoid">
+                <h3 class="text-sm font-semibold text-black mb-0.5">
+                  Personal Portfolio Website
+                </h3>
+                <p class="text-xs text-grey mb-1.5">
+                  A personal website to showcase my work and blog about tech.
+                </p>
+                <ul
+                  class="list-disc list-inside text-2a space-y-0.5 text-xs leading-relaxed"
+                >
+                  <li>Built with Astro, Tailwind CSS, and TypeScript.</li>
+                  <li>Integrated with a headless CMS for blog content.</li>
+                  <li>Deployed on Vercel with a CI/CD pipeline.</li>
+                </ul>
+              </div>
+            </section>
+
+            <section>
+              <h2
+                class="text-sm font-bold border-b border-grey/20 pb-1 mb-3 text-black"
+                style="font-family: var(--font-display); letter-spacing: 0.02em;"
+              >
+                Education
+              </h2>
+              <div class="break-inside-avoid">
+                <h3 class="text-sm font-semibold text-black mb-0.5">
+                  B.Sc. in Computer Science
+                </h3>
+                <p class="text-xs text-grey mb-1.5">
+                  University of Technology | 2010 - 2014
+                </p>
+                <p class="text-xs text-2a leading-relaxed">
+                  Graduated with First Class Honors. Specialized in
+                  Human-Computer Interaction.
+                </p>
+              </div>
+            </section>
+          </main>
+
+          <!-- Sidebar (1/3) -->
+          <div class="col-span-1">
+            <aside
+              class="bg-milk/30 print:bg-milk/30 p-4 rounded-lg print:rounded-none"
+            >
+              <section class="mb-4">
+                <h2
+                  class="text-sm font-bold border-b border-grey/20 pb-1 mb-2 text-black"
+                  style="font-family: var(--font-display); letter-spacing: 0.02em;"
+                >
+                  Contact
+                </h2>
+                <ul class="list-none !ms-0">
+                  <li>
+                    <strong>Email:</strong> john.doe@email.com
+                  </li>
+                  <li>
+                    <strong>Phone:</strong> (123) 456-7890
+                  </li>
+                  <li>
+                    <strong>Website:</strong> johndoe.dev
+                  </li>
+                  <li>
+                    <strong>LinkedIn:</strong> linkedin.com/in/johndoe
+                  </li>
+                </ul>
+              </section>
+              <style>
+                @reference "@/styles/tailwind--.css";
+
+                ul {
+                  @apply space-y-1 text-xs ms-6;
+                }
+                li {
+                  @apply text-2a leading-4 list-outside;
+                }
+              </style>
+
+              <section class="mb-4">
+                <h2
+                  class="text-sm font-bold border-b border-grey/20 pb-1 mb-2 text-black"
+                  style="font-family: var(--font-display); letter-spacing: 0.02em;"
+                >
+                  Technical Skills
+                </h2>
+                <div class="flex flex-wrap gap-1.5">
+                  <span
+                    class="bg-grey/10 text-2a text-xs font-medium px-2 py-0.5 rounded print:border print:border-grey/30"
+                    >JavaScript</span
+                  >
+                  <span
+                    class="bg-grey/10 text-2a text-xs font-medium px-2 py-0.5 rounded print:border print:border-grey/30"
+                    >React</span
+                  >
+                  <span
+                    class="bg-grey/10 text-2a text-xs font-medium px-2 py-0.5 rounded print:border print:border-grey/30"
+                    >TypeScript</span
+                  >
+                  <span
+                    class="bg-grey/10 text-2a text-xs font-medium px-2 py-0.5 rounded print:border print:border-grey/30"
+                    >Node.js</span
+                  >
+                  <span
+                    class="bg-grey/10 text-2a text-xs font-medium px-2 py-0.5 rounded print:border print:border-grey/30"
+                    >Tailwind CSS</span
+                  >
+                  <span
+                    class="bg-grey/10 text-2a text-xs font-medium px-2 py-0.5 rounded print:border print:border-grey/30"
+                    >HTML5 & CSS3</span
+                  >
+                </div>
+              </section>
+
+              <section class="mb-4">
+                <h2
+                  class="text-sm font-bold border-b border-grey/20 pb-1 mb-2 text-black"
+                  style="font-family: var(--font-display); letter-spacing: 0.02em;"
+                >
+                  Awards
+                </h2>
+                <ul class="list-disc list-inside text-2a text-xs space-y-0.5">
+                  <li>Developer of the Year - Tech Solutions Inc. (2021)</li>
+                  <li>Innovation Award - Web Innovators (2017)</li>
+                </ul>
+              </section>
+
+              <section>
+                <h2
+                  class="text-sm font-bold border-b border-grey/20 pb-1 mb-2 text-black"
+                  style="font-family: var(--font-display); letter-spacing: 0.02em;"
+                >
+                  Languages
+                </h2>
+                <ul class="list-disc list-inside text-2a text-xs space-y-0.5">
+                  <li>English (Native)</li>
+                  <li>Spanish (Conversational)</li>
+                </ul>
+              </section>
+            </aside>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+  <style>
+    @reference "@/styles/tailwind--.css";
+
+    .resume-article {
+      h1 {
+        @apply text-2xl font-bold text-black mb-1;
+        font-family: var(--font-display);
+        line-height: 1.2;
+      }
+      h2 {
+        @apply text-sm font-bold border-b border-grey/20 pb-1 mb-3 text-black;
+        font-family: var(--font-display);
+        letter-spacing: 0.02em;
+      }
+      h3 {
+        @apply text-sm font-semibold text-black mb-0.5;
+      }
+      p {
+        @apply text-xs text-2a leading-relaxed;
+      }
+      ul {
+        @apply list-disc list-inside text-2a space-y-0.5 text-xs leading-relaxed;
+      }
+      aside ul {
+        list-style: disc;
+      }
+      aside ul.list-none {
+        list-style: none;
+        margin-left: 0;
+      }
+      aside li {
+        @apply text-2a leading-4 list-outside;
+      }
+      aside ul {
+        @apply space-y-1 text-xs;
+      }
+      aside h2 {
+        @apply mb-2;
+      }
+    }
+
+    main > section {
+      margin: 0;
+    }
+    @media print {
+      @page {
+        size: A4;
+        margin: 0;
+      }
+
+      body,
+      #resume-container {
+        margin: 0;
+        padding: 0;
+        background-color: #fff;
+      }
+
+      article {
+        font-size: 9pt;
+      }
+
+      .break-inside-avoid {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      /* Ensure proper spacing on print */
+      h1,
+      h2,
+      h3 {
+        page-break-after: avoid;
+      }
+
+      ul {
+        page-break-inside: avoid;
+      }
+
+      /* Print-specific color adjustments */
+      * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+  </style>
+</LayoutBase>

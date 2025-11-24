@@ -1,0 +1,378 @@
+---
+// import Layout from "@/layouts/Layout.astro";
+
+const title = "Golden Ratio Calculator";
+const description =
+  "A simple tool to calculate a sequence of numbers based on the golden ratio (φ).";
+---
+
+<!-- <Layout title={title} description={description}> --><!-- <main> --><!-- Wrapper ID for component scope -->
+<div id="golden-ratio-calculator">
+  <!-- <header> -->
+    <!-- <h1>{title}</h1> -->
+  <!-- </header> -->
+
+  <!-- Semantic lists for output -->
+  <ul id="sequence-larger">
+    <li></li><li></li><li></li><li></li>
+  </ul>
+
+  <div id="input-wrapper">
+    <input type="number" id="gr-input" value="118" placeholder="0" />
+  </div>
+
+  <ul id="sequence-smaller">
+    <li></li><li></li><li></li><li></li><li></li>
+  </ul>
+</div>
+<!-- </main> -->
+<!-- </Layout> -->
+
+<style is:inline>
+  /* 
+   * COMPONENT STYLES 
+   * Scoped to #golden-ratio-calculator 
+   * Using semantic tags and attribute selectors
+   */
+  :root {
+    --gr-bg: #f0f0f0;
+    --gr-text: #333;
+    --gr-accent: #555;
+    --gr-surface: #fff;
+    --gr-border: #ccc;
+  }
+
+/*   main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--gr-bg);
+    font-family:
+      system-ui,
+      -apple-system,
+      sans-serif;
+    color: var(--gr-text);
+    padding: 2rem;
+  } */
+
+  #golden-ratio-calculator {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    text-align: center;
+    width: 100%;
+    max-width: min(90vmin, 600px);
+    aspect-ratio: 1 / 1;
+    padding: 2rem;
+    background-color: var(--gr-surface);
+    border-radius: 8px;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+    /* Smooth transition for state changes */
+    transition: opacity 0.3s ease;
+  }
+
+  /* State: Empty/Invalid */
+  #golden-ratio-calculator.is-invalid {
+    opacity: 0.7;
+  }
+
+  #golden-ratio-calculator header h1 {
+    font-size: 1.2rem;
+    font-weight: 300;
+    color: var(--gr-accent);
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  #golden-ratio-calculator ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    flex: 0;
+    justify-content: center;
+  }
+
+  #golden-ratio-calculator li {
+    font-size: 1rem;
+    color: var(--gr-accent);
+    min-height: 1.2em;
+    cursor: pointer;
+    transition: color 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: space-between;
+    gap: 0.5rem;
+    position: relative;
+  }
+
+  #golden-ratio-calculator li:hover {
+    color: var(--gr-text);
+  }
+
+  /* Visual bar for each sequence item */
+  #golden-ratio-calculator li::after {
+    content: "";
+    display: block;
+    height: 4px;
+    width: var(--bar-width, 0%);
+    background: linear-gradient(90deg, var(--gr-accent), transparent);
+    border-radius: 2px;
+    transition:
+      width 0.3s ease,
+      opacity 0.2s;
+    flex-shrink: 0;
+  }
+
+  #golden-ratio-calculator li:hover::after {
+    opacity: 0.7;
+  }
+
+  /* Reverse order for the top list visually */
+  #golden-ratio-calculator #sequence-larger {
+    flex-direction: column-reverse;
+  }
+
+  #input-wrapper {
+    display: flex;
+    justify-content: start;
+    flex-shrink: 0;
+  }
+
+  #golden-ratio-calculator input {
+    font-size: 2rem;
+    padding: 0.5rem;
+    border: 1px solid transparent;
+    border-bottom: 2px solid var(--gr-border);
+    background-color: transparent;
+    color: var(--gr-text);
+    text-align: center;
+    width: 100%;
+    max-width: 200px;
+    outline: none;
+    transition: border-color 0.2s;
+    cursor: ns-resize;
+  }
+
+  #golden-ratio-calculator input:focus {
+    border-bottom-color: var(--gr-accent);
+  }
+
+  #golden-ratio-calculator input:hover {
+    border-bottom-color: var(--gr-accent);
+  }
+
+  /* Remove spinner buttons */
+  #golden-ratio-calculator input::-webkit-outer-spin-button,
+  #golden-ratio-calculator input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  #golden-ratio-calculator input[type="number"] {
+    -moz-appearance: textfield;
+  }
+</style>
+
+<script is:inline>
+  /**
+   * GOLDEN RATIO CALCULATOR LOGIC
+   * Chronological Structure:
+   * 1. Constants
+   * 2. Elements
+   * 3. Utility Managers (IIFE)
+   * 4. State
+   * 5. State Manager
+   * 6. Core Logic
+   * 7. Event Handlers
+   * 8. Init
+   */
+
+  // 1. CONSTANTS
+  const PHI = 1.61803398875;
+  const ATTR_STATE = "data-state";
+
+  // 2. ELEMENT REFERENCES
+  const ref = {
+    component: document.getElementById("golden-ratio-calculator"),
+    input: document.getElementById("gr-input"),
+    listLarger: document
+      .getElementById("sequence-larger")
+      .querySelectorAll("li"),
+    listSmaller: document
+      .getElementById("sequence-smaller")
+      .querySelectorAll("li"),
+  };
+
+  // 3. UTILITY MANAGERS (IIFE)
+  const Formatter = (() => {
+    const small = new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 4,
+      maximumFractionDigits: 4,
+    });
+    const medium = new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 3,
+      maximumFractionDigits: 3,
+    });
+    const large = new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+
+    return {
+      format: (num) => {
+        if (!num || isNaN(num)) return "";
+        if (Math.abs(num) < 1) return small.format(num);
+        if (Math.abs(num) < 1000) return medium.format(num);
+        return large.format(num);
+      },
+      copyToClipboard: (text) => {
+        if (!text) return;
+        navigator.clipboard
+          .writeText(text)
+          .then(() => {
+            // Visual feedback logic could go here (e.g. toast)
+            console.log(`Copied: ${text}`);
+          })
+          .catch((err) => console.error("Failed to copy:", err));
+      },
+    };
+  })();
+
+  // 4. MUTABLE STATE VARIABLES
+  let state = {
+    value: 118,
+    isValid: true,
+  };
+
+  // 5. STATE MANAGER
+  const setComponentState = (newState) => {
+    // Merge state
+    state = { ...state, ...newState };
+
+    // Sync UI classes
+    if (state.isValid) {
+      ref.component.classList.remove("is-invalid");
+      ref.component.classList.add("is-valid");
+    } else {
+      ref.component.classList.add("is-invalid");
+      ref.component.classList.remove("is-valid");
+    }
+
+    // Trigger render
+    renderResults();
+  };
+
+  // 6. CORE LOGIC
+  const renderResults = () => {
+    const baseVal = parseFloat(state.value);
+
+    if (isNaN(baseVal) || baseVal === 0) {
+      [...ref.listLarger, ...ref.listSmaller].forEach((el) => {
+        el.textContent = "";
+        el.style.setProperty("--bar-width", "0%");
+      });
+      return;
+    }
+
+    // Collect all values for normalization
+    const allValues = [];
+
+    // Calculate Larger (Upwards)
+    let curr = baseVal;
+    ref.listLarger.forEach((el) => {
+      curr *= PHI;
+      allValues.push(curr);
+    });
+
+    // Calculate Smaller (Downwards)
+    curr = baseVal;
+    ref.listSmaller.forEach((el) => {
+      curr /= PHI;
+      allValues.push(curr);
+    });
+
+    // Find max for bar scaling
+    const maxVal = Math.max(...allValues);
+
+    // Render Larger
+    curr = baseVal;
+    ref.listLarger.forEach((el) => {
+      curr *= PHI;
+      const barWidth = (curr / maxVal) * 100;
+      el.textContent = Formatter.format(curr);
+      el.style.setProperty("--bar-width", `${barWidth}%`);
+    });
+
+    // Render Smaller
+    curr = baseVal;
+    ref.listSmaller.forEach((el) => {
+      curr /= PHI;
+      const barWidth = (curr / maxVal) * 100;
+      el.textContent = Formatter.format(curr);
+      el.style.setProperty("--bar-width", `${barWidth}%`);
+    });
+  };
+
+  // 7. EVENT HANDLERS
+  const handleInput = (e) => {
+    const val = e.target.value;
+    // Basic validation
+    const isValid = val !== "" && !isNaN(val);
+    setComponentState({ value: val, isValid });
+  };
+
+  const handleWheel = (e) => {
+    e.preventDefault();
+
+    const currentVal = parseFloat(ref.input.value) || 0;
+    const delta = e.deltaY > 0 ? -1 : 1;
+
+    // Calculate step size based on current value magnitude
+    let step = 1;
+    if (Math.abs(currentVal) >= 1000) step = 10;
+    else if (Math.abs(currentVal) >= 100) step = 5;
+    else if (Math.abs(currentVal) < 10) step = 0.5;
+
+    const newVal = currentVal + delta * step;
+
+    // Prevent negative values
+    if (newVal < 0) return;
+
+    ref.input.value = newVal.toFixed(2);
+    handleInput({ target: ref.input });
+  };
+
+  const handleResultClick = (e) => {
+    // Delegation check
+    if (e.target.tagName === "LI" && e.target.textContent) {
+      // Simple animation feedback
+      e.target.style.opacity = "0.5";
+      setTimeout(() => (e.target.style.opacity = "1"), 150);
+
+      // Action
+      Formatter.copyToClipboard(e.target.textContent);
+    }
+  };
+
+  // 8. INITIALIZATION & BINDING
+  const init = () => {
+    if (!ref.component) return;
+
+    // Bind Input
+    ref.input.addEventListener("input", handleInput);
+    ref.input.addEventListener("wheel", handleWheel, { passive: false });
+
+    // Bind Output Interactions (Delegation)
+    ref.component.addEventListener("click", handleResultClick);
+
+    // Initial Render
+    setComponentState({ value: ref.input.value });
+  };
+
+  init();
+</script>

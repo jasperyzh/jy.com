@@ -1,0 +1,22 @@
+---
+import Head from "./Head.astro";
+
+interface Props {
+  title?: string | undefined;
+  description?: string | undefined;
+  image?: string;
+}
+
+const { title, description } = Astro.props as Props;
+---
+
+<html lang="en" class="transition-theme">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <Head title={title} description={description} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

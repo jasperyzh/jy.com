@@ -1,0 +1,114 @@
+<div class="grid-- grid--sidebar_content justify-items-center items-center">
+  <article class="card-- texture--">
+    <img
+      class="card--img"
+      src="https://images.pexels.com/photos/28664282/pexels-photo-28664282.jpeg"
+      alt="Card image"
+    />
+    <div class="card--body">
+      <h3>Design System: Card</h3>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus
+        quia, nulla! Maiores et perferendis eaque, exercitationem praesentium
+        nihil.
+      </p>
+    </div>
+    <div class="card--footer">
+      <span>#photography</span>
+      <span>#travel</span>
+      <span>#winter</span>
+    </div>
+  </article>
+
+  <article
+    class="card-- texture-- card--yellow flex flex-col md:flex-row gap-4 items-center"
+  >
+    <img
+      class="card--img flex-shrink-0 w-full md:w-1/3 mb-0 my-auto"
+      src="https://images.pexels.com/photos/28664282/pexels-photo-28664282.jpeg"
+      alt="Card image"
+    />
+    <div class="card--content">
+      <div class="card--body">
+        <h3>Design System: Card</h3>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus
+          quia, nulla! Maiores et perferendis eaque, exercitationem praesentium
+          nihil.
+        </p>
+      </div>
+      <div class="card--footer">
+        <span>#photography</span>
+        <span>#travel</span>
+        <span>#winter</span>
+      </div>
+    </div>
+  </article>
+</div>
+
+<style>
+  .card-- {
+    .card--img {
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      border-radius: var(--radius-xl);
+    }
+    .card--img {
+      margin-bottom: 1rem;
+    }
+    .card--content {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+</style>
+
+<hr class="spacer" />
+
+<div class="container">
+  <div
+    class="card-- texture-- card--red grid-- lg:grid-cols-3 justify-items-center"
+  >
+    {
+      Array.from({ length: 3 }).map((_, index) => (
+        <div class="card-- texture-- card--grey p-8 mx-0">
+          <img
+            class="card--img"
+            src="https://images.pexels.com/photos/28664282/pexels-photo-28664282.jpeg"
+            alt="Card image"
+          />
+          <div class="card--body">
+            <h4>Design System: Card</h4>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+              Voluptatibus quia, nulla! Maiores et perferendis eaque,
+              exercitationem praesentium nihil.
+            </p>
+          </div>
+          <div class="card--footer">
+            <span>#photography</span>
+            <span>#travel</span>
+            <span>#winter</span>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+
+  <hr class="spacer" />
+
+  <div class="card-- texture-- card--yellow">
+    <h2>Design System: Card</h2>
+    <p class="lead">
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus
+      quia, nulla! Maiores et perferendis eaque, exercitationem praesentium
+      nihil.
+    </p>
+
+    <button
+      class="px-6 py-3 border-2 font-medium rounded-lg transition-all duration-300 border-2a text-2a hover:bg-red hover:text-milk cursor-pointer"
+    >
+      Outline Button
+    </button>
+  </div>
+</div>

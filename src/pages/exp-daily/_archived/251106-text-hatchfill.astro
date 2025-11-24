@@ -1,0 +1,235 @@
+---
+import Layout from "@/layouts/Layout.astro";
+---
+
+<Layout title="Text HatchFill Demo">
+  <main class="container">
+    <div class="header">
+      <h1>Text with HatchFill</h1>
+      <p>
+        Demonstration of hatchfill patterns applied to text for pen plotting.
+      </p>
+    </div>
+    <div id="canvas-container"></div>
+    <div class="CONTROL-grid"></div>
+  </main>
+</Layout>
+<script is:inline type="module">
+  import "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js";
+  import "https://cdn.jsdelivr.net/npm/p5.js-svg@1.5.1/dist/p5.svg.min.js";
+</script>
+<script is:inline type="module">
+  import GUI from "https://cdn.jsdelivr.net/npm/lil-gui@0.19/+esm";
+  import HatchFill from "/dot_matrix/HatchFill.js";
+
+  let font;
+  let fontLoaded = false;
+  let fontError = null;
+
+  const CONTROL = {
+    text: "HATCH",
+    fontSize: 120,
+    x: 256,
+    y: 256,
+    hatchDensity: 0.05,
+    hatchAngle: 45,
+    hatchCrossHatch: false,
+    hatchUseGlobalDensity: true,
+    hatchGlobalSpacing: 3,
+    exportSvg: () => exportSvg(),
+  };
+
+  /**
+   * Test if a font supports textToPoints() by trying to call it with a test character
+   * @param {p5.Font} testFont - Font to test
+   * @returns {boolean} True if font supports textToPoints()
+   */
+  function testFontSupport(testFont) {
+    if (!testFont) return false;
+    
+    // Check if textToPoints method exists
+    if (typeof testFont.textToPoints !== 'function') {
+      return false;
+    }
+
+    // Try to actually call textToPoints with a simple test
+    try {
+      const testPoints = testFont.textToPoints('A', 0, 0, 100, {
+        sampleFactor: 0.1
+      });
+      
+      // If we get points back, the font supports it
+      return Array.isArray(testPoints) && testPoints.length > 0;
+    } catch (error) {
+      console.warn('Font textToPoints test failed:', error);
+      return false;
+    }
+  }
+
+  window.preload = function () {
+    // Load a font file
+    // Supported formats: .ttf, .otf, .woff, .woff2
+    // IMPORTANT: Font must have vector outlines (not bitmap fonts)
+    // Most modern fonts work, but some older bitmap fonts may not support textToPoints()
+    font = loadFont('/fonts/Wendy-Neue.ttf');
+  };
+
+  window.setup = function () {
+    const canvas = createCanvas(512, 512);
+    canvas.parent("canvas-container");
+
+    // Validate the loaded font supports textToPoints()
+    if (font) {
+      if (testFontSupport(font)) {
+        fontLoaded = true;
+        console.log('✓ Font validated: textToPoints() is supported');
+      } else {
+        fontError = "Loaded font does not support textToPoints().\n" +
+                   "The font may be a bitmap font or in an unsupported format.\n" +
+                   "Try using a .ttf or .otf font with vector outlines.";
+        console.error('✗ Font validation failed:', fontError);
+      }
+    } else {
+      fontError = "Font not loaded. Check the file path in preload().\n" +
+                 "Make sure the font file exists at /public/fonts/Wendy-Neue.ttf";
+    }
+
+    const gui = new GUI();
+    gui.add(CONTROL, "text").name("Text");
+    gui.add(CONTROL, "fontSize", 20, 200, 1).name("Font Size");
+    gui.add(CONTROL, "x", 0, 512, 1).name("X Position");
+    gui.add(CONTROL, "y", 0, 512, 1).name("Y Position");
+
+    const hatchFolder = gui.addFolder("Hatch Fill");
+    hatchFolder.add(CONTROL, "hatchUseGlobalDensity").name("Use Global Density");
+    hatchFolder.add(CONTROL, "hatchDensity", 0.01, 1.0, 0.01).name("Hatch Density");
+    hatchFolder.add(CONTROL, "hatchGlobalSpacing", 1, 20, 0.5).name("Global Spacing (px)");
+    hatchFolder.add(CONTROL, "hatchAngle", 0, 180, 1).name("Hatch Angle");
+    hatchFolder.add(CONTROL, "hatchCrossHatch").name("Cross Hatch");
+
+    gui.add(CONTROL, "exportSvg").name("Export SVG");
+  };
+
+  window.draw = function () {
+    background(255);
+
+    if (fontError) {
+      fill(100);
+      textAlign(CENTER, CENTER);
+      textSize(16);
+      text(fontError, width / 2, height / 2 - 20);
+      text("Add: font = loadFont('/fonts/YourFont.otf') in preload()", width / 2, height / 2 + 20);
+      return;
+    }
+
+    if (!fontLoaded || !font) {
+      fill(100);
+      textAlign(CENTER, CENTER);
+      textSize(16);
+      text("Loading font...", width / 2, height / 2);
+      return;
+    }
+
+    if (!font.textToPoints) {
+      fill(100);
+      textAlign(CENTER, CENTER);
+      textSize(16);
+      text("Font does not support textToPoints()", width / 2, height / 2);
+      text("Please load a font using loadFont()", width / 2, height / 2 + 20);
+      return;
+    }
+
+    // Create hatch fill instance
+    const hatchFill = new HatchFill({
+      density: CONTROL.hatchDensity,
+      angle: CONTROL.hatchAngle,
+      crossHatch: CONTROL.hatchCrossHatch,
+      useGlobalDensity: CONTROL.hatchUseGlobalDensity,
+      globalSpacing: CONTROL.hatchGlobalSpacing,
+    });
+
+    // Set stroke for hatch lines
+    stroke(0);
+    strokeWeight(1);
+    noFill();
+
+    // Generate and draw hatch lines for text
+    const hatchLines = hatchFill.fillText(
+      CONTROL.text,
+      CONTROL.x,
+      CONTROL.y,
+      CONTROL.fontSize,
+      font,
+      { sampleFactor: 0.1 }
+    );
+
+    // Draw hatch lines
+    for (const lineSeg of hatchLines) {
+      if (
+        lineSeg &&
+        lineSeg.x1 !== undefined &&
+        lineSeg.y1 !== undefined &&
+        lineSeg.x2 !== undefined &&
+        lineSeg.y2 !== undefined
+      ) {
+        line(lineSeg.x1, lineSeg.y1, lineSeg.x2, lineSeg.y2);
+      }
+    }
+  };
+
+  function exportSvg() {
+    if (!font || !font.textToPoints) {
+      alert("Cannot export: Font not loaded or does not support textToPoints()");
+      return;
+    }
+
+    // Create hatch fill instance outside renderer to reuse
+    const hatchFill = new HatchFill({
+      density: CONTROL.hatchDensity,
+      angle: CONTROL.hatchAngle,
+      crossHatch: CONTROL.hatchCrossHatch,
+      useGlobalDensity: CONTROL.hatchUseGlobalDensity,
+      globalSpacing: CONTROL.hatchGlobalSpacing,
+    });
+
+    const svgRenderer = (p) => {
+      p.setup = () => {
+        p.createCanvas(512, 512, p.SVG);
+        p.noLoop();
+        p.background(255);
+
+        p.stroke(0);
+        p.strokeWeight(1);
+        p.noFill();
+
+        // Generate and draw hatch lines for text
+        // Use the font from the main sketch (accessible via closure)
+        const hatchLines = hatchFill.fillText(
+          CONTROL.text,
+          CONTROL.x,
+          CONTROL.y,
+          CONTROL.fontSize,
+          font,
+          { sampleFactor: 0.1 }
+        );
+
+        // Draw hatch lines as SVG
+        for (const lineSeg of hatchLines) {
+          if (
+            lineSeg &&
+            lineSeg.x1 !== undefined &&
+            lineSeg.y1 !== undefined &&
+            lineSeg.x2 !== undefined &&
+            lineSeg.y2 !== undefined
+          ) {
+            p.line(lineSeg.x1, lineSeg.y1, lineSeg.x2, lineSeg.y2);
+          }
+        }
+
+        p.save("text-hatchfill.svg");
+      };
+    };
+    new p5(svgRenderer);
+  }
+</script>
+

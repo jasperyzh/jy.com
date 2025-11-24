@@ -1,0 +1,443 @@
+---
+import Layout from "@/layouts/Layout.astro";
+
+import "@/styles/tailwind--.css";
+
+const today_date =
+  String(new Date().getFullYear()).slice(-2) +
+  String(new Date().getMonth() + 1).padStart(2, "0") +
+  String(new Date().getDate()).padStart(2, "0");
+
+const title = `${today_date}_DAILY_SKETCH`;
+const footer_text = `${today_date} // FRAMEWORK_V1 // OPEN-METEO API // P5.JS`;
+---
+
+<Layout title="Daily Sketch 251119" empty_canvas={true}>
+  <main
+    class="min-h-screen bg-neutral-400 flex flex-col items-center justify-center"
+  >
+    <!-- Main Container -->
+    <div class="flex flex-col gap-4 w-full max-w-[1200px]">
+      <!-- Header / Controls -->
+      <header>
+        <h1 class="text-xl">{title}</h1>
+        <div class="flex gap-2">
+          <button id="btn-export-svg">Export SVG</button>
+          <button id="btn-export-png">Export PNG</button>
+          <button id="btn-record" class="text-red-500">Record Video</button>
+        </div>
+      </header>
+
+      <!-- Sketch Frame (The Capture Area) -->
+      <div id="sketch-frame">
+        <!-- Back -->
+        <section class="back">
+          <span class="text-xs">TEMP</span>
+          <span id="data-temp" class="text-2xl animated--">--°C</span>
+          <span class="text-xs">WIND</span>
+          <span id="data-wind" class="animated--">-- km/h</span>
+        </section>
+
+        <!-- middle -->
+        <section class="middle">
+          <div id="canvas-container"></div>
+        </section>
+
+        <!-- Top  -->
+        <section class="front">
+          <span id="data-location" class="animated--">LOADING...</span>
+          <span id="data-coords" class="text-xs animated--">--°N --°E</span>
+          <span id="data-time" class="animated--">00:00:00</span>
+        </section>
+      </div>
+
+      <!-- footer -->
+      <footer>
+        {footer_text}
+      </footer>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  @reference "../../styles/tailwind--.css";
+
+  #sketch-frame {
+    width: 800px;
+    height: 800px;
+    aspect-ratio: 1/1;
+    margin: 0 auto;
+    background-color: var(--color-yellow);
+    @apply grid-- grid--content_sidebar grid-rows-5;
+
+    & > * {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .front {
+      @apply grid grid-cols-subgrid grid-rows-5 col-span-full row-span-full p-16;
+      color: cyan !important;
+    }
+    .middle {
+    }
+    .back {
+      @apply grid grid-cols-subgrid grid-rows-5 col-span-full row-span-full p-16;
+      color: red !important;
+    }
+  }
+
+  header {
+    @apply flex flex-col;
+  }
+  footer {
+    @apply text-center text-neutral-600 text-xs font-mono mt-4;
+  }
+  button {
+    @apply px-3 py-1 border border-neutral-700 hover:bg-neutral-800 rounded text-sm transition-colors cursor-pointer;
+  }
+</style>
+<!-- Libraries -->
+<script is:inline type="module">
+  import "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.10/p5.js";
+  import "https://cdn.jsdelivr.net/npm/p5.js-svg@1.6.0/dist/p5.svg.min.js";
+</script>
+
+<script
+  is:inline
+  src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"
+></script>
+
+<script is:inline type="module">
+  import GUI from "https://cdn.jsdelivr.net/npm/lil-gui@0.19/+esm";
+  import { VideoRecorder } from "/daily_sketch/VideoRecorder.js";
+
+  import PixelDisplay from "/dot_matrix/PixelDisplay.js";
+  import HatchFill from "/dot_matrix/HatchFill.js";
+
+  import { createDotMatrixSketch } from "/daily_sketch/sketches/dotMatrixSketch.js";
+
+  // --- CONFIGURATION ---
+  const CONFIG = {
+    debug: true,
+    city: "Kuala Lumpur", // Default city
+    lat: 3.0831022768590155,
+    lon: 101.64836391773572,
+    refreshRate: 1000 * 60 * 15, // 15 mins
+
+    // Dimensions
+    width: 800,
+    height: 800,
+
+    // Dot Matrix Params
+    matrixSize: 4,
+    theme: "milk_transparent",
+
+    shadeSteps: 2,
+    noiseScale: 0.05,
+    dotScaleFactor: 2.0,
+    dotNoiseInfluence: 1.0,
+
+    useColorThemeShading: false,
+    useHatchFill: false,
+    hatchDensity: 0.05,
+    hatchAngle: 45,
+    hatchCrossHatch: false,
+    hatchUseGlobalDensity: true,
+    hatchGlobalSpacing: 3,
+    animationSpeed: 0.002,
+
+    // Common
+    isPaused: false,
+
+    // Export
+    exportSize: "current", // 'current' | 'a4'
+  };
+
+  // --- STATE ---
+  let weatherData = null;
+  let videoRecorder = null;
+  let sketch = null;
+
+  // --- DOM ELEMENTS ---
+  const els = {
+    location: document.getElementById("data-location"),
+    coords: document.getElementById("data-coords"),
+    time: document.getElementById("data-time"),
+    temp: document.getElementById("data-temp"),
+    wind: document.getElementById("data-wind"),
+    frame: document.getElementById("sketch-frame"),
+  };
+
+  // --- DATA LAYER ---
+  async function fetchWeather() {
+    try {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${CONFIG.lat}&longitude=${CONFIG.lon}&current=temperature_2m,wind_speed_10m&timezone=auto`;
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if (data.current) {
+        weatherData = data.current;
+        updateUI();
+      }
+    } catch (e) {
+      console.error("Weather fetch failed", e);
+    }
+  }
+
+  function updateUI() {
+    if (!weatherData) return;
+    els.location.textContent = CONFIG.city.toUpperCase();
+    els.coords.textContent = `${CONFIG.lat.toFixed(2)}°N ${CONFIG.lon.toFixed(2)}°E`;
+    els.temp.textContent = `${weatherData.temperature_2m}${weatherData.temperature_2m_unit || "°C"}`;
+    els.wind.textContent = `${weatherData.wind_speed_10m} km/h`;
+  }
+
+  function updateTime() {
+    const now = new Date();
+    els.time.textContent = now.toLocaleTimeString("en-US", {
+      hour12: false,
+    });
+  }
+
+  // --- LAYOUT CONTROL ---
+  function updateLayout() {
+    els.frame.style.width = `${CONFIG.width}px`;
+    els.frame.style.height = `${CONFIG.height}px`;
+    if (videoRecorder) {
+      videoRecorder.updateDimensions(CONFIG.width, CONFIG.height);
+    }
+
+    // Reset dot matrix
+    if (sketch && sketch.resize) {
+      sketch.resize(CONFIG.width, CONFIG.height);
+    }
+
+    if (sketch && sketch.updateColorTheme) {
+      sketch.updateColorTheme();
+    }
+  }
+
+  function updateColorTheme() {
+    if (sketch && sketch.updateColorTheme) {
+      sketch.updateColorTheme();
+    }
+  }
+
+  // --- P5 SKETCH (Global Mode) ---
+  window.setup = function () {
+    // Create a global p5 adapter
+    const globalP5Adapter = {
+      createCanvas: (...args) => createCanvas(...args),
+      resizeCanvas: (...args) => resizeCanvas(...args),
+      background: (...args) => background(...args),
+      fill: (...args) => fill(...args),
+      stroke: (...args) => stroke(...args),
+      strokeWeight: (...args) => strokeWeight(...args),
+      noFill: (...args) => noFill(...args),
+      noStroke: (...args) => noStroke(...args),
+      push: (...args) => push(...args),
+      pop: (...args) => pop(...args),
+      translate: (...args) => translate(...args),
+      circle: (...args) => circle(...args),
+      line: (...args) => line(...args),
+      ellipse: (...args) => ellipse(...args),
+      ellipseMode: (...args) => ellipseMode(...args),
+      color: (...args) => color(...args),
+      lerp: (...args) => lerp(...args),
+      lerpColor: (...args) => lerpColor(...args),
+      map: (...args) => map(...args),
+      noise: (...args) => noise(...args),
+      floor: (...args) => floor(...args),
+      image: (...args) => image(...args),
+      CORNER: "corner",
+      SVG: "svg",
+      width: width,
+      height: height,
+    };
+
+    // Create the sketch instance
+    sketch = createDotMatrixSketch(globalP5Adapter, CONFIG);
+
+    // Initialize dependencies
+    sketch.init(PixelDisplay, HatchFill);
+
+    // Setup the sketch
+    sketch.setup();
+
+    // Set canvas parent
+    const canvasEl = document.getElementById("defaultCanvas0");
+    if (canvasEl) {
+      canvasEl.parentElement.removeChild(canvasEl);
+      document.getElementById("canvas-container").appendChild(canvasEl);
+    }
+  };
+
+  window.draw = function () {
+    if (sketch && sketch.draw) {
+      sketch.draw();
+    }
+  };
+
+  // --- EXPORT FUNCTIONS ---
+
+  // SVG Export
+  function exportSVG() {
+    if (sketch && sketch.exportSvg) {
+      sketch.exportSvg(CONFIG.exportSize);
+    }
+  }
+
+  // PNG Export
+  async function exportPNG() {
+    try {
+      const canvas = await html2canvas(els.frame, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: null,
+      });
+
+      const link = document.createElement("a");
+      link.download = "daily_sketch.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    } catch (err) {
+      console.error("PNG Export failed", err);
+    }
+  }
+
+  // Video Export (using VideoRecorder component)
+  function setupRecording() {
+    const btnRecord = document.getElementById("btn-record");
+    if (!btnRecord) return;
+
+    btnRecord.addEventListener("click", async () => {
+      if (!videoRecorder) {
+        console.error("VideoRecorder not initialized");
+        return;
+      }
+
+      if (!videoRecorder.getRecordingState()) {
+        await videoRecorder.startRecording();
+        btnRecord.textContent = "Stop Recording";
+        btnRecord.classList.add("bg-red-600", "text-white", "border-red-600");
+        btnRecord.classList.remove("text-red-500");
+      } else {
+        videoRecorder.stopRecording();
+        btnRecord.textContent = "Record Video";
+        btnRecord.classList.remove(
+          "bg-red-600",
+          "text-white",
+          "border-red-600"
+        );
+        btnRecord.classList.add("text-red-500");
+      }
+    });
+  }
+
+  // --- INIT ---
+  function init() {
+    // Initialize DOM elements reference
+    /* els = {
+      location: document.getElementById("data-location"),
+      coords: document.getElementById("data-coords"),
+      time: document.getElementById("data-time"),
+      temp: document.getElementById("data-temp"),
+      wind: document.getElementById("data-wind"),
+      frame: document.getElementById("sketch-frame"),
+    }; */
+
+    // 1. Initialize VideoRecorder
+    videoRecorder = new VideoRecorder({
+      canvasContainerId: "canvas-container",
+      overlayId: "sketch-frame", // Use the main frame as overlay, relies on hiding canvas
+      frameId: "sketch-frame",
+      width: CONFIG.width,
+      height: CONFIG.height,
+      dynamicTextElements: {
+        time: els.time,
+        temp: els.temp,
+        wind: els.wind,
+      },
+    });
+
+    // 2. Start Data Fetching
+    fetchWeather();
+    setInterval(fetchWeather, CONFIG.refreshRate);
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    // 3. Setup GUI
+    const gui = new GUI();
+
+    const f0 = gui.addFolder("Layout");
+    f0.add(CONFIG, "width", 400, 2000).step(10).onChange(updateLayout);
+    f0.add(CONFIG, "height", 400, 2000).step(10).onChange(updateLayout);
+
+    const f1 = gui.addFolder("Sketch");
+    f1.add(CONFIG, "matrixSize", [64, 32, 16, 8, 4])
+      .name("Matrix Size")
+      .onChange(updateLayout);
+    f1.add(CONFIG, "theme", [
+      "2a",
+      "milk_transparent",
+      "green",
+      "amber",
+      "white",
+      "blue",
+    ])
+      .name("Theme")
+      .onChange(updateColorTheme);
+    f1.add(CONFIG, "noiseScale", 0.01, 0.8, 0.005).name("NoiseScale");
+    f1.add(CONFIG, "animationSpeed", 0.001, 0.1, 0.001).name("Animation Speed");
+    f1.add(CONFIG, "shadeSteps", 2, 16, 1).name("Shade Steps");
+    f1.add(CONFIG, "dotScaleFactor", 0.1, 5.0, 0.05).name("Dot Scale Factor");
+    f1.add(CONFIG, "dotNoiseInfluence", 0.0, 3.0, 0.05).name(
+      "Dot Noise Influence"
+    );
+    f1.add(CONFIG, "useColorThemeShading").name("Use Color Theme Shading");
+
+    // Hatch fill controls
+    const hatchFolder = f1.addFolder("Hatch Fill");
+    hatchFolder.add(CONFIG, "useHatchFill").name("Use Hatch Fill");
+    hatchFolder.add(CONFIG, "hatchUseGlobalDensity").name("Use Global Density");
+    hatchFolder
+      .add(CONFIG, "hatchDensity", 0.01, 1.0, 0.01)
+      .name("Hatch Density");
+    hatchFolder
+      .add(CONFIG, "hatchGlobalSpacing", 1, 20, 0.5)
+      .name("Global Spacing (px)");
+    hatchFolder.add(CONFIG, "hatchAngle", 0, 180, 1).name("Hatch Angle");
+    hatchFolder.add(CONFIG, "hatchCrossHatch").name("Cross Hatch");
+
+    f1.add(CONFIG, "isPaused").name("Pause Animation");
+
+    const f2 = gui.addFolder("Location");
+    f2.add(CONFIG, "city").onFinishChange(() => {
+      /* Todo: Geocode */
+    });
+    f2.add(CONFIG, "lat").onFinishChange(fetchWeather);
+    f2.add(CONFIG, "lon").onFinishChange(fetchWeather);
+
+    const f3 = gui.addFolder("Export");
+    f3.add(CONFIG, "exportSize", ["current", "a4"]).name("SVG Size");
+
+    // 4. Bind Buttons
+    document
+      .getElementById("btn-export-svg")
+      .addEventListener("click", exportSVG);
+    document
+      .getElementById("btn-export-png")
+      .addEventListener("click", exportPNG);
+
+    // Setup recording button
+    setupRecording();
+  }
+
+  // Run
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+</script>

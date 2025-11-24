@@ -1,0 +1,466 @@
+---
+// Brand Assets Landing Page
+import Layout from "@/layouts/Layout.astro";
+
+import CopyCode from "@/components/Tool__CopyCode.astro";
+
+import JyAnimations from "./_animations.astro";
+import JyToolStack from "./_toolstack.astro";
+import JyCards from "./_cards.astro";
+
+import JyLogo from "./_logo.astro";
+import JyTexture from "./_texture.astro";
+
+import JyTypography from "./_typography.astro";
+import JyDesignPrinciples from "./_designprinciples.astro";
+
+import JyColor from "./_color.astro";
+
+// UI
+import JyButtons from "./_buttons.astro";
+import JyLayoutSystem from "./_layoutsystem.astro";
+---
+
+<!-- new landing page for new branding -->
+<Layout>
+  <main class="min-h-screen noise-- py-16">
+    <section>
+      <header class="container">
+        <h1>JY Branding Assets & Components</h1>
+        <p>
+          JY is a brand that is all about the journey. It is a brand that is all
+          about the experience. It is a brand that is all about the journey. It
+          is a brand that is all about the experience. It is a brand that is all
+          about the journey. It is a brand that is all about the experience.
+        </p>
+        <hr />
+      </header>
+    </section>
+
+    <section id="color-palette" class="bg-black text-milk noise-- py-16">
+      <JyColor />
+    </section>
+
+    <section id="grid-system">
+      <JyLayoutSystem />
+    </section>
+
+    <section id="typography">
+      <JyTypography />
+
+      <CopyCode
+        title="Merriweather & Ubuntu"
+        code={`<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">`}
+        language="html"
+      />
+    </section>
+
+    <section id="design-principles" class="noise- m-0 py-20">
+      <header class="container">
+        <h2>GoodDesign--</h2>
+        <p class="lead">A reminders for good design principles.</p>
+      </header>
+      <hr class="spacer" />
+      <JyDesignPrinciples />
+    </section>
+
+    <section id="Dot_Line_Shape--">
+      <header class="container">
+        <h2>Dot_Line_Shape--</h2>
+        <p class="lead">Adding rhythm & texture.</p>
+      </header>
+
+      <hr class="spacer" />
+
+      <div class="container grid-- md:grid-cols-3">
+        <JyTexture />
+      </div>
+
+      <JyAnimations />
+    </section>
+
+    <section id="icons">
+      <header class="container">
+        <h2>icons</h2>
+        <p>
+          <a href="https://icon-sets.iconify.design/">Iconify</a> - Best collection
+          of icons library there is.
+        </p>
+      </header>
+
+      <div class="container">
+        <JyToolStack />
+      </div>
+    </section>
+
+    <section id="logos">
+      <header class="container">
+        <h2>Logo</h2>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus
+          quia, nulla! Maiores et perferendis eaque, exercitationem praesentium
+          nihil.
+        </p>
+      </header>
+
+      <div class="container">
+        <JyLogo />
+      </div>
+    </section>
+
+    <section id="cards">
+      <header class="container">
+        <h2>Design System: Card</h2>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus
+          quia, nulla! Maiores et perferendis eaque, exercitationem praesentium
+          nihil.
+        </p>
+      </header>
+
+      <div class="container">
+        <JyCards />
+      </div>
+    </section>
+
+    <section id="buttons">
+      <header class="container">
+        <h2>Buttons</h2>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus
+          quia, nulla! Maiores et perferendis eaque, exercitationem praesentium
+          nihil.
+        </p>
+      </header>
+
+      <div class="container">
+        <JyButtons />
+      </div>
+    </section>
+
+    <section id="components" class="noise-- bg-blue m-0 py-20 !my-0">
+      <header class="container text-milk">
+        <h2>Components</h2>
+        <p>Various useful components for general use.</p>
+      </header>
+
+      <div class="container">
+        <div class="card-- card--milk texture--">
+          <h3>Copy Code</h3>
+          <p>
+            A versatile component for displaying code snippets with easy copy
+            functionality. Perfect for documentation, tutorials, and design
+            systems.
+          </p>
+          <h4>Different Code Types</h4>
+          <p>
+            The component supports various programming languages and code types:
+          </p>
+
+          <!-- CSS Example -->
+          <CopyCode
+            title="CSS Variables"
+            code={`.container {
+  --primary-color: #3b82f6;
+  --secondary-color: #64748b;
+  --border-radius: 0.5rem;
+  --spacing: 1rem;
+}
+
+.card {
+  background: var(--primary-color);
+  border-radius: var(--border-radius);
+  padding: var(--spacing);
+}`}
+            language="css"
+          />
+
+          <!-- JavaScript Example -->
+          <CopyCode
+            title="JavaScript Function"
+            code={`function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    console.log('Text copied to clipboard');
+  }).catch(err => {
+    console.error('Failed to copy: ', err);
+  });
+}`}
+            language="javascript"
+          />
+
+          <!-- Without Title (Overlay Button) -->
+          <h4>Code Block Without Header</h4>
+          <p>
+            When no title is provided, the copy button appears as an overlay:
+          </p>
+          <CopyCode
+            code={`npm install @astrojs/tailwind
+npm install tailwindcss`}
+            language="bash"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Update Log & Future Development -->
+    <section id="update-log">
+      <header class="container">
+        <h2>Brand System Updates & Roadmap</h2>
+        <p class="lead">
+          Development log and future enhancements for this brand documentation
+          page.
+        </p>
+      </header>
+
+      <div class="container">
+        <div class="card-- card--2a">
+          <div class="grid-- lg:grid-cols-2">
+            <!-- Recent Updates -->
+            <div class="card-- card--grey">
+              <h3>Recent Updates</h3>
+              <ul>
+                <li>
+                  <strong>v1.0.0</strong> - Initial brand system documentation
+                </li>
+                <li>
+                  <strong>Color Palette</strong> - Established core brand colors
+                  with CSS variables
+                </li>
+                <li>
+                  <strong>Typography</strong> - Implemented golden ratio-based font
+                  scaling
+                </li>
+                <li>
+                  <strong>Design Principles</strong> - Added Dieter Rams' 10 principles
+                  section
+                </li>
+                <li>
+                  <strong>Component Library</strong> - Created button component examples
+                </li>
+              </ul>
+            </div>
+
+            <!-- Planned Features -->
+            <div class="card-- card--blue">
+              <h3>Planned Features</h3>
+              <ul>
+                <li>Interactive color picker and palette generator</li>
+                <li>Typography scale calculator with live preview</li>
+                <li>Component playground with code export</li>
+                <li>Dark/light theme toggle demonstration</li>
+                <li>Accessibility testing tools integration</li>
+                <li>Brand asset download center</li>
+              </ul>
+            </div>
+
+            <!-- Technical Notes -->
+            <div class="card-- card--red lg:col-span-2">
+              <h3>Technical Implementation</h3>
+              <p>
+                This brand system is built with modern web standards and best
+                practices:
+              </p>
+              <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                  <h4>Technologies Used</h4>
+                  <ul>
+                    <li>Astro.js for static site generation</li>
+                    <li>CSS Custom Properties for theming</li>
+                    <li>Tailwind CSS for utility classes</li>
+                    <li>Golden Ratio mathematical scaling</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4>Design System Features</h4>
+                  <ul>
+                    <li>Responsive typography scaling</li>
+                    <li>Consistent spacing system</li>
+                    <li>Accessible color contrasts</li>
+                    <li>Modular component architecture</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-- card--yellow">
+            <h4>Contributing</h4>
+            <p class="lead">
+              This brand system is continuously evolving. Feedback and
+              suggestions are welcome to improve the design consistency and
+              developer experience across all projects.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="quote">
+      <div class="container grid-- lg:grid-cols-2 place-items-center">
+        <blockquote
+          class="card-- texture-- card--yellow"
+          cite="https://www.goodreads.com/book/show/6909862-bruce-lee-wisdom-for-the-way"
+        >
+          <p class="-indent-2.5">
+            “Absorb what is useful, discard what is useless and add what is
+            specifically your own.”
+          </p>
+          <p>—Bruce Lee, <cite>Wisdom for the Way</cite></p>
+        </blockquote>
+        <blockquote class="card-- texture-- card--grey text-lg">
+          <p class="-indent-2.5">
+            “It gets easier… Every day it gets a little easier… But you gotta do
+            it every day — that’s the hard part. But it does get easier.”
+          </p>
+          <p>—Jogging Baboon, <cite>BoJack Horseman</cite></p>
+        </blockquote>
+        <blockquote class="card-- texture-- card--grey">
+          <p class="-indent-2.5">
+            “A healthy man wants a thousand things, a sick man only wants one.”
+          </p>
+          <p>—Confucius</p>
+        </blockquote>
+        <blockquote class="card-- texture-- card--yellow">
+          <p class="-indent-2.5">
+            “The principle of strategy is having one thing, to know ten thousand
+            things.”
+          </p>
+          <p>—Miyamoto Musashi</p>
+        </blockquote>
+        <blockquote
+          class="card-- texture-- card--yellow"
+          cite="[[251103-Durable value emerges from a foundation of breadth and the pursuit of depth.]]"
+        >
+          <p>
+            Durable value emerges from a foundation of breadth and the pursuit
+            of depth.
+          </p>
+        </blockquote>
+
+        <blockquote class="card-- texture-- card--grey">
+          <p class="h4">
+            We are taught by everyone and everything: peers, predecessors, our
+            environment, and fortune.
+          </p>
+          <p class="h4">
+            To deny this and say “no one taught me” is a profound disservice to
+            your successors.
+          </p>
+        </blockquote>
+      </div>
+    </section>
+
+    <section id="web-design" class="container">
+      <h3>1. Hero Sections and User Attention</h3>
+      <pre>
+- Users spend 80% of their time above the fold and decide within 3 seconds if they'll stay or bounce.
+- Effective hero sections must answer:
+    - What is this?
+    - What's in it for me?
+    - What should I do next?
+- Clarity and directness are key to reducing bounce rates and increasing engagement.
+</pre>
+      <hr class="spacer mb-4" />
+
+      <h3>2. Color Psychology and Contrast</h3>
+      <pre>
+- Colors influence emotions and conversion:
+    - Blue = Trust (e.g., banks)
+    - Green = Growth (e.g., eco-brands)
+    - Red = Urgency (e.g., sales)
+- High contrast is essential for readability; use contrast-checking tools to ensure accessibility.
+
+*   **Color Palette:** Define primary, secondary, and accent colors with their hex codes.
+</pre>
+      <hr class="spacer mb-4" />
+
+      <h3>3. Navigation Patterns and User Flow</h3>
+      <pre>
+- Users scan in F-patterns on desktops and Z-patterns on mobile.
+- Place crucial navigation elements along these patterns for intuitive navigation.
+- Avoid burying important links more than 3 levels deep as users typically abandon searches after 3-4 clicks.
+</pre>
+      <hr class="spacer mb-4" />
+
+      <h3>4. Responsive Design and Mobile Usability</h3>
+      <pre>
+- Design for purpose: Every element on mobile must justify its space due to limited screen real estate.
+- Ensure touch targets are at least 44x44 pixels to accommodate "fat finger" usage.
+- Prioritize speed and simplicity to cater to distracted mobile users.
+</pre>
+      <hr class="spacer mb-4" />
+
+      <h3>5. Typography and Performance Optimization</h3>
+      <pre>
+- Variable fonts improve load times by combining multiple weights into one file.
+- Pairing Tips:
+    - Serif for titles and Sans Serif for body text improve readability.
+    - Using the same Sans Serif family with different weights provides consistency.
+- Limit font weights to necessary styles to enhance performance.
+
+*   **Typography:** Define primary (headings) and secondary (body text) fonts. Ensure they are available in Google Fonts for easy application in Docs/Sheets/Slides.
+
+
+### 9 Web Design Hack
+- Break up big chunks of text;  50-75 characters (600-700px)
+- Bullet points with Icons;  our brain love lists.
+- Use a consistent spacing system 
+  - Start with a baseline value
+  - separate groups by at least double
+  - keep the distance between big groups similar
+- Use ratios for the line-height - 
+  - display 1 to 1 ratio
+  - paragraph 1 to 1.5 ratio
+- Refine text with letter-spacing - 
+  - display fonts -1px
+  - body text 0px/default
+  - CTAS 1px
+- font superfamilies - source, roboto, dm, noto
+- find color palettes with css overview (devtools > more tools > css overview > capture)
+- be subtle with design elements - content is the star of the show. so use:
+  - gradients
+  - soft textured backgrounds
+  - shadows
+  - dont over design
+- use the squint test to check hierarchy
+
+---
+
+→ 9 Web Design Hacks I Wish I Knew Years Ago
+</pre>
+      <hr class="spacer mb-4" />
+
+      <h3>6. Performance and Micro-Interactions</h3>
+      <pre>
+- 1-second delay can cost significant revenue (e.g., Amazon's $1.6 billion loss).
+- Use lazy loading for images and avoid heavy background videos.
+- Micro-interactions should be subtle, enhancing UX without overwhelming users.
+</pre>
+      <hr class="spacer mb-4" />
+
+      <h3>7. Role of AI in Web Design</h3>
+      <pre>
+- AI can accelerate the design process but should complement, not replace, human creativity.
+- Use AI tools for brainstorming and repetitive tasks while trusting human instincts for nuanced design decisions.
+- <a href="#">>>my view on AI as tool</a>
+</pre>
+      <hr class="spacer mb-4" />
+
+      <h3>Brand Guidelines</h3>
+      <pre>
+*   **Brand Guidelines Document:** Create a simple internal document (e.g., a Google Doc or Slide) summarizing all these elements. This is your bible for template creation.
+
+*   **Logo & Variations:** Ensure you have high-resolution versions (PNG with transparent background, SVG if possible).
+*   **Imagery Style:** Define the overall look and feel of images (e.g., minimalist, vibrant, professional, illustrative).
+*   **Tone of Voice:** How does your business communicate? (e.g., formal, friendly, authoritative, innovative). This influences text placeholders and instructions.
+  </pre>
+      <hr class="spacer mb-4" />
+
+      <p>
+        <pre>[[250224-25 Years of Web Design Knowledge in 7 Minutes - Essential Web Design Insights]]</pre>
+      </p>
+    </section>
+  </main>
+</Layout>

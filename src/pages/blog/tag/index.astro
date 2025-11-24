@@ -1,0 +1,41 @@
+---
+import { getCollection } from "astro:content";
+import { slugify } from "@/util/util--blog";
+
+import Layout from "@/layouts/Layout.astro";
+
+import CategoryList from "@/components/blog--category_list.astro";
+
+const allPosts = await getCollection("blog", ({ data }) => {
+  return data.draft !== true;
+});
+
+const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))].sort();
+
+const tagCounts = {};
+allTags.forEach((tag) => {
+  tagCounts[tag] = allPosts.filter(
+    (post) => post.data.tags && post.data.tags.includes(tag)
+  ).length;
+});
+---
+
+<Layout>
+  <main>
+    <header>
+      <h1>All Tags</h1>
+    </header>
+
+    <div class="page--aside">
+      <CategoryList
+        type="blog"
+        baseUrl="/blog"
+        tags={allTags}
+        tagCounts={tagCounts}
+        activeTag=""
+        allItemsCount={allPosts.length}
+        formatTagUrl={(tag) => `/blog/tag/${slugify(tag)}`}
+      />
+    </div>
+  </main>
+</Layout>

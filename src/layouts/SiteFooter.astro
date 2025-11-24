@@ -1,0 +1,60 @@
+---
+import { Icon } from "astro-icon/components";
+import Button from "@/components/starwind/button";
+
+import AntiScrapingContact from "@/components/AntiScrap.astro";
+
+import { SITE_CONFIG } from "@/consts";
+
+const socialLinks = [
+  {
+    platform: "instagram",
+    href: SITE_CONFIG.social.instagram,
+    icon: "mdi:instagram",
+  },
+  // { platform: "facebook", href: SITE_CONFIG.social.facebook, icon: "mdi:facebook" },
+  // { platform: "linkedin", href: SITE_CONFIG.social.linkedin, icon: "mdi:linkedin" },
+  {
+    platform: "github",
+    href: SITE_CONFIG.social.github,
+    icon: "mdi:github",
+  },
+];
+
+const todayYear = SITE_CONFIG.site.year;
+---
+
+<footer class="site--footer noise-- bg-2a py-12">
+  <div class="container card-- texture-- card--greylight">
+    <div class="grid-- grid--content_sidebar">
+      <div>
+        <p class="text-4xl font-body font-medium tracking-tighter select-none">
+          Get in touch @
+        </p>
+
+        <AntiScrapingContact text="hello@jasperyong.com" />
+        <AntiScrapingContact text="+1 (234) 567-890" />
+
+        <ul class="flex flex-row space-x-1 my-4">
+          {
+            socialLinks.map((link) => (
+              <Button
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${link.platform} link`}
+                variant="ghost"
+              >
+                <Icon name={`bi:${link.platform}`} class="w-8 h-8" />
+              </Button>
+            ))
+          }
+        </ul>
+        <hr class="my-8" />
+        <p class="text-xs my-4">
+          © {todayYear} jasperyong.com
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,429 @@
+---
+// jy--animations.astro
+// This component showcases various animation techniques used throughout the site.
+
+// 1. Fade-in on Scroll (Intersection Observer)
+//    - Elements with `data-animation="fade-in"` are observed.
+//    - When an element enters the viewport, the `is-visible` class is added, triggering a CSS transition.
+//    - This is a performant way to handle "animate on scroll" effects.
+
+// 2. Parallax Effect (Rellax.js)
+//    - Uses the Rellax.js library (via CDN) for smooth parallax scrolling.
+//    - Elements with `data-animation="parallax"` and a `data-rellax-speed` attribute will move at different speeds on scroll.
+//    - Rellax is initialized in the script block for all relevant elements.
+
+// 3. SVG Animations (Vanilla CSS vs. D3.js)
+//    - This section provides a side-by-side comparison of creating and animating SVG elements.
+//    - **Vanilla JS/CSS:**
+//      - SVGs are created dynamically with JavaScript (`document.createElementNS`).
+//      - Animations are defined using standard CSS `@keyframes` and `animation` properties.
+//      - This method is straightforward and leverages the browser's native animation engine.
+//    - **D3.js:**
+//      - D3.js (via CDN) is used for its powerful data-driven approach to DOM manipulation.
+//      - SVGs are appended and manipulated using D3's selection and transition methods.
+//      - D3 transitions, by default, play once and then stop. To create looping animations with D3, additional logic (e.g., using `on("end", ...)` to restart the transition) would be required, but is not implemented here as per user request.
+---
+
+<div class="container">
+  <div class="grid-- grid--content_sidebar">
+    <div class="card-- texture--" data-animation="fade-in">
+      <h3>Mastering Typography</h3>
+      <p>
+        Using a golden ratio type scale ensures harmonious and readable text
+        hierarchies throughout the project.
+      </p>
+    </div>
+
+    <div class="card-- card--grey texture--" data-animation="fade-in">
+      <h3>Systematized Layout</h3>
+      <p>
+        The 8-point grid and a 6-column layout provide structure and visual
+        rhythm, guiding the user's eye.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="container py-64 rellax--center">
+  <h2 data-animation="parallax" data-rellax-speed="1.2">Tactile Feel</h2>
+  <div data-animation="parallax" data-rellax-speed="1">
+    <p data-animation="fade-in">
+      Focus on using texture to provide depth and materiality, countering the
+      sterile feel of pure digital design. The background has a subtle noise
+      texture applied.
+    </p>
+    <p data-animation="fade-in">
+      The parallax animation on the heading to the left creates a sense of depth
+      and materiality as you scroll.
+    </p>
+  </div>
+</div>
+
+<div class="spacer">
+  <!-- Just to create scrolling space -->
+</div>
+
+<div class="container">
+  <div class="card--" data-animation="fade-in">
+    <h3>Simple & Reusable</h3>
+    <p>
+      Any element can be animated by just adding a `data-animation` attribute.
+      No complex classes or libraries needed.
+    </p>
+  </div>
+  <div class="content-right card--" data-animation="fade-in">
+    <h3>Vanilla JavaScript</h3>
+    <p>
+      All animations are powered by a small, efficient script that runs directly
+      in the browser, ensuring fast load times.
+    </p>
+  </div>
+</div>
+
+<section id="svg-animations" class="container py-16">
+  <header>
+    <h2>SVG Animations: Dot, Line, Shape</h2>
+    <p>Showcasing SVG animations with Vanilla JS/CSS and D3.js.</p>
+  </header>
+
+  <div class="grid-- md:grid-cols-2 gap-8">
+    <div class="card-- texture--">
+      <h3>Vanilla JS & CSS</h3>
+      <svg id="svg-vanilla" class="w-full h-64 bg-greylight rounded-lg"></svg>
+    </div>
+    <div class="card-- texture--">
+      <h3>D3.js</h3>
+      <svg id="svg-d3" class="w-full h-64 bg-greylight rounded-lg"></svg>
+    </div>
+  </div>
+</section>
+
+<section id="reusable-svg-animations" class="container py-16">
+  <header>
+    <h2>Reusable SVG Animation Classes</h2>
+    <p>Apply these classes to any SVG element for common looping animations.</p>
+  </header>
+
+  <div class="grid-- md:grid-cols-2 gap-8">
+    <div class="card-- texture--">
+      <h3>Translate & Rotate</h3>
+      <svg
+        class="w-full h-64 bg-greylight rounded-lg texture--"
+        viewBox="0 0 200 100"
+      >
+        <rect
+          x="10"
+          y="10"
+          width="30"
+          height="30"
+          class="animate-left-to-right"
+          fill="#2a2a2a"></rect>
+        <ellipse
+          cx="30"
+          cy="70"
+          rx="20"
+          ry="10"
+          class="animate-top-to-bottom"
+          fill="rgba(42,42,42,0.7)"></ellipse>
+      </svg>
+    </div>
+    <div class="card-- texture--">
+      <h3>Scale & Rotate</h3>
+      <svg class="w-full h-64 bg-greylight rounded-lg" viewBox="0 0 200 100">
+        <rect
+          x="50"
+          y="35"
+          width="30"
+          height="30"
+          class="animate-rotate"
+          fill="rgba(42,42,42,0.5)"></rect>
+        <ellipse
+          cx="150"
+          cy="50"
+          rx="20"
+          ry="20"
+          class="animate-scale"
+          fill="none"
+          stroke="#2a2a2a"
+          stroke-width="2"></ellipse>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<script
+  src="https://cdn.jsdelivr.net/gh/dixonandmoe/rellax@master/rellax.min.js"
+></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"
+></script>
+
+<script>
+  //-------------------------------------//
+  // 3. REUSABLE ANIMATION SCRIPT        //
+  //-------------------------------------//
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // --- Fade-in Animation Logic ---
+    const fadeInElements = document.querySelectorAll(
+      '[data-animation="fade-in"]'
+    );
+
+    const fadeInObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target); // Stop observing once visible
+          }
+        });
+      },
+      {
+        rootMargin: "0px",
+        threshold: 0.2, // Trigger when 20% of the element is visible
+      }
+    );
+
+    fadeInElements.forEach((el) => fadeInObserver.observe(el));
+
+    // --- Parallax Animation Logic (Rellax.js) ---
+    if (typeof Rellax !== "undefined") {
+      new Rellax('[data-animation="parallax"]', {
+        speed: -2,
+        center: true,
+        wrapper: null,
+        round: true,
+        vertical: true,
+        horizontal: false,
+      });
+    }
+
+    // --- SVG Animation Logic ---
+    const svgVanilla = document.getElementById("svg-vanilla");
+    const svgNS = "http://www.w3.org/2000/svg";
+
+    // 1. Vanilla Dot
+    const dot = document.createElementNS(svgNS, "circle");
+    dot.setAttribute("cx", "40");
+    dot.setAttribute("cy", "40");
+    dot.setAttribute("r", "20");
+    dot.setAttribute("class", "vanilla-dot");
+    svgVanilla.appendChild(dot);
+
+    // 2. Vanilla Line
+    const line = document.createElementNS(svgNS, "line");
+    line.setAttribute("x1", "80");
+    line.setAttribute("y1", "20");
+    line.setAttribute("x2", "180");
+    line.setAttribute("y2", "120");
+    line.setAttribute("class", "vanilla-line");
+    line.setAttribute("stroke", "#2a2a2a");
+    line.setAttribute("stroke-width", "4");
+    line.setAttribute("stroke-dasharray", "3, 3");
+    line.setAttribute("stroke-dashoffset", "20");
+    svgVanilla.appendChild(line);
+
+    // 3. Vanilla Rectangle
+    const rect = document.createElementNS(svgNS, "rect");
+    rect.setAttribute("x", "200");
+    rect.setAttribute("y", "50");
+    rect.setAttribute("width", "80");
+    rect.setAttribute("height", "80");
+    rect.setAttribute("class", "vanilla-rect");
+    svgVanilla.appendChild(rect);
+
+    // 4. Vanilla Ellipse
+    const ellipse = document.createElementNS(svgNS, "ellipse");
+    ellipse.setAttribute("cx", "350");
+    ellipse.setAttribute("cy", "90");
+    ellipse.setAttribute("rx", "50");
+    ellipse.setAttribute("ry", "30");
+    ellipse.setAttribute("class", "vanilla-ellipse");
+    svgVanilla.appendChild(ellipse);
+
+    // --- D3.js Animation Logic ---
+    if (typeof d3 !== "undefined") {
+      const svgD3 = d3.select("#svg-d3");
+
+      // 1. D3 Dot
+      svgD3
+        .append("circle")
+        .attr("cx", 40)
+        .attr("cy", 40)
+        .attr("r", 20)
+        .style("fill", "#2a2a2a")
+        .transition()
+        .duration(1000)
+        .ease(d3.easeBounce)
+        .attr("cy", 100);
+
+      // 2. D3 Line
+      svgD3
+        .append("line")
+        .attr("x1", 80)
+        .attr("y1", 20)
+        .attr("x2", 180)
+        .attr("y2", 120)
+        .style("stroke", "#2a2a2a")
+        .style("stroke-width", 4)
+        .style("stroke-dasharray", "3, 3")
+        .transition()
+        .duration(1500)
+        .style("stroke-dashoffset", 20);
+
+      // 3. D3 Rectangle
+      svgD3
+        .append("rect")
+        .attr("x", 200)
+        .attr("y", 50)
+        .attr("width", 80)
+        .attr("height", 80)
+        .style("fill", "rgba(42,42,42,0.5)")
+        .transition()
+        .duration(2000)
+        .attr("transform", "rotate(45, 240, 90)");
+
+      // 4. D3 Ellipse
+      svgD3
+        .append("ellipse")
+        .attr("cx", 350)
+        .attr("cy", 90)
+        .attr("rx", 50)
+        .attr("ry", 30)
+        .style("fill", "none")
+        .style("stroke", "#2a2a2a")
+        .style("stroke-width", 2)
+        .transition()
+        .duration(2500)
+        .attr("rx", 60)
+        .attr("ry", 40);
+    }
+  });
+</script>
+
+<style is:global>
+  /* Initial state for fade-in elements */
+  [data-animation="fade-in"] {
+    opacity: 0;
+    transform: translateY(24px); /* Start 24px down */
+    transition:
+      opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* The state when the element is visible */
+  [data-animation="fade-in"].is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Parallax elements need a wrapper to contain them if they have other content */
+  [data-animation="parallax"] {
+    /* The JS will apply a transform, so no initial state is needed here */
+    will-change: transform; /* Performance optimization */
+  }
+
+  svg {
+    position: relative;
+    z-index: 5;
+  }
+  /* Vanilla SVG Animations */
+  .vanilla-dot {
+    fill: #2a2a2a;
+    animation: bounce 1s ease-in-out infinite alternate;
+  }
+  .vanilla-line {
+    stroke: red !important;
+    stroke-width: 4;
+    stroke-dasharray: 5;
+    animation: dash 5s linear infinite;
+  }
+  .vanilla-rect {
+    fill: rgba(42, 42, 42, 0.5);
+    animation: rotate 4s linear infinite;
+    transform-origin: center;
+  }
+  .vanilla-ellipse {
+    fill: none;
+    stroke: #2a2a2a;
+    stroke-width: 2;
+    animation: pulse 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes bounce {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(20px);
+    }
+  }
+  @keyframes dash {
+    to {
+      stroke-dashoffset: 100;
+    }
+  }
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes pulse {
+    from {
+      rx: 50;
+      ry: 30;
+    }
+    to {
+      rx: 60;
+      ry: 40;
+    }
+  }
+
+  /* Reusable SVG Animation Classes */
+  .animate-left-to-right {
+    animation: move-left-to-right 1s ease-in-out infinite alternate;
+  }
+  .animate-top-to-bottom {
+    animation: move-top-to-bottom 1s ease-in-out infinite alternate;
+  }
+  .animate-rotate {
+    animation: rotate 2s linear infinite;
+    transform-origin: center;
+  }
+  .animate-scale {
+    animation: scale-back-and-forth 1s ease-in-out infinite alternate;
+    transform-origin: center;
+  }
+
+  @keyframes move-left-to-right {
+    from {
+      transform: translateX(0%);
+    }
+    to {
+      transform: translateX(0.5%);
+    }
+  }
+
+  @keyframes move-top-to-bottom {
+    0% {
+      transform: translateY(0%) translateX(0%);
+    }
+    30% {
+      transform: translateY(10%) translateX(10%);
+    }
+    100% {
+      transform: translateY(10%) translateX(10%);
+    }
+  }
+
+  @keyframes scale-back-and-forth {
+    from {
+      transform: scale(0.5);
+    }
+    to {
+      transform: scale(0.2);
+    }
+  }
+</style>

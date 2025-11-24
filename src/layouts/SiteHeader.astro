@@ -1,0 +1,42 @@
+---
+import { Icon } from "astro-icon/components";
+
+// Get current path to highlight active page
+const pathname = new URL(Astro.request.url).pathname;
+const currentPath = pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
+---
+
+<header class="site--header">
+  <nav class="flex justify-between" aria-label="Main navigation">
+
+    <a href="/" aria-label="Home">
+      <img src="/brand/logo-jy-yellow.png" alt="Logo" width="48" height="48" />
+    </a>
+
+    <!-- <Button
+          class="menu-toggle md:hidden"
+          type="button"
+          variant="ghost"
+          size="icon"
+          aria-controls="nav-links"
+          aria-expanded="false"
+          id="mobile-menu-button"
+        >
+          <span class="sr-only">Toggle menu</span>
+          <Icon name="bi:list" />
+        </Button> -->
+
+    <ol class="nav-links flex justify-end items-center gap-4">
+      <li>
+        <a class="close-menu md:hidden" aria-label="Close menu">
+          <Icon name="bi:x-lg" class="text-4xl" />
+        </a>
+      </li>
+      <li><a href="/portfolio">portfolio>></a></li>
+      <li><a href="/blog">blog>></a></li>
+      <li><a href="/toolstack--">toolstack>></a></li>
+      <li><a href="/exp--">exp>></a></li>
+      <slot />
+    </ol>
+  </nav>
+</header>

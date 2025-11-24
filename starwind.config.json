@@ -1,0 +1,67 @@
+{
+  "$schema": "https://starwind.dev/config-schema.json",
+  "tailwind": {
+    "css": "src/styles--starwind.css",
+    "baseColor": "neutral",
+    "cssVariables": true,
+    "themeVariables": {
+      "primary": "var(--color-primary)",
+      "primaryForeground": "var(--color-primary-foreground)",
+      "secondary": "var(--color-secondary)",
+      "secondaryForeground": "var(--color-secondary-foreground)",
+      "background": "var(--color-background)",
+      "foreground": "var(--color-foreground)",
+      "muted": "var(--color-muted)",
+      "mutedForeground": "var(--color-muted-foreground)",
+      "accent": "var(--color-accent)",
+      "accentForeground": "var(--color-accent-foreground)",
+      "destructive": "var(--color-destructive)",
+      "destructiveForeground": "var(--color-destructive-foreground)",
+      "success": "var(--color-success)",
+      "successForeground": "var(--color-success-foreground)",
+      "warning": "var(--color-warning)",
+      "warningForeground": "var(--color-warning-foreground)",
+      "info": "var(--color-info)",
+      "infoForeground": "var(--color-info-foreground)"
+    }
+  },
+  "componentDir": "src/components",
+  "components": [
+    {
+      "name": "switch",
+      "version": "1.1.0"
+    },
+    {
+      "name": "card",
+      "version": "1.1.0"
+    },
+    {
+      "name": "select",
+      "version": "1.1.0"
+    },
+    {
+      "name": "input",
+      "version": "1.1.0"
+    },
+    {
+      "name": "label",
+      "version": "1.1.0"
+    },
+    {
+      "name": "badge",
+      "version": "1.1.0"
+    },
+    {
+      "name": "button",
+      "version": "2.1.0"
+    },
+    {
+      "name": "pagination",
+      "version": "2.0.1"
+    },
+    {
+      "name": "carousel",
+      "version": "1.0.0"
+    }
+  ]
+}

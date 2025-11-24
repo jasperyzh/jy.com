@@ -1,0 +1,51 @@
+{
+  "name": "jy",
+  "type": "module",
+  "version": "1.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "npm run sync && astro build",
+    "sync": "bash ./sync_obsidian_content.sh",
+    "check": "astro check",
+    "preview": "astro preview",
+    "astro": "astro",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/cloudflare": "^12.6.10",
+    "@astrojs/rss": "4.0.12",
+    "@astrojs/sitemap": "^3.6.0",
+    "@iconify-json/bi": "^1.2.6",
+    "@iconify-json/devicon": "^1.2.45",
+    "@iconify-json/logos": "^1.2.10",
+    "@iconify-json/skill-icons": "^1.2.3",
+    "@iconify-json/tabler": "^1.2.23",
+    "@tabler/icons": "^3.35.0",
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/vite": "^4.1.14",
+    "astro": "^5.14.1",
+    "astro-icon": "^1.1.5",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "embla-carousel": "^8.6.0",
+    "marked": "^16.4.1",
+    "motion": "^12.23.22",
+    "photoswipe": "^5.4.4",
+    "prismjs": "^1.30.0",
+    "tailwind-merge": "^3.3.1",
+    "tailwind-variants": "^3.1.1",
+    "tw-animate-css": "^1.4.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "cross-env": "^10.1.0",
+    "postcss": "^8.5.6",
+    "prettier-plugin-astro": "^0.14.1",
+    "sharp": "^0.34.4",
+    "tailwindcss": "^4.1.14",
+    "vitest": "^3.2.4"
+  }
+}

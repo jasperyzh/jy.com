@@ -1,0 +1,415 @@
+---
+/**
+ * - [ ] how to reuse template
+ * - [ ] UX: disable form interaction when form submitting
+ * - [251002] form framework + KISE
+ * - [250919] implemented recaptcha_v3
+ * - [250815] created form and worked with gsheet
+ */
+import Layout from "../../layouts/Layout.astro";
+
+import "@/styles/tailwind--.css";
+
+// src/components/LeadForm.astro
+
+//AKfycbxAVUcFrIzWIMyyPUQLb69UeQWnkzQ6h9FFORN6Vgt0Spu_LEJ4LEfK2pBgxqgf-ODt
+// const webapp_url =
+//   "https://script.google.com/macros/s/AKfycbzKr6aU3Hu0nuiNDZAdLq4z4zJiQfIoe9VRfm494uAvMP3c-df3waPr014ljO8u954G/exec";
+const webapp_url =
+  "https://script.google.com/macros/s/AKfycbxAVUcFrIzWIMyyPUQLb69UeQWnkzQ6h9FFORN6Vgt0Spu_LEJ4LEfK2pBgxqgf-ODt/exec"
+
+// PUBLIC_GAS_URL="YOUR_DEPLOYED_WEB_APP_URL"
+// const formActionURL = import.meta.env.PUBLIC_GAS_URL;
+
+const formActionURL = webapp_url;
+
+// For details on how to set up the Google Apps Script backend,
+// including reCAPTCHA and email notifications, see `backend_setup_guide.md`.
+const recaptchaSiteKey = "6Le4Ss4rAAAAADtVZhPwOE3v45TEar7Ee1r6YZ_A";
+---
+
+<Layout title="Custom Form Submission to Google Sheet">
+  <form id="portfolio-contact-form" class="max-w-2xl mx-auto">
+    <fieldset>
+      <legend>1. About You</legend>
+      <div>
+        <label for="fullName">Full Name *</label>
+        <input
+          type="text"
+          id="fullName"
+          name="fullName"
+          required
+          autocomplete="name"
+        />
+      </div>
+      <div>
+        <label for="email">Best Email to Reach You *</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          autocomplete="email"
+        />
+      </div>
+      <div>
+        <label for="company">Company / Organization</label>
+        <input
+          type="text"
+          id="company"
+          name="company"
+          autocomplete="organization"
+        />
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>2. How can I help?</legend>
+      <div>
+        <label>What are you looking for? *</label>
+        <div>
+          <div>
+            <label>
+              <input type="checkbox" name="inquiryType" value="New Project" />
+              🚀 Let's build a new project
+            </label>
+          </div>
+          <div>
+            <label>
+              <input
+                type="checkbox"
+                name="inquiryType"
+                value="Existing Project"
+              /> 🔧 I need help with an existing project
+            </label>
+          </div>
+          <div>
+            <label>
+              <input type="checkbox" name="inquiryType" value="Opportunity" /> 💼
+              I have a job opportunity
+            </label>
+          </div>
+          <div>
+            <label>
+              <input type="checkbox" name="inquiryType" value="General" /> 💡 Just
+              want to ask a question
+            </label>
+          </div>
+        </div>
+      </div>
+      <div>
+        <label for="projectDetails"
+          >Tell me more about your project or idea *</label
+        >
+        <textarea
+          id="projectDetails"
+          name="projectDetails"
+          rows="5"
+          required
+          placeholder="What are your goals? Who is your audience? Any specific features you have in mind?"
+        ></textarea>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>3. Project Details</legend>
+      <div>
+        <label for="budget">What's your estimated budget? *</label>
+        <select id="budget" name="budget" required>
+          <option value="" disabled selected>Select an option</option>
+          <option value="$1k-5k">$1,000 - $5,000</option>
+          <option value="$5k-15k">$5,000 - $15,000</option>
+          <option value="$15k+">$15,000+</option>
+          <option value="Not Sure">I'm not sure yet</option>
+        </select>
+      </div>
+      <div>
+        <label for="fileUpload">Have a brief, moodboard, or spec doc?</label>
+        <p>
+          Helps me understand your vision faster. (PDF, PNG, JPG, ZIP up to
+          10MB)
+        </p>
+        <input
+          type="file"
+          id="fileUpload"
+          name="fileUpload"
+          accept=".pdf,.png,.jpg,.zip"
+        />
+      </div>
+      <div>
+        <label for="deadline">Do you have a specific deadline?</label>
+        <input
+          type="text"
+          id="deadline"
+          name="deadline"
+          placeholder="MM/DD/YYYY"
+        />
+      </div>
+      <div>
+        <label for="source">How did you find my work?</label>
+        <select id="source" name="source">
+          <option value="" disabled selected>Select an option</option>
+          <option value="LinkedIn">LinkedIn</option>
+          <option value="GitHub">GitHub</option>
+          <option value="A blog post of mine">A blog post of mine</option>
+          <option value="Google Search">Google Search</option>
+          <option value="Referral from a friend/colleague"
+            >Referral from a friend/colleague</option
+          >
+          <option value="Other">Other</option>
+        </select>
+      </div>
+    </fieldset>
+
+    <!-- HIDDEN_FIELDS -->
+
+    <!-- Honeypot Field for basic spam protection -->
+    <div style="position: absolute; left: -5000px;" aria-hidden="true">
+      <input type="text" name="honeypot" tabindex="-1" autocomplete="off" />
+      <!-- code.gs
+      // ... inside doPost(e)
+      const data = JSON.parse(e.postData.contents);
+
+      // Honeypot check
+      if (data.honeypot) {
+        // This is a bot. Pretend it was successful but do nothing.
+        return ContentService.createTextOutput(JSON.stringify({ status: 'success' }));
+      }
+      // ... rest of the script
+      -->
+    </div>
+
+    <!-- [START] reCAPTCHA v3: Token will be injected here -->
+    <input type="hidden" id="recaptcha-token" name="recaptcha-token" />
+    <!-- [END] reCAPTCHA v3 -->
+
+    <!-- AGREE & SUBMIT -->
+    <div>
+      <input
+        type="checkbox"
+        id="consent"
+        name="consent"
+        value="agreed"
+        required
+      />
+      <label for="consent">
+        I understand this form collects my information to process this inquiry.
+        <a href="/privacy-policy">Learn more</a>. *
+      </label>
+    </div>
+
+    <div>
+      <button type="submit" id="submit-button">Send Message</button>
+    </div>
+
+    <!-- form status, notification, alerts -->
+    <p id="form-status" role="status"></p>
+  </form>
+
+  <!-- DEBUG -->
+  <button type="button" id="log-button">Log Data</button>
+  <button type="button" id="populate-button">Populate</button>
+</Layout>
+
+<style>
+  #form-status.success {
+    color: green;
+    font-weight: bold;
+  }
+  #form-status.error {
+    color: red;
+    font-weight: bold;
+  }
+  #form-status.sending {
+    color: gray;
+  }
+</style>
+
+<!-- [START] reCAPTCHA v3 Script Loader -->
+<script define:vars={{ recaptchaSiteKey }} is:inline>
+  const script = document.createElement("script");
+  script.src = `https://www.google.com/recaptcha/api.js?render=${recaptchaSiteKey}`;
+  script.async = true;
+  script.defer = true;
+  document.head.appendChild(script);
+</script>
+<!-- [END] reCAPTCHA v3 Script Loader -->
+
+<script define:vars={{ formActionURL, recaptchaSiteKey }}>
+  const form = document.getElementById("portfolio-contact-form");
+
+  const tokenInput = document.getElementById("recaptcha-token");
+
+  const statusEl = document.getElementById("form-status");
+  const buttonEl = document.getElementById("submit-button");
+
+  // --- Main Form Submission Logic ---
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  }
+
+  if (form) {
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      // client_side validation
+      // check the form data before proceed with recaptcha & submission
+
+      // --- [START] reCAPTCHA v3 Execution ---
+      if (typeof grecaptcha === "undefined") {
+        statusEl.textContent =
+          "Error: reCAPTCHA not loaded. Please check your connection.";
+        statusEl.className = "error";
+        return;
+      }
+      grecaptcha.ready(function () {
+        grecaptcha
+          .execute(recaptchaSiteKey, { action: "submit" })
+          .then(function (token) {
+            tokenInput.value = token;
+            handleFormSubmit(); // Proceed with form submission after getting token
+          });
+      });
+      // --- [END] reCAPTCHA v3 Execution ---
+    });
+  }
+
+  async function handleFormSubmit() {
+    if (form.honeypot.value) {
+      console.log("Bot detected, submission blocked.");
+      return;
+    }
+
+    buttonEl.disabled = true;
+    statusEl.textContent = "Sending, please wait...";
+    statusEl.className = "sending";
+
+    const formData = new FormData(form);
+
+    const fileInput = form.querySelector('input[type="file"]');
+    const file = fileInput.files ? fileInput.files[0] : null;
+    let fileData = null;
+    let fileName = null;
+    let mimeType = null;
+
+    if (file) {
+      const MAX_SIZE_MB = 10;
+      if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+        statusEl.textContent = `Error: File is too large (max ${MAX_SIZE_MB}MB).`;
+        statusEl.className = "error";
+        buttonEl.disabled = false;
+        return;
+      }
+      try {
+        const base64String = await fileToBase64(file);
+        fileData = base64String.split("base64,")[1];
+        fileName = file.name;
+        mimeType = file.type;
+      } catch (e) {
+        console.error(e);
+        statusEl.textContent = "Error reading file.";
+        statusEl.className = "error";
+        buttonEl.disabled = false;
+        return;
+      }
+    }
+
+    const inquiryTypes = Array.from(formData.getAll("inquiryType")).join(", ");
+    const data = {
+      ...Object.fromEntries(formData.entries()),
+      inquiryType: inquiryTypes,
+      fileData,
+      fileName,
+      mimeType,
+    };
+    delete data.honeypot;
+
+    try {
+      // NOTE: Using 'no-cors' mode. The frontend will not receive a response from the server.
+      // Success is assumed if the fetch call itself does not throw a network error.
+      await fetch(formActionURL, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        mode: "no-cors", 
+      });
+
+      statusEl.textContent = "Message sent successfully! Thank you.";
+      statusEl.className = "success";
+      form.reset();
+
+    } catch (error) {
+      console.error("Submission error:", error);
+      statusEl.textContent =
+        "An error occurred while sending the form. Please try again.";
+      statusEl.className = "error";
+    } finally {
+      buttonEl.disabled = false;
+    }
+  }
+
+  // TESTING
+  const populateButton = document.getElementById("populate-button");
+  const logButton = document.getElementById("log-button");
+
+  // --- Testing Function: Populate Form ---
+  if (populateButton) {
+    populateButton.addEventListener("click", () => {
+      form.fullName.value = "Jane Tester";
+      form.email.value = "jane.tester@example.com";
+      form.company.value = "Testing Co";
+
+      const inquiryCheckboxes = form.querySelectorAll(
+        'input[name="inquiryType"]'
+      );
+      inquiryCheckboxes.forEach((cb) => (cb.checked = false));
+      if (inquiryCheckboxes.length > 1) {
+        inquiryCheckboxes[1].checked = true; // Check "I need help with an existing project"
+      }
+
+      form.projectDetails.value =
+        "This is a test project. We need to debug the form submission and data handling.";
+      form.budget.value = "$15k+";
+      form.deadline.value = "2025-12-31";
+      form.source.value = "GitHub";
+      form.consent.checked = true;
+
+      statusEl.textContent = "Form populated with test data.";
+      statusEl.className = "";
+      // Note: Cannot programmatically set the value of a file input for security reasons.
+    });
+  }
+
+  // --- Testing Function: Log Data ---
+  if (logButton) {
+    logButton.addEventListener("click", () => {
+      const formData = new FormData(form);
+      const inquiryTypes = Array.from(formData.getAll("inquiryType")).join(
+        ", "
+      );
+      const fileInput = form.querySelector('input[type="file"]');
+      const file = fileInput.files ? fileInput.files[0] : null;
+
+      const data = {
+        ...Object.fromEntries(formData.entries()),
+        inquiryType: inquiryTypes,
+        fileName: file ? file.name : "No file selected",
+        fileSize: file ? `${(file.size / 1024).toFixed(2)} KB` : "N/A",
+      };
+      delete data.honeypot;
+
+      console.clear();
+      console.log("--- Form Data ---");
+      console.table(data);
+      console.log("-----------------");
+      alert("Form data has been logged to the console (press F12 to view).");
+    });
+  }
+</script>

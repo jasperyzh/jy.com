@@ -1,0 +1,498 @@
+---
+import Layout from "@/layouts/Layout.astro";
+---
+
+<Layout title="Voice Recorder - Demo" description="Reusable voice recorder module with multiple storage options">
+  <main class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4">
+    <div class="max-w-7xl mx-auto">
+      <!-- Header -->
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          Voice Recorder Module
+        </h1>
+        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          A reusable, feature-rich voice recording solution with multiple storage strategies, 
+          real-time visualization, and flexible configuration. Perfect for flashcards, music snippets, 
+          voice memos, and more.
+        </p>
+      </div>
+
+      <!-- Feature Highlights -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <div class="text-blue-500 mb-3">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+            Flexible Recording
+          </h3>
+          <p class="text-gray-600 dark:text-gray-400">
+            Record from 1 second to 10 minutes with pause/resume support and real-time visualization.
+          </p>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <div class="text-green-500 mb-3">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+            Multiple Storage Options
+          </h3>
+          <p class="text-gray-600 dark:text-gray-400">
+            Choose from localStorage, IndexedDB, or server upload based on your needs.
+          </p>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <div class="text-purple-500 mb-3">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+            Easy Integration
+          </h3>
+          <p class="text-gray-600 dark:text-gray-400">
+            Plain JavaScript module that works in any project - no framework dependencies.
+          </p>
+        </div>
+      </div>
+
+      <!-- Use Case Demos -->
+      <div class="space-y-8">
+        <!-- Demo 1: Quick Voice Memo (localStorage) -->
+        <section class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+              📝 Quick Voice Memo
+            </h2>
+            <p class="text-gray-600 dark:text-gray-400">
+              Perfect for short notes and reminders. Uses <code class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded">localStorage</code> 
+              for instant access (max ~5MB).
+            </p>
+          </div>
+          <div id="demo-voice-memo"></div>
+        </section>
+
+        <!-- Demo 2: Flashcard Audio (IndexedDB) -->
+        <section class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+              🎓 Flashcard Audio Recorder
+            </h2>
+            <p class="text-gray-600 dark:text-gray-400">
+              Record pronunciation for language learning flashcards. Uses <code class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded">IndexedDB</code> 
+              for storing multiple recordings without size limits.
+            </p>
+          </div>
+          <div id="demo-flashcard"></div>
+        </section>
+
+        <!-- Demo 3: Music Snippet (Server Upload) -->
+        <section class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+              🎵 Music Snippet Recorder
+            </h2>
+            <p class="text-gray-600 dark:text-gray-400">
+              Capture musical ideas on the fly. Longer duration (up to 5 minutes). Example uses 
+              <code class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded">IndexedDB</code> 
+              (server upload can be configured).
+            </p>
+          </div>
+          <div id="demo-music"></div>
+        </section>
+      </div>
+
+      <!-- Code Examples -->
+      <section class="mt-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow-lg p-8 text-white">
+        <h2 class="text-2xl font-bold mb-4">💻 Quick Start</h2>
+        <div class="bg-gray-900 rounded-lg p-6 overflow-x-auto">
+          <pre class="text-sm"><code>{`// Import the UI component
+import { VoiceRecorderUI } from './components/VoiceRecorderUI.js';
+
+// Initialize with options
+const recorder = new VoiceRecorderUI({
+  container: document.getElementById('my-recorder'),
+  storageType: 'indexeddb', // or 'localstorage' or 'server'
+  maxDuration: 60, // seconds
+  showVisualizer: true,
+  autoSave: true,
+  onSave: (data) => {
+    console.log('Recording saved:', data);
+  }
+});
+
+// That's it! The UI handles everything else.`}</code></pre>
+        </div>
+        
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <h3 class="font-semibold mb-2">📦 Modules Included:</h3>
+            <ul class="space-y-1 text-sm">
+              <li>• <code class="bg-blue-800 px-2 py-1 rounded">VoiceRecorder.js</code> - Core recording logic</li>
+              <li>• <code class="bg-blue-800 px-2 py-1 rounded">AudioStorage.js</code> - Multi-strategy storage</li>
+              <li>• <code class="bg-blue-800 px-2 py-1 rounded">VoiceRecorderUI.js</code> - Complete UI component</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-semibold mb-2">🎨 Features:</h3>
+            <ul class="space-y-1 text-sm">
+              <li>✓ Configurable duration (1s - 10min)</li>
+              <li>✓ Real-time waveform visualization</li>
+              <li>✓ Pause/resume support</li>
+              <li>✓ Multiple storage strategies</li>
+              <li>✓ Download recordings</li>
+              <li>✓ Dark mode support</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Saved Recordings Section -->
+      <section class="mt-12 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+            💾 Saved Recordings
+          </h2>
+          <button id="refresh-recordings" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+            🔄 Refresh
+          </button>
+        </div>
+        
+        <!-- Storage Type Selector -->
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            View recordings from:
+          </label>
+          <select id="storage-type-selector" class="px-4 py-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            <option value="localstorage">localStorage</option>
+            <option value="indexeddb" selected>IndexedDB</option>
+          </select>
+        </div>
+
+        <div id="recordings-list" class="space-y-3">
+          <p class="text-gray-500 dark:text-gray-400">Loading recordings...</p>
+        </div>
+      </section>
+
+      <!-- Browser Support -->
+      <section class="mt-8 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-yellow-900 dark:text-yellow-200 mb-2">
+          ⚠️ Browser Requirements
+        </h3>
+        <p class="text-yellow-800 dark:text-yellow-300 text-sm">
+          This module requires modern browser features: MediaRecorder API, Web Audio API, and getUserMedia. 
+          Works best in Chrome, Firefox, Edge, and Safari (iOS 14.3+). HTTPS is required for microphone access 
+          (except on localhost).
+        </p>
+      </section>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  // import { VoiceRecorderUI } from '../../components/VoiceRecorderUI.js';
+  // import { AudioStorage } from '../../components/AudioStorage.js';
+  import { VoiceRecorderUI } from './VoiceRecorderUI.js';
+    import { AudioStorage } from './AudioStorage.js';
+
+  // Wait for DOM to be ready
+  document.addEventListener('DOMContentLoaded', () => {
+    
+    // Demo 1: Quick Voice Memo (localStorage, 30 seconds max)
+    const voiceMemo = new VoiceRecorderUI({
+      container: document.getElementById('demo-voice-memo'),
+      storageType: 'localstorage',
+      maxDuration: 30,
+      showVisualizer: true,
+      showDownload: true,
+      autoSave: false,
+      onSave: (data: any) => {
+        console.log('Voice memo saved:', data);
+      },
+      onError: (err: Error) => {
+        console.error('Voice memo error:', err);
+        alert('Error: ' + err.message);
+      }
+    });
+
+    // Demo 2: Flashcard Audio (IndexedDB, 10 seconds max)
+    const flashcardRecorder = new VoiceRecorderUI({
+      container: document.getElementById('demo-flashcard'),
+      storageType: 'indexeddb',
+      maxDuration: 10,
+      showVisualizer: true,
+      showDownload: false,
+      autoSave: true,
+      onSave: (data: any) => {
+        console.log('Flashcard audio saved:', data);
+      },
+      onError: (err: Error) => {
+        console.error('Flashcard error:', err);
+        alert('Error: ' + err.message);
+      }
+    });
+
+    // Demo 3: Music Snippet (IndexedDB, 5 minutes max)
+    const musicRecorder = new VoiceRecorderUI({
+      container: document.getElementById('demo-music'),
+      storageType: 'indexeddb',
+      maxDuration: 300, // 5 minutes
+      audioBitsPerSecond: 128000, // Higher quality for music
+      showVisualizer: true,
+      showDownload: true,
+      showStorage: true,
+      autoSave: false,
+      onSave: (data: any) => {
+        console.log('Music snippet saved:', data);
+      },
+      onError: (err: Error) => {
+        console.error('Music recorder error:', err);
+        alert('Error: ' + err.message);
+      }
+    });
+
+    // Check browser support
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert('Your browser does not support audio recording. Please use a modern browser.');
+    }
+
+    // ==================== Saved Recordings Manager ====================
+    
+    let currentStorageType = 'indexeddb';
+    let storageInstances: { [key: string]: AudioStorage } = {};
+
+    // Initialize storage instances
+    async function getStorage(type: string) {
+      if (!storageInstances[type]) {
+        storageInstances[type] = new AudioStorage({ storageType: type });
+        await storageInstances[type].init();
+      }
+      return storageInstances[type];
+    }
+
+    // Load and display saved recordings
+    async function loadSavedRecordings() {
+      const listContainer = document.getElementById('recordings-list');
+      if (!listContainer) return;
+
+      try {
+        const storage = await getStorage(currentStorageType);
+        const recordings = await storage.list();
+
+        if (recordings.length === 0) {
+          listContainer.innerHTML = '<p class="text-gray-500 dark:text-gray-400">No recordings found. Create one above!</p>';
+          return;
+        }
+
+        listContainer.innerHTML = recordings.map((recording, index) => {
+          const date = new Date(recording.timestamp).toLocaleString();
+          const sizeMB = (recording.size / (1024 * 1024)).toFixed(2);
+          const title = recording.metadata?.title || 'Recording ' + (index + 1);
+
+          return `
+            <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-gray-50 dark:bg-gray-900">
+              <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <div class="flex-1">
+                  <h3 class="font-semibold text-gray-900 dark:text-white">${title}</h3>
+                  <p class="text-sm text-gray-600 dark:text-gray-400">
+                    ${date} • ${sizeMB} MB • ${recording.type || 'audio/webm'}
+                  </p>
+                </div>
+                <div class="flex gap-2">
+                  <button 
+                    class="play-recording-btn bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center gap-2"
+                    data-recording-id="${recording.id}"
+                    data-index="${index}">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
+                    </svg>
+                    <span>Play</span>
+                  </button>
+                  <button 
+                    class="download-recording-btn bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+                    data-recording-id="${recording.id}"
+                    data-index="${index}"
+                    title="Download">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                  </button>
+                  <button 
+                    class="delete-recording-btn bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+                    data-recording-id="${recording.id}"
+                    data-index="${index}"
+                    title="Delete">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="audio-player-container-${index} mt-3 hidden">
+                <audio controls class="w-full" preload="none"></audio>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // Add event listeners
+        attachRecordingListeners(recordings);
+
+      } catch (err) {
+        console.error('Error loading recordings:', err);
+        listContainer.innerHTML = `<p class="text-red-500">Error loading recordings: ${(err as Error).message}</p>`;
+      }
+    }
+
+    // Attach event listeners to recording buttons
+    function attachRecordingListeners(recordings: any[]) {
+      // Play buttons
+      document.querySelectorAll('.play-recording-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const target = e.currentTarget as HTMLElement;
+          const recordingId = target.dataset.recordingId;
+          const index = target.dataset.index;
+          
+          if (!recordingId || index === undefined) return;
+
+          try {
+            const storage = await getStorage(currentStorageType);
+            const recording = recordings[parseInt(index)];
+            
+            if (!recording) return;
+
+            // Show audio player
+            const playerContainer = document.querySelector(`.audio-player-container-${index}`) as HTMLElement;
+            if (playerContainer) {
+              playerContainer.classList.remove('hidden');
+              const audioElement = playerContainer.querySelector('audio') as HTMLAudioElement;
+              
+              if (audioElement && !audioElement.src) {
+                audioElement.src = recording.url;
+                audioElement.load();
+              }
+              
+              audioElement.play();
+            }
+          } catch (err) {
+            console.error('Error playing recording:', err);
+            alert('Error playing recording: ' + (err as Error).message);
+          }
+        });
+      });
+
+      // Download buttons
+      document.querySelectorAll('.download-recording-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const target = e.currentTarget as HTMLElement;
+          const index = target.dataset.index;
+          
+          if (index === undefined) return;
+
+          const recording = recordings[parseInt(index)];
+          if (!recording) return;
+
+          const a = document.createElement('a');
+          a.href = recording.url;
+          a.download = `recording-${recording.timestamp}.${getExtension(recording.type)}`;
+          a.click();
+        });
+      });
+
+      // Delete buttons
+      document.querySelectorAll('.delete-recording-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const target = e.currentTarget as HTMLElement;
+          const recordingId = target.dataset.recordingId;
+          
+          if (!recordingId) return;
+
+          if (!confirm('Are you sure you want to delete this recording?')) {
+            return;
+          }
+
+          try {
+            const storage = await getStorage(currentStorageType);
+            await storage.delete(recordingId);
+            await loadSavedRecordings(); // Reload list
+          } catch (err) {
+            console.error('Error deleting recording:', err);
+            alert('Error deleting recording: ' + (err as Error).message);
+          }
+        });
+      });
+    }
+
+    // Helper: Get file extension from MIME type
+    function getExtension(mimeType: string) {
+      const extensions: { [key: string]: string } = {
+        'audio/webm': 'webm',
+        'audio/ogg': 'ogg',
+        'audio/mp4': 'mp4',
+        'audio/mpeg': 'mp3',
+        'audio/wav': 'wav',
+      };
+      return extensions[mimeType] || 'webm';
+    }
+
+    // Storage type selector
+    const storageTypeSelector = document.getElementById('storage-type-selector') as HTMLSelectElement;
+    if (storageTypeSelector) {
+      storageTypeSelector.addEventListener('change', (e) => {
+        currentStorageType = (e.target as HTMLSelectElement).value;
+        loadSavedRecordings();
+      });
+    }
+
+    // Refresh button
+    const refreshBtn = document.getElementById('refresh-recordings');
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', () => {
+        loadSavedRecordings();
+      });
+    }
+
+    // Initial load
+    loadSavedRecordings();
+
+    // Reload when a new recording is saved
+    voiceMemo.callbacks.onSave = (data: any) => {
+      console.log('Voice memo saved:', data);
+      setTimeout(() => loadSavedRecordings(), 500);
+    };
+
+    flashcardRecorder.callbacks.onSave = (data: any) => {
+      console.log('Flashcard audio saved:', data);
+      setTimeout(() => loadSavedRecordings(), 500);
+    };
+
+    musicRecorder.callbacks.onSave = (data: any) => {
+      console.log('Music snippet saved:', data);
+      setTimeout(() => loadSavedRecordings(), 500);
+    };
+  });
+</script>
+
+<style>
+  code {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+  }
+
+  pre code {
+    color: #e2e8f0;
+    line-height: 1.6;
+  }
+
+  /* Smooth scroll */
+  html {
+    scroll-behavior: smooth;
+  }
+</style>
+

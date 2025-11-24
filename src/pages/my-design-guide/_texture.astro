@@ -1,0 +1,196 @@
+<!-- Noise Texture v3 - Design System -->
+<div class="card--">
+  <div class="card-- card--sample texture---v1">
+    <div class="noise-background !bg-blue"></div>
+    <div class="noise-mask"></div>
+    <div class="noise-layer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <filter id="noise">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="1.50"
+            numOctaves="1"
+            stitchTiles="stitch"></feTurbulence>
+          <feColorMatrix type="saturate" values="0"></feColorMatrix>
+        </filter>
+        <rect width="100%" height="100%" filter="url(#noise)"></rect>
+      </svg>
+    </div>
+  </div>
+  <h3>Noise Overlay v1</h3>
+  <p>Subtle SVG noise texture for cards & backgrounds</p>
+  <p>svg noise filter have stutter issue with animation.</p>
+</div>
+
+<style>
+  .texture---v1 {
+    position: relative;
+    overflow: hidden;
+
+    .noise-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .noise-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      mix-blend-mode: screen;
+      opacity: 0.6;
+      mask: linear-gradient(150deg, transparent 0%, white 86%, white 95%);
+      -webkit-mask: linear-gradient(
+        150deg,
+        transparent 0%,
+        white 86%,
+        white 95%
+      );
+    }
+  }
+</style>
+
+<!-- Noise Texture v3-3refactored - Design System -->
+<div class="card--">
+  <div class="card-- card--sample texture---v3">
+    <div class="noise-background"></div>
+    <div class="noise-layer"></div>
+  </div>
+  <h3>Noise Overlay v2</h3>
+  <p>CSS background noise • Animation-friendly</p>
+</div>
+
+<style>
+  .texture---v3 {
+    position: relative;
+    overflow: hidden;
+
+    .noise-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--color-yellow);
+    }
+
+    .noise-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url(/assets/noise2-compressed.png);
+      background-repeat: repeat;
+      background-size:;
+      mix-blend-mode: screen;
+      opacity: 0.8;
+      mask: linear-gradient(150deg, transparent 0%, white 86%, white 95%);
+      -webkit-mask: linear-gradient(
+        150deg,
+        transparent 0%,
+        white 86%,
+        white 95%
+      );
+    }
+  }
+</style>
+
+<div class="card--" id="noise-overlay-v3">
+  <div class="card-- card--sample noise-- shadow--inset bg-red"></div>
+  <h3>Noise Overlay v3</h3>
+  <p>Refactored from previous iterations.</p>
+  <p>Adapted into a universal class .noise-- to be applied to any element.</p>
+  <p>Opacity adjusted for subtle effect, hover for exaggerated effect.</p>
+  <p>Can be adjusted with --texture---opacity.</p>
+</div>
+
+<div class="card--">
+  <div
+    class="card-- card--sample texture-- shadow--drop bg-grey flex flex-col justify-center"
+  >
+    <div class="text-center text-milk">
+      <h3>Card Texture</h3>
+      <p>.texture--</p>
+    </div>
+  </div>
+  <h3>Noise Texture on Card</h3>
+  <p class="text-sm text-gray-600 mt-2">CSS background noise for cards</p>
+</div>
+
+<!-- Inner Shadow Examples -->
+<div class="card--">
+  <div
+    class="card-- card--sample shadow--inset"
+    style="background: var(--color-milk);"
+  >
+    <div style="padding: 2rem; text-align: center;">
+      <h4>Inner Shadow</h4>
+      <p>.shadow--inset</p>
+    </div>
+  </div>
+  <h3>Subtle Inner Shadow</h3>
+  <p>
+    Light inner shadow effect
+    <br />inset 0 2px 4px rgba(0, 0, 0, 0.1)
+  </p>
+</div>
+
+<style is:global>
+  #noise-overlay-v3 .card--sample.noise--,
+  #noise-overlay-v3 .card--sample.shadow--inset {
+    transition: var(--brand-transition);
+  }
+
+  #noise-overlay-v3 .card--sample:hover.noise-- {
+    --noise---opacity: 0.5;
+  }
+
+  #noise-overlay-v3 .card--sample:hover.shadow--inset {
+    --brand-innershadow: inset 8px 8px 30px rgba(42, 42, 42, 0.5);
+  }
+</style>
+
+<style>
+  .card-- {
+    padding: 2rem;
+  }
+  .card--sample {
+    aspect-ratio: 4 / 3;
+  }
+
+  h3 {
+    font-size: var(--text-2xl);
+    margin-bottom: 1rem;
+  }
+  p {
+    font-size: var(--text-sm);
+  }
+</style>
+
+<!-- Inner Shadow Examples -->
+<div class="card--">
+  <div class="card-- card--sample card--2a noise-- noise--animate">
+    <div>
+      <h4>Static Noise</h4>
+    </div>
+  </div>
+  <h3>.noise.noise--animate</h3>
+  <code> animation: noiseMove 0.3s infinite linear alternate; </code>
+</div>
+
+<style>
+  @reference "../../styles/tailwind--.css";
+
+  .card-- > div {
+    @apply transition-all;
+
+    @variant hover {
+      transform: translateY(-0.2rem) scale(100.5%);
+    }
+  }
+</style>

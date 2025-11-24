@@ -1,3 +1,13 @@
+/exp--archived
+/exp--canvas
+/exp--educations_assets
+/exp--wordpress_docker--loveartdesign
+/exp--wordpress_docker-to_home_server
+/docs--jy
+
+251112-exp--node.zip
+251113-jy--node.zip
+
 # build output
 dist/
 # generated types
@@ -12,6 +22,8 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Example for Deno
+*.log
 
 # environment variables
 .env
@@ -22,3 +34,8 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# copied content
+# src/content/blog/
+
+.vercel

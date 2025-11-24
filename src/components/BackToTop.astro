@@ -1,0 +1,90 @@
+---
+// floating button for quick access:
+// BackToTop
+// BackToHome
+// keep it simple, essential
+// vanilla-minimal_class-css
+---
+
+<div id="BackToTop__">
+  <a href="/" class="BackTo__button--home">Home</a>
+  <!-- <button id="backToTopBtn" class="BackTo__button--top">Top</button> -->
+</div>
+
+<script is:inline>
+  const backToTopBtn = document.getElementById("backToTopBtn");
+
+  if (backToTopBtn) {
+    // Function to toggle button visibility
+    const toggleVisibility = () => {
+      if (window.scrollY > 100) {
+        // Show after 100px of scrolling
+        backToTopBtn.classList.add("is-visible");
+      } else {
+        backToTopBtn.classList.remove("is-visible");
+      }
+    };
+
+    // Scroll event listener
+    window.addEventListener("scroll", toggleVisibility);
+
+    // Click event to scroll to top
+    backToTopBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    // Initial check on page load
+    toggleVisibility();
+  }
+</script>
+
+<style is:global>
+  #BackToTop__ {
+    position: fixed;
+    /* display: inline-block */
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 1000;
+    display: flex;
+    flex-direction: row-reverse; /* Stacks items from right to left */
+    gap: 0.5rem; /* Space between buttons */
+
+    .BackTo__button:hover {
+      opacity: 1;
+    }
+
+    .BackTo__button--top {
+      opacity: 0;
+      visibility: hidden;
+      transition:
+        opacity 0.3s ease,
+        visibility 0.3s ease;
+    }
+
+    .BackTo__button--top.is-visible {
+      opacity: 0.4;
+      visibility: visible;
+    }
+
+    .BackTo__button--top.is-visible:hover {
+      opacity: 1;
+    }
+
+    .BackTo__button--home {
+      opacity: 0.4;
+      visibility: visible;
+      background: #a2a2a2;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .BackTo__button--home:hover {
+      opacity: 1;
+    }
+  }
+</style>

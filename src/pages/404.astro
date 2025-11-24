@@ -1,0 +1,20 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Button from "@/components/starwind/button";
+---
+
+<Layout title="404 Page Not Found">
+  <main>
+    <div
+      class="__card texture-- bg-red flex flex-col items-center justify-center text-center"
+    >
+      <h1 class="font-bold mb-2">
+        404<span class="text-4xl block">Page Not Found</span>
+      </h1>
+
+      <p>Oops! The page you're looking for seems to have been misplaced.</p>
+
+      <Button href="/" variant="outline">Return to Home</Button>
+    </div>
+  </main>
+</Layout>

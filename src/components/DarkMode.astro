@@ -1,0 +1,109 @@
+{
+  /*
+    # Darkmode: created for tailwind, and work without tailwind
+
+    This inline script is crucial for preventing the "flash of unstyled content" (FOUC).
+    It runs before the page is rendered to apply the correct theme class to the <html> element.
+    SCRIPT 1: This inline script runs instantly to prevent the theme flash. IT IS CRUCIAL.
+  */
+}
+<script is:inline>
+  const getTheme = () => {
+    // Priority: 1. localStorage, 2. System Preference, 3. Default to 'light'
+    if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
+      return localStorage.getItem("theme");
+    }
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      return "dark";
+    }
+    return "light";
+  };
+
+  const theme = getTheme();
+
+  if (theme === "light") {
+    document.documentElement.classList.remove("dark");
+  } else {
+    document.documentElement.classList.add("dark");
+  }
+</script>
+
+<button id="theme-toggle"></button>
+
+{
+  /* SCRIPT 2: This script handles user interaction and runs after the page is interactive. */
+}
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const themeToggleBtn = document.getElementById("theme-toggle");
+
+    if (!themeToggleBtn) return;
+
+    const themeModes = ["light", "dark", "system"];
+    let currentMode = localStorage.getItem("theme") || "system";
+
+    const setButtonText = (mode) => {
+      themeToggleBtn.textContent = `theme--${mode.charAt(0).toUpperCase() + mode.slice(1)}`;
+    };
+
+    const applyTheme = (mode) => {
+      // 1. Remove the theme from localStorage if we are in 'system' mode.
+      if (mode === "system") {
+        localStorage.removeItem("theme");
+      } else {
+        localStorage.setItem("theme", mode);
+      }
+
+      // 2. Determine if the dark class should be applied.
+      const isDarkMode =
+        mode === "dark" ||
+        (mode === "system" &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+      // 3. Apply the class to the root element.
+      document.documentElement.classList.toggle("dark", isDarkMode);
+
+      // 4. Update button text.
+      setButtonText(mode);
+    };
+
+    // Button click cycles through the modes.
+    themeToggleBtn.addEventListener("click", () => {
+      const currentIndex = themeModes.indexOf(currentMode);
+      const nextIndex = (currentIndex + 1) % themeModes.length;
+      currentMode = themeModes[nextIndex];
+      applyTheme(currentMode);
+    });
+
+    // Listen for OS theme changes and update if we are in 'system' mode.
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        if (
+          localStorage.getItem("theme") === null ||
+          localStorage.getItem("theme") === "system"
+        ) {
+          document.documentElement.classList.toggle("dark", e.matches);
+        }
+      });
+
+    // Initialize the button text on page load.
+    applyTheme(currentMode);
+  });
+</script>
+
+<!-- 
+This is the old way of doing things.
+<style is:global>
+  html body {
+    color: var(--color-dark, #222);
+    background-color: var(--color-light, #eee);
+    @apply transition-colors duration-300;
+
+    &:where(.dark, .dark *) {
+      color: var(--color-light, #eee);
+      background-color: var(--color-dark, #222);
+    }
+  }
+</style> 
+-->

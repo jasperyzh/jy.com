@@ -1,0 +1,410 @@
+---
+/**
+ * pomodoro
+ *
+ * - [ ] style it minimally, dark mode, responsives to shrink to 120x120px
+ * - [251003] successfully created one
+ */
+// import Layout from "@/layouts/Layout.astro";
+---
+
+<!-- <Layout title="Pomodoro Timer"> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"
+></script>
+
+<!-- <main class="container"> -->
+  <div id="pomodoro-timer" class="pomodoro-container timer-paused">
+    <!-- The button now uses our vanilla CSS classes -->
+    <button id="timer-button" class="timer-button">
+      <span id="timer-display" class="timer-display">25:00</span>
+      <span id="timer-longpress" class="timer-longpress"></span>
+    </button>
+    <p class="helper-text">
+      Click to start/pause. Double-click or long-press on pause to reset.
+    </p>
+  </div>
+<!-- </main> -->
+
+<style>
+  @reference "../styles/tailwind--.css";
+
+  .pomodoro-container {
+    @apply aspect-square max-w-[512px] flex flex-col items-center justify-center relative;
+    .timer-button {
+      @apply bg-gray-100 select-none relative w-96 h-96 rounded-full border-8 border-gray-200 text-8xl font-bold text-gray-800 shadow-2xl shadow-gray-200 flex items-center justify-center overflow-hidden transition-all duration-300 cursor-pointer;
+    }
+    .timer-display {
+      @apply z-10 transition-all duration-300 ease-in-out pointer-events-none;
+    }
+
+    .timer-longpress {
+      @apply absolute z-10 top-0 left-0 h-0 w-full bg-gray-200 transition-all duration-300 ease-in-out;
+    }
+    .helper-text {
+      @apply absolute bottom-0 left-0 right-0 text-center text-gray-400 text-xs pointer-events-none italic;
+    }
+  }
+  /* NEW: Define the keyframes for the fill animation */
+  @keyframes fill-and-snap-back {
+    from {
+      height: 0%;
+    }
+    to {
+      height: 100%;
+    }
+  }
+
+  .timer-longpress.active {
+    /* This animation runs for 2s, and when it's done, the element reverts to its base style (width: 0), causing the instant snap-back. */
+    animation: fill-and-snap-back 840ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  }
+
+  /* --- Helper Text & Blink --- */
+  @keyframes blink {
+    50% {
+      opacity: 0.2;
+    }
+  }
+  .animate-blink {
+    animation: blink 1s ease-in-out infinite;
+  }
+
+  /* When the timer is running, change the display text color */
+  .pomodoro-container.timer-running .timer-display {
+    @apply text-gray-800;
+  }
+  /* When the timer is paused, change the display text color */
+  .pomodoro-container.timer-stopped .timer-display,
+  .pomodoro-container.timer-paused .timer-display {
+    @apply text-gray-400;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // ========================================================================
+    //  CONSTANTS & ELEMENTS
+    // ========================================================================
+    const POMODORO_MINUTES = 25;
+    const LONG_PRESS_DURATION = 840;
+    const DOUBLE_CLICK_DELAY = 300; // ms
+
+    const pomodoroContainer = document.getElementById("pomodoro-timer");
+    const timerButton = document.getElementById("timer-button");
+    const timerDisplay = document.getElementById("timer-display");
+    const longPressIndicator = document.getElementById("timer-longpress");
+
+    // Early return if elements are missing
+    if (
+      !pomodoroContainer ||
+      !timerButton ||
+      !timerDisplay ||
+      !longPressIndicator
+    ) {
+      console.error("Required DOM elements not found");
+      return;
+    }
+
+    // ========================================================================
+    //  SOUND MANAGER
+    // ========================================================================
+    const soundManager = (() => {
+      // Internal state
+      let isReady = false;
+      // @ts-ignore - Tone.js types
+      let clickSynth: any = null;
+      // @ts-ignore - Tone.js types
+      let alarmSynth: any = null;
+      // @ts-ignore - Tone.js types
+      let alarmLoop: any = null;
+      // @ts-ignore - Tone.js types
+      let reverb: any = null;
+      // @ts-ignore - Tone.js types
+      let clickTimeout: any = null;
+
+      return {
+        initialize() {
+          if (isReady) return;
+          // @ts-ignore - Tone.js is loaded from CDN
+          Tone.start()
+            .then(() => {
+              // Create reverb effect
+              // @ts-ignore - Tone.js is loaded from CDN
+              reverb = new Tone.Reverb({
+                roomSize: 0.3,
+                dampening: 3000,
+              }).toDestination();
+
+              // Initialize reverb
+              reverb.generate().then(() => {
+                // Create click synth with chord support, sustain, and reverb
+                // @ts-ignore - Tone.js is loaded from CDN
+                clickSynth = new Tone.PolySynth(Tone.Synth, {
+                  oscillator: { type: "sine" },
+                  envelope: {
+                    attack: 0.01,
+                    decay: 0.2,
+                    sustain: 0.3, // Soft sustain
+                    release: 0.3,
+                  },
+                })
+                  .connect(reverb)
+                  .toDestination();
+
+                // Set volume to prevent jarring sounds
+                clickSynth.volume.value = -12; // Quieter volume
+
+                // Create alarm synth with reverb
+                // @ts-ignore - Tone.js is loaded from CDN
+                alarmSynth = new Tone.MembraneSynth({
+                  envelope: {
+                    attack: 0.01,
+                    decay: 0.2,
+                    sustain: 0.3,
+                    release: 0.3,
+                  },
+                })
+                  .connect(reverb)
+                  .toDestination();
+
+                alarmSynth.volume.value = -10;
+
+                // Create alarm loop - gentle beep every 4 seconds
+                // @ts-ignore - Tone.js is loaded from CDN
+                alarmLoop = new Tone.Loop((time: number) => {
+                  if (alarmSynth) {
+                    // Play a gentle single beep
+                    alarmSynth.triggerAttackRelease("C4", "8n", time);
+                  }
+                }, "4s");
+
+                isReady = true;
+              });
+            })
+            .catch((e: Error) =>
+              console.error("Could not initialize sound:", e)
+            );
+        },
+
+        playClick() {
+          if (!isReady || !clickSynth) return;
+
+          // Cancel any pending click to prevent overlapping sounds
+          if (clickTimeout) {
+            clearTimeout(clickTimeout);
+            clickTimeout = null;
+          }
+
+          // Stop any currently playing notes
+          clickSynth.releaseAll();
+
+          // Play a gentle chord (C major triad)
+          // @ts-ignore - Tone.js is loaded from CDN
+          clickSynth.triggerAttackRelease(["C5", "E5", "G5"], "16n");
+        },
+
+        playAlarm() {
+          if (!isReady || !alarmLoop) return;
+          alarmLoop.start(0);
+          // @ts-ignore - Tone.js is loaded from CDN
+          Tone.Transport.start();
+        },
+
+        stopAlarm() {
+          if (!isReady) return;
+          // @ts-ignore - Tone.js is loaded from CDN
+          clickSynth.triggerAttackRelease("G4", "8n");
+          if (alarmLoop) {
+            alarmLoop.stop();
+          }
+          // @ts-ignore - Tone.js is loaded from CDN
+          if (Tone.Transport.state === "started") {
+            // @ts-ignore - Tone.js is loaded from CDN
+            Tone.Transport.stop();
+          }
+          if (alarmSynth) {
+            alarmSynth.releaseAll();
+          }
+        },
+      };
+    })();
+
+    // ========================================================================
+    //  TIMER STATE
+    // ========================================================================
+    let totalSeconds = POMODORO_MINUTES * 60;
+    // @ts-ignore - Timer types
+    let timerInterval: any = null;
+    let timerState: "stopped" | "running" | "paused" | "finished" = "stopped";
+    // @ts-ignore - Timer types
+    let longPressTimer: any = null;
+    let lastClickTime = 0;
+    // @ts-ignore - Timer types
+    let clickTimeout: any = null;
+
+    // ========================================================================
+    //  STATE MANAGEMENT
+    // ========================================================================
+    const setTimerStateClass = (
+      state: "stopped" | "running" | "paused" | "finished"
+    ) => {
+      pomodoroContainer.classList.remove(
+        "timer-stopped",
+        "timer-running",
+        "timer-paused",
+        "timer-finished"
+      );
+      pomodoroContainer.classList.add(`timer-${state}`);
+    };
+
+    // ========================================================================
+    //  TIMER FUNCTIONS
+    // ========================================================================
+    const formatTime = (seconds: number) => {
+      const mins = Math.floor(seconds / 60)
+        .toString()
+        .padStart(2, "0");
+      const secs = (seconds % 60).toString().padStart(2, "0");
+      return `${mins}:${secs}`;
+    };
+
+    const updateDisplay = () => {
+      timerDisplay.textContent = formatTime(totalSeconds);
+    };
+
+    const startTimer = () => {
+      if (timerState === "running") return;
+      timerState = "running";
+      setTimerStateClass("running");
+      timerInterval = setInterval(() => {
+        totalSeconds--;
+        updateDisplay();
+        if (totalSeconds <= 0) finishTimer();
+      }, 1000);
+    };
+
+    const pauseTimer = () => {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      timerState = "paused";
+      setTimerStateClass("paused");
+    };
+
+    const resetTimer = () => {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      timerState = "stopped";
+      setTimerStateClass("stopped");
+      totalSeconds = POMODORO_MINUTES * 60;
+      pomodoroContainer.classList.remove("animate-blink");
+      longPressIndicator.classList.remove("active");
+      updateDisplay();
+      soundManager.stopAlarm();
+    };
+
+    const finishTimer = () => {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      timerState = "finished";
+      setTimerStateClass("finished");
+      pomodoroContainer.classList.add("animate-blink");
+      soundManager.playAlarm();
+      setTimeout(() => {
+        if (timerState === "finished") {
+          pomodoroContainer.classList.remove("animate-blink");
+          soundManager.stopAlarm();
+        }
+      }, 20 * 1000);
+    };
+
+    // ========================================================================
+    //  EVENT HANDLERS
+    // ========================================================================
+    let isLongPress = false;
+
+    const handleClick = () => {
+      soundManager.playClick();
+      switch (timerState) {
+        case "stopped":
+        case "paused":
+          startTimer();
+          break;
+        case "running":
+          pauseTimer();
+          break;
+        case "finished":
+          resetTimer();
+          break;
+      }
+    };
+
+    const handleDoubleClick = () => {
+      // Cancel any pending single click to prevent double sound
+      clearTimeout(clickTimeout);
+      clickTimeout = null;
+      lastClickTime = 0;
+      soundManager.playClick();
+      resetTimer();
+    };
+
+    const handlePressStart = () => {
+      soundManager.initialize();
+      isLongPress = false;
+      if (timerState === "paused") {
+        longPressIndicator.classList.add("active");
+        longPressTimer = setTimeout(() => {
+          isLongPress = true;
+          resetTimer();
+        }, LONG_PRESS_DURATION);
+      }
+    };
+
+    const handlePressEnd = () => {
+      clearTimeout(longPressTimer);
+      longPressIndicator.classList.remove("active");
+      if (!isLongPress) {
+        // Double-click detection
+        const currentTime = Date.now();
+        const timeSinceLastClick = currentTime - lastClickTime;
+
+        if (timeSinceLastClick < DOUBLE_CLICK_DELAY) {
+          // Double click detected
+          clearTimeout(clickTimeout);
+          handleDoubleClick();
+          lastClickTime = 0;
+        } else {
+          // Single click - wait to see if it becomes a double click
+          lastClickTime = currentTime;
+          clearTimeout(clickTimeout);
+          clickTimeout = setTimeout(() => {
+            handleClick();
+            lastClickTime = 0;
+          }, DOUBLE_CLICK_DELAY);
+        }
+      }
+    };
+
+    const handlePressCancel = () => {
+      clearTimeout(longPressTimer);
+      longPressIndicator.classList.remove("active");
+    };
+
+    // ========================================================================
+    //  EVENT LISTENERS
+    // ========================================================================
+    timerButton.addEventListener("mousedown", handlePressStart);
+    timerButton.addEventListener("mouseup", handlePressEnd);
+    timerButton.addEventListener("mouseleave", handlePressCancel);
+    timerButton.addEventListener("touchstart", (e: TouchEvent) => {
+      e.preventDefault();
+      handlePressStart();
+    });
+    timerButton.addEventListener("touchend", handlePressEnd);
+
+    // ========================================================================
+    //  INITIALIZATION
+    // ========================================================================
+    updateDisplay();
+    setTimerStateClass("stopped");
+  });
+</script>

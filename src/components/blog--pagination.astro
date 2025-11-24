@@ -1,0 +1,82 @@
+---
+import {
+  Pagination as PaginationRoot,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+  PaginationEllipsis
+} from "@/components/starwind/pagination";
+
+const { prevUrl, nextUrl, currentPage, totalPages, baseUrl = "/blog" } = Astro.props;
+
+// Calculate page numbers to display
+const displayPages: number[] = [];
+const maxDisplayed = 5;
+const halfDisplay = Math.floor(maxDisplayed / 2);
+
+let startPage = Math.max(1, currentPage - halfDisplay);
+let endPage = Math.min(totalPages, startPage + maxDisplayed - 1);
+
+// Adjust if we're near the end
+if (endPage - startPage + 1 < maxDisplayed && startPage > 1) {
+  startPage = Math.max(1, endPage - maxDisplayed + 1);
+}
+
+for (let i = startPage; i <= endPage; i++) {
+  displayPages.push(i);
+}
+---
+
+<PaginationRoot>
+  <PaginationContent>
+    <PaginationItem>
+      <PaginationPrevious href={prevUrl || "#"} class={!prevUrl ? "opacity-50 pointer-events-none" : ""}>
+        Newer
+      </PaginationPrevious>
+    </PaginationItem>
+
+    {startPage > 1 && (
+      <>
+        <PaginationItem>
+          <PaginationLink href={baseUrl}>1</PaginationLink>
+        </PaginationItem>
+        {startPage > 2 && (
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+        )}
+      </>
+    )}
+
+    {displayPages.map((page) => (
+      <PaginationItem>
+        <PaginationLink 
+          href={page === 1 ? baseUrl : `${baseUrl}/${page}`}
+          isActive={page === currentPage}>
+          {page}
+        </PaginationLink>
+      </PaginationItem>
+    ))}
+
+    {endPage < totalPages && (
+      <>
+        {endPage < totalPages - 1 && (
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+        )}
+        <PaginationItem>
+          <PaginationLink href={`${baseUrl}/${totalPages}`}>{totalPages}</PaginationLink>
+        </PaginationItem>
+      </>
+    )}
+
+    <PaginationItem>
+      <PaginationNext href={nextUrl || "#"} class={!nextUrl ? "opacity-50 pointer-events-none" : ""}>
+        Older
+      </PaginationNext>
+    </PaginationItem>
+  </PaginationContent>
+</PaginationRoot>

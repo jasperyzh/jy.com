@@ -1,16 +1,86 @@
 ---
+import Layout from "@/layouts/Layout.astro";
 
+import Button from "@/components/starwind/button/Button.astro";
+import { Icon } from "astro-icon/components";
+import { SITE_CONFIG } from "../consts";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="Home" description={SITE_CONFIG.site.description}>
+  <!-- {isProduction && <script>window.location.href = "/coming-soon";</script>} -->
+
+  <main>
+    <section class="intro">
+      <header>
+        <h1>
+          <span>Learning.</span>
+          <span>Building.</span>
+          <span>Sharing.</span>
+        </h1>
+
+        <p>
+          I'm Jasper, a Full-Stack Developer and lifelong learner navigating the
+          intersection of technology, creativity.
+        </p>
+
+        <p>
+          Here is where I share my professional portfolio, experiments, and
+          reflections on my craft.
+        </p>
+      </header>
+    </section>
+
+    <section id="what-you-ll-find-here" class="container">
+      <div class="card-- texture-- card--2a">
+        <h2>What You'll Find Here</h2>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque
+          mollitia similique adipisci nihil!
+        </p>
+
+        <hr class="spacer" />
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid--">
+          <div class="card-- texture-- card--milk">
+            <Icon name="bi:code-slash" class="text-4xl mb-2 text-red dark:text-red" />
+            <h3>Creative Code</h3>
+            <p>
+              Experiments and explorations at the intersection of code, art, and
+              design – bringing ideas to life visually.
+            </p>
+          </div>
+
+          <div class="card-- texture-- card--milk dark:card--red">
+            <Icon name="bi:book" class="text-4xl mb-2 text-blue" />
+            <h3>Blog</h3>
+            <p>
+              My collection of reflections on technology & learnings. My space
+              for sharing insights and managing knowledge & systems.
+            </p>
+          </div>
+
+          <div class="card-- texture-- card--milk dark:card--red">
+            <Icon name="bi:briefcase" class="text-4xl mb-2 text-yellow" />
+            <h3>Portfolio</h3>
+            <p>
+              A curated selection of professional full-stack web development
+              projects and impactful solutions I've built.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="container">
+      <div class="card-- texture-- card--yellow">
+        <h2>Get in touch</h2>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus
+          quia, nulla! Maiores et perferendis eaque, exercitationem praesentium
+          nihil.
+        </p>
+        <Button href="/contact" variant="outline">Send Me a Message </Button>
+      </div>
+    </section>
+  </main>
+</Layout>

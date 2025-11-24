@@ -1,0 +1,176 @@
+---
+import Layout from '@/layouts/Layout.astro';
+
+/**
+ * video synthesizer
+ * 
+ * guide, ideas
+ */
+---
+
+<Layout title="Video Synthesizer">
+  <main class="bg-black text-white">
+    <div id="canvas-container" class="w-full h-screen flex justify-center items-center"></div>
+  </main>
+</Layout>
+
+<script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.js"></script>
+
+<script is:inline>
+  /*
+    ============================================================================
+    GUIDE: A Simple p5.js Video Synthesizer
+    ============================================================================
+
+    This sketch replicates the core ideas of a hardware video synthesizer like
+    the Hypno by Sleepy Circuits, using p5.js and off-screen graphics buffers.
+
+    inspired by: https://www.youtube.com/watch?v=ddXo483h43o
+
+    --- CORE CONCEPT ---
+    Instead of drawing directly to the screen, we use multiple hidden "canvases"
+    called buffers. This lets us process and mix visual sources independently
+    before showing the final result.
+
+    - `feedbackBuffer`: Stores the entire output from the previous frame. This
+                      is the key to the feedback effect.
+    - `channel1`: A buffer for our first video source. It now captures a single
+                  frame from your webcam every 4 seconds.
+    - `channel2`: A buffer for our second source (a procedural shape).
+    - `mainOutput`: The final buffer where feedback and the live channels are
+                    mixed together. This is what you see.
+
+    --- HOW TO USE ---
+    - Frame Capture: The synthesizer grabs a new image from your webcam every 4
+                     seconds. In between captures, the feedback loop and other
+                     effects will "glitch out" this static image.
+    - Shape Control: Move your mouse to control the position of the shape in
+                     `channel2`.
+    - Mix Control: The horizontal position of your mouse (left to right)
+                   controls the transparency of `channel2`, mixing it with the
+                   captured webcam frame.
+
+    ============================================================================
+    10 IDEAS FOR THE NEXT EVOLUTION OF THIS SYNTHESIZER
+    ============================================================================
+
+    1.  **Feedback Loop:** (Implemented!) Feed the `mainOutput` back into one of
+        the channels with slight transformations to create classic video
+        feedback trails.
+
+    2.  **Audio Reactivity:** Use the `p5.sound` library to get microphone input
+        and link the volume to parameters like scale, rotation, or color.
+
+    3.  **Shaders (GLSL):** Integrate fragment shaders for powerful GPU-based
+        effects like color space manipulation (HSV), pixelation, or blur.
+
+    4.  **LFOs (Low-Frequency Oscillators):** Create smooth, cyclical modulation
+        for any parameter, making the visuals pulse and move on their own.
+
+    5.  **Clip Bank / Sampler:** Add UI buttons to "record" the current output
+        to a `p5.Image` and then re-introduce those clips as sources.
+
+    6.  **Switchable Blend Modes:** Create a UI to let the user cycle through
+        different blend modes (`ADD`, `DIFFERENCE`, `MULTIPLY`, `SCREEN`).
+
+    7.  **MIDI Control:** Use a library like `web-midi-js` to control parameters
+        with a physical MIDI controller's knobs and sliders.
+
+    8.  **Procedural Textures:** Use `p5.noise()` to generate complex patterns
+        like Perlin noise clouds as a channel source.
+
+    9.  **Kaleidoscope Effect:** Create a symmetrical, mirrored pattern from the
+        webcam or shape sources by using transformations in a loop.
+
+    10. **Slit-Scan Effect:** Create a time-displacement effect by capturing a
+        single column of pixels from the webcam each frame and stacking them.
+  */
+
+  let channel1, channel2, mainOutput, webcam, feedbackBuffer;
+
+  function setup() {
+    const container = document.getElementById('canvas-container');
+    const canvas = createCanvas(windowWidth, windowHeight);
+    canvas.parent(container);
+
+    // --- Webcam Setup ---
+    webcam = createCapture(VIDEO);
+    webcam.size(width, height);
+    webcam.hide(); // Hide the default HTML5 video element
+
+    // Initialize our off-screen canvases (graphics buffers)
+    channel1 = createGraphics(width, height);
+    channel2 = createGraphics(width, height);
+    mainOutput = createGraphics(width, height);
+    feedbackBuffer = createGraphics(width, height);
+
+    // Set initial drawing modes for channels
+    channel2.colorMode(HSB, 360, 100, 100);
+  }
+
+  function draw() {
+    // 1. Draw sources into their respective channels
+
+    // --- Frame Capture Logic ---
+    // Capture a new frame from the webcam every 240 frames (approx. 4 seconds at 60fps).
+    if (frameCount % 240 === 0) {
+      // Channel 1: Webcam Feed (flipped horizontally for mirror effect)
+      channel1.push();
+      channel1.translate(width, 0);
+      channel1.scale(-1, 1);
+      channel1.image(webcam, 0, 0, width, height);
+      channel1.pop();
+    }
+    // On all other frames, channel1 simply retains its last captured image,
+    // allowing the feedback and other effects to "glitch it out".
+
+    // Channel 2: Procedural Shape
+    channel2.background(0, 0, 0, 0.1);
+    channel2.noStroke();
+    channel2.fill(((frameCount + 180) % 360), 90, 90);
+    channel2.push();
+    channel2.translate(mouseX, mouseY);
+    channel2.rotate(frameCount * 0.03);
+    channel2.rectMode(CENTER);
+    channel2.rect(0, 0, 200, 200);
+    channel2.pop();
+
+
+    // 2. Compose the mainOutput, starting with feedback
+    mainOutput.background(0);
+
+    // Draw the previous frame (from feedbackBuffer) back onto the main output
+    // with a slight transformation to create the trail effect.
+    mainOutput.push();
+    mainOutput.translate(width / 2, height / 2); // Center for transformation
+    mainOutput.scale(1.01); // Slightly zoom in
+    mainOutput.rotate(0.002); // Slightly rotate
+    mainOutput.translate(-width / 2, -height / 2); // Un-center
+    mainOutput.image(feedbackBuffer, 0, 0); // Draw the last frame
+    mainOutput.pop();
+
+    // 3. Mix the live channels on top of the feedback
+    // mainOutput.image(channel1, 0, 0);
+    mainOutput.blendMode(ADD);
+    let mixAmount = map(mouseX, 0, width, 0, 255);
+    mainOutput.tint(255, mixAmount);
+    mainOutput.image(channel2, 0, 0);
+    mainOutput.blendMode(BLEND);
+    mainOutput.noTint();
+
+
+    // 4. Display the final result and save it for the next frame
+    image(mainOutput, 0, 0);
+    feedbackBuffer.image(mainOutput, 0, 0);
+  }
+
+  function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+    // Also resize all the buffers
+    channel1.resize(width, height);
+    channel2.resize(width, height);
+    mainOutput.resize(width, height);
+    feedbackBuffer.resize(width, height);
+    webcam.size(width, height);
+  }
+</script>

@@ -1,0 +1,269 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout>
+  <main class="p-4">
+    <h1 class="text-2xl font-bold mb-4">Flashcard Recorder</h1>
+    <p class="mb-4">
+      Click "Record" to save an audio clip (max 8 seconds) to your browser's localStorage. Refresh the page, and your audio will remain.
+    </p>
+    <div id="flashcard-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    </div>
+
+    <div class="mt-8">
+        <h2 class="text-xl font-bold mb-4">LocalStorage Audio Metadata</h2>
+        <div class="overflow-x-auto">
+            <table id="metadata-table" class="min-w-full bg-white border">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th class="py-2 px-4 border-b">Card</th>
+                        <th class="py-2 px-4 border-b">Blob Size (Bytes)</th>
+                        <th class="py-2 px-4 border-b">Base64 Size (KB)</th>
+                        <th class="py-2 px-4 border-b">MIME Type</th>
+                        <th class="py-2 px-4 border-b">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+        <div id="storage-summary" class="mt-4 text-sm text-gray-600"></div>
+    </div>
+  </main>
+</Layout>
+
+<style is:inline>
+    .visualizer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 16px;
+        width: 20px; /* Added width */
+    }
+    .visualizer .bar {
+        display: block;
+        width: 3px;
+        height: 100%;
+        background-color: white;
+        margin: 0 1px;
+        animation-duration: 1.2s;
+        animation-iteration-count: infinite;
+        animation-timing-function: ease-in-out;
+        transform: scaleY(0.1); /* Start small */
+    }
+    .visualizer.playing .bar {
+        animation-name: play;
+    }
+    .visualizer.playing .bar:nth-child(1) { animation-delay: 0s; }
+    .visualizer.playing .bar:nth-child(2) { animation-delay: 0.2s; }
+    .visualizer.playing .bar:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes play {
+        0%, 100% { transform: scaleY(0.1); }
+        50% { transform: scaleY(1); }
+    }
+</style>
+
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", () => {
+    const flashcardData = [
+      { term: "Apple" }, { term: "Banana" }, { term: "Cherry" }, { term: "Date" },
+      { term: "Elderberry" }, { term: "Fig" }, { term: "Grape" }, { term: "Honeydew" },
+    ];
+
+    const container = document.getElementById("flashcard-container");
+    let mediaRecorder;
+    let audioChunks = [];
+
+    const updateMetadataTable = () => {
+        const tableBody = document.querySelector("#metadata-table tbody");
+        const summaryEl = document.getElementById("storage-summary");
+        tableBody.innerHTML = "";
+        let totalSize = 0;
+
+        const keys = Object.keys(localStorage).filter(k => k.startsWith('flashcard-audio-'));
+        
+        if (keys.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4">No audio saved yet.</td></tr>';
+        }
+
+        keys.forEach(key => {
+            const dataUrl = localStorage.getItem(key);
+            const index = key.replace('flashcard-audio-', '');
+            const term = flashcardData[index]?.term || 'Unknown';
+            
+            const base64String = dataUrl.split(',')[1];
+            const stringLength = base64String.length;
+            const sizeInKb = (stringLength * 0.75 / 1024).toFixed(2);
+            totalSize += stringLength * 0.75;
+
+            const blob = dataURLToBlob(dataUrl);
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="py-2 px-4 border-b text-center">${term}</td>
+                <td class="py-2 px-4 border-b text-center">${blob.size}</td>
+                <td class="py-2 px-4 border-b text-center">${sizeInKb} KB</td>
+                <td class="py-2 px-4 border-b text-center">${blob.type}</td>
+                <td class="py-2 px-4 border-b text-center">
+                    <button class="play-meta-btn bg-green-500 text-white px-3 py-1 rounded-md text-sm">Play</button>
+                    <button class="delete-meta-btn bg-gray-500 text-white px-3 py-1 rounded-md text-sm">Delete</button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+
+            row.querySelector('.play-meta-btn').addEventListener('click', () => {
+                const audio = new Audio(dataUrl);
+                audio.play();
+            });
+            row.querySelector('.delete-meta-btn').addEventListener('click', () => {
+                localStorage.removeItem(key);
+                loadRecordings();
+                updateMetadataTable();
+            });
+        });
+
+        const localStorageLimit = 5 * 1024 * 1024; // 5MB
+        const percentageUsed = ((totalSize / localStorageLimit) * 100).toFixed(2);
+        summaryEl.textContent = `Total localStorage used: ${(totalSize / 1024).toFixed(2)} KB of ~5MB (${percentageUsed}% used). Base64 encoding adds ~33% overhead compared to binary blob size.`;
+    };
+
+    const dataURLToBlob = (dataUrl) => {
+        const arr = dataUrl.split(',');
+        const mime = arr[0].match(/:(.*?);/)[1];
+        const bstr = atob(arr[1]);
+        let n = bstr.length;
+        const u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], { type: mime });
+    };
+
+    const loadRecordings = () => {
+        flashcardData.forEach((data, index) => {
+            const card = container.querySelector(`[data-id='${index}']`);
+            const playButton = card.querySelector('.play-btn');
+            const statusEl = card.querySelector('.status');
+            const storageKey = `flashcard-audio-${index}`;
+            
+            const dataUrl = localStorage.getItem(storageKey);
+
+            if (dataUrl) {
+                const blob = dataURLToBlob(dataUrl);
+                const cardAudioUrl = URL.createObjectURL(blob);
+                playButton.dataset.audioUrl = cardAudioUrl;
+                playButton.disabled = false;
+                statusEl.textContent = "Saved";
+            } else {
+                playButton.disabled = true;
+                statusEl.textContent = "Not recorded";
+                delete playButton.dataset.audioUrl;
+            }
+        });
+    };
+
+    flashcardData.forEach((data, index) => {
+      const card = document.createElement("div");
+      card.className = "card border p-4 rounded-lg shadow-md flex flex-col items-center justify-center";
+      card.dataset.id = index;
+
+      const termEl = document.createElement("div");
+      termEl.className = "term text-xl font-semibold mb-4";
+      termEl.textContent = data.term;
+
+      const recordButton = document.createElement("button");
+      recordButton.className = "record-btn bg-red-500 text-white px-4 py-2 rounded-md mb-2 w-full";
+      recordButton.textContent = "Record";
+
+      const playButton = document.createElement("button");
+      playButton.className = "play-btn bg-blue-500 text-white px-4 py-2 rounded-md w-full flex items-center justify-center";
+      playButton.innerHTML = `Play <div class="visualizer ml-2"><span class="bar"></span><span class="bar"></span><span class="bar"></span></div>`;
+      playButton.disabled = true;
+
+      const statusEl = document.createElement("div");
+      statusEl.className = "status text-sm text-gray-500 mt-2";
+      statusEl.textContent = "Not recorded";
+
+      card.appendChild(termEl);
+      card.appendChild(recordButton);
+      card.appendChild(playButton);
+      card.appendChild(statusEl);
+
+      container.appendChild(card);
+
+      recordButton.addEventListener("click", async () => {
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+          mediaRecorder.stop();
+          return;
+        }
+
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          const options = {
+              mimeType: 'audio/webm;codecs=opus',
+              audioBitsPerSecond: 64000 // 64kbps
+          };
+          mediaRecorder = new MediaRecorder(stream, options);
+          audioChunks = [];
+
+          mediaRecorder.ondataavailable = (event) => {
+            audioChunks.push(event.data);
+          };
+
+          mediaRecorder.onstart = () => {
+            recordButton.textContent = "Stop";
+            recordButton.classList.replace("bg-red-500", "bg-yellow-500");
+            statusEl.textContent = "Recording...";
+            playButton.disabled = true;
+          };
+
+          mediaRecorder.onstop = () => {
+            const audioBlob = new Blob(audioChunks, { type: options.mimeType });
+            
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64String = reader.result;
+                localStorage.setItem(`flashcard-audio-${index}`, base64String);
+                loadRecordings();
+                updateMetadataTable();
+            };
+            reader.readAsDataURL(audioBlob);
+
+            recordButton.textContent = "Record";
+            recordButton.classList.replace("bg-yellow-500", "bg-red-500");
+            stream.getTracks().forEach(track => track.stop());
+          };
+
+          mediaRecorder.start();
+
+          setTimeout(() => {
+            if (mediaRecorder && mediaRecorder.state === "recording") {
+              mediaRecorder.stop();
+            }
+          }, 8000);
+
+        } catch (err) {
+          console.error("Error accessing microphone:", err);
+          statusEl.textContent = "Mic error!";
+        }
+      });
+
+      playButton.addEventListener("click", () => {
+        if (playButton.dataset.audioUrl) {
+          const audio = new Audio(playButton.dataset.audioUrl);
+          const visualizer = playButton.querySelector('.visualizer');
+          audio.onplay = () => visualizer.classList.add('playing');
+          audio.onended = () => visualizer.classList.remove('playing');
+          audio.onpause = () => visualizer.classList.remove('playing');
+          audio.play();
+        }
+      });
+    });
+
+    loadRecordings();
+    updateMetadataTable();
+  });
+</script>   

@@ -1,0 +1,937 @@
+<main>
+  <div id="dynamic-messages" class="fixed z-50 w-full"></div>
+
+  <div
+    id="snackbar-container"
+    class="fixed right-0 z-50 flex flex-col mx-4 overflow-hidden lg:mx-0 lg:right-24 top-24 gap-y-4"
+  >
+  </div>
+
+  <div id="snackbar-template-container" class="hidden">
+    <div
+      class="snackbar p-2 lg:p-3 max-w-sm flex flex-row justify-between rounded-md shadow-sm animate-slide-in-from-right"
+      data-test-id="snackbar"
+      data-controller="elements--snackbar-component--close"
+    >
+      <div class="p-1.5 flex flex-col gap-y-2">
+        <div data-js-target="content"></div>
+        <a
+          data-js-target="link"
+          data-turbo="false"
+          href="#"
+          class="hidden underline"
+          data-action="click->elements--snackbar-component--close#closeMessage"
+          >Sample Link content</a
+        >
+        <button
+          data-js-target="button"
+          class="hidden underline text-left font-medium"
+          data-action="click->elements--snackbar-component--close#closeMessage"
+          >Sample Button content</button
+        >
+      </div>
+
+      <div
+        data-test-id="snackbar-close-icon"
+        class="cursor-pointer"
+        data-action="click->elements--snackbar-component--close#closeMessage"
+      >
+        <span
+          class="material-icons material-icons-outlined text-2xl"
+          data-nosnippet="true">close</span
+        >
+      </div>
+    </div>
+  </div>
+
+  <div class="bg--color-milk">
+    <div class="pt-4 lg:pt-6 pb-4 lg:pb-6 text-black container">
+      <div
+        class="grid grid-cols-1 lg:grid-cols-12 lg:grid-flow-row-dense gap-y-4 gap-x-6"
+      >
+        <div class="lg:col-start-1 lg:col-end-13">
+          <div class="relative overflow-hidden rounded-xl">
+            <div class="relative">
+              <div class="hidden lg:block">
+                <video
+                  data-controller="elements--cloudflare-stream-component--cloudflare-stream-component"
+                  width="100%"
+                  height="auto"
+                  autoplay="true"
+                  loop="true"
+                  playsinline="true"
+                  tabindex="-1"
+                  letterboxcolor="transparent"
+                  muted="true"
+                  lazy="true"
+                  class="absolute h-full left-0 overflow-hidden top-0 z-0 relative rounded-xl"
+                  poster="https://customer-gbu4wsrjcdamtxzc.cloudflarestream.com/2475d0688ab539894985de98161fea67/thumbnails/thumbnail.jpg"
+                >
+                  <source
+                    src="https://customer-gbu4wsrjcdamtxzc.cloudflarestream.com/2475d0688ab539894985de98161fea67/downloads/default.mp4"
+                    type="video/mp4"
+                  />
+                </video>
+              </div>
+
+              <div class="lg:hidden">
+                <video
+                  data-controller="elements--cloudflare-stream-component--cloudflare-stream-component"
+                  data-elements--cloudflare-stream-component--cloudflare-stream-component-src-value="https://customer-gbu4wsrjcdamtxzc.cloudflarestream.com/aa9419a09ec07bc9bfafc2d7f494c2e0/downloads/default.mp4"
+                  width="100%"
+                  height="auto"
+                  autoplay="true"
+                  loop="true"
+                  playsinline="true"
+                  tabindex="-1"
+                  letterboxcolor="transparent"
+                  muted="true"
+                  lazy="true"
+                  class="absolute h-full left-0 overflow-hidden top-0 z-0 relative rounded-xl"
+                  poster="https://customer-gbu4wsrjcdamtxzc.cloudflarestream.com/aa9419a09ec07bc9bfafc2d7f494c2e0/thumbnails/thumbnail.jpg"
+                >
+                  <source
+                    src="https://customer-gbu4wsrjcdamtxzc.cloudflarestream.com/aa9419a09ec07bc9bfafc2d7f494c2e0/downloads/default.mp4"
+                    type="video/mp4"
+                  />
+                </video>
+              </div>
+            </div>
+
+            <div
+              class="flex flex-col lg:grid lg:grid-cols-12 z-20 w-full lg:p-10 lg:container py-8 lg:absolute lg:inset-0 justify-end lg:items-center"
+            >
+              <div
+                class="flex flex-col lg:col-start-8 lg:col-end-13 lg:text-left lg:items-start"
+              >
+                <div
+                  class="prose lg:prose-lg lg:max-w-content prose-h1:mb-4 prose-h2:mt-0 prose-h2:mb-2 prose-h3:mt-0 prose-h3:mb-2 prose-h5:mb-2 prose-h6:mb-2 prose-p:m-0 prose-p:leading-normal"
+                >
+                  <span class="hidden lg:block">
+                    <h3>
+                      <span class="font-framework-pixel"
+                        >Configure once. Upgrade whenever ❤.
+                      </span>
+                    </h3>
+
+                    <p>
+                      Framework Laptop 16 is an endlessly customizable laptop
+                      with upgradeable graphics, powered by NVIDIA® GeForce
+                      RTX™ 5070 and AMD's latest Ryzen™ AI 300 Series
+                      Processors.
+                    </p>
+                  </span>
+                  <span class="lg:hidden">
+                    <h3>
+                      <span class="font-framework-pixel"
+                        >Configure once. Upgrade whenever ❤.
+                      </span>
+                    </h3>
+
+                    <p>
+                      Framework Laptop 16 is an endlessly customizable laptop
+                      with upgradeable graphics, powered by NVIDIA® GeForce
+                      RTX™ 5070 and AMD's latest Ryzen™ AI 300 Series
+                      Processors.
+                    </p>
+                  </span>
+                </div>
+                <div class="flex flex-row flex-wrap mt-8 gap-2">
+                  <a
+                    class="focus:accent-blue whitespace-nowrap block flex justify-center items-center transition-colors duration-300 ease-in-out hover:no-underline disabled:cursor-not-allowed font-semibold focus:outline focus:outline-offset-2 focus:outline-2 focus:outline-accent-blue group rounded-full max-w-max min-w-min bg-primary text-on-primary hover:bg-primary-hover active:bg-primary-pressed no-underline"
+                    data-controller="elements--button-component--button"
+                    data-action="click->elements--button-component--button#disable"
+                    href="/ca/en/products/laptop16-diy-amd-ai300/configuration/new"
+                    ><span
+                      class="flex justify-center space-x-3 items-center py-2 px-4 rounded-full group-[.disabled]:invisible group-disabled:invisible"
+                      ><span>
+                        <span class="lg:hidden"> Configure now </span>
+                        <span class="hidden lg:inline"> Configure now </span>
+                      </span></span
+                    ><span
+                      class="hidden absolute spinner group-[.disabled]:flex group-disabled:flex"
+                    ></span></a
+                  >
+                  <a
+                    class="focus:accent-blue whitespace-nowrap block flex justify-center items-center transition-colors duration-300 ease-in-out hover:no-underline disabled:cursor-not-allowed font-semibold focus:outline focus:outline-offset-2 focus:outline-2 focus:outline-accent-blue group rounded-full max-w-max min-w-min bg-transparent text-on-surface border-on-surface border no-underline"
+                    data-controller="elements--button-component--button"
+                    data-action="click->elements--button-component--button#disable"
+                    href="/ca/en/laptop16"
+                    ><span
+                      class="flex justify-center space-x-3 items-center py-2 px-4 rounded-full group-[.disabled]:invisible group-disabled:invisible"
+                      ><span>
+                        <span class="lg:hidden"> Learn more </span>
+                        <span class="hidden lg:inline"> Learn more </span>
+                      </span></span
+                    ><span
+                      class="hidden absolute spinner group-[.disabled]:flex group-disabled:flex"
+                    ></span></a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bg--color-milk">
+    <div class="pb-4 lg:pb-6 text-black container">
+      <div
+        class="grid grid-cols-1 lg:grid-cols-12 lg:grid-flow-row-dense gap-y-4 gap-x-6"
+      >
+        <div class="lg:col-start-1 lg:col-end-13">
+          <div class="relative overflow-hidden rounded-xl">
+            <div class="relative">
+              <div class="hidden lg:block">
+                <video
+                  data-controller="elements--cloudflare-stream-component--cloudflare-stream-component"
+                  data-elements--cloudflare-stream-component--cloudflare-stream-component-src-value="https://customer-gbu4wsrjcdamtxzc.cloudflarestream.com/cd26c4d60f921721b5ea841361f6ea4d/downloads/default.mp4"
+                  width="100%"
+                  height="auto"
+                  autoplay="true"
+                  loop="true"
+                  playsinline="true"
+                  tabindex="-1"
+                  letterboxcolor="transparent"
+                  muted="true"
+                  lazy="true"
+                  class="absolute h-full left-0 overflow-hidden top-0 z-0 relative rounded-xl"
+                  poster="https://customer-gbu4wsrjcdamtxzc.cloudflarestream.com/cd26c4d60f921721b5ea841361f6ea4d/thumbnails/thumbnail.jpg"
+                >
+                  <source
+                    src="https://customer-gbu4wsrjcdamtxzc.cloudflarestream.com/cd26c4d60f921721b5ea841361f6ea4d/downloads/default.mp4"
+                    type="video/mp4"
+                  />
+                </video>
+              </div>
+
+              <div class="lg:hidden">
+                <video
+                  data-controller="elements--cloudflare-stream-component--cloudflare-stream-component"
+                  data-elements--cloudflare-stream-component--cloudflare-stream-component-src-value="https://customer-gbu4wsrjcdamtxzc.cloudflarestream.com/69f33f7c8f2e1ee2ff953d71862efa42/downloads/default.mp4"
+                  width="100%"
+                  height="auto"
+                  autoplay="true"
+                  loop="true"
+                  playsinline="true"
+                  tabindex="-1"
+                  letterboxcolor="transparent"
+                  muted="true"
+                  lazy="true"
+                  class="absolute h-full left-0 overflow-hidden top-0 z-0 relative rounded-xl"
+                  poster="https://customer-gbu4wsrjcdamtxzc.cloudflarestream.com/69f33f7c8f2e1ee2ff953d71862efa42/thumbnails/thumbnail.jpg"
+                >
+                  <source
+                    src="https://customer-gbu4wsrjcdamtxzc.cloudflarestream.com/69f33f7c8f2e1ee2ff953d71862efa42/downloads/default.mp4"
+                    type="video/mp4"
+                  />
+                </video>
+              </div>
+            </div>
+
+            <div
+              class="flex flex-col lg:grid lg:grid-cols-12 z-20 w-full lg:p-10 lg:container py-8 lg:absolute lg:inset-0 justify-end lg:items-center"
+            >
+              <div
+                class="flex flex-col lg:col-start-1 lg:col-end-5 lg:text-left lg:items-start"
+              >
+                <div
+                  class="prose lg:prose-lg lg:max-w-content prose-h1:mb-4 prose-h2:mt-0 prose-h2:mb-2 prose-h3:mt-0 prose-h3:mb-2 prose-h5:mb-2 prose-h6:mb-2 prose-p:m-0 prose-p:leading-normal"
+                >
+                  <span class="hidden lg:block">
+                    <h3>Computers shouldn't be boring.</h3>
+
+                    <p>
+                      Framework Laptop 12 is a 12.2” convertible with stylus
+                      support. Designed for easy customization, upgrades, and
+                      repairs.
+                    </p>
+                  </span>
+                  <span class="lg:hidden">
+                    <h3>Computers shouldn't be boring.</h3>
+
+                    <p>
+                      Framework Laptop 12 is a 12.2” convertible with stylus
+                      support. Designed for easy customization, upgrades, and
+                      repairs.
+                    </p>
+                  </span>
+                </div>
+                <div class="flex flex-row flex-wrap mt-8 gap-2">
+                  <a
+                    class="focus:accent-blue whitespace-nowrap block flex justify-center items-center transition-colors duration-300 ease-in-out hover:no-underline disabled:cursor-not-allowed font-semibold focus:outline focus:outline-offset-2 focus:outline-2 focus:outline-accent-blue group rounded-full max-w-max min-w-min bg-primary text-on-primary hover:bg-primary-hover active:bg-primary-pressed no-underline"
+                    data-controller="elements--button-component--button"
+                    data-action="click->elements--button-component--button#disable"
+                    href="/ca/en/products/laptop12-diy-intel-13gen/configuration/new"
+                    ><span
+                      class="flex justify-center space-x-3 items-center py-2 px-4 rounded-full group-[.disabled]:invisible group-disabled:invisible"
+                      ><span>
+                        <span class="lg:hidden"> Configure now </span>
+                        <span class="hidden lg:inline"> Configure now </span>
+                      </span></span
+                    ><span
+                      class="hidden absolute spinner group-[.disabled]:flex group-disabled:flex"
+                    ></span></a
+                  >
+                  <a
+                    class="focus:accent-blue whitespace-nowrap block flex justify-center items-center transition-colors duration-300 ease-in-out hover:no-underline disabled:cursor-not-allowed font-semibold focus:outline focus:outline-offset-2 focus:outline-2 focus:outline-accent-blue group rounded-full max-w-max min-w-min bg-transparent text-on-surface border-on-surface border no-underline"
+                    data-controller="elements--button-component--button"
+                    data-action="click->elements--button-component--button#disable"
+                    href="/ca/en/laptop12"
+                    ><span
+                      class="flex justify-center space-x-3 items-center py-2 px-4 rounded-full group-[.disabled]:invisible group-disabled:invisible"
+                      ><span>
+                        <span class="lg:hidden"> Learn more </span>
+                        <span class="hidden lg:inline"> Learn more </span>
+                      </span></span
+                    ><span
+                      class="hidden absolute spinner group-[.disabled]:flex group-disabled:flex"
+                    ></span></a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bg--color-milk">
+    <div class="pb-4 lg:pb-6 text-black container">
+      <div
+        class="grid grid-cols-1 lg:grid-cols-12 lg:grid-flow-row-dense gap-y-4 gap-x-6"
+      >
+        <div class="lg:col-start-1 lg:col-end-13">
+          <div class="relative overflow-hidden rounded-xl">
+            <div class="relative">
+              <div class="hidden lg:block">
+                <video
+                  data-controller="elements--cloudflare-stream-component--cloudflare-stream-component"
+                  data-elements--cloudflare-stream-component--cloudflare-stream-component-src-value="https://customer-gbu4wsrjcdamtxzc.cloudflarestream.com/9e060b35f143fee3be74aa67adf61a83/downloads/default.mp4"
+                  width="100%"
+                  height="auto"
+                  autoplay="true"
+                  loop="true"
+                  playsinline="true"
+                  tabindex="-1"
+                  letterboxcolor="transparent"
+                  muted="true"
+                  lazy="true"
+                  class="absolute h-full left-0 overflow-hidden top-0 z-0 relative rounded-xl"
+                  poster="https://customer-gbu4wsrjcdamtxzc.cloudflarestream.com/9e060b35f143fee3be74aa67adf61a83/thumbnails/thumbnail.jpg"
+                >
+                  <source
+                    src="https://customer-gbu4wsrjcdamtxzc.cloudflarestream.com/9e060b35f143fee3be74aa67adf61a83/downloads/default.mp4"
+                    type="video/mp4"
+                  />
+                </video>
+              </div>
+
+              <div class="lg:hidden">
+                <video
+                  data-controller="elements--cloudflare-stream-component--cloudflare-stream-component"
+                  data-elements--cloudflare-stream-component--cloudflare-stream-component-src-value="https://customer-gbu4wsrjcdamtxzc.cloudflarestream.com/7655016559f2790840751ea9579bd277/downloads/default.mp4"
+                  width="100%"
+                  height="auto"
+                  autoplay="true"
+                  loop="true"
+                  playsinline="true"
+                  tabindex="-1"
+                  letterboxcolor="transparent"
+                  muted="true"
+                  lazy="true"
+                  class="absolute h-full left-0 overflow-hidden top-0 z-0 relative rounded-xl"
+                  poster="https://customer-gbu4wsrjcdamtxzc.cloudflarestream.com/7655016559f2790840751ea9579bd277/thumbnails/thumbnail.jpg"
+                >
+                  <source
+                    src="https://customer-gbu4wsrjcdamtxzc.cloudflarestream.com/7655016559f2790840751ea9579bd277/downloads/default.mp4"
+                    type="video/mp4"
+                  />
+                </video>
+              </div>
+            </div>
+
+            <div
+              class="flex flex-col lg:grid lg:grid-cols-12 z-20 w-full lg:p-10 lg:container py-8 lg:absolute lg:inset-0 justify-end lg:items-center"
+            >
+              <div
+                class="flex flex-col lg:col-start-8 lg:col-end-13 lg:text-left lg:items-start"
+              >
+                <div
+                  class="prose lg:prose-lg lg:max-w-content prose-h1:mb-4 prose-h2:mt-0 prose-h2:mb-2 prose-h3:mt-0 prose-h3:mb-2 prose-h5:mb-2 prose-h6:mb-2 prose-p:m-0 prose-p:leading-normal"
+                >
+                  <span class="hidden lg:block">
+                    <h3>Framework Desktop is a big computer made mini.</h3>
+
+                    <p>
+                      Massive gaming capability, heavy-duty AI compute, and
+                      standard PC parts, all in 4.5L.
+                    </p>
+                  </span>
+                  <span class="lg:hidden">
+                    <h3>Framework Desktop is a big computer made mini.</h3>
+
+                    <p>
+                      Massive gaming capability, heavy-duty AI compute, and
+                      standard PC parts, all in 4.5L.
+                    </p>
+                  </span>
+                </div>
+                <div class="flex flex-row flex-wrap mt-8 gap-2">
+                  <a
+                    class="focus:accent-blue whitespace-nowrap block flex justify-center items-center transition-colors duration-300 ease-in-out hover:no-underline disabled:cursor-not-allowed font-semibold focus:outline focus:outline-offset-2 focus:outline-2 focus:outline-accent-blue group rounded-full max-w-max min-w-min bg-primary text-on-primary hover:bg-primary-hover active:bg-primary-pressed no-underline"
+                    data-controller="elements--button-component--button"
+                    data-action="click->elements--button-component--button#disable"
+                    href="/ca/en/products/desktop-diy-amd-aimax300/configuration/new"
+                    ><span
+                      class="flex justify-center space-x-3 items-center py-2 px-4 rounded-full group-[.disabled]:invisible group-disabled:invisible"
+                      ><span>
+                        <span class="lg:hidden"> Configure now </span>
+                        <span class="hidden lg:inline"> Configure now </span>
+                      </span></span
+                    ><span
+                      class="hidden absolute spinner group-[.disabled]:flex group-disabled:flex"
+                    ></span></a
+                  >
+                  <a
+                    class="focus:accent-blue whitespace-nowrap block flex justify-center items-center transition-colors duration-300 ease-in-out hover:no-underline disabled:cursor-not-allowed font-semibold focus:outline focus:outline-offset-2 focus:outline-2 focus:outline-accent-blue group rounded-full max-w-max min-w-min bg-transparent text-on-surface border-on-surface border no-underline"
+                    data-controller="elements--button-component--button"
+                    data-action="click->elements--button-component--button#disable"
+                    href="/ca/en/desktop"
+                    ><span
+                      class="flex justify-center space-x-3 items-center py-2 px-4 rounded-full group-[.disabled]:invisible group-disabled:invisible"
+                      ><span>
+                        <span class="lg:hidden"> Learn more </span>
+                        <span class="hidden lg:inline"> Learn more </span>
+                      </span></span
+                    ><span
+                      class="hidden absolute spinner group-[.disabled]:flex group-disabled:flex"
+                    ></span></a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bg--color-milk">
+    <div class="pb-28 lg:pb-40 text-black container">
+      <div
+        class="grid grid-cols-1 lg:grid-cols-12 lg:grid-flow-row-dense gap-y-4 gap-x-6"
+      >
+        <div class="lg:col-start-1 lg:col-end-13">
+          <div class="relative overflow-hidden rounded-xl">
+            <div class="relative">
+              <img
+                alt="Framework Laptop 13 with bezel and top cover removed, exposing internals with Expansion Cards, screws and screwdriver beside it."
+                width="2720"
+                height="1360"
+                class="w-full rounded-xl hidden lg:block"
+                srcset="https://images.prismic.io/frameworkmarketplace/aJBl86Tt2nPbZzs1_homepage_fw13-banner_desktop.jpg?auto=format,compress&w=375 375w,https://images.prismic.io/frameworkmarketplace/aJBl86Tt2nPbZzs1_homepage_fw13-banner_desktop.jpg?auto=format,compress&w=768 768w,https://images.prismic.io/frameworkmarketplace/aJBl86Tt2nPbZzs1_homepage_fw13-banner_desktop.jpg?auto=format,compress&w=1024 1024w,https://images.prismic.io/frameworkmarketplace/aJBl86Tt2nPbZzs1_homepage_fw13-banner_desktop.jpg?auto=format,compress&w=1280 1280w,https://images.prismic.io/frameworkmarketplace/aJBl86Tt2nPbZzs1_homepage_fw13-banner_desktop.jpg?auto=format,compress 1920w"
+                sizes="100vw"
+                src="https://images.prismic.io/frameworkmarketplace/aJBl86Tt2nPbZzs1_homepage_fw13-banner_desktop.jpg?auto=format,compress"
+              />
+
+              <img
+                alt="Framework Laptop 13 with bezel and top cover removed, exposing internals with Expansion Cards, screws and screwdriver beside it."
+                width="1440"
+                height="1440"
+                class="w-full rounded-xl block lg:hidden"
+                srcset="https://images.prismic.io/frameworkmarketplace/aJBl9KTt2nPbZzs3_homepage_fw13-banner_mobile.jpg?auto=format,compress&w=375 375w,https://images.prismic.io/frameworkmarketplace/aJBl9KTt2nPbZzs3_homepage_fw13-banner_mobile.jpg?auto=format,compress&w=768 768w,https://images.prismic.io/frameworkmarketplace/aJBl9KTt2nPbZzs3_homepage_fw13-banner_mobile.jpg?auto=format,compress&w=1024 1024w,https://images.prismic.io/frameworkmarketplace/aJBl9KTt2nPbZzs3_homepage_fw13-banner_mobile.jpg?auto=format,compress&w=1280 1280w,https://images.prismic.io/frameworkmarketplace/aJBl9KTt2nPbZzs3_homepage_fw13-banner_mobile.jpg?auto=format,compress 1920w"
+                sizes="100vw"
+                src="https://images.prismic.io/frameworkmarketplace/aJBl9KTt2nPbZzs3_homepage_fw13-banner_mobile.jpg?auto=format,compress"
+              />
+            </div>
+
+            <div
+              class="flex flex-col lg:grid lg:grid-cols-12 z-20 w-full lg:p-10 lg:container py-8 lg:absolute lg:inset-0 justify-end lg:items-center"
+            >
+              <div
+                class="flex flex-col lg:col-start-1 lg:col-end-5 lg:text-left lg:items-start"
+              >
+                <div
+                  class="prose lg:prose-lg lg:max-w-content prose-h1:mb-4 prose-h2:mt-0 prose-h2:mb-2 prose-h3:mt-0 prose-h3:mb-2 prose-h5:mb-2 prose-h6:mb-2 prose-p:m-0 prose-p:leading-normal"
+                >
+                  <span class="hidden lg:block">
+                    <h3>Framework Laptop 13 isn’t our computer. It’s yours.</h3>
+
+                    <p>
+                      Updated for 2025 with AMD's latest Ryzen™ AI 300 Series
+                      Processors with up to 12 CPU cores.
+                    </p>
+                  </span>
+                  <span class="lg:hidden">
+                    <h3>Framework Laptop 13 isn’t our computer. It’s yours.</h3>
+
+                    <p>
+                      Updated for 2025 with AMD's latest Ryzen™ AI 300 Series
+                      Processors with up to 12 CPU cores.
+                    </p>
+                  </span>
+                </div>
+                <div class="flex flex-row flex-wrap mt-8 gap-2">
+                  <a
+                    class="focus:accent-blue whitespace-nowrap block flex justify-center items-center transition-colors duration-300 ease-in-out hover:no-underline disabled:cursor-not-allowed font-semibold focus:outline focus:outline-offset-2 focus:outline-2 focus:outline-accent-blue group rounded-full max-w-max min-w-min bg-primary text-on-primary hover:bg-primary-hover active:bg-primary-pressed no-underline"
+                    data-controller="elements--button-component--button"
+                    data-action="click->elements--button-component--button#disable"
+                    href="/ca/en/products/laptop13-diy-amd-ai300/configuration/new"
+                    ><span
+                      class="flex justify-center space-x-3 items-center py-2 px-4 rounded-full group-[.disabled]:invisible group-disabled:invisible"
+                      ><span>
+                        <span class="lg:hidden"> Configure now </span>
+                        <span class="hidden lg:inline"> Configure now </span>
+                      </span></span
+                    ><span
+                      class="hidden absolute spinner group-[.disabled]:flex group-disabled:flex"
+                    ></span></a
+                  >
+                  <a
+                    class="focus:accent-blue whitespace-nowrap block flex justify-center items-center transition-colors duration-300 ease-in-out hover:no-underline disabled:cursor-not-allowed font-semibold focus:outline focus:outline-offset-2 focus:outline-2 focus:outline-accent-blue group rounded-full max-w-max min-w-min bg-transparent text-on-surface border-on-surface border no-underline"
+                    data-controller="elements--button-component--button"
+                    data-action="click->elements--button-component--button#disable"
+                    href="/ca/en/laptop13"
+                    ><span
+                      class="flex justify-center space-x-3 items-center py-2 px-4 rounded-full group-[.disabled]:invisible group-disabled:invisible"
+                      ><span>
+                        <span class="lg:hidden"> Learn more </span>
+                        <span class="hidden lg:inline"> Learn more </span>
+                      </span></span
+                    ><span
+                      class="hidden absolute spinner group-[.disabled]:flex group-disabled:flex"
+                    ></span></a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bg-white">
+    <div class="pt-16 lg:pt-20 pb-16 lg:pb-20">
+      <div
+        class="grid grid-cols-1 lg:grid-cols-12 lg:grid-flow-row-dense gap-y-4 gap-x-6"
+      >
+        <div class="lg:col-start-1 lg:col-end-13">
+          <div class="relative overflow-hidden">
+            <div class="relative">
+              <div class="hidden lg:block">
+                <video
+                  data-controller="elements--cloudflare-stream-component--cloudflare-stream-component"
+                  data-elements--cloudflare-stream-component--cloudflare-stream-component-src-value="https://customer-gbu4wsrjcdamtxzc.cloudflarestream.com/cc4295ab6738467ab189597d8f7ebb69/downloads/default.mp4"
+                  width="100%"
+                  height="auto"
+                  autoplay="true"
+                  loop="true"
+                  playsinline="true"
+                  tabindex="-1"
+                  letterboxcolor="transparent"
+                  muted="true"
+                  lazy="true"
+                  class="absolute h-full left-0 overflow-hidden top-0 z-0 relative"
+                  poster="https://customer-gbu4wsrjcdamtxzc.cloudflarestream.com/cc4295ab6738467ab189597d8f7ebb69/thumbnails/thumbnail.jpg"
+                >
+                  <source
+                    src="https://customer-gbu4wsrjcdamtxzc.cloudflarestream.com/cc4295ab6738467ab189597d8f7ebb69/downloads/default.mp4"
+                    type="video/mp4"
+                  />
+                </video>
+              </div>
+
+              <div class="lg:hidden">
+                <video
+                  data-controller="elements--cloudflare-stream-component--cloudflare-stream-component"
+                  data-elements--cloudflare-stream-component--cloudflare-stream-component-src-value="https://customer-gbu4wsrjcdamtxzc.cloudflarestream.com/cc4295ab6738467ab189597d8f7ebb69/downloads/default.mp4"
+                  width="100%"
+                  height="auto"
+                  autoplay="true"
+                  loop="true"
+                  playsinline="true"
+                  tabindex="-1"
+                  letterboxcolor="transparent"
+                  muted="true"
+                  lazy="true"
+                  class="absolute h-full left-0 overflow-hidden top-0 z-0 relative"
+                  poster="https://customer-gbu4wsrjcdamtxzc.cloudflarestream.com/cc4295ab6738467ab189597d8f7ebb69/thumbnails/thumbnail.jpg"
+                >
+                  <source
+                    src="https://customer-gbu4wsrjcdamtxzc.cloudflarestream.com/cc4295ab6738467ab189597d8f7ebb69/downloads/default.mp4"
+                    type="video/mp4"
+                  />
+                </video>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bg-white">
+    <div class="pb-3 lg:pb-4 text-black container">
+      <div
+        class="grid grid-cols-1 lg:grid-cols-12 lg:grid-flow-row-dense gap-y-4 gap-x-6"
+      >
+        <div class="lg:col-start-3 lg:col-end-11">
+          <div class="prose lg:prose-lg max-w-none text-center prose-h2:mb-4">
+            <h2>Upgrade, customize, and repair.</h2>
+
+            <p>Pick up new parts and modules for your Framework products.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bg-white">
+    <div class="pb-16 lg:pb-20 container">
+      <div
+        class="grid grid-cols-1 lg:grid-cols-12 lg:grid-flow-row-dense gap-y-4 gap-x-6"
+      >
+        <div class="lg:col-start-1 lg:col-end-13">
+          <div class="flex pt-4 justify-center">
+            <a
+              class="focus:accent-blue whitespace-nowrap block flex justify-center items-center transition-colors duration-300 ease-in-out hover:no-underline disabled:cursor-not-allowed font-semibold focus:outline focus:outline-offset-2 focus:outline-2 focus:outline-accent-blue group rounded-full max-w-max min-w-min bg-primary text-on-primary hover:bg-primary-hover active:bg-primary-pressed no-underline"
+              data-controller="elements--button-component--button"
+              data-action="click->elements--button-component--button#disable"
+              href="/marketplace"
+              ><span
+                class="flex justify-center space-x-3 items-center py-2 px-4 rounded-full group-[.disabled]:invisible group-disabled:invisible"
+                ><span><span class="text">Shop our Marketplace</span></span
+                ></span
+              ><span
+                class="hidden absolute spinner group-[.disabled]:flex group-disabled:flex"
+              ></span></a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="homepage-newsletters" class="bg--color-milk">
+    <div class="pt-24 lg:pt-32 pb-16 lg:pb-20 text-black container">
+      <div
+        class="grid grid-cols-1 lg:grid-cols-12 lg:grid-flow-row-dense gap-y-4 gap-x-6"
+      >
+        <div class="lg:col-start-1 lg:col-end-13">
+          <div
+            class="email-signup container relative flex justify-center mt-5 lg:mt-9 mb-7 lg:mb-0 pb-11 lg:pb-12"
+          >
+            <div
+              data-controller="containers--email-signup-component--eye-follow"
+              data-action="mousemove@window->containers--email-signup-component--eye-follow#followCursor"
+            >
+              <div
+                aria-hidden="true"
+                class="eyes flex absolute -bottom-5 left-5 lg:static lg:mt-9"
+              >
+                <div
+                  class="eye relative p-2"
+                  data-containers--email-signup-component--eye-follow-target="eye"
+                  style="transform: rotate(21.3024deg);"
+                >
+                </div>
+                <div
+                  class="eye relative p-2"
+                  data-containers--email-signup-component--eye-follow-target="eye"
+                  style="transform: rotate(20.9224deg);"
+                >
+                </div>
+              </div>
+            </div>
+
+            <div class="lg:max-w-2xl xl:max-w-4xl">
+              <div
+                class="email-signup-title lg:text-center max-w-full mb-6 lg:mb-9 text-4xl lg:text-5xl lg:leading-10 font-semibold"
+              >
+                <span class="hidden lg:inline">
+                  <h3>
+                    Keep track of what we’re <br />working on with the Framework
+                    Newsletter.
+                  </h3>
+                </span>
+                <span class="inline lg:hidden"
+                  ><h3>
+                    Keep track of what we’re working on with the Framework
+                    Newsletter.
+                  </h3></span
+                >
+              </div>
+
+              <turbo-frame
+                id="email-signup"
+                src="https://frame.work/ca/en/email_signup/new?email_signup%5Bcall_to_action%5D=Subscribe&email_signup%5Bsource%5D=Newsletter+Form&email_signup%5Bsuccess_text%5D=%3Cp%3EThanks+for+subscribing%21%3C%2Fp%3E"
+                loading="lazy"
+                complete=""
+              >
+                <div
+                  data-test-id="email-signup-newsletter-form"
+                  id="newsletter-form"
+                >
+                  <form
+                    data-turbo="true"
+                    data-type="html"
+                    data-controller="elements--form-component--state"
+                    action="/ca/en/email_signup"
+                    accept-charset="UTF-8"
+                    method="post"
+                  >
+                    <input
+                      type="hidden"
+                      name="authenticity_token"
+                      value="5H4C97ERu-ZSgEZLN2Nh-tOajgw8Qh2_g-mH8Q0UiNc4AI8IWMu697wAFkK_G2Zia9bFamAw4RdZe1TBsyiMlA"
+                      autocomplete="off"
+                    />
+
+                    <div class="current">
+                      <div
+                        class="flex flex-col justify-center gap-3 lg:flex-row lg:space-y-0 lg:flex-wrap"
+                      >
+                        <div class="flex-1">
+                          <div>
+                            <label for="email_signup_newsletter_form[email]"
+                            ></label>
+
+                            <span class="relative">
+                              <input
+                                type="email"
+                                name="email_signup[email]"
+                                id="email_signup_newsletter_form[email]"
+                                class="w-full focus:outline-none focus:ring-offset-0 focus:ring-1 focus:ring-light-darker focus:ring-opacity-0 hover:ring-opacity-0 text-sm text-base text-black border-0 border-b border-black placeholder-black bg-transparent px-0 hover:border-primary focus:border-primary"
+                                required="required"
+                                aria-label="Your email"
+                                placeholder="Your email"
+                              />
+                            </span>
+                            <span
+                              class="block text-xs"
+                              data-elements--forms--inputs--text-component--email-warning-target="warning"
+                            >
+                            </span>
+                          </div>
+                        </div>
+                        <div class="w-full lg:order-last">
+                          <div
+                            data-appearance="interaction-only"
+                            data-sitekey="0x4AAAAAABc_tTklf93Z5BAe"
+                            data-size="normal"
+                            data-theme="light"
+                            data-controller="elements--cloudflare-turnstile-component--cloudflare-turnstile"
+                          >
+                            <div>
+                              <input
+                                type="hidden"
+                                name="cf-turnstile-response"
+                                id="cf-chl-widget-48oms_response"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <button
+                          name="notify_me"
+                          data-controller="elements--button-component--button"
+                          class="whitespace-nowrap block flex justify-center items-center transition-colors duration-300 ease-in-out hover:no-underline disabled:cursor-not-allowed font-semibold focus:outline focus:outline-offset-2 focus:outline-2 focus:outline-accent-blue group rounded-full max-w-max min-w-min bg-primary text-on-primary hover:bg-primary-hover active:bg-primary-pressed"
+                          type="submit"
+                          value="edit"
+                          ><span
+                            class="flex justify-center space-x-3 items-center py-2 px-4 group-[.disabled]:invisible group-disabled:invisible"
+                            ><span> Subscribe </span></span
+                          ><span
+                            class="hidden absolute spinner group-[.disabled]:flex group-disabled:flex"
+                          ></span></button
+                        >
+                      </div>
+
+                      <input
+                        type="hidden"
+                        name="email_signup[source]"
+                        value="Newsletter Form"
+                        autocomplete="off"
+                      />
+                      <input
+                        type="hidden"
+                        name="email_signup[call_to_action]"
+                        value="Subscribe"
+                        autocomplete="off"
+                      />
+                      <input
+                        type="hidden"
+                        name="email_signup[success_text]"
+                        value="<p>Thanks for subscribing!</p>"
+                        autocomplete="off"
+                      />
+                    </div>
+                  </form>
+                </div>
+              </turbo-frame>
+            </div>
+
+            <div
+              class="frequency absolute -bottom-7 right-5 lg:static pb-4 lg:ml-6 xl:ml-0 lg:mt-4 overflow-hidden text-primary-dark font-semibold text-xl"
+            >
+              <p>Monthly-ish</p>
+              <img
+                alt="wiggle"
+                class="absolute top-7 -left-0 max-w-none h-2"
+                src="/assets/wiggle-17ac27cfea3f79f2c8b5e5dcaa61840e7c343cbdd59b7ed0bec5512428ccf9e8.png"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bg--color-milk">
+    <div class="pt-16 lg:pt-20 pb-4 lg:pb-6">
+      <div
+        class="grid grid-cols-1 lg:grid-cols-12 lg:grid-flow-row-dense gap-y-4 gap-x-6"
+      >
+        <div class="lg:col-start-1 lg:col-end-13">
+          <div
+            class="flex overflow-hidden gap-14 text-4xl xl:text-6xl [&_pre]:font-framework-pixel [&_pre]:text-[41px] [&_pre]:xl:text-[70px] [&_pre]:mt-0.5 [&_img]:w-auto [&_img]:max-h-11 [&_img]:xl:max-h-[86px] group"
+          >
+            <div
+              class="items-center flex justify-around min-w-full shrink-0 space-x-2 xl:space-x-4 animate-marquee group-hover:pause-animation"
+            >
+              <pre>Let’s fix 🪛 Consumer Electronics.</pre>
+            </div>
+            <div
+              class="items-center flex justify-around min-w-full shrink-0 space-x-2 xl:space-x-4 animate-marquee group-hover:pause-animation"
+            >
+              <pre>Let’s fix 🪛 Consumer Electronics.</pre>
+            </div>
+            <div
+              class="items-center flex justify-around min-w-full shrink-0 space-x-2 xl:space-x-4 animate-marquee group-hover:pause-animation"
+            >
+              <pre>Let’s fix 🪛 Consumer Electronics.</pre>
+            </div>
+            <div
+              class="items-center flex justify-around min-w-full shrink-0 space-x-2 xl:space-x-4 animate-marquee group-hover:pause-animation"
+            >
+              <pre>Let’s fix 🪛 Consumer Electronics.</pre>
+            </div>
+            <div
+              class="items-center flex justify-around min-w-full shrink-0 space-x-2 xl:space-x-4 animate-marquee group-hover:pause-animation"
+            >
+              <pre>Let’s fix 🪛 Consumer Electronics.</pre>
+            </div>
+            <div
+              class="items-center flex justify-around min-w-full shrink-0 space-x-2 xl:space-x-4 animate-marquee group-hover:pause-animation"
+            >
+              <pre>Let’s fix 🪛 Consumer Electronics.</pre>
+            </div>
+            <div
+              class="items-center flex justify-around min-w-full shrink-0 space-x-2 xl:space-x-4 animate-marquee group-hover:pause-animation"
+            >
+              <pre>Let’s fix 🪛 Consumer Electronics.</pre>
+            </div>
+            <div
+              class="items-center flex justify-around min-w-full shrink-0 space-x-2 xl:space-x-4 animate-marquee group-hover:pause-animation"
+            >
+              <pre>Let’s fix 🪛 Consumer Electronics.</pre>
+            </div>
+            <div
+              class="items-center flex justify-around min-w-full shrink-0 space-x-2 xl:space-x-4 animate-marquee group-hover:pause-animation"
+            >
+              <pre>Let’s fix 🪛 Consumer Electronics.</pre>
+            </div>
+            <div
+              class="items-center flex justify-around min-w-full shrink-0 space-x-2 xl:space-x-4 animate-marquee group-hover:pause-animation"
+            >
+              <pre>Let’s fix 🪛 Consumer Electronics.</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bg--color-milk">
+    <div class="pb-3 lg:pb-4 text-black container">
+      <div
+        class="grid grid-cols-1 lg:grid-cols-12 lg:grid-flow-row-dense gap-y-4 gap-x-6"
+      >
+        <div class="lg:col-start-3 lg:col-end-11">
+          <div class="prose lg:prose-lg max-w-none text-center prose-h2:mb-4">
+            <p>
+              The Consumer Electronics industry is broken. We’re here to fix it.
+              We build high-performance products that are easy to repair,
+              upgrade, and customize, so you can use them for as long as you'd
+              like.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bg--color-milk">
+    <div class="pb-12 lg:pb-14 container">
+      <div
+        class="grid grid-cols-1 lg:grid-cols-12 lg:grid-flow-row-dense gap-y-4 gap-x-6"
+      >
+        <div class="lg:col-start-1 lg:col-end-13">
+          <div class="flex pt-4 justify-center">
+            <a
+              class="focus:accent-blue whitespace-nowrap block flex justify-center items-center transition-colors duration-300 ease-in-out hover:no-underline disabled:cursor-not-allowed font-semibold focus:outline focus:outline-offset-2 focus:outline-2 focus:outline-accent-blue group rounded-full max-w-max min-w-min bg-primary text-on-primary hover:bg-primary-hover active:bg-primary-pressed no-underline"
+              data-controller="elements--button-component--button"
+              data-action="click->elements--button-component--button#disable"
+              href="/about"
+              ><span
+                class="flex justify-center space-x-3 items-center py-2 px-4 rounded-full group-[.disabled]:invisible group-disabled:invisible"
+                ><span><span class="text">Learn more about us</span></span
+                ></span
+              ><span
+                class="hidden absolute spinner group-[.disabled]:flex group-disabled:flex"
+              ></span></a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bg--color-milk">
+    <div class="">
+      <div
+        class="grid grid-cols-1 lg:grid-cols-12 lg:grid-flow-row-dense gap-y-4 gap-x-6"
+      >
+        <div class="lg:col-start-1 lg:col-end-13">
+          <div class="relative overflow-hidden">
+            <div class="relative">
+              <img
+                alt="Image of different Framework parts"
+                width="3840"
+                height="2160"
+                class="w-full hidden lg:block"
+                loading="lazy"
+                srcset="https://images.prismic.io/frameworkmarketplace/Z7cgsZ7c43Q3gAxR_homepage_about-us.jpg?auto=format,compress&w=375 375w,https://images.prismic.io/frameworkmarketplace/Z7cgsZ7c43Q3gAxR_homepage_about-us.jpg?auto=format,compress&w=768 768w,https://images.prismic.io/frameworkmarketplace/Z7cgsZ7c43Q3gAxR_homepage_about-us.jpg?auto=format,compress&w=1024 1024w,https://images.prismic.io/frameworkmarketplace/Z7cgsZ7c43Q3gAxR_homepage_about-us.jpg?auto=format,compress&w=1280 1280w,https://images.prismic.io/frameworkmarketplace/Z7cgsZ7c43Q3gAxR_homepage_about-us.jpg?auto=format,compress 1920w"
+                sizes="100vw"
+                src="https://images.prismic.io/frameworkmarketplace/Z7cgsZ7c43Q3gAxR_homepage_about-us.jpg?auto=format,compress"
+              />
+
+              <img
+                alt="Image of different Framework parts"
+                width="1422"
+                height="800"
+                class="w-full block lg:hidden"
+                loading="lazy"
+                srcset="https://images.prismic.io/frameworkmarketplace/Z7cgsZ7c43Q3gAxR_homepage_about-us.jpg?auto=format,compress&rect=0,0,3839,2160&w=1422&h=800&w=375 375w,https://images.prismic.io/frameworkmarketplace/Z7cgsZ7c43Q3gAxR_homepage_about-us.jpg?auto=format,compress&rect=0,0,3839,2160&w=1422&h=800&w=768 768w,https://images.prismic.io/frameworkmarketplace/Z7cgsZ7c43Q3gAxR_homepage_about-us.jpg?auto=format,compress&rect=0,0,3839,2160&w=1422&h=800&w=1024 1024w,https://images.prismic.io/frameworkmarketplace/Z7cgsZ7c43Q3gAxR_homepage_about-us.jpg?auto=format,compress&rect=0,0,3839,2160&w=1422&h=800&w=1280 1280w,https://images.prismic.io/frameworkmarketplace/Z7cgsZ7c43Q3gAxR_homepage_about-us.jpg?auto=format,compress&rect=0,0,3839,2160&w=1422&h=800 1920w"
+                sizes="100vw"
+                src="https://images.prismic.io/frameworkmarketplace/Z7cgsZ7c43Q3gAxR_homepage_about-us.jpg?auto=format,compress&rect=0,0,3839,2160&w=1422&h=800"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<style>
+    @reference "tailwindcss";
+
+  .bg--color-milk {
+    background-color: #f5f5f4;
+
+    @apply bg-amber-100;
+  }
+</style>

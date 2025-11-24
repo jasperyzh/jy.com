@@ -1,0 +1,89 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import { render } from "astro:content";
+import { slugify } from "@/util/util--blog";
+
+import ToolstackIcons from "@/pages/my-design-guide/_toolstack.astro";
+import ToolPomodoro from "@/components/Tool__Pomodoro.astro";
+import ToolGoldenRatioCalculator from "@/components/Tool__GoldenRatioCalculator.astro";
+import ToolScreenCapture from "@/components/Tool__ScreenCapture.astro";
+
+// import ToolColorPalette from "@/components/Tool__ColorPalette.astro";
+import MyColorPalette from "@/pages/my-design-guide/_color.astro";
+
+// Load all toolstack items from content collection
+const toolstack = await getCollection("toolstack");
+
+// Render all toolstack items and prepare data
+const toolstackItems = await Promise.all(
+  toolstack.map(async (item) => {
+    const { Content } = await render(item);
+    const title = item.data.title || item.id;
+    const id = slugify(title);
+    const hidden = item.data.hidden || 0;
+    return {
+      id,
+      title,
+      Content,
+      hidden,
+    };
+  })
+);
+
+// console.log(toolstackItems);
+---
+
+<Layout
+  title="Classless CSS test"
+  description="Test page for testing out classless CSS with TailwindCSS"
+>
+  <main class="container">
+    <header>
+      <h1>Toolstack</h1>
+      <p>
+        My list of aggregated tools and principles for building web projects.
+      </p>
+    </header>
+
+    <div class="container">
+
+      <section id="tools">
+        <ToolPomodoro />
+        <ToolGoldenRatioCalculator />
+        <ToolScreenCapture />
+        <!-- <ToolColorPalette /> -->
+         <MyColorPalette />
+      </section>
+    </div>
+
+    <div class="container">
+
+      <ToolstackIcons />
+    </div>
+
+    <div class="grid-- grid--sidebar_content my-16">
+      <aside>
+        <ul class="sticky top-24 list-none card-- mr-16 px-8">
+          {
+            toolstackItems.map((item) => (
+              <li>
+                <a href={`#${item.id}`}>{item.title}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </aside>
+      <section>
+        {
+          toolstackItems.map((item) => (
+            <article id={item.id}>
+              <h2>{item.title}</h2>
+              {!item.hidden && <item.Content />}
+            </article>
+          ))
+        }
+      </section>
+    </div>
+  </main>
+</Layout>
