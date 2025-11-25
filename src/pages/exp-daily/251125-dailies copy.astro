@@ -4,7 +4,7 @@ import Layout from "@/layouts/Layout.astro";
 import { formatDateYYMMDD } from "@/util/util--date";
 
 // Import the sketch component - this will set up createDotMatrixSketch globally
-import SketchSetup from "./_251124-sketch-dotMatrixSketch.astro";
+import SketchSetup from "./_251125-sketch-dotMatrixSketch.astro";
 
 const sketch_name = "long live the rain";
 
@@ -12,7 +12,10 @@ const today_date = formatDateYYMMDD(new Date());
 
 const title = `${today_date}-dailies${sketch_name ? `--${sketch_name}` : ""}`;
 
-const footer_text = `${today_date} // FRAMEWORK_V1 // OPEN-METEO API // P5.JS`;
+const footer_text = `${today_date} // FRAMEWORK_V2 // OPEN  -METEO API // P5.JS`;
+
+const canvas_width = 1024;
+const canvas_height = 768;
 ---
 
 <Layout title={title} empty_canvas={true}>
@@ -21,17 +24,17 @@ const footer_text = `${today_date} // FRAMEWORK_V1 // OPEN-METEO API // P5.JS`;
     <!-- Header / Controls -->
     <header>
       <h1 class="h5">{title}</h1>
-      <div class="flex gap-2">
-        <button id="btn-export-svg">Export SVG</button>
-        <button id="btn-export-png">Export PNG</button>
-      </div>
     </header>
 
     <!-- Sketch Frame (The Capture Area) -->
     <div id="sketch-frame" class="grid-- grid--content_sidebar">
       <!-- Back -->
       <section class="back">
-        <img class="w-full h-full object-cover object-bottom col-span-2 row-span-2" src="/assets/Blog__/251124-20251124_140919.jpg" alt="">
+        <img
+          class="w-full h-full object-cover object-bottom col-span-2 row-span-2"
+          src="/assets/Blog__/251124-20251124_140919.jpg"
+          alt=""
+        />
         <span>TEMP</span>
         <span id="data-temp" class="text-2xl animated--">--°C</span>
         <span>WIND</span>
@@ -45,9 +48,8 @@ const footer_text = `${today_date} // FRAMEWORK_V1 // OPEN-METEO API // P5.JS`;
 
       <!-- Top  -->
       <section class="front">
-
         <span id="data-location" class="animated--">LOADING...</span>
-        <span id="data-coords" class=" animated--">--°N --°E</span>
+        <span id="data-coords" class="animated--">--°N --°E</span>
         <span id="data-time" class="animated--">00:00:00</span>
       </section>
     </div>
@@ -59,10 +61,15 @@ const footer_text = `${today_date} // FRAMEWORK_V1 // OPEN-METEO API // P5.JS`;
   </main>
 </Layout>
 
-<style>
+<style
+  define:vars={{
+    canvas_width: canvas_width + "px",
+    canvas_height: canvas_height + "px",
+  }}
+>
   #sketch-frame {
-    width: 800px;
-    height: 800px;
+    width: var(--canvas_width);
+    height: var(--canvas_height);
     aspect-ratio: 1/1;
     margin: 0 auto;
     background-color: var(--color-yellow);
@@ -116,7 +123,11 @@ const footer_text = `${today_date} // FRAMEWORK_V1 // OPEN-METEO API // P5.JS`;
   import "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js";
 </script>
 
-<script is:inline type="module" define:vars={{ title }}>
+<script
+  is:inline
+  type="module"
+  define:vars={{ title, canvas_width, canvas_height }}
+>
   import GUI from "https://cdn.jsdelivr.net/npm/lil-gui@0.19/+esm";
   import PixelDisplay from "/dailies/PixelDisplay.js";
   import HatchFill from "/dailies/HatchFill.js";
@@ -124,43 +135,42 @@ const footer_text = `${today_date} // FRAMEWORK_V1 // OPEN-METEO API // P5.JS`;
   // --- CONFIGURATION ---
   const CONFIG = {
     debug: true,
-    city: "Kuala Lumpur", // Default city
+
+    // --- WEATHER SETTINGS ---
+    city: "Kuala Lumpur",
     lat: 3.0831022768590155,
     lon: 101.64836391773572,
     refreshRate: 1000 * 60 * 15, // 15 mins
 
     // Dimensions
-    width: 800,
-    height: 800,
+    width: canvas_width,
+    height: canvas_height,
 
     // Dot Matrix Params
+    // displayScale: 1.0, ???? //full width? scale 2? scale 3? scale 4?
     matrixSize: 4,
     theme: "milk_transparent",
 
-    shadeSteps: 2,
+    // Noise Params
     noiseScale: 0.05,
+    animationSpeed: 0.002,
+    shadeSteps: 2,
     dotScaleFactor: 2.0,
     dotNoiseInfluence: 1.0,
-
     useColorThemeShading: false,
-    useHatchFill: false,
-    hatchDensity: 0.05,
-    hatchAngle: 45,
-    hatchCrossHatch: false,
-    hatchUseGlobalDensity: true,
-    hatchGlobalSpacing: 3,
-    animationSpeed: 0.002,
-
-    // Common
     isPaused: false,
 
-    // Export
-    exportSize: "current", // 'current' | 'a4'
+    // Hatch Fill Params
+    useHatchFill: false,
+    hatchUseGlobalDensity: true,
+    hatchDensity: 0.05,
+    hatchGlobalSpacing: 3,
+    hatchAngle: 45,
+    hatchCrossHatch: false,
   };
 
   // --- STATE ---
   let weatherData = null;
-
   let sketch = null;
 
   // --- DOM ELEMENTS ---
@@ -173,7 +183,7 @@ const footer_text = `${today_date} // FRAMEWORK_V1 // OPEN-METEO API // P5.JS`;
     frame: document.getElementById("sketch-frame"),
   };
 
-  // --- DATA LAYER ---
+  // --- WEATHER DATA ---
   async function fetchWeather() {
     try {
       const url = `https://api.open-meteo.com/v1/forecast?latitude=${CONFIG.lat}&longitude=${CONFIG.lon}&current=temperature_2m,wind_speed_10m&timezone=auto`;
@@ -214,12 +224,10 @@ const footer_text = `${today_date} // FRAMEWORK_V1 // OPEN-METEO API // P5.JS`;
       sketch.resize(CONFIG.width, CONFIG.height);
     }
 
-    if (sketch && sketch.updateColorTheme) {
-      sketch.updateColorTheme();
-    }
+    sketchUpdateColorTheme();
   }
 
-  function updateColorTheme() {
+  function sketchUpdateColorTheme() {
     if (sketch && sketch.updateColorTheme) {
       sketch.updateColorTheme();
     }
@@ -252,47 +260,28 @@ const footer_text = `${today_date} // FRAMEWORK_V1 // OPEN-METEO API // P5.JS`;
 
   // --- EXPORT FUNCTIONS ---
 
-  // SVG Export
-  function exportSVG() {
-    if (sketch && sketch.exportSvg) {
-      sketch.exportSvg(CONFIG.exportSize);
-    }
-  }
-
-  // PNG Export
-  async function exportPNG() {
-    try {
-      const canvas = await html2canvas(els.frame, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: null,
-      });
-
-      const link = document.createElement("a");
-      link.download = `${title}.png`;
-      link.href = canvas.toDataURL("image/png");
-      link.click();
-    } catch (err) {
-      console.error("PNG Export failed", err);
-    }
-  }
-
   // --- INIT ---
-  function init() {
-    // 2. Start Data Fetching
+  async function init() {
+    // 1. Weather Data
     fetchWeather();
     setInterval(fetchWeather, CONFIG.refreshRate);
+
+    // 2. Time
     setInterval(updateTime, 1000);
     updateTime();
 
     // 3. Setup GUI
     const gui = new GUI();
 
+    // 4. Layout
     const f0 = gui.addFolder("Layout");
     f0.add(CONFIG, "width", 400, 2000).step(10).onChange(updateLayout);
     f0.add(CONFIG, "height", 400, 2000).step(10).onChange(updateLayout);
 
+    // 5. Sketch
     const f1 = gui.addFolder("Sketch");
+
+    // Dot Matrix Params
     f1.add(CONFIG, "matrixSize", [64, 32, 16, 8, 4])
       .name("Matrix Size")
       .onChange(updateLayout);
@@ -305,7 +294,9 @@ const footer_text = `${today_date} // FRAMEWORK_V1 // OPEN-METEO API // P5.JS`;
       "blue",
     ])
       .name("Theme")
-      .onChange(updateColorTheme);
+      .onChange(sketchUpdateColorTheme);
+
+    // Noise Params
     f1.add(CONFIG, "noiseScale", 0.01, 0.8, 0.005).name("NoiseScale");
     f1.add(CONFIG, "animationSpeed", 0.001, 0.1, 0.001).name("Animation Speed");
     f1.add(CONFIG, "shadeSteps", 2, 16, 1).name("Shade Steps");
@@ -314,39 +305,47 @@ const footer_text = `${today_date} // FRAMEWORK_V1 // OPEN-METEO API // P5.JS`;
       "Dot Noise Influence"
     );
     f1.add(CONFIG, "useColorThemeShading").name("Use Color Theme Shading");
-
-    // Hatch fill controls
-    const hatchFolder = f1.addFolder("Hatch Fill");
-    hatchFolder.add(CONFIG, "useHatchFill").name("Use Hatch Fill");
-    hatchFolder.add(CONFIG, "hatchUseGlobalDensity").name("Use Global Density");
-    hatchFolder
-      .add(CONFIG, "hatchDensity", 0.01, 1.0, 0.01)
-      .name("Hatch Density");
-    hatchFolder
-      .add(CONFIG, "hatchGlobalSpacing", 1, 20, 0.5)
-      .name("Global Spacing (px)");
-    hatchFolder.add(CONFIG, "hatchAngle", 0, 180, 1).name("Hatch Angle");
-    hatchFolder.add(CONFIG, "hatchCrossHatch").name("Cross Hatch");
-
     f1.add(CONFIG, "isPaused").name("Pause Animation");
 
-    const f2 = gui.addFolder("Location");
-    f2.add(CONFIG, "city").onFinishChange(() => {
-      /* Todo: Geocode */
-    });
-    f2.add(CONFIG, "lat").onFinishChange(fetchWeather);
-    f2.add(CONFIG, "lon").onFinishChange(fetchWeather);
+    // 6. Hatch Fill
+    const f3 = gui.addFolder("Hatch Fill");
+    // const hatchFolder = f2.addFolder("Hatch Fill");
+    f3.add(CONFIG, "useHatchFill").name("Use Hatch Fill");
+    f3.add(CONFIG, "hatchUseGlobalDensity").name("Use Global Density");
+    f3.add(CONFIG, "hatchDensity", 0.01, 1.0, 0.01).name("Hatch Density");
+    f3.add(CONFIG, "hatchGlobalSpacing", 1, 20, 0.5).name(
+      "Global Spacing (px)"
+    );
+    f3.add(CONFIG, "hatchAngle", 0, 180, 1).name("Hatch Angle");
+    f3.add(CONFIG, "hatchCrossHatch").name("Cross Hatch");
 
-    const f3 = gui.addFolder("Export");
-    f3.add(CONFIG, "exportSize", ["current", "a4"]).name("SVG Size");
+    // 7. Exports
+    const f4 = gui.addFolder("Export");
+    const exportFunctions = {
+      exportSVG: function () {
+        if (sketch && sketch.exportSvg) {
+          sketch.exportSvg("current");
+        }
+      },
+      exportPNG: async function () {
+        try {
+          const canvas = await html2canvas(els.frame, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: null,
+          });
 
-    // 4. Bind Buttons
-    document
-      .getElementById("btn-export-svg")
-      .addEventListener("click", exportSVG);
-    document
-      .getElementById("btn-export-png")
-      .addEventListener("click", exportPNG);
+          const link = document.createElement("a");
+          link.download = `${title}.png`;
+          link.href = canvas.toDataURL("image/png");
+          link.click();
+        } catch (err) {
+          console.error("PNG Export failed", err);
+        }
+      },
+    };
+    f4.add(exportFunctions, "exportSVG").name("Export SVG");
+    f4.add(exportFunctions, "exportPNG").name("Export PNG");
   }
 
   // Run

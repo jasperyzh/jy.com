@@ -1,10 +1,5 @@
-/exp--archived
-/exp--canvas
-/exp--educations_assets
-/exp--phaser
-/exp--wordpress_docker--loveartdesign
-/exp--wordpress_docker-to_home_server
-/docs--jy
+/exp--*
+/jy--*
 
 251112-exp--node.zip
 251113-jy--node.zip
