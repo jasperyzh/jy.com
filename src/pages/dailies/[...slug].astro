@@ -1,0 +1,126 @@
+---
+/**
+ * @description Dynamic route for individual sketch pages
+ * Uses import.meta.glob() and getStaticPaths to read all .astro files from src/sketches/,
+ * parse metadata (slug, title) from filenames, and generate dynamic routes.
+ * Uses LayoutDailies.astro as the layout.
+ */
+
+import LayoutDailies from "@/layouts/LayoutDailies.astro";
+
+export async function getStaticPaths() {
+  // Import all sketch files from src/sketches/
+  // Use eager: true to get modules directly and avoid dynamic import issues
+  const allSketches = import.meta.glob("../../sketches/*.astro", {
+    eager: true,
+  });
+
+  const paths: Array<{
+    params: { slug: string };
+    props: {
+      SketchComponent: any;
+      filename: string;
+      sketch_date: string;
+      sketch_title: string;
+      canvas_width: number;
+      canvas_height: number;
+    };
+  }> = [];
+
+  /**
+   * Parse sketch metadata from filename
+   * Expected format: YYMMDD-sketch--(sketch_name)
+   * @param {string} filename - Filename without extension
+   * @returns {{sketch_date: string, sketch_title: string, slug: string}}
+   */
+  function parseSketchMeta(filename) {
+    if (!filename) return { sketch_date: "", sketch_title: "", slug: "" };
+
+    // Match: YYMMDD-sketch--(sketch_name)
+    // Captures: date (6 digits) and title (everything after "sketch--")
+    const match = filename.match(/^(\d{6})-sketch--(.+)$/);
+
+    if (!match) {
+      console.warn(
+        `Filename "${filename}" does not match expected format: YYMMDD-sketch--(sketch_name)`
+      );
+      return { sketch_date: "", sketch_title: "", slug: "" };
+    }
+
+    return {
+      sketch_date: match[1], // YYMMDD
+      sketch_title: match[2], // sketch name
+      slug: filename, // Use full filename as slug
+    };
+  }
+
+  /**
+   * Extract filename from file path
+   * @param {string} filePath - Full file path
+   * @returns {string} Filename without extension
+   */
+  function getFilenameFromPath(filePath) {
+    const filename = filePath.split("/").pop() || "";
+    return filename.replace(/\.astro$/, "");
+  }
+
+
+  // Loop through all sketches and generate paths
+  for (const filePath in allSketches) {
+    const filename = getFilenameFromPath(filePath);
+    const { sketch_date, sketch_title, slug } = parseSketchMeta(filename);
+
+    // Skip if filename doesn't match expected format
+    if (!sketch_date || !sketch_title) {
+      continue;
+    }
+
+    // Get the module (already loaded with eager: true)
+    const SketchModule = allSketches[filePath] as any;
+    const SketchComponent = SketchModule.default;
+
+    // Extract canvas dimensions from the sketch if available, or use defaults
+    const canvas_width = SketchModule.canvas_width || 800;
+    const canvas_height = SketchModule.canvas_height || 800;
+
+    paths.push({
+      params: { slug: slug },
+      props: {
+        SketchComponent,
+        filename: filename,
+        sketch_date,
+        sketch_title,
+        canvas_width,
+        canvas_height,
+      },
+    });
+  }
+
+  // Sort by date (newest first)
+  paths.sort((a, b) => {
+    const dateA = a.props.sketch_date;
+    const dateB = b.props.sketch_date;
+    return dateB.localeCompare(dateA);
+  });
+
+  return paths;
+}
+
+const {
+  SketchComponent,
+  filename,
+  sketch_date,
+  sketch_title,
+  canvas_width,
+  canvas_height,
+} = Astro.props;
+
+export const prerender = true;
+---
+
+<!-- 
+  The sketch component is rendered directly here.
+  Sketch files use DailiesInstance, which is a wrapper around LayoutDailies,
+  so they will work correctly with this setup.
+-->
+<SketchComponent />

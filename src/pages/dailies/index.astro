@@ -1,0 +1,92 @@
+---
+/**
+ * @description Dailies index page - displays all sketches in a list
+ * TODO: Add pagination later
+ */
+
+import Layout from "@/layouts/Layout.astro";
+
+/**
+ * Parse sketch metadata from filename
+ * Expected format: YYMMDD-sketch--(sketch_name)
+ * @param {string} filename - Filename without extension
+ * @returns {{sketch_date: string, sketch_title: string, slug: string}}
+ */
+function parseSketchMeta(filename) {
+  if (!filename) return { sketch_date: "", sketch_title: "", slug: "" };
+
+  // Match: YYMMDD-sketch--(sketch_name)
+  const match = filename.match(/^(\d{6})-sketch--(.+)$/);
+
+  if (!match) {
+    return { sketch_date: "", sketch_title: "", slug: "" };
+  }
+
+  return {
+    sketch_date: match[1], // YYMMDD
+    sketch_title: match[2], // sketch name
+    slug: filename, // Use full filename as slug
+  };
+}
+
+/**
+ * Extract filename from file path
+ * @param {string} filePath - Full file path
+ * @returns {string} Filename without extension
+ */
+function getFilenameFromPath(filePath) {
+  const filename = filePath.split("/").pop() || "";
+  return filename.replace(/\.astro$/, "");
+}
+
+// Import all sketch files from src/sketches/
+const allSketches = import.meta.glob("../../sketches/*.astro", { eager: false });
+
+console.log(allSketches);
+// Process all sketches
+const sketches = Object.keys(allSketches)
+  .map((filePath) => {
+    const filename = getFilenameFromPath(filePath);
+    const { sketch_date, sketch_title, slug } = parseSketchMeta(filename);
+
+    // Skip if filename doesn't match expected format
+    if (!sketch_date || !sketch_title) {
+      return null;
+    }
+
+    return {
+      filename,
+      slug,
+      sketch_date,
+      sketch_title,
+      url: `/dailies/${slug}`,
+    };
+  })
+  .filter((sketch) => sketch !== null)
+  .sort((a, b) => {
+    // Sort by date (newest first)
+    return b.sketch_date.localeCompare(a.sketch_date);
+  });
+
+export const prerender = true;
+---
+
+<Layout title="Dailies">
+  <main>
+    <header>
+      <h1>Dailies</h1>
+      <p>Collection of daily sketches</p>
+    </header>
+
+    <ul>
+      {sketches.map((sketch) => (
+        <li>
+          <a href={sketch.url}>
+            <h3 class="h6"><time>{sketch.sketch_date}</time> {sketch.sketch_title}</h3>
+            
+          </a>
+        </li>
+      ))}
+    </ul>
+  </main>
+</Layout>

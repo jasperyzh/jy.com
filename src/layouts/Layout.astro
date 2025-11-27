@@ -74,9 +74,9 @@ const { title, description, empty_canvas = false } = Astro.props as Props;
       );
       window.hotkeyManager.register(
         "2",
-        "Go to toolstack--",
+        "Daily Sketches",
         () => {
-          window.location.href = "/toolstack--";
+          window.location.href = "/dailies";
         },
         true,
         {},
@@ -94,6 +94,16 @@ const { title, description, empty_canvas = false } = Astro.props as Props;
       );
       window.hotkeyManager.register(
         "4",
+        "Go to toolstack--",
+        () => {
+          window.location.href = "/toolstack--";
+        },
+        true,
+        {},
+        true
+      );
+      window.hotkeyManager.register(
+        "]",
         "Toggle dark mode",
         () => {
           if ((window as any).toggleTheme) {

@@ -1,0 +1,544 @@
+---
+import Layout from "@/layouts/Layout.astro";
+
+import { ASSETS_PATH } from "@/consts";
+
+import { formatDateYYMMDD } from "@/util/util--date";
+
+const sketch_name = "British Weather";
+
+const today_date = formatDateYYMMDD(new Date());
+
+const title = `${today_date}-dailies${sketch_name ? `--${sketch_name}` : ""}`;
+
+const footer_text = `${today_date} // FRAMEWORK_V2 // OPEN  -METEO API // P5.JS`;
+
+// const canvas_width = 1024;
+// const canvas_height = 768;
+const canvas_width = 800;
+const canvas_height = 800;
+---
+
+<Layout title={title} empty_canvas={true}>
+  <main class="flex flex-col gap-4">
+    <!-- Main Container -->
+    <!-- Header / Controls -->
+    <header>
+      <h1 class="h5">{title}</h1>
+    </header>
+
+    <!-- Sketch Frame (The Capture Area) -->
+    <div id="sketch-frame" class="grid-- grid--content_sidebar">
+      <!-- Back -->
+      <section class="back">
+        <img
+          class="w-full h-full object-cover object-bottom col-span-2 row-span-2"
+          src={`${ASSETS_PATH.images}/251124-20251124_140919.jpg`}
+          alt=""
+        />
+        <span>TEMP</span>
+        <span id="data-temp" class="text-2xl animated--">--°C</span>
+        <span>WIND</span>
+        <span id="data-wind" class="animated--">-- km/h</span>
+      </section>
+
+      <!-- middle -->
+      <section class="middle">
+        <div id="canvas-container"></div>
+      </section>
+
+      <!-- Top  -->
+      <section class="front">
+        <span id="data-location" class="animated--">LOADING...</span>
+        <span id="data-coords" class="animated--">--°N --°E</span>
+        <span id="data-time" class="animated--">00:00:00</span>
+      </section>
+    </div>
+
+    <!-- footer -->
+    <footer class="font-display-alt">
+      {footer_text}
+    </footer>
+  </main>
+</Layout>
+
+<style
+  define:vars={{
+    canvas_width: canvas_width + "px",
+    canvas_height: canvas_height + "px",
+  }}
+>
+  #sketch-frame {
+    width: var(--canvas_width);
+    height: var(--canvas_height);
+    background-color: var(--color-yellow);
+    .front,
+    .back {
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-template-rows: repeat(5, 20%);
+      grid-column: 1 / -1;
+      grid-row: 1 / -1;
+    }
+  }
+
+  .front {
+    color: var(--color-2a) !important;
+    font-size: var(--text-5xl);
+    font-family: var(--font-display);
+    font-weight: bold;
+    padding: 3rem;
+  }
+  .middle {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  #canvas-container {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    grid-template-rows: 50% 50%;
+    width: 100%;
+    height: 100%;
+    gap: 0;
+  }
+
+  #canvas-container canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .back {
+    color: var(--color-red) !important;
+    font-size: var(--text-5xl);
+    font-family: var(--font-display);
+    font-weight: bold;
+  }
+
+  #data-coords {
+    grid-row: 2;
+    justify-self: start;
+    align-self: end;
+  }
+  #data-time {
+    grid-row: 5;
+    justify-self: start;
+    align-self: end;
+  }
+</style>
+
+<!-- Libraries -->
+<script type="module">
+  import "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.10/p5.js";
+  import "https://cdn.jsdelivr.net/npm/p5.js-svg@1.6.0/dist/p5.svg.min.js";
+  import "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js";
+</script>
+
+<script
+  is:inline
+  type="module"
+  define:vars={{ title, canvas_width, canvas_height }}
+>
+  import GUI from "https://cdn.jsdelivr.net/npm/lil-gui@0.19/+esm";
+  import PixelDisplay from "/dailies/PixelDisplay.js";
+  import HatchFill from "/dailies/HatchFill.js";
+
+  import { createDotMatrixSketch } from "/dailies/251125-dot_matrix_hatchfill.js";
+
+  // --- CONFIGURATION ---
+  const CONFIG = {
+    debug: true,
+    title: title,
+
+    // --- WEATHER SETTINGS ---
+    city: "Kuala Lumpur",
+    lat: 3.0831022768590155,
+    lon: 101.64836391773572,
+    refreshRate: 1000 * 60 * 15, // 15 mins
+
+    // Dimensions
+    width: canvas_width,
+    height: canvas_height,
+
+    // Dot Matrix Params
+    // Matrix preset based on 128x64 OLED resolution (max 128x128)
+    // Options: "128x64", "64x64", "48x48", "32x32", "16x16", "8x8", "4x4", "2x2"
+    // Or use matrixWidth/matrixHeight for custom dimensions (max 128 each)
+    // Set matrixWidth/matrixHeight to 0 to use preset instead
+    matrixPreset: "4x4", // Legacy: matrixSize still works for square matrices
+    matrixWidth: 0, // Custom width (0 = use preset, 2-128 = custom width)
+    matrixHeight: 0, // Custom height (0 = use preset, 2-128 = custom height)
+    theme: "milk_transparent",
+
+    // Noise Params
+    noiseScale: 0.05,
+    animationSpeed: 0.002,
+    shadeSteps: 2,
+    dotScaleFactor: 2.0,
+    dotNoiseInfluence: 1.0,
+    useColorThemeShading: false,
+    isPaused: false,
+
+    // Hatch Fill Params
+    useHatchFill: false,
+    hatchUseGlobalDensity: true,
+    hatchDensity: 0.05,
+    hatchGlobalSpacing: 3,
+    hatchAngle: 45,
+    hatchCrossHatch: false,
+  };
+
+  // --- STATE ---
+  let weatherData = null;
+  let sketch = null;
+
+  // --- DOM ELEMENTS ---
+  const els = {
+    location: document.getElementById("data-location"),
+    coords: document.getElementById("data-coords"),
+    time: document.getElementById("data-time"),
+    temp: document.getElementById("data-temp"),
+    wind: document.getElementById("data-wind"),
+    frame: document.getElementById("sketch-frame"),
+  };
+
+  // --- WEATHER DATA ---
+  async function fetchWeather() {
+    try {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${CONFIG.lat}&longitude=${CONFIG.lon}&current=temperature_2m,wind_speed_10m&timezone=auto`;
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if (data.current) {
+        weatherData = data.current;
+        updateUI();
+      }
+    } catch (e) {
+      console.error("Weather fetch failed", e);
+    }
+  }
+
+  function updateUI() {
+    if (!weatherData) return;
+    els.location.textContent = CONFIG.city.toUpperCase();
+    els.coords.textContent = `${CONFIG.lat.toFixed(2)}°N ${CONFIG.lon.toFixed(2)}°E`;
+    els.temp.textContent = `${weatherData.temperature_2m}${weatherData.temperature_2m_unit || "°C"}`;
+    els.wind.textContent = `${weatherData.wind_speed_10m} km/h`;
+  }
+
+  function updateTime() {
+    const now = new Date();
+    els.time.textContent = now.toLocaleTimeString("en-US", {
+      hour12: false,
+    });
+  }
+
+  // --- LAYOUT CONTROL ---
+  function updateLayout() {
+    els.frame.style.width = `${CONFIG.width}px`;
+    els.frame.style.height = `${CONFIG.height}px`;
+
+    // Resize webcam sketch if available
+    if (sketch && sketch.resize) {
+      sketch.resize(CONFIG.width, CONFIG.height);
+    }
+
+    // Legacy: Reset dot matrix (commented out for webcam demo)
+    // if (sketch && sketch.updateColorTheme) {
+    //   sketchUpdateColorTheme();
+    // }
+  }
+
+  function sketchUpdateColorTheme() {
+    if (sketch && sketch.updateColorTheme) {
+      sketch.updateColorTheme();
+    }
+  }
+
+  import { createWebcamDemoSketch } from "/dailies/webcam-demo.js";
+
+  window.setup = async function () {
+    sketch = createWebcamDemoSketch({
+      width: canvas_width,
+      height: canvas_height,
+      debug: CONFIG.debug,
+    });
+    await sketch.setup();
+
+    // Move all canvas elements to the canvas-container
+    const canvasContainer = document.getElementById("canvas-container");
+    if (canvasContainer) {
+      const managers = sketch.getManagers();
+      managers.forEach((manager, index) => {
+        const canvas = manager.getCanvas();
+        if (canvas && canvas.elt) {
+          // Remove from default p5 container
+          if (canvas.elt.parentElement) {
+            canvas.elt.parentElement.removeChild(canvas.elt);
+          }
+          // Add to our container
+          canvasContainer.appendChild(canvas.elt);
+
+          // Set grid position based on layout:
+          // Manager 0: left column, top row (grid-column: 1, grid-row: 1)
+          // Manager 1: right column, top row (grid-column: 2, grid-row: 1)
+          // Manager 2: left column, bottom row (grid-column: 1, grid-row: 2)
+          if (index === 0) {
+            canvas.elt.style.gridColumn = "1";
+            canvas.elt.style.gridRow = "1";
+          } else if (index === 1) {
+            canvas.elt.style.gridColumn = "2";
+            canvas.elt.style.gridRow = "1";
+          } else if (index === 2) {
+            canvas.elt.style.gridColumn = "1";
+            canvas.elt.style.gridRow = "2";
+          }
+        }
+      });
+    }
+
+    // Setup GUI after sketch is ready (if GUI already exists)
+    if (window.webcamGUI) {
+      sketch.setupGUI(window.webcamGUI);
+    }
+  };
+
+  window.draw = function () {
+    if (sketch && sketch.draw) {
+      sketch.draw();
+    }
+  };
+
+  // --- P5 SKETCH (Global Mode) ---
+  /* window.setup = function () {
+    // Use the global function directly - no adapter needed!
+    sketch = createDotMatrixSketch(CONFIG);
+
+    // Initialize dependencies
+    sketch.init(PixelDisplay, HatchFill);
+
+    // Setup the sketch
+    sketch.setup();
+
+    // Set canvas parent
+    const canvasEl = document.getElementById("defaultCanvas0");
+    if (canvasEl) {
+      canvasEl.parentElement.removeChild(canvasEl);
+      document.getElementById("canvas-container").appendChild(canvasEl);
+    }
+  };
+
+  window.draw = function () {
+    if (sketch && sketch.draw) {
+      sketch.draw();
+    }
+  }; */
+
+  // --- INIT ---
+  async function init() {
+    // 1. Weather Data
+    fetchWeather();
+    setInterval(fetchWeather, CONFIG.refreshRate);
+
+    // 2. Time
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    // 3. Setup GUI
+    const gui = new GUI();
+    window.webcamGUI = gui; // Store globally so setup() can access it
+
+    // 4. Layout
+    const f0 = gui.addFolder("Layout");
+    f0.add(CONFIG, "width", 400, 2000).step(10).onChange(updateLayout);
+    f0.add(CONFIG, "height", 400, 2000).step(10).onChange(updateLayout);
+
+    // 5. Webcam Sketch Controls
+    // Try to set up now if sketch is ready, otherwise it will be set up in window.setup
+    const setupWebcamGUI = () => {
+      if (
+        sketch &&
+        sketch.isInitialized &&
+        sketch.isInitialized() &&
+        sketch.setupGUI
+      ) {
+        sketch.setupGUI(gui);
+      } else if (sketch && !sketch.isInitialized()) {
+        // If sketch exists but isn't initialized yet, try again after a short delay
+        setTimeout(setupWebcamGUI, 100);
+      }
+    };
+    setupWebcamGUI();
+
+    // 6. Legacy Sketch (commented out for webcam demo)
+    const f1 = gui.addFolder("Sketch (Legacy)");
+
+    // Dot Matrix Params
+    // Matrix preset based on 128x64 OLED resolution
+    f1.add(CONFIG, "matrixPreset", [
+      "128x64",
+      "64x64",
+      "48x48",
+      "32x32",
+      "16x16",
+      "8x8",
+      "4x4",
+      "2x2",
+    ])
+      .name("Matrix Preset [OLED-based]")
+      .onChange(updateLayout);
+
+    // Optional: Custom matrix dimensions (overrides preset)
+    // Set to 0 to use preset instead
+    f1.add(CONFIG, "matrixWidth", 0, 128, 1)
+      .name("Matrix Width [0=preset]")
+      .onChange(updateLayout);
+    f1.add(CONFIG, "matrixHeight", 0, 128, 1)
+      .name("Matrix Height [0=preset]")
+      .onChange(updateLayout);
+
+    f1.add(CONFIG, "theme", [
+      "2a",
+      "milk_transparent",
+      "green",
+      "amber",
+      "white",
+      "blue",
+    ])
+      .name("Theme")
+      .onChange(sketchUpdateColorTheme);
+
+    // Noise Params
+    f1.add(CONFIG, "noiseScale", 0.01, 0.8, 0.005).name("NoiseScale");
+    f1.add(CONFIG, "animationSpeed", 0.001, 0.1, 0.001).name("Animation Speed");
+    f1.add(CONFIG, "shadeSteps", 2, 16, 1).name("Shade Steps");
+    f1.add(CONFIG, "dotScaleFactor", 0.1, 5.0, 0.05).name("Dot Scale Factor");
+    f1.add(CONFIG, "dotNoiseInfluence", 0.0, 3.0, 0.05).name(
+      "Dot Noise Influence"
+    );
+    f1.add(CONFIG, "useColorThemeShading").name("Use Color Theme Shading");
+    f1.add(CONFIG, "isPaused").name("Pause Animation");
+
+    // 7. Hatch Fill (Legacy)
+    const f3 = gui.addFolder("Hatch Fill (Legacy)");
+    f3.add(CONFIG, "useHatchFill").name("Use Hatch Fill");
+    f3.add(CONFIG, "hatchUseGlobalDensity").name("Use Global Density");
+    f3.add(CONFIG, "hatchDensity", 0.01, 1.0, 0.01).name("Hatch Density");
+    f3.add(CONFIG, "hatchGlobalSpacing", 1, 20, 0.5).name(
+      "Global Spacing (px)"
+    );
+    f3.add(CONFIG, "hatchAngle", 0, 180, 1).name("Hatch Angle");
+    f3.add(CONFIG, "hatchCrossHatch").name("Cross Hatch");
+
+    // 8. Exports
+    const f4 = gui.addFolder("Export");
+    const exportFunctions = {
+      exportSVG: function () {
+        if (sketch && sketch.exportSvg) {
+          sketch.exportSvg("current");
+        }
+      },
+      exportPNG: async function () {
+        try {
+          const canvas = await html2canvas(els.frame, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: null,
+          });
+
+          const link = document.createElement("a");
+          link.download = `${title}.png`;
+          link.href = canvas.toDataURL("image/png");
+          link.click();
+        } catch (err) {
+          console.error("PNG Export failed", err);
+        }
+      },
+      captureSketch: async function () {
+        // Set flag in localStorage to trigger auto-start in new tab
+        localStorage.setItem("screenCapture_autoStart", "true");
+        localStorage.setItem("screenCapture_source", "dailies");
+
+        // Open new tab to screen_capture page
+        // (Cannot record own tab due to browser security limitations)
+        const screenCaptureUrl = "/screen_capture";
+        window.open(screenCaptureUrl, "_blank");
+      },
+    };
+    f4.add(exportFunctions, "exportSVG").name("Export SVG");
+    f4.add(exportFunctions, "exportPNG").name("Export PNG");
+    f4.add(exportFunctions, "captureSketch").name("Capture Sketch");
+
+    // Toggle GUI collapse/expand
+    let guiCollapsed = false;
+    function toggleGUI() {
+      if (guiCollapsed) {
+        gui.open();
+        guiCollapsed = false;
+      } else {
+        gui.close();
+        guiCollapsed = true;
+      }
+    }
+
+    // Register hotkeys
+    function initHotkeys() {
+      if (window.hotkeyManager) {
+        // Global hotkey to toggle GUI visibility
+        window.hotkeyManager.register(
+          "h",
+          "Toggle GUI visibility",
+          () => {
+            toggleGUI();
+          },
+          true,
+          {},
+          false // Works globally, not just with console open
+        );
+
+        // Console-only hotkeys (only work when console is open)
+        window.hotkeyManager.register(
+          "8",
+          "Export SVG",
+          () => {
+            exportFunctions.exportSVG();
+          },
+          true,
+          {},
+          true
+        );
+        window.hotkeyManager.register(
+          "9",
+          "Export PNG",
+          () => {
+            exportFunctions.exportPNG();
+          },
+          true,
+          {},
+          true
+        );
+        window.hotkeyManager.register(
+          "0",
+          "Capture Sketch",
+          () => {
+            exportFunctions.captureSketch();
+          },
+          true,
+          {},
+          true
+        );
+      } else {
+        // Retry if hotkeyManager isn't ready yet
+        setTimeout(initHotkeys, 100);
+      }
+    }
+    initHotkeys();
+  }
+
+  // Run
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+</script>

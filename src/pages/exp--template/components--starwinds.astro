@@ -1,0 +1,162 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import "@/styles/starwind.css";
+
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/starwind/accordion";
+
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/starwind/alert";
+import Flame from "@tabler/icons/outline/flame.svg";
+
+import { AspectRatio } from "@/components/starwind/aspect-ratio";
+
+import { Button } from "@/components/starwind/button";
+
+import { Separator } from "@/components/starwind/separator";
+
+import { Card, CardContent } from "@/components/starwind/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/starwind/carousel";
+---
+
+<Layout title="starwind experiments">
+  <main class="starwind-theme container">
+    <h1>StarwindCSS experiment</h1>
+    <a href="https://starwind.dev/docs/components/" target="_blank"
+      >https://starwind.dev/docs/components/</a
+    >
+    <section id="accordion">
+      <Accordion type="multiple" defaultValue="item-1">
+        <AccordionItem value="item-1">
+          <AccordionTrigger>What is Astro?</AccordionTrigger>
+          <AccordionContent>
+            Astro is an web framework for building fast, scalable, and secure
+            websites.
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="item-2">
+          <AccordionTrigger>Why should I use Astro?</AccordionTrigger>
+          <AccordionContent>
+            Astro provides a set of features that make it an ideal choice for
+            building fast, scalable, and secure websites.
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="item-3">
+          <AccordionTrigger>How do I get started with Astro?</AccordionTrigger>
+          <AccordionContent>
+            To get started with Astro, follow the instructions in the
+            documentation.
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    </section>
+
+    <section id="alert">
+      <Alert variant="error">
+        <AlertTitle><Flame />Danger!</AlertTitle>
+        <AlertDescription>
+          This action is destructive and may have unintended consequences.
+        </AlertDescription>
+      </Alert>
+    </section>
+
+    <section id="aspect-ratio">
+      <div class="card-- max-w-2xs">
+        <AspectRatio ratio={4 / 3}>
+          <img
+            src="https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=800&dpr=2&q=80"
+            alt="Photo by Kari Shea"
+            class="rounded-md object-cover w-full h-full"
+          />
+        </AspectRatio>
+      </div>
+    </section>
+
+    <section id="button">
+      <Button>default button</Button>
+      <Button class="bg-purple-700 text-white hover:bg-purple-800 rounded-full"
+        >custom button</Button
+      >
+    </section>
+
+    <section id="carousel">
+      <Carousel opts={{ align: "start" }} class="mx-auto w-full max-w-sm">
+        <CarouselContent>
+          {
+            Array.from({ length: 5 }).map((_, index) => (
+              <CarouselItem class="md:basis-1/2 lg:basis-1/3">
+                <div class="p-1">
+                  <Card>
+                    <CardContent class="flex aspect-square items-center justify-center p-6">
+                      <span class="text-2xl font-semibold">{index + 1}</span>
+                    </CardContent>
+                  </Card>
+                </div>
+              </CarouselItem>
+            ))
+          }
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
+    </section>
+
+    <section id="separator">
+      <div>
+        <h4 class="text-sm font-medium">Starwind UI</h4>
+        <p class="text-sm text-muted-foreground">
+          A beautiful component library for Astro.
+        </p>
+      </div>
+      <Separator />
+      <div class="flex h-5 items-center space-x-4 text-sm">
+        <div>Components</div>
+        <Separator orientation="vertical" />
+        <div>Documentation</div>
+        <Separator orientation="vertical" />
+        <div>Examples</div>
+      </div>
+      <div class="space-y-1">
+        <h4 class="text-sm font-medium leading-none">Horizontal Separator</h4>
+        <p class="text-sm text-muted-foreground">
+          This is the default orientation.
+        </p>
+      </div>
+      <Separator />
+      <div class="space-y-1">
+        <h4 class="text-sm font-medium leading-none">Content Below</h4>
+        <p class="text-sm text-muted-foreground">
+          The separator divides content vertically.
+        </p>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  /* @reference "../../styles/tailwind--.css"; */
+  @reference "tailwindcss";
+
+  main > section {
+    @apply my-16;
+  }
+
+  .card-- {
+    border: 1px solid #888;
+    border-radius: var(--radius-md);
+    padding: 2px;
+  }
+</style>

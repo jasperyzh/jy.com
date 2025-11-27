@@ -1,0 +1,121 @@
+---
+import Layout from '@/layouts/Layout.astro';
+
+---
+
+<Layout title="Flashcard Voiceover POC">
+  <main>
+    <h1>Flashcard Voiceover</h1>
+    <p>Click on any word to hear its pronunciation. (TTS confirmed working on Firefox)</p>
+    <div id="flashcard-container"></div>
+  </main>
+</Layout>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    // UPDATED: Added a 'pinyin' field with tone numbers for accurate TTS
+    const flashcardData = [
+      { chinese: '树', pinyin: 'shu4', malay: 'pokok', english: 'tree', lang: 'zh-CN' },
+      { chinese: '水', pinyin: 'shui3', malay: 'air', english: 'water', lang: 'zh-CN' },
+      { chinese: '火', pinyin: 'huo3', malay: 'api', english: 'fire', lang: 'zh-CN' },
+      { chinese: '山', pinyin: 'shan', malay: 'gunung', english: 'mountain', lang: 'zh-CN' },
+      { chinese: '你好', pinyin: 'ni3 hao3', malay: 'helo', english: 'hello', lang: 'zh-CN' },
+      { chinese: '谢谢', pinyin: 'xie4 xie4', malay: 'terima kasih', english: 'thank you', lang: 'zh-CN' },
+      { chinese: '猫', pinyin: 'mao1', malay: 'kucing', english: 'cat', lang: 'zh-CN' },
+      { chinese: '狗', pinyin: 'gou3', malay: 'anjing', english: 'dog', lang: 'zh-CN' },
+    ];
+
+    const container = document.getElementById('flashcard-container');
+    let voicesLoaded = false;
+    let voices = [];
+    const isSpeechSupported = ('speechSynthesis' in window);
+
+    if (!isSpeechSupported) {
+      container.innerHTML = "<p>Sorry, your browser does not support text-to-speech.</p>";
+      return;
+    }
+
+    // --- Voice Loading Logic ---
+    const loadVoices = () => {
+        voices = window.speechSynthesis.getVoices();
+        voicesLoaded = voices.length > 0;
+        // console.log(`TTS Voice Count: ${voices.length} voices loaded.`);
+    };
+
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+    loadVoices();
+    if (!voicesLoaded) {
+        setTimeout(loadVoices, 1000); 
+    }
+    
+    function getVoiceByLang(lang) {
+        if (!voicesLoaded) loadVoices();
+        const baseLang = lang.split('-')[0]; 
+        return voices.find(voice => voice.lang === lang) || voices.find(voice => voice.lang.startsWith(baseLang));
+    }
+    
+    // --- Speak Function ---
+    
+    function speak(text, lang, element) {
+      // Cancel any previous speech
+      window.speechSynthesis.cancel();
+      
+      // Add visual feedback immediately
+      element.classList.add('speaking');
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = lang;
+      utterance.rate = 0.9;
+      
+      const selectedVoice = getVoiceByLang(lang);
+      if (selectedVoice) {
+          utterance.voice = selectedVoice;
+      }
+
+      // Remove visual feedback when speech ends
+      utterance.onend = () => {
+          element.classList.remove('speaking');
+      };
+      
+      // Remove visual feedback on error
+      utterance.onerror = (e) => {
+          console.error('Speech synthesis error:', e.error);
+          element.classList.remove('speaking');
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    flashcardData.forEach(data => {
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      const chineseEl = document.createElement('div');
+      chineseEl.className = 'chinese';
+      chineseEl.textContent = data.chinese;
+      // CRITICAL CHANGE: Use Pinyin for the TTS Text, but display the Hanzi
+      chineseEl.addEventListener('click', (e) => speak(data.pinyin, data.lang, e.currentTarget));
+
+      const translationsEl = document.createElement('div');
+      translationsEl.className = 'translations';
+
+      const malayEl = document.createElement('span');
+      malayEl.className = 'malay';
+      malayEl.textContent = data.malay;
+      malayEl.addEventListener('click', (e) => speak(data.malay, 'ms-MY', e.currentTarget));
+
+      const englishEl = document.createElement('span');
+      englishEl.className = 'english';
+      englishEl.textContent = data.english;
+      englishEl.addEventListener('click', (e) => speak(data.english, 'en-US', e.currentTarget));
+
+      translationsEl.appendChild(malayEl);
+      translationsEl.appendChild(englishEl);
+      card.appendChild(chineseEl);
+      card.appendChild(translationsEl);
+      container.appendChild(card);
+    });
+  });
+</script>

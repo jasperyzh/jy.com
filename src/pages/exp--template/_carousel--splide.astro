@@ -1,0 +1,118 @@
+<script
+  is:inline
+  src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"
+></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css"
+/>
+
+<!-- the carousel is directly related to your main contents or not. If it is — e.g. banners, gallery, cards, or list of products — -->
+<section class="splide" aria-label="Splide Basic HTML Example">
+  <div class="splide__track">
+    <ul class="splide__list">
+      <li class="splide__slide">
+        Slide 01
+
+        <a href="https://splidejs.com/guides/options/"
+          >https://splidejs.com/guides/options/</a
+        >
+      </li>
+      <li class="splide__slide">Slide 02</li>
+      <li class="splide__slide">Slide 03</li>
+    </ul>
+  </div>
+</section>
+
+<!-- carousel is not relevant to your main contents or just for decoration -->
+<div class="splide" role="group" aria-label="Splide Basic HTML Example">
+  <div class="splide__track">
+    <ul class="splide__list">
+      <li class="splide__slide">
+        Slide 01
+
+        <a href="https://splidejs.com/guides/options/"
+          >https://splidejs.com/guides/options/</a
+        >
+      </li>
+      <li class="splide__slide">Slide 02</li>
+      <li class="splide__slide">Slide 03</li>
+    </ul>
+  </div>
+</div>
+
+<!-- make sure to provide a concise label to the root element -->
+<section class="splide" aria-labelledby="carousel-heading">
+  <h2 id="carousel-heading">Splide Basic HTML Example</h2>
+
+  <div class="splide__track">
+    <ul class="splide__list">
+      <li class="splide__slide">
+        Slide 01
+
+        <a href="https://splidejs.com/guides/options/"
+          >https://splidejs.com/guides/options/</a
+        >
+      </li>
+      <li class="splide__slide">Slide 02</li>
+      <li class="splide__slide">Slide 03</li>
+    </ul>
+  </div>
+
+
+  
+</section>
+
+
+<section id="main-carousel" class="splide">
+      <div class="splide__track">
+            <ul class="splide__list">
+                <li class="splide__slide"><div class="test__card">test</div></li>
+                <li class="splide__slide"><div class="test__card">test</div></li>
+                <li class="splide__slide"><div class="test__card">test</div></li>
+          <li class="splide__slide"><div class="test__card">test</div></li>
+            </ul>
+      </div>
+    </section>
+     <section id="thumbnail-carousel" class="splide">
+       <div class="splide__track">
+             <ul class="splide__list">
+                 <li class="splide__slide"><div class="test__card">test</div></li>
+                 <li class="splide__slide"><div class="test__card">test</div></li>
+                 <li class="splide__slide"><div class="test__card">test</div></li>
+           <li class="splide__slide"><div class="test__card">test</div></li>
+             </ul>
+       </div>
+     </section>
+
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", function () {
+    var splide = new Splide("#main-carousel");
+    splide.mount();
+  });
+
+  var elms = document.getElementsByClassName( 'splide' );
+
+  for ( var i = 0; i < elms.length; i++ ) {
+    new Splide( elms[ i ] ).mount();
+  }
+</script>
+<style>
+	.splide__slide {
+		padding: 3rem;
+		
+			margin-bottom: 3rem;
+			background-color:aliceblue;
+			border-radius: 3rem;
+			aspect-ratio: 5/1;
+			padding: 3rem;
+		.test__card {
+
+			margin-bottom: 3rem;
+			background-color:antiquewhite;
+			border-radius: 3rem;
+			aspect-ratio: 5/1;
+			padding: 3rem;
+		}
+	}
+</style>

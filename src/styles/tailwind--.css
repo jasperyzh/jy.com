@@ -6,6 +6,13 @@
 
 @variant dark (&:where(.dark, .dark *));
 
+@layer base {
+  /* fixes html2canvas screenshot issue with tailwind-preflight.css (this causes text misalign with display-block elements)*/
+  img {
+    display: initial;
+  }
+}
+
 @import "./tailwind--basic.css";
 
 @import "./tailwind--jy.css";

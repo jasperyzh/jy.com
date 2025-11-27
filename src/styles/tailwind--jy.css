@@ -46,14 +46,6 @@
 
 /* ===== BASE STYLES ===== */
 @layer base {
-  main > section {
-    margin-block: calc(var(--spacing) * 20); /* 5rem */
-
-    & > header {
-      @apply margin-- padding--;
-    }
-  }
-
   .h1,
   h1,
   .h2,
@@ -131,7 +123,7 @@
 
   body > main {
     @apply container max-w-7xl my-8;
-    
+
     /* mt-20 mb-8 px-4 */
     /* ; */
   }
@@ -400,4 +392,14 @@
 
 @utility padding-- {
   padding-inline: var(--spacing-special);
+}
+
+.landing-page {
+  main > section {
+    margin-block: calc(var(--spacing) * 20); /* 5rem */
+
+    & > header {
+      @apply margin-- padding--;
+    }
+  }
 }

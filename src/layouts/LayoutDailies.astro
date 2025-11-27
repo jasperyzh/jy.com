@@ -1,0 +1,258 @@
+---
+/**
+ * @version 251127
+ * @description Dailies Template
+ */
+
+import Layout from "@/layouts/Layout.astro";
+
+import { formatDateYYMMDD } from "@/util/util--date";
+
+/**
+ * Parse sketch metadata from filename
+ * Expected format: YYMMDD-sketch--(sketch_name)
+ * @param {string} filename - Filename without extension
+ * @returns {{sketch_date: string, sketch_title: string}}
+ */
+function parseSketchMeta(filename) {
+  if (!filename) return { sketch_date: "", sketch_title: "" };
+
+  // Match: YYMMDD-sketch--(sketch_name)
+  // Captures: date (6 digits) and title (everything after "sketch--")
+  const match = filename.match(/^(\d{6})-sketch--(.+)$/);
+
+  if (!match) {
+    console.warn(
+      `Filename "${filename}" does not match expected format: YYMMDD-sketch--(sketch_name)`
+    );
+    return { sketch_date: "", sketch_title: "" };
+  }
+
+  return {
+    sketch_date: match[1], // YYMMDD
+    sketch_title: match[2], // sketch name
+  };
+}
+
+const {
+  filename: filename_prop,
+  canvas_width: canvas_width_prop,
+  canvas_height: canvas_height_prop,
+} = Astro.props;
+
+const { sketch_date, sketch_title } = parseSketchMeta(filename_prop);
+
+const filename = filename_prop || "Work in Progress";
+const canvas_width = canvas_width_prop || 800;
+const canvas_height = canvas_height_prop || 800;
+const today_date = formatDateYYMMDD(new Date());
+const footer_text = `${today_date} // FRAMEWORK_V2 // OPEN  -METEO API // P5.JS`;
+---
+
+<Layout title={filename}>
+  <main id="sketch-frame" class="grid-- grid--content_sidebar">
+    <div class="back">
+      <slot name="back" />
+    </div>
+
+    <div class="front">
+      <slot name="front" />
+    </div>
+
+    <section class="meta">
+      <h1>{sketch_title}</h1>
+      <date>{sketch_date}</date>
+      <footer>{footer_text}</footer>
+    </section>
+  </main>
+</Layout>
+
+<style
+  define:vars={{
+    canvas_width: canvas_width + "px",
+    canvas_height: canvas_height + "px",
+  }}
+>
+  main {
+    width: var(--canvas_width);
+    height: var(--canvas_height);
+    background-color: var(--color-yellow);
+
+    display: grid;
+    overflow: hidden;
+
+    & > * {
+      grid-column: 1 / -1;
+      grid-row: 1 / -1;
+
+      justify-items: start;
+      align-items: end;
+    }
+
+    & > * {
+      display: grid;
+      grid-auto-flow: column;
+      grid-template-columns: subgrid;
+      grid-template-rows: repeat(6, 16.666%);
+    }
+    .front {
+      z-index: 10;
+    }
+    .middle {
+      z-index: 5;
+    }
+    .back {
+      z-index: 1;
+    }
+
+    .meta {
+      z-index: 999;
+
+      & > * {
+        background: var(--color-red);
+        font-size: var(--text-xl);
+        grid-column: 1 / -1;
+      }
+
+      /* html2canvas error */
+      h1 {
+        display: inline-block;
+        font-size: 3rem;
+        font-family: var(--font-display-alt);
+        font-weight: normal;
+        text-transform: uppercase;
+        margin: 0;
+        color: var(--color-2a);
+      }
+
+      date,
+      footer {
+        font-family: var(--font-display-alt);
+      }
+      footer {
+        grid-column: 1 / -1;
+        grid-row: 6;
+      }
+      footer {
+        justify-self: end;
+      }
+    }
+  }
+</style>
+<script>
+  /**
+   * Template script for GUI export folder and hotkey registration
+   * This runs for all sketches using LayoutDailies
+   */
+  function initDailiesTemplate() {
+    // Wait for GUI to be available (set up by sketch files)
+    function setupExportGUI() {
+      // Check if GUI exists (sketch files create it)
+      if (typeof window.dailiesGUI === "undefined") {
+        // Retry if GUI isn't ready yet
+        setTimeout(setupExportGUI, 100);
+        return;
+      }
+
+      const gui = window.dailiesGUI;
+
+      // Setup Export folder
+      const f4 = gui.addFolder("Export");
+
+      // Get export functions from sketch (registered on window.sketchExports)
+      const exportFunctions = window.sketchExports || {};
+
+      if (exportFunctions.exportSVG) {
+        f4.add(exportFunctions, "exportSVG").name("Export SVG");
+      }
+      if (exportFunctions.exportPNG) {
+        f4.add(exportFunctions, "exportPNG").name("Export PNG");
+      }
+      if (exportFunctions.captureSketch) {
+        f4.add(exportFunctions, "captureSketch").name("Capture Sketch");
+      }
+
+      // Toggle GUI collapse/expand
+      let guiCollapsed = false;
+      function toggleGUI() {
+        if (guiCollapsed) {
+          gui.open();
+          guiCollapsed = false;
+        } else {
+          gui.close();
+          guiCollapsed = true;
+        }
+      }
+
+      // Register hotkeys
+      function initHotkeys() {
+        if (window.hotkeyManager) {
+          // Global hotkey to toggle GUI visibility
+          window.hotkeyManager.register(
+            "h",
+            "Toggle GUI visibility",
+            () => {
+              toggleGUI();
+            },
+            true,
+            {},
+            false // Works globally, not just with console open
+          );
+
+          // Console-only hotkeys (only work when console is open)
+          if (exportFunctions.exportSVG) {
+            window.hotkeyManager.register(
+              "8",
+              "Export SVG",
+              () => {
+                exportFunctions.exportSVG();
+              },
+              true,
+              {},
+              true
+            );
+          }
+          if (exportFunctions.exportPNG) {
+            window.hotkeyManager.register(
+              "9",
+              "Export PNG",
+              () => {
+                exportFunctions.exportPNG();
+              },
+              true,
+              {},
+              true
+            );
+          }
+          if (exportFunctions.captureSketch) {
+            window.hotkeyManager.register(
+              "0",
+              "Capture Sketch",
+              () => {
+                toggleGUI();
+                exportFunctions.captureSketch();
+              },
+              true,
+              {},
+              true
+            );
+          }
+        } else {
+          // Retry if hotkeyManager isn't ready yet
+          setTimeout(initHotkeys, 100);
+        }
+      }
+      initHotkeys();
+    }
+
+    // Start setup after DOM is ready
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", setupExportGUI);
+    } else {
+      setupExportGUI();
+    }
+  }
+
+  // Initialize template
+  initDailiesTemplate();
+</script>

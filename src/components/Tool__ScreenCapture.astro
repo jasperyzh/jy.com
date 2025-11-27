@@ -244,10 +244,21 @@
    */
   function initHotkeys(): void {
     if (window.hotkeyManager) {
-      // Global hotkeys
+      // Global hotkeys - register both "0" and "`" (backtick) for toggling recording
       window.hotkeyManager.register(
         "0",
         "Toggle recording",
+        (): void => {
+          toggleRecord();
+        },
+        true,
+        {},
+        true  
+      );
+      
+      window.hotkeyManager.register(
+        "`",
+        "Toggle recording (alternative)",
         (): void => {
           toggleRecord();
         },
@@ -262,13 +273,52 @@
   }
 
   /**
+   * Auto-trigger recording if flag is set from dailies page
+   * This automates the workflow when opening screen_capture from dailies
+   */
+  function checkAutoTrigger(): void {
+    // Check localStorage for auto-start flag
+    const autoStart = localStorage.getItem("screenCapture_autoStart");
+    const source = localStorage.getItem("screenCapture_source");
+    
+    if (autoStart === "true" && source === "dailies") {
+      console.log("🎥 Auto-trigger: Detected auto-start flag from dailies page");
+      
+      // Clear the flag so it doesn't trigger again on refresh
+      localStorage.removeItem("screenCapture_autoStart");
+      localStorage.removeItem("screenCapture_source");
+      
+      // Wait a bit for the page to fully load and hotkeys to be ready
+      setTimeout(() => {
+        console.log("🚀 Auto-starting recording...");
+        toggleRecord();
+      }, 1000); // 1 second delay to ensure everything is ready
+    }
+  }
+
+  /**
    * STEP 10: Type DOM ready checks
    * - document.readyState is a specific string literal type
    * - TypeScript ensures we handle all states correctly
    */
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initHotkeys);
-  } else {
+  function initPage(): void {
     initHotkeys();
+    checkAutoTrigger();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initPage);
+  } else {
+    initPage();
+  }
+
+  /**
+   * Expose recording functions globally so they can be called from other pages
+   * This allows automation of the recording workflow
+   */
+  if (typeof window !== "undefined") {
+    (window as any).toggleScreenRecord = toggleRecord;
+    (window as any).stopScreenRecord = stopRecordingLogic;
+    (window as any).isScreenRecording = (): boolean => isRecording;
   }
 </script>

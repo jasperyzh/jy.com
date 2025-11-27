@@ -1,0 +1,120 @@
+---
+// src/pages/pixel-stretch.astro
+---
+
+<div id="canvas-container"></div>
+
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #111;
+    overflow: hidden;
+  }
+
+  #canvas-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+</style>
+
+<script type="module">
+  import "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.10/p5.js";
+
+  const sketch = (p) => {
+    let cam;
+    let isReady = false;
+    // Set internal resolution (lower is faster)
+    const w = 640;
+    const h = 480;
+
+    p.setup = () => {
+      p.createCanvas(w, h);
+      
+      // Initialize Webcam with proper constraints
+      const constraints = {
+        video: {
+          width: { ideal: w },
+          height: { ideal: h }
+        },
+        audio: false
+      };
+      
+      cam = p.createCapture(constraints, () => {
+        console.log('Camera initialized');
+      });
+      
+      // Set crossorigin attribute for compatibility
+      if (cam.elt) {
+        cam.elt.setAttribute('crossorigin', 'anonymous');
+        
+        // Wait for video metadata to load before marking as ready
+        cam.elt.addEventListener('loadedmetadata', () => {
+          console.log('Camera ready');
+          isReady = true;
+        }, { once: true });
+      }
+      
+      cam.size(w, h);
+      cam.hide(); // Hide the HTML DOM video element
+      
+      p.noCursor(); 
+      p.pixelDensity(1);
+    };
+
+    p.draw = () => {
+      p.background(0);
+
+      // Check if camera is ready and has valid data
+      // readyState >= 2 means HAVE_CURRENT_DATA (enough data for current frame)
+      if (isReady && cam && cam.elt && cam.elt.readyState >= 2) {
+        
+        // Map mouseX to the video width
+        let splitX = p.map(p.mouseX, 0, p.width, 0, w);
+        splitX = p.constrain(splitX, 0, w);
+
+        // 1. Draw "Past" Video (Left Side)
+        // Only draw if the split line is not at the very start
+        if (splitX > 1) {
+          p.copy(
+            cam,       
+            0, 0,      
+            splitX, h, 
+            0, 0,      
+            splitX, h  
+          );
+        }
+
+        // 2. Draw "Present" Stretched Pixel (Right Side)
+        let remainingWidth = w - splitX;
+
+        // Only draw if there is space remaining
+        if (remainingWidth > 0) {
+          p.copy(
+            cam,           
+            splitX, 0,     // Source: Column at mouse position
+            1, h,          // Width: 1 pixel
+            splitX, 0,     // Dest: Start at mouse position
+            remainingWidth, h // Stretch to fill rest of screen
+          );
+        }
+        
+        // Red line indicator
+        p.stroke(255, 50, 50);
+        p.strokeWeight(1);
+        p.line(splitX, 0, splitX, h);
+      } else if (!isReady) {
+        // Show loading message
+        p.fill(255);
+        p.textAlign(p.CENTER, p.CENTER);
+        p.textSize(16);
+        p.text('Initializing camera...', w / 2, h / 2);
+      }
+    };
+  };
+
+  const container = document.getElementById('canvas-container');
+  new p5(sketch, container);
