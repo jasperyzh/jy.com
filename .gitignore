@@ -35,3 +35,4 @@ pnpm-debug.log*
 # src/content/blog/
 
 .vercel
+*.zip

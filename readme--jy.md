@@ -90,8 +90,8 @@ export const GET: APIRoute = async ({ request }) => {
   - `tailwind-variants` (^3.1.1)
   - `tailwind-merge` (^3.4.0)
   - `tw-animate-css` (^1.4.0)
-- **Host:** Vercel (configured via `vercel.json`)
-- **CI/CD:** GitHub Actions (auto-deploy on merge to `main` branch)
+- **Host:** Cloudflare Pages
+- **CI/CD:** Cloudflare Pages (auto-deploy on push to `main` branch)
 - **Custom Domain:** `jasperyong.com`
 
 ## Project Structure
