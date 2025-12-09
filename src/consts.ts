@@ -13,11 +13,17 @@ import type { SiteConfig } from "@/types";
 const JOURNAL_BASE_PATH = import.meta.env.JOURNAL_BASE_PATH;
 
 // Asset URL paths (for browser/client-side)
-// Note: These map to symlinked directories in public/assets
+// Note: These map to symlinked directories in public/assets for local dev,
+// or synced content in src/content/* for CI/CD builds
 export const ASSETS_PATH = {
   // basePath: "/assets",
-  blog: JOURNAL_BASE_PATH + "/blog--", // Symlinked from JOURNAL_SHARE_PATH
-  toolstack: JOURNAL_BASE_PATH + "/toolstack--",
+  // Use symlink path if JOURNAL_BASE_PATH is set (local dev), otherwise use synced content (CI/CD)
+  blog: JOURNAL_BASE_PATH 
+    ? `${JOURNAL_BASE_PATH}/Share__/blog--` 
+    : "src/content/blog",
+  toolstack: JOURNAL_BASE_PATH 
+    ? `${JOURNAL_BASE_PATH}/Share__/toolstack--` 
+    : "src/content/toolstack",
   images: "/assets/assets--",
   // logos: "/assets",
   // fonts: "/assets/fonts",

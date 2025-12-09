@@ -1,33 +1,61 @@
 #!/bin/bash
-# Sync assets from Obsidian vault to repo for deployment
+# Sync assets and content from Obsidian vault to repo for deployment
 # Usage: ./scripts/sync-assets.sh
 # 
 # This script handles both scenarios:
-# - If assets-- is a symlink: Skip (assets auto-update from Obsidian)
-# - If assets-- is files: Sync from Obsidian to files (for committing to git)
+# - If directories are symlinks: Skip (auto-update from Obsidian)
+# - If directories are files: Sync from Obsidian to files (for committing to git)
 
-OBSIDIAN_ASSETS="/home/matsu/Documents/Journal__/Share__/assets--"
+# Use JOURNAL_BASE_PATH env var or default to local path
+JOURNAL_BASE_PATH="${JOURNAL_BASE_PATH:-/home/matsu/Documents/Journal__}"
+JOURNAL_SHARE="${JOURNAL_BASE_PATH}/Share__"
+
+OBSIDIAN_ASSETS="${JOURNAL_SHARE}/assets--"
 REPO_ASSETS="public/assets/assets--"
 
-# Check if it's a symlink (local development mode)
-if [ -L "$REPO_ASSETS" ]; then
-  echo "Assets directory is a symlink - skipping sync."
-  echo "Assets will auto-update from Obsidian vault during development."
-  echo "To sync files for git commit, run: ./scripts/setup-assets.sh (to switch to files), then run this script again."
-  exit 0
-fi
+OBSIDIAN_BLOG="${JOURNAL_SHARE}/blog--"
+REPO_BLOG="src/content/blog"
 
-# Check if Obsidian source exists
-if [ ! -d "$OBSIDIAN_ASSETS" ]; then
-  echo "Warning: Obsidian assets directory not found at $OBSIDIAN_ASSETS"
-  echo "Cannot sync assets. If you're in CI/CD, this is expected."
-  exit 1
-fi
+OBSIDIAN_TOOLSTACK="${JOURNAL_SHARE}/toolstack--"
+REPO_TOOLSTACK="src/content/toolstack"
 
-# Sync from Obsidian to files
-echo "Syncing assets from Obsidian vault to repository..."
-mkdir -p "$REPO_ASSETS"
-rsync -av --delete "$OBSIDIAN_ASSETS/" "$REPO_ASSETS/"
-echo "✓ Assets synced successfully!"
+# Function to sync a directory
+sync_directory() {
+  local SOURCE=$1
+  local TARGET=$2
+  local NAME=$3
+
+  # Check if target is a symlink (local development mode)
+  if [ -L "$TARGET" ]; then
+    echo "${NAME} directory is a symlink - skipping sync."
+    echo "  ${NAME} will auto-update from Obsidian vault during development."
+    return 0
+  fi
+
+  # Check if source exists
+  if [ ! -d "$SOURCE" ]; then
+    echo "Warning: ${NAME} source directory not found at $SOURCE"
+    echo "  Cannot sync ${NAME}. If you're in CI/CD, this is expected."
+    return 1
+  fi
+
+  # Sync from Obsidian to files
+  echo "Syncing ${NAME} from Obsidian vault to repository..."
+  mkdir -p "$TARGET"
+  rsync -av --delete "$SOURCE/" "$TARGET/"
+  echo "✓ ${NAME} synced successfully!"
+}
+
+# Sync assets
+sync_directory "$OBSIDIAN_ASSETS" "$REPO_ASSETS" "Assets"
+
+# Sync blog content
+sync_directory "$OBSIDIAN_BLOG" "$REPO_BLOG" "Blog"
+
+# Sync toolstack content
+sync_directory "$OBSIDIAN_TOOLSTACK" "$REPO_TOOLSTACK" "Toolstack"
+
+echo ""
+echo "All content synced successfully!"
 echo "  You can now commit these files to git."
 

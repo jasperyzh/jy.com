@@ -4,13 +4,6 @@ import { file, glob } from "astro/loaders"; // Not available with legacy API
 
 import { parseDateYYMMDD } from "@/util/util--date";
 
-// const BLOG_DIR = `${import.meta.env.JOURNAL_SHARE_PATH}/blog--`;
-
-const JOURNAL_SHARE_PATH = import.meta.env.JOURNAL_SHARE_PATH;
-
-const BLOG_PATH = `${JOURNAL_SHARE_PATH}/Share__/blog--`
-const TOOLSTACK_PATH = `${JOURNAL_SHARE_PATH}/Share__/toolstack--`
-
 import { ASSETS_PATH } from "./consts";
 
 // Define blog collection
