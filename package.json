@@ -4,9 +4,11 @@
   "version": "1.0.1",
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "bash scripts/ensure-assets.sh",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "sync-assets": "bash scripts/sync-assets.sh"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.10",
