@@ -1,12 +1,49 @@
 ---
 /**
  * @description Dynamic route for individual sketch pages
- * Uses import.meta.glob() and getStaticPaths to read all .astro files from src/sketches/,
- * parse metadata (slug, title) from filenames, and generate dynamic routes.
- * Uses LayoutDailies.astro as the layout.
+ * 
+ * HOW IT WORKS:
+ * =============
+ * 
+ * 1. STATIC PATH GENERATION (getStaticPaths)
+ *    - Uses Astro's getStaticPaths() to generate routes at build time
+ *    - Scans all .astro files in src/sketches/ using import.meta.glob()
+ *    - Parses metadata from filenames following format: YYMMDD-sketch--(title)
+ *    - Creates a route for each sketch at /dailies/[slug]
+ * 
+ * 2. FILENAME PARSING
+ *    - Expected format: YYMMDD-sketch--(sketch_name)
+ *    - Example: "251128-sketch--Fire & Water.astro" or "251128-sketch--Fire%20&%20Water.astro"
+ *    - Extracts:
+ *      * sketch_date: "251128" (first 6 digits)
+ *      * sketch_title: "Fire & Water" (everything after "sketch--", URL-decoded)
+ *      * slug: Used in URL (currently uses sketch_date for cleaner URLs like /dailies/251128)
+ * 
+ * 3. URL DECODING & NORMALIZATION
+ *    - Decodes URL-encoded characters (e.g., %20 -> space, %26 -> &)
+ *    - Converts spaces to underscores in filenames for cleaner URLs
+ *    - Example: "Fire%20&%20Water" -> "Fire_&_Water" (in title) -> "251128" (in slug)
+ * 
+ * 4. ROUTE GENERATION
+ *    - Each sketch gets a route: /dailies/[slug]
+ *    - Props passed to the page component:
+ *      * SketchComponent: The actual sketch component to render
+ *      * filename: Full filename without extension (URL-decoded)
+ *      * sketch_date: YYMMDD date string
+ *      * sketch_title: Title extracted from filename (URL-decoded, spaces preserved)
+ *      * canvas_width/canvas_height: Canvas dimensions (defaults to 800x800)
+ * 
+ * 5. RENDERING
+ *    - The SketchComponent is rendered directly
+ *    - Sketch files use LayoutDailies, which provides the layout structure
+ *    - All sketches are pre-rendered at build time (prerender: true)
+ * 
+ * 6. SORTING
+ *    - Sketches are sorted by date (newest first) before returning paths
+ * 
+ * NOTE: If multiple sketches share the same date, they will conflict.
+ * Consider using unique identifiers or timestamps if needed.
  */
-
-import LayoutDailies from "@/layouts/LayoutDailies.astro";
 
 export async function getStaticPaths() {
   // Import all sketch files from src/sketches/
@@ -30,27 +67,38 @@ export async function getStaticPaths() {
   /**
    * Parse sketch metadata from filename
    * Expected format: YYMMDD-sketch--(sketch_name)
-   * @param {string} filename - Filename without extension
+   * Handles URL-encoded filenames (e.g., %20 for spaces, %26 for &)
+   * @param {string} filename - Filename without extension (may be URL-encoded)
    * @returns {{sketch_date: string, sketch_title: string, slug: string}}
    */
   function parseSketchMeta(filename) {
     if (!filename) return { sketch_date: "", sketch_title: "", slug: "" };
 
+    // Decode URL encoding first to get original characters
+    const decodedFilename = decodeURL(filename);
+
     // Match: YYMMDD-sketch--(sketch_name)
     // Captures: date (6 digits) and title (everything after "sketch--")
-    const match = filename.match(/^(\d{6})-sketch--(.+)$/);
+    const match = decodedFilename.match(/^(\d{6})-sketch--(.+)$/);
 
     if (!match) {
-      console.warn(
-        `Filename "${filename}" does not match expected format: YYMMDD-sketch--(sketch_name)`
-      );
+      // Only warn if it looks like it might be a sketch file (contains "sketch" or starts with digits)
+      // This prevents warnings for unrelated files like consts.ts
+      if (decodedFilename.includes("sketch") || /^\d/.test(decodedFilename)) {
+        console.warn(
+          `Filename "${filename}" (decoded: "${decodedFilename}") does not match expected format: YYMMDD-sketch--(sketch_name)`
+        );
+      }
       return { sketch_date: "", sketch_title: "", slug: "" };
     }
 
+    const sketch_date = match[1]; // YYMMDD
+    const sketch_title = match[2]; // Title with spaces and special chars preserved (e.g., "Fire & Water")
+
     return {
-      sketch_date: match[1], // YYMMDD
-      sketch_title: match[2], // sketch name
-      slug: filename, // Use full filename as slug
+      sketch_date,
+      sketch_title,
+      slug: sketch_date, // Use only date (YYMMDD) as slug for cleaner URLs like /dailies/251128
     };
   }
 
@@ -64,11 +112,49 @@ export async function getStaticPaths() {
     return filename.replace(/\.astro$/, "");
   }
 
+  /**
+   * Decode URL-encoded string
+   * Handles %20 (space), %26 (&), and other URL-encoded characters
+   * @param {string} str - URL-encoded string
+   * @returns {string} Decoded string
+   */
+  function decodeURL(str) {
+    if (!str) return "";
+    
+    try {
+      return decodeURIComponent(str);
+    } catch (e) {
+      // If decoding fails, manually replace common encodings
+      return str
+        .replace(/%20/g, " ")
+        .replace(/%26/g, "&")
+        .replace(/%2F/g, "/")
+        .replace(/%3F/g, "?")
+        .replace(/%3D/g, "=");
+    }
+  }
+
+  /**
+   * Normalize filename: decode URL encoding and convert spaces to underscores
+   * @param {string} filename - Filename (may be URL-encoded)
+   * @returns {string} Decoded filename with spaces as underscores
+   */
+  function normalizeFilename(filename) {
+    const decoded = decodeURL(filename);
+    return decoded.replace(/\s+/g, "_");
+  }
+
 
   // Loop through all sketches and generate paths
   for (const filePath in allSketches) {
-    const filename = getFilenameFromPath(filePath);
-    const { sketch_date, sketch_title, slug } = parseSketchMeta(filename);
+    // Early filter: only process files from sketches directory that end with .astro
+    // This prevents processing unexpected files like consts.ts
+    if (!filePath.includes("/sketches/") || !filePath.endsWith(".astro")) {
+      continue;
+    }
+
+    const rawFilename = getFilenameFromPath(filePath);
+    const { sketch_date, sketch_title, slug } = parseSketchMeta(rawFilename);
 
     // Skip if filename doesn't match expected format
     if (!sketch_date || !sketch_title) {
@@ -83,13 +169,16 @@ export async function getStaticPaths() {
     const canvas_width = SketchModule.canvas_width || 800;
     const canvas_height = SketchModule.canvas_height || 800;
 
+    // Normalize filename for props (spaces converted to underscores)
+    const normalizedFilename = normalizeFilename(rawFilename);
+
     paths.push({
       params: { slug: slug },
       props: {
         SketchComponent,
-        filename: filename,
+        filename: normalizedFilename, // Filename with spaces as underscores (e.g., "Fire_&_Water")
         sketch_date,
-        sketch_title,
+        sketch_title, // Title with spaces preserved for display (e.g., "Fire & Water")
         canvas_width,
         canvas_height,
       },

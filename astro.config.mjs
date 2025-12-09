@@ -11,7 +11,7 @@ import icon from "astro-icon";
 
 // https://astro.build/config
 export default defineConfig({
-  // output: "server", // Hybrid mode: mostly static with some server endpoints
+  output: "server", // Hybrid mode: mostly static with some server endpoints
   // adapter: cloudflare(),
   site: "https://jasperyong.com",
   // markdown: {

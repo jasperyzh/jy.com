@@ -22,9 +22,13 @@ function parseSketchMeta(filename) {
   const match = filename.match(/^(\d{6})-sketch--(.+)$/);
 
   if (!match) {
-    console.warn(
-      `Filename "${filename}" does not match expected format: YYMMDD-sketch--(sketch_name)`
-    );
+    // Only warn if it looks like it might be a sketch file (contains "sketch" or starts with digits)
+    // This prevents warnings for unrelated files like consts.ts
+    if (filename.includes("sketch") || /^\d/.test(filename)) {
+      console.warn(
+        `Filename "${filename}" does not match expected format: YYMMDD-sketch--(sketch_name)`
+      );
+    }
     return { sketch_date: "", sketch_title: "" };
   }
 
@@ -45,8 +49,8 @@ const { sketch_date, sketch_title } = parseSketchMeta(filename_prop);
 const filename = filename_prop || "Work in Progress";
 const canvas_width = canvas_width_prop || 800;
 const canvas_height = canvas_height_prop || 800;
-const today_date = formatDateYYMMDD(new Date());
-const footer_text = `${today_date} // FRAMEWORK_V2 // OPEN  -METEO API // P5.JS`;
+const last_updated = "251128";
+const footer_text = `${last_updated} // FRAMEWORK_V2 // OPEN  -METEO API // P5.JS`;
 ---
 
 <Layout title={filename}>
@@ -97,9 +101,6 @@ const footer_text = `${today_date} // FRAMEWORK_V2 // OPEN  -METEO API // P5.JS`
     }
     .front {
       z-index: 10;
-    }
-    .middle {
-      z-index: 5;
     }
     .back {
       z-index: 1;

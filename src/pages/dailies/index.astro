@@ -2,30 +2,73 @@
 /**
  * @description Dailies index page - displays all sketches in a list
  * TODO: Add pagination later
+ * 
+ * Uses the same URL decoding and slug generation logic as [...slug].astro
+ * to ensure consistency between the index page and individual sketch pages.
  */
 
 import Layout from "@/layouts/Layout.astro";
 
 /**
+ * Decode URL-encoded string
+ * Handles %20 (space), %26 (&), and other URL-encoded characters
+ * @param {string} str - URL-encoded string
+ * @returns {string} Decoded string
+ */
+function decodeURL(str) {
+  if (!str) return "";
+  
+  try {
+    return decodeURIComponent(str);
+  } catch (e) {
+    // If decoding fails, manually replace common encodings
+    return str
+      .replace(/%20/g, " ")
+      .replace(/%26/g, "&")
+      .replace(/%2F/g, "/")
+      .replace(/%3F/g, "?")
+      .replace(/%3D/g, "=");
+  }
+}
+
+/**
+ * Normalize filename: decode URL encoding and convert spaces to underscores
+ * @param {string} filename - Filename (may be URL-encoded)
+ * @returns {string} Decoded filename with spaces as underscores
+ */
+function normalizeFilename(filename) {
+  const decoded = decodeURL(filename);
+  return decoded.replace(/\s+/g, "_");
+}
+
+/**
  * Parse sketch metadata from filename
  * Expected format: YYMMDD-sketch--(sketch_name)
- * @param {string} filename - Filename without extension
+ * Handles URL-encoded filenames (e.g., %20 for spaces, %26 for &)
+ * @param {string} filename - Filename without extension (may be URL-encoded)
  * @returns {{sketch_date: string, sketch_title: string, slug: string}}
  */
 function parseSketchMeta(filename) {
   if (!filename) return { sketch_date: "", sketch_title: "", slug: "" };
 
+  // Decode URL encoding first to get original characters
+  const decodedFilename = decodeURL(filename);
+
   // Match: YYMMDD-sketch--(sketch_name)
-  const match = filename.match(/^(\d{6})-sketch--(.+)$/);
+  // Captures: date (6 digits) and title (everything after "sketch--")
+  const match = decodedFilename.match(/^(\d{6})-sketch--(.+)$/);
 
   if (!match) {
     return { sketch_date: "", sketch_title: "", slug: "" };
   }
 
+  const sketch_date = match[1]; // YYMMDD
+  const sketch_title = match[2]; // Title with spaces and special chars preserved (e.g., "Fire & Water")
+
   return {
-    sketch_date: match[1], // YYMMDD
-    sketch_title: match[2], // sketch name
-    slug: filename, // Use full filename as slug
+    sketch_date,
+    sketch_title,
+    slug: sketch_date, // Use only date (YYMMDD) as slug for cleaner URLs like /dailies/251128
   };
 }
 
@@ -42,24 +85,26 @@ function getFilenameFromPath(filePath) {
 // Import all sketch files from src/sketches/
 const allSketches = import.meta.glob("../../sketches/*.astro", { eager: false });
 
-console.log(allSketches);
 // Process all sketches
 const sketches = Object.keys(allSketches)
   .map((filePath) => {
-    const filename = getFilenameFromPath(filePath);
-    const { sketch_date, sketch_title, slug } = parseSketchMeta(filename);
+    const rawFilename = getFilenameFromPath(filePath);
+    const { sketch_date, sketch_title, slug } = parseSketchMeta(rawFilename);
 
     // Skip if filename doesn't match expected format
     if (!sketch_date || !sketch_title) {
       return null;
     }
 
+    // Normalize filename for display (spaces converted to underscores)
+    const normalizedFilename = normalizeFilename(rawFilename);
+
     return {
-      filename,
+      filename: normalizedFilename, // Filename with spaces as underscores (e.g., "Fire_&_Water")
       slug,
       sketch_date,
-      sketch_title,
-      url: `/dailies/${slug}`,
+      sketch_title, // Title with spaces preserved for display (e.g., "Fire & Water")
+      url: `/dailies/${slug}`, // URL uses date-based slug (e.g., /dailies/251128)
     };
   })
   .filter((sketch) => sketch !== null)

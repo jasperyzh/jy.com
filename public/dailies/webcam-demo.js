@@ -20,7 +20,7 @@
  * };
  */
 
-import { P5WebcamManager } from "./WebcamManager.js";
+import { P5WebcamManager } from "../../src/util/WebcamManager.js";
 
 /**
  * Creates a webcam demo sketch with multiple instances

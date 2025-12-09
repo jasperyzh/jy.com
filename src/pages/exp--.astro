@@ -4,12 +4,13 @@
 // and generates links to them, organized by their directory structure.
 
 import Layout from "@/layouts/Layout.astro";
+import { glob } from "astro/loaders";
+import GiveHeart from "@/components/GiveHeart.astro";
 
 // Dynamically import all Astro pages from the `../pages` directory.
 // This creates an object where keys are file paths and values are functions to import the modules.
 const allPageImports = import.meta.glob("./**/*.{astro,mdx}");
 
-// console.log(allPageImports);
 
 const pages = Object.keys(allPageImports)
   .filter((filePath) => {
@@ -27,6 +28,7 @@ const pages = Object.keys(allPageImports)
     return (
       // !filePath.includes("components") &&
       !isRootIndex && // Exclude root index.astro
+      !filePath.includes("[...slug]") &&
       !filePath.includes("404") &&
       !filePath.includes("blog") &&
       !filePath.includes("_exp") &&
@@ -71,8 +73,6 @@ const pagesByDir = pages.reduce((acc, page) => {
 const sortedDirs = Object.keys(pagesByDir).sort();
 
 export const prerender = true;
-
-
 ---
 
 <Layout title="Home">
@@ -84,6 +84,7 @@ export const prerender = true;
     <section
       class="grid lg:grid-cols-2 grid-flow-col grid-rows-[repeat(2,auto)] gap-4"
     >
+    <GiveHeart pageUrl="/exp--" />
       {
         sortedDirs.map((dir) => {
           const dirPages = pagesByDir[dir].sort((a, b) =>

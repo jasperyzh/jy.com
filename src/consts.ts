@@ -55,3 +55,31 @@ export const SITE_CONFIG: SiteConfig = {
     posts_per_page: 10,
   },
 };
+
+
+
+/**
+ * Extract filename from import.meta.url and remove extension
+ * Handles URL encoding (e.g., %20 for spaces)
+ * @param {string|URL} [urlOrString] - Optional URL or URL string to extract filename from. If not provided, uses import.meta.url from the calling context.
+ * @returns {string} Filename without extension, URL-decoded
+ */
+export function getFilename(urlOrString?: string | URL) {
+  // Use provided URL or fall back to import.meta.url
+  // Note: If no parameter is provided, this will use import.meta.url from consts.ts
+  // To get the filename of the calling file, pass import.meta.url as parameter
+  const urlToUse = urlOrString || import.meta.url;
+  
+  if (!urlToUse) return "";
+  const url = typeof urlToUse === "string" ? new URL(urlToUse) : urlToUse;
+  const filename = url.pathname.split("/").pop() || "";
+  // Remove .astro extension if present
+  const withoutExt = filename.replace(/\.astro$/, "");
+  // Decode URL-encoded characters (e.g., %20 -> space)
+  try {
+    return decodeURIComponent(withoutExt);
+  } catch (e) {
+    // If decoding fails, return as-is (might already be decoded)
+    return withoutExt;
+  }
+}

@@ -40,12 +40,36 @@ const { title, description, empty_canvas = false } = Astro.props as Props;
       <SiteFooter>
         <div class="flex flex-col gap-2">
           <BackToTop />
-          <button id="custom-theme-toggle" class="btn--toggle">Toggle Theme</button>
+          <button id="custom-theme-toggle" class="btn--toggle">
+            Toggle Theme
+          </button>
         </div>
       </SiteFooter>
     )
   }
 </LayoutBase>
+
+<style is:global>
+  body {
+    display: grid;
+    grid-template-rows: 100px 1fr auto;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "content"
+      "footer";
+    min-height: 100vh;
+  }
+  .site--header {
+    grid-area: header;
+  }
+  body > main {
+    grid-area: content;
+  }
+  .site--footer {
+    grid-area: footer;
+  }
+</style>
 
 <script>
   // Register spacebar hotkey for recording toggle

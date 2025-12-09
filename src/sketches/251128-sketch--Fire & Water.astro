@@ -23,7 +23,7 @@ function getFilename() {
 }
 
 const filename = getFilename();
-const canvas_width = 800;
+const canvas_width = 600;
 const canvas_height = 800;
 ---
 
@@ -34,18 +34,19 @@ const canvas_height = 800;
 >
   <!-- Back -->
   <Fragment slot="back">
+    <span>TEMP</span>
+    <span id="data-temp" class="animated--">--°C</span>
+    <span>WIND</span>
+    <span id="data-wind" class="animated--">-- km/h</span>
+
+    <div id="canvas-container"></div>
+
     <!-- <img
-      class="w-full h-full object-cover object-bottom col-span-2 row-span-2"
+      class="w-full h-full object-cover object-bottom col-span-2 col-start-1 row-start-4 row-end-5"
       src={`${ASSETS_PATH.images}/251124-20251124_140919.jpg`}
       alt=""
     /> -->
-    <span>TEMP</span>
-    <span id="data-temp" class="text-2xl animated--">--°C</span>
-    <span>WIND</span>
-    <span id="data-wind" class="animated--">-- km/h</span>
   </Fragment>
-
-  <!-- middle: div.middle>div#canvas-container -->
 
   <!-- front -->
   <Fragment slot="front">
@@ -53,13 +54,30 @@ const canvas_height = 800;
     <span id="data-coords" class="animated--">--°N --°E</span>
     <span id="data-time" class="animated--">00:00:00</span>
   </Fragment>
-
-  <!-- meta: div.meta>h1+date+footer -->
 </LayoutDailies>
 
+<!-- <style define:vars={{ textColor: foregroundColor, backgroundColor }}></style> -->
 <style is:inline>
-  main {
-    background: gold;
+  main#sketch-frame {
+    background: var(--color-blue);
+
+    #canvas-container {
+      grid-column: 1 / -1;
+      grid-row: 1 / -1;
+    }
+
+    .front {
+      grid-template-rows: repeat(4, 1fr);
+      color: var(--color-milk);
+
+      & > * {
+        grid-column: 1 / -1;
+        background: var(--color-blue);
+        font-size: var(--text-5xl);
+        font-family: var(--font-display);
+        line-height: 1.2;
+      }
+    }
   }
 </style>
 
@@ -771,7 +789,7 @@ const canvas_height = 800;
 
       // Initialize webcam manager
       webcamManager = new P5WebcamManager(CONFIG.width, CONFIG.height, {
-        flipHorizontal: true, // Mirror for selfie mode
+        flipHorizontal: false, // Mirror for selfie mode
         zoom: 1.5,
       });
 
@@ -968,9 +986,10 @@ const canvas_height = 800;
       exportPNG: async function () {
         try {
           const canvas = await html2canvas(els.frame, {
-            scale: 2,
-            useCORS: true,
-            backgroundColor: null,
+            scale: 1,
+            // useCORS: true,
+            // backgroundColor: null,
+            // y-offset:5
           });
 
           const link = document.createElement("a");
