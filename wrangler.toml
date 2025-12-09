@@ -1,0 +1,9 @@
+# Cloudflare Pages configuration for Astro
+# This file tells Wrangler where to find the static assets
+
+name = "jy"
+compatibility_date = "2025-12-09"
+
+[assets]
+directory = "./dist"
+
