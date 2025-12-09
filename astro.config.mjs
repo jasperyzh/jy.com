@@ -1,5 +1,7 @@
 // @ts-check
 import { defineConfig } from "astro/config";
+import path from "path";
+import { fileURLToPath } from "url";
 
 import cloudflare from "@astrojs/cloudflare";
 
@@ -7,6 +9,9 @@ import tailwindcss from "@tailwindcss/vite";
 
 import sitemap from "@astrojs/sitemap";
 import icon from "astro-icon";
+import vue from "@astrojs/vue";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://astro.build/config
 export default defineConfig({
@@ -17,6 +22,7 @@ export default defineConfig({
   //   syntaxHighlight: "prism",
   // },
   integrations: [
+    vue(),
     sitemap(),
     icon(),
   ],
@@ -31,7 +37,7 @@ export default defineConfig({
     },
     resolve: {
       alias: {
-        "@": "/src",
+        "@": path.resolve(__dirname, "./src"),
       },
     },
     

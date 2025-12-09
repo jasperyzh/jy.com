@@ -1438,14 +1438,13 @@ import Layout from "@/layouts/Layout.astro";
       </button>
     </main>
   </div>
-<!-- lang="scss"  -->
-  <style lang="scss">
+  <style>
     :root {
       --font-family-body: "Times New Roman", Times, serif;
       --color-blue: #0830ff;
     }
 
-    // make sure if you scroll past the top it shows same color as hero
+    /* // make sure if you scroll past the top it shows same color as hero*/
     body:after {
       background-color: black;
       bottom: -500px;
@@ -1457,7 +1456,7 @@ import Layout from "@/layouts/Layout.astro";
       z-index: 1000;
     }
 
-    // make sure if you scroll past the top it shows same color as hero
+    /* // make sure if you scroll past the top it shows same color as hero*/
     body:before {
       background-color: var(--color-blue);
       top: -500px;
@@ -1475,7 +1474,7 @@ import Layout from "@/layouts/Layout.astro";
 
     /* // -- Mixins -- // */
 
-    @mixin grid-cols($span: 1, $gutter: 30px, $cols: 12) {
+   /*  @mixin grid-cols($span: 1, $gutter: 30px, $cols: 12) {
       width: calc(
         (((100% - (#{$cols - 1} * #{$gutter})) / #{$cols}) * #{$span}) +
           (#{$gutter} * #{$span - 1})
@@ -1506,11 +1505,11 @@ import Layout from "@/layouts/Layout.astro";
       margin-left: auto;
       margin-right: auto;
       max-width: 1600px;
-    }
+    } */
 
     /* // -- Helpers -- // */
-    $section-gutter: 9.375vw; // 5vw
-    $section-gutter-large: 9.375vw;
+    /* $section-gutter: 9.375vw; // 5vw
+    $section-gutter-large: 9.375vw; */
 
     .cta {
       color: inherit;
@@ -2265,7 +2264,7 @@ import Layout from "@/layouts/Layout.astro";
       margin-bottom: 34px;
     }
 
-    // fixes
+    /* // fixes */
     .flickity-viewport {
       overflow: hidden;
     }
@@ -2399,7 +2398,7 @@ import Layout from "@/layouts/Layout.astro";
     }
 
     .wwd__info__copy {
-      // TODO: check styles to see if we can use .copy helper classes here
+      /* // TODO: check styles to see if we can use .copy helper classes here */
       color: #333;
       font-family: var(--font-family-body);
       font-size: 15px;
@@ -2454,7 +2453,7 @@ import Layout from "@/layouts/Layout.astro";
       }
     }
 
-    // DEV helper for lining up columns text with baseline of first link and right col headline
+/*     // DEV helper for lining up columns text with baseline of first link and right col headline
     // .wwd__item:first-child {
     //   position: relative;
 
@@ -2468,7 +2467,7 @@ import Layout from "@/layouts/Layout.astro";
     //     width: 100vw;
     //   }
     // }
-
+ */
     .wwd__item--active {
       color: #333;
     }
@@ -2605,7 +2604,8 @@ import Layout from "@/layouts/Layout.astro";
         @media (min-width: 768px) {
           padding-top: percentage(
             800px/570px
-          ); // start all images out as portrait until they get big enough as squares to look right with copy not getting taller than image
+          ); 
+          /* // start all images out as portrait until they get big enough as squares to look right with copy not getting taller than image */
         }
 
         @media (min-width: 1400px) {
@@ -2721,7 +2721,7 @@ import Layout from "@/layouts/Layout.astro";
     }
 
     .showcase__video video {
-      // TODO: fix so videos hold proper ratio of square/po
+      /* // TODO: fix so videos hold proper ratio of square/po */
       height: 100%;
       left: 50%;
       position: absolute;
@@ -3099,7 +3099,7 @@ import Layout from "@/layouts/Layout.astro";
       margin-left: 30px;
       opacity: 0;
       width: 100%;
-      // width: calc(100% - 30px);
+      /* // width: calc(100% - 30px); */
     }
 
     @media (min-width: 500px) {
@@ -3556,11 +3556,13 @@ import Layout from "@/layouts/Layout.astro";
         width: calc(100% - 130px);
 
         @media (min-width: 900px) {
-          bottom: -63px; // sits 30px below image
+          bottom: -63px; 
+          /* // sits 30px below image */
         }
 
         @media (min-width: 1700px) {
-          bottom: -73px; // sits 40px below image
+          bottom: -73px;
+           /* // sits 40px below image */
         }
 
         &.in-view {
@@ -3591,7 +3593,7 @@ import Layout from "@/layouts/Layout.astro";
             height: 40px;
           }
 
-          // line
+          /* // line */
           &:after {
             background-color: #cdcdcd;
             bottom: 30px;
@@ -3666,9 +3668,9 @@ import Layout from "@/layouts/Layout.astro";
       transition: all 450ms ease-in-out;
     }
 
-    // .bg__item--slide-up.bg__item--active {
+    /* // .bg__item--slide-up.bg__item--active {
     //   transform: translate3d(0, 100%, 0);
-    // }
+    // } */   
 
     .bg__item--active {
       opacity: 1;
@@ -3761,7 +3763,7 @@ import Layout from "@/layouts/Layout.astro";
       }
     }
 
-    // mobile menu background
+    /* // mobile menu background */
     .mobile-menu__bg {
       background-color: transparentize(#151515, 0.05);
       bottom: 0;
@@ -3783,7 +3785,7 @@ import Layout from "@/layouts/Layout.astro";
       }
     }
 
-    // Menu
+    /* // Menu */
     .mobile-menu {
       align-items: center;
       animation: none;
@@ -3801,9 +3803,9 @@ import Layout from "@/layouts/Layout.astro";
       top: 80px;
       z-index: 2;
 
-      // .menu--active--top & {
+     /*  // .menu--active--top & {
       //   transition-delay: 450ms;
-      // }
+      // } */
 
       .menu--active & {
         opacity: 1;
@@ -3832,9 +3834,9 @@ import Layout from "@/layouts/Layout.astro";
         transform: translateY(0);
 
         @for $i from 1 through 6 {
-          &:nth-of-type(#{$i}) {
+          /* &:nth-of-type(#{$i}) {
             transition-delay: #{400ms + (50ms * $i)};
-          }
+          } */
         }
       }
 
@@ -3867,16 +3869,16 @@ import Layout from "@/layouts/Layout.astro";
       }
 
       @media (min-height: 500px) {
-        // font-size: 36px;
+        /* // font-size: 36px; */
 
         &:hover:before {
           height: 70px;
         }
       }
 
-      // @media (min-height: 600px) {
+      /* // @media (min-height: 600px) {
       //   font-size: 36px;
-      // }
+      // } */
     }
 
     .nav-scroll {
