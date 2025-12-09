@@ -8,6 +8,7 @@
     "postinstall": "bash scripts/setup-assets.sh",
     "prebuild": "bash scripts/ensure-assets.sh",
     "build": "astro build",
+    "postbuild": "bash scripts/postbuild-assetsignore.sh",
     "preview": "astro preview",
     "astro": "astro",
     "sync-assets": "bash scripts/sync-assets.sh"
