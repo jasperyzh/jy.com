@@ -36,3 +36,7 @@ pnpm-debug.log*
 
 .vercel
 *.zip
+
+# Assets: Symlink is used for local dev (auto-updates from Obsidian)
+# Files are committed for production builds. Use scripts/setup-assets.sh to switch.
+# Note: Git will track whatever exists (symlink or files), so run sync-assets.sh before committing

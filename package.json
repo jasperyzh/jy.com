@@ -4,6 +4,8 @@
   "version": "1.0.1",
   "scripts": {
     "dev": "astro dev",
+    "setup": "bash scripts/setup-assets.sh",
+    "postinstall": "bash scripts/setup-assets.sh",
     "prebuild": "bash scripts/ensure-assets.sh",
     "build": "astro build",
     "preview": "astro preview",
