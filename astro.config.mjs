@@ -44,39 +44,7 @@ export default defineConfig({
       },
     },
     build: {
-      // Optimize build output
-      rollupOptions: {
-        output: {
-          // Manual chunk splitting to reduce worker size
-          manualChunks: (id) => {
-            // Split large dependencies into separate chunks
-            if (id.includes("node_modules")) {
-              // Vue runtime - separate chunk
-              if (id.includes("vue") && !id.includes("vue-router")) {
-                return "vue-runtime";
-              }
-              // Supabase client - separate chunk
-              if (id.includes("supabase")) {
-                return "supabase";
-              }
-              // Iconify packages - separate chunk (can be large)
-              if (id.includes("iconify")) {
-                return "iconify";
-              }
-              // Marked (markdown parser) - separate chunk
-              if (id.includes("marked")) {
-                return "marked";
-              }
-              // Embla carousel - separate chunk
-              if (id.includes("embla")) {
-                return "embla";
-              }
-              // Other node_modules - vendor chunk
-              return "vendor";
-            }
-          },
-        },
-      },
+    
       // Minify output
       minify: "esbuild",
       // Reduce chunk size warnings threshold
