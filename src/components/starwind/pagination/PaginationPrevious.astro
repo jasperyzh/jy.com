@@ -1,5 +1,5 @@
 ---
-import { Icon } from "astro-icon/components";
+// import { Icon } from "astro-icon/components";
 import type { HTMLAttributes } from "astro/types";
 import { tv } from "tailwind-variants";
 import PaginationLink from "./PaginationLink.astro";
@@ -17,6 +17,6 @@ const { class: className, size = "md", ...rest } = Astro.props;
 	class={paginationPrevious({ class: className })}
 	{...rest}
 >
-	<Icon name="bi:chevron-left" class="size-4 transition-transform group-hover:-translate-x-1" />
+	<!-- <Icon name="bi:chevron-left" class="size-4 transition-transform group-hover:-translate-x-1" /> -->
 	<slot />
 </PaginationLink>
