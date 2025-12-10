@@ -30,16 +30,16 @@ sync_directory() {
     echo "${NAME} directory is a symlink - skipping sync."
     echo "  ${NAME} will auto-update from Obsidian vault during development."
     return 0
-  fi
+fi
 
   # Check if source exists
   if [ ! -d "$SOURCE" ]; then
     echo "Warning: ${NAME} source directory not found at $SOURCE"
     echo "  Cannot sync ${NAME}. If you're in CI/CD, this is expected."
     return 1
-  fi
+fi
 
-  # Sync from Obsidian to files
+# Sync from Obsidian to files
   echo "Syncing ${NAME} from Obsidian vault to repository..."
   mkdir -p "$TARGET"
   rsync -av --delete "$SOURCE/" "$TARGET/"

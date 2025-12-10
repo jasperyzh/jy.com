@@ -21,10 +21,10 @@ setup_directory() {
   local TARGET=$2
   local NAME=$3
 
-  # Remove existing directory/symlink
+# Remove existing directory/symlink
   if [ -e "$TARGET" ] || [ -L "$TARGET" ]; then
     rm -rf "$TARGET"
-  fi
+fi
 
   # Check if source exists (local development)
   if [ -d "$SOURCE" ]; then
@@ -32,16 +32,16 @@ setup_directory() {
     ln -s "$SOURCE" "$TARGET"
     echo "✓ Symlink created: $TARGET -> $SOURCE"
     echo "  ${NAME} will auto-update during development"
-  else
+else
     echo "Obsidian vault not found - using copied ${NAME} files from repo..."
-    # Ensure directory exists (files should be in git)
+  # Ensure directory exists (files should be in git)
     if [ ! -d "$TARGET" ]; then
       mkdir -p "$TARGET"
       echo "⚠ Warning: ${NAME} directory not found. Run 'npm run sync-assets' to copy ${NAME}."
-    else
+  else
       echo "✓ Using copied ${NAME} from repository"
-    fi
   fi
+fi
 }
 
 # Setup assets

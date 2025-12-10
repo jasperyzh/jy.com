@@ -13,41 +13,41 @@ export const POSTS_PER_PAGE = 4;
 
 export async function getStaticPaths({ paginate }) {
   try {
-    const allPosts = await getCollection("blog");
-    const publishedPosts = allPosts.filter((post) => !post.data.draft);
+  const allPosts = await getCollection("blog");
+  const publishedPosts = allPosts.filter((post) => !post.data.draft);
 
     // If no posts, return empty array to avoid build errors
     if (publishedPosts.length === 0) {
       return [];
     }
 
-    const tags = ["life", "art", "tech", "share"];
+  const tags = ["life", "art", "tech", "share"];
 
-    let paths = [];
-    tags.forEach((tag) => {
-      const tagPosts = publishedPosts
-        .filter((post) => post.data.tags?.includes(tag))
-        .sort((a, b) => {
-          const dateA = parseDateYYMMDD(a.data.pubDate || new Date());
-          const dateB = parseDateYYMMDD(b.data.pubDate || new Date());
-          return dateB.getTime() - dateA.getTime();
-        });
+  let paths = [];
+  tags.forEach((tag) => {
+    const tagPosts = publishedPosts
+      .filter((post) => post.data.tags?.includes(tag))
+      .sort((a, b) => {
+        const dateA = parseDateYYMMDD(a.data.pubDate || new Date());
+        const dateB = parseDateYYMMDD(b.data.pubDate || new Date());
+        return dateB.getTime() - dateA.getTime();
+      });
 
       // Only create paths if there are posts for this tag
       if (tagPosts.length > 0) {
-        const paginatedResult = paginate(tagPosts, {
-          params: { tag: slugify(tag) },
-          pageSize: POSTS_PER_PAGE,
-          props: {
-            tag,
-            allPosts: publishedPosts,
-          },
-        });
-        paths = paths.concat(paginatedResult);
-      }
+    const paginatedResult = paginate(tagPosts, {
+      params: { tag: slugify(tag) },
+      pageSize: POSTS_PER_PAGE,
+      props: {
+        tag,
+        allPosts: publishedPosts,
+      },
     });
+    paths = paths.concat(paginatedResult);
+      }
+  });
 
-    return paths;
+  return paths;
   } catch (error) {
     // If collection doesn't exist or is empty, return empty array
     console.warn("Blog collection not available:", error);

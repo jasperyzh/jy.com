@@ -1,9 +1,12 @@
 # Cloudflare Pages configuration for Astro
-# This file tells Wrangler where to find the static assets
+# Note: For Pages deployments via Git, this file is optional.
+# Pages will auto-detect the dist directory from build settings.
+# This file is kept for local development and manual deployments.
 
 name = "jy"
 compatibility_date = "2025-12-09"
 
-[assets]
-directory = "./dist"
+# For Pages, specify the build output directory
+pages_build_output_dir = "./dist"
+
 
