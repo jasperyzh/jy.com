@@ -1,5 +1,5 @@
 ---
-import { Icon } from "astro-icon/components";
+// import { Icon } from "astro-icon/components";
 
 // Get current path to highlight active page
 const pathname = new URL(Astro.request.url).pathname;
@@ -21,7 +21,7 @@ const currentPath = pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
     <ol class="nav-links flex justify-end items-center gap-4">
       <li>
         <a class="close-menu md:hidden" aria-label="Close menu">
-          <Icon name="bi:x-lg" class="text-4xl" />
+          <!-- <Icon name="bi:x-lg" class="text-4xl" /> -->
         </a>
       </li>
       <li><a href="/portfolio">portfolio>></a></li>

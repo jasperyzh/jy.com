@@ -4265,6 +4265,7 @@
         "npm:@astrojs/cloudflare@^12.6.10",
         "npm:@astrojs/sitemap@^3.6.0",
         "npm:@astrojs/vue@5",
+        "npm:@iconify-json/bi@^1.2.6",
         "npm:@iconify-json/tabler@^1.2.23",
         "npm:@supabase/supabase-js@^2.39.0",
         "npm:@tabler/icons@^3.35.0",
