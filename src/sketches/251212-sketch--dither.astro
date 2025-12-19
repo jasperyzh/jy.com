@@ -1,0 +1,1047 @@
+---
+import LayoutDailies from "@/layouts/LayoutDailies.astro";
+import { ASSETS_PATH, getFilename } from "@/consts";
+
+
+const get_current_filename = import.meta.url;
+const filename = getFilename(get_current_filename);
+// console.log("filename", filename, import.meta.url);
+// console.log(filename);
+const canvas_width = 600;
+const canvas_height = 800;
+---
+
+<LayoutDailies
+  filename={filename}
+  canvas_width={canvas_width}
+  canvas_height={canvas_height}
+>
+
+  <!-- Back -->
+  <Fragment slot="back">
+    <span>Dither</span>
+    <!-- <span id="data-temp" class="animated--">--°C</span> -->
+    <span>WIND</span>
+    <span id="data-wind" class="animated--">-- km/h</span>
+
+    <div id="canvas-container"></div>
+
+    <!-- <img
+      class="w-full h-full object-cover object-bottom col-span-2 col-start-1 row-start-4 row-end-5"
+      src={`${ASSETS_PATH.images}/251124-20251124_140919.jpg`}
+      alt=""
+    /> -->
+  </Fragment>
+
+  <!-- front -->
+  <Fragment slot="front">
+    
+    <span id="data-location" class="animated--">LOADING...</span>
+    <span id="data-coords" class="animated--">--°N --°E</span>
+    <span id="data-time" class="animated--">00:00:00</span>
+
+    <script is:inline>
+      
+      // Weather, Time, and Location Data
+      (function () {
+        const WEATHER_CONFIG = {
+          city: "Kuala Lumpur",
+          lat: 3.0831022768590155,
+          lon: 101.64836391773572,
+          refreshRate: 1000 * 60 * 15, // 15 mins
+        };
+
+        // DOM Elements
+        const els = {
+          location: document.getElementById("data-location"),
+          coords: document.getElementById("data-coords"),
+          time: document.getElementById("data-time"),
+          wind: document.getElementById("data-wind"),
+        };
+
+        let weatherData = null;
+
+        // Fetch weather data
+        async function fetchWeather() {
+          try {
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${WEATHER_CONFIG.lat}&longitude=${WEATHER_CONFIG.lon}&current=temperature_2m,wind_speed_10m&timezone=auto`;
+            const res = await fetch(url);
+            const data = await res.json();
+
+            if (data.current) {
+              weatherData = data.current;
+              updateUI();
+            }
+          } catch (e) {
+            console.error("Weather fetch failed", e);
+          }
+        }
+
+        // Update UI with weather and location data
+        function updateUI() {
+          if (!weatherData) return;
+          if (els.location) {
+            els.location.textContent = WEATHER_CONFIG.city.toUpperCase();
+          }
+          if (els.coords) {
+            els.coords.textContent = `${WEATHER_CONFIG.lat.toFixed(2)}°N ${WEATHER_CONFIG.lon.toFixed(2)}°E`;
+          }
+          if (els.wind) {
+            els.wind.textContent = `${weatherData.wind_speed_10m} km/h`;
+          }
+        }
+
+        // Update time display
+        function updateTime() {
+          if (els.time) {
+            const now = new Date();
+            els.time.textContent = now.toLocaleTimeString("en-US", {
+              hour12: false,
+            });
+          }
+        }
+
+        // Initialize weather, time, and location
+        function init() {
+          // Fetch weather data
+          fetchWeather();
+          setInterval(fetchWeather, WEATHER_CONFIG.refreshRate);
+
+          // Update time every second
+          setInterval(updateTime, 1000);
+          updateTime();
+        }
+
+        // Run when DOM is ready
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", init);
+        } else {
+          init();
+        }
+      })();
+    </script>
+
+    <style is:inline>
+      main#sketch-frame {
+        background: var(--color-blue);
+
+        #canvas-container {
+          grid-column: 1 / -1;
+          grid-row: 1 / -1;
+        }
+
+        .front {
+          grid-template-rows: repeat(4, 1fr);
+          color: var(--color-milk);
+
+          & > * {
+            grid-column: 1 / -1;
+            background: var(--color-blue);
+            /* font-size: var(--text-5xl); */
+            font-family: var(--font-display);
+            line-height: 1.2;
+          }
+        }
+        .meta {
+          pointer-events: none !important;
+        }
+      }
+    </style>
+
+    <script
+      type="module"
+      define:vars={{ filename, canvas_width, canvas_height }}
+    >
+      import "/lib/p5-1.11.10.js";
+      import "/lib/p5.svg.min-1.6.0.js";
+      import "/lib/html2canvas.min-1.4.1.js";
+      import GUI from "/lib/lil-gui-0.19.2.js";
+
+      import PixelDisplay from "/src/util/PixelDisplay";
+      import HatchFill from "/src/util/HatchFill.js";
+      import { P5WebcamManager } from "/src/util/WebcamManager.js";
+
+      /**
+       * @fileoverview
+       * @description
+       * @author jy
+       * @date 2025-11-25
+       * @example
+       */
+
+      /**
+       * Matrix presets based on 128x64 OLED resolution
+       * These presets represent common OLED display resolutions and their common divisors
+       */
+      const MATRIX_PRESETS = {
+        "128x64": { width: 128, height: 64 },
+        "64x64": { width: 64, height: 64 },
+        "48x48": { width: 48, height: 48 },
+        "32x32": { width: 32, height: 32 },
+        "16x16": { width: 16, height: 16 },
+        "8x8": { width: 8, height: 8 },
+        "4x4": { width: 4, height: 4 },
+        "2x2": { width: 2, height: 2 },
+      };
+
+      /**
+       * Maximum matrix dimensions (128x128 constraint)
+       */
+      const MAX_MATRIX_WIDTH = 128;
+      const MAX_MATRIX_HEIGHT = 128;
+
+      /**
+       * Creates a simplified dot matrix sketch (Instance Mode)
+       *
+       * @param {p5} p - p5.js instance
+       * @param {Object} config - Configuration object
+       * @param {string} config.title - Title of the sketch
+       * @param {number} config.width - Canvas width in pixels
+       * @param {number} config.height - Canvas height in pixels
+       * @param {string|number} [config.matrixPreset] - Matrix preset name (e.g., "64x64", "128x64") or legacy matrixSize number for square matrices
+       * @param {number} [config.matrixWidth] - Custom matrix width (overrides preset, max 128)
+       * @param {number} [config.matrixHeight] - Custom matrix height (overrides preset, max 128)
+       * @param {string} [config.theme="milk_transparent"] - Color theme name
+       * @param {number} [config.noiseScale=0.05] - Base noise scale (0.01-0.8)
+       * @param {number} [config.dotScaleFactor=2.0] - Base dot scale factor (0.5-3.0)
+       * @param {number} [config.animationSpeed=0.002] - Base animation speed (0.001-0.1)
+       * @param {number} [config.dotNoiseInfluence=1.0] - Influence of noise on dot size (0.0-3.0)
+       * @param {boolean} [config.useColorThemeShading=false] - Enable color theme shading
+       * @param {number} [config.shadeSteps=2] - Number of shade steps for color theme shading
+       * @param {boolean} [config.isPaused=false] - Pause animation
+       * @param {boolean} [config.useHatchFill=false] - Use hatch fill rendering instead of solid fill
+       * @param {boolean} [config.hatchUseGlobalDensity=true] - Use global density for hatch fill
+       * @param {number} [config.hatchDensity=0.05] - Hatch fill density (0.01-1.0)
+       * @param {number} [config.hatchGlobalSpacing=3] - Global spacing for hatch fill in pixels
+       * @param {number} [config.hatchAngle=45] - Hatch fill angle in degrees (0-180)
+       * @param {boolean} [config.hatchCrossHatch=false] - Enable cross hatch pattern
+       *
+       * @returns {Object} Sketch object with setup, init, draw, resize, exportSvg, getDotDisplay, and updateColorTheme methods
+       */
+      function createDotMatrixSketch(p, config) {
+        const GR__ = 1.618; // Golden ratio constant
+
+        let PixelDisplay, HatchFill;
+        let PIXEL_SCALE_X;
+        let PIXEL_SCALE_Y;
+        let PIXEL_GAP;
+        let MATRIX_WIDTH;
+        let MATRIX_HEIGHT;
+        let dotDisplay;
+        let zOffset = 0;
+
+        const colorThemes = {
+          "2a": {
+            off: "transparent",
+            on: [204, 165, 69],
+            stroke: [13, 13, 13],
+          },
+          milk_transparent: {
+            off: "transparent",
+            on: [13, 13, 13],
+            stroke: [13, 13, 13],
+          },
+          green: {
+            off: "transparent",
+            on: [100, 255, 100],
+            stroke: [150, 255, 150],
+          },
+          amber: {
+            off: "transparent",
+            on: [255, 180, 0],
+            stroke: [255, 200, 100],
+          },
+          white: {
+            off: "transparent",
+            on: [220, 220, 220],
+            stroke: [255, 255, 255],
+          },
+          blue: {
+            off: "transparent",
+            on: [80, 160, 255],
+            stroke: [120, 180, 255],
+          },
+        };
+
+        /**
+         * Calculate matrix dimensions from config
+         * Supports presets, custom dimensions, or legacy matrixSize
+         *
+         * @returns {{width: number, height: number}} Matrix dimensions
+         */
+        function calculateMatrixDimensions() {
+          // Priority 1: Custom matrixWidth and matrixHeight (0 means "not set", use preset)
+          if (
+            config.matrixWidth !== undefined &&
+            config.matrixHeight !== undefined &&
+            config.matrixWidth > 0 &&
+            config.matrixHeight > 0
+          ) {
+            return {
+              width: Math.min(
+                Math.max(2, Math.floor(config.matrixWidth)),
+                MAX_MATRIX_WIDTH
+              ),
+              height: Math.min(
+                Math.max(2, Math.floor(config.matrixHeight)),
+                MAX_MATRIX_HEIGHT
+              ),
+            };
+          }
+
+          // Priority 2: Matrix preset
+          if (config.matrixPreset && MATRIX_PRESETS[config.matrixPreset]) {
+            return MATRIX_PRESETS[config.matrixPreset];
+          }
+
+          // Priority 3: Legacy matrixSize (square matrix)
+          if (config.matrixSize !== undefined) {
+            const size = Math.min(
+              Math.max(2, Math.floor(config.matrixSize)),
+              MAX_MATRIX_WIDTH
+            );
+            return { width: size, height: size };
+          }
+
+          // Priority 4: Calculate from canvas dimensions (responsive)
+          // Calculate appropriate matrix size based on canvas dimensions
+          // Aim for a reasonable pixel scale (not too small, not too large)
+          const targetPixelScale = 8; // Target 8 pixels per matrix cell
+          let calcWidth = Math.floor(config.width / targetPixelScale);
+          let calcHeight = Math.floor(config.height / targetPixelScale);
+
+          // Clamp to max dimensions
+          calcWidth = Math.min(Math.max(2, calcWidth), MAX_MATRIX_WIDTH);
+          calcHeight = Math.min(Math.max(2, calcHeight), MAX_MATRIX_HEIGHT);
+
+          // Round to nearest power of 2 for cleaner look (optional, but common for matrix displays)
+          const roundToPowerOf2 = (n) => {
+            if (n <= 2) return 2;
+            if (n <= 4) return 4;
+            if (n <= 8) return 8;
+            if (n <= 16) return 16;
+            if (n <= 32) return 32;
+            if (n <= 64) return 64;
+            return 128;
+          };
+
+          return {
+            width: roundToPowerOf2(calcWidth),
+            height: roundToPowerOf2(calcHeight),
+          };
+        }
+
+        /**
+         * Reset and recalculate sketch dimensions
+         * Called when canvas size or matrix dimensions change
+         */
+        function resetSketch() {
+          const matrixDims = calculateMatrixDimensions();
+          MATRIX_WIDTH = matrixDims.width;
+          MATRIX_HEIGHT = matrixDims.height;
+
+          // Calculate pixel scales for both dimensions
+          PIXEL_SCALE_X = config.width / MATRIX_WIDTH;
+          PIXEL_SCALE_Y = config.height / MATRIX_HEIGHT;
+
+          // Use the smaller scale to maintain aspect ratio, or use separate scales
+          // For now, use separate scales to fill the canvas
+          // PIXEL_SCALE is used for the gap calculation (using average)
+          const avgPixelScale = (PIXEL_SCALE_X + PIXEL_SCALE_Y) / 2;
+          PIXEL_GAP = avgPixelScale - avgPixelScale / Math.pow(GR__, 1);
+
+          // Resize canvas to match config dimensions
+          p.resizeCanvas(config.width, config.height);
+
+          if (typeof PixelDisplay !== "undefined") {
+            // PixelDisplay uses a single pixelScale, so we use the average
+            dotDisplay = new PixelDisplay(
+              MATRIX_WIDTH,
+              MATRIX_HEIGHT,
+              avgPixelScale,
+              PIXEL_GAP,
+              p
+            );
+            updateColorTheme();
+          }
+        }
+
+        /**
+         * Update color theme from config
+         */
+        function updateColorTheme() {
+          if (!dotDisplay) return;
+          const theme = colorThemes[config.theme];
+          // Use p5 instance functions for color
+          dotDisplay.setColors(
+            Array.isArray(theme.off) ? p.color(...theme.off) : theme.off,
+            Array.isArray(theme.on) ? p.color(...theme.on) : theme.on,
+            Array.isArray(theme.stroke)
+              ? p.color(...theme.stroke)
+              : theme.stroke
+          );
+        }
+
+        /**
+         * Render hatch fill pattern
+         * Uses the same calculation logic as PixelDisplay.render() but draws hatch lines instead
+         */
+        function renderHatchFill() {
+          if (typeof HatchFill === "undefined" || !dotDisplay) return;
+
+          // Create hatch fill instance
+          const hatchFill = new HatchFill({
+            density: config.hatchDensity,
+            angle: config.hatchAngle,
+            crossHatch: config.hatchCrossHatch,
+            useGlobalDensity: config.hatchUseGlobalDensity,
+            globalSpacing: config.hatchGlobalSpacing,
+          });
+
+          // Set stroke color and no fill (using p5 instance functions)
+          p.stroke(dotDisplay.colorOn);
+          p.strokeWeight(1);
+          p.noFill();
+
+          // Use average pixel scale for calculations (matching PixelDisplay)
+          const avgPixelScale = (PIXEL_SCALE_X + PIXEL_SCALE_Y) / 2;
+
+          // Render each pixel with hatch fill
+          for (let x = 0; x < dotDisplay.matrixWidth; x++) {
+            for (let y = 0; y < dotDisplay.matrixHeight; y++) {
+              const noiseVal = dotDisplay.pixelMatrix[x][y];
+              if (noiseVal === 0) continue;
+
+              // Calculate dot position and size (matching dotDisplay.render logic)
+              const baseDotSize = avgPixelScale - dotDisplay.pixelGap;
+              const maxDotSize = baseDotSize * config.dotScaleFactor;
+              const minDotSize = p.lerp(
+                maxDotSize,
+                0,
+                config.dotNoiseInfluence
+              );
+              const scaledDotSize = p.map(
+                noiseVal,
+                0,
+                1,
+                minDotSize,
+                maxDotSize
+              );
+              const offset = (avgPixelScale - scaledDotSize) / 2;
+
+              // Calculate center position using actual pixel scales for positioning
+              const cx = x * PIXEL_SCALE_X + offset + scaledDotSize / 2;
+              const cy = y * PIXEL_SCALE_Y + offset + scaledDotSize / 2;
+              const radius = scaledDotSize / 2;
+
+              // Skip if radius is too small
+              if (radius < 0.5) continue;
+
+              // Generate hatch lines for this circle
+              const hatchLines = hatchFill.fillCircle(cx, cy, radius);
+
+              // Draw hatch lines
+              if (hatchLines && hatchLines.length > 0) {
+                for (const lineSeg of hatchLines) {
+                  if (
+                    lineSeg &&
+                    lineSeg.x1 !== undefined &&
+                    lineSeg.y1 !== undefined &&
+                    lineSeg.x2 !== undefined &&
+                    lineSeg.y2 !== undefined
+                  ) {
+                    p.line(lineSeg.x1, lineSeg.y1, lineSeg.x2, lineSeg.y2);
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        const sketch = {
+          /**
+           * Setup function - creates the canvas
+           * Should be called after dependencies are loaded
+           */
+          setup: () => {
+            if (typeof window !== "undefined") {
+              const matrixDims = calculateMatrixDimensions();
+              MATRIX_WIDTH = matrixDims.width;
+              MATRIX_HEIGHT = matrixDims.height;
+
+              // Calculate pixel scales
+              PIXEL_SCALE_X = config.width / MATRIX_WIDTH;
+              PIXEL_SCALE_Y = config.height / MATRIX_HEIGHT;
+              const avgPixelScale = (PIXEL_SCALE_X + PIXEL_SCALE_Y) / 2;
+              PIXEL_GAP = avgPixelScale - avgPixelScale / Math.pow(GR__, 0);
+
+              // Create canvas with config dimensions
+              p.createCanvas(config.width, config.height);
+            }
+          },
+
+          /**
+           * Initialize function - sets up dependencies and creates PixelDisplay
+           * @param {Class} PixelDisplayClass - PixelDisplay class constructor
+           * @param {Class} HatchFillClass - HatchFill class constructor
+           */
+          init: (PixelDisplayClass, HatchFillClass) => {
+            // Initialize dependencies
+            PixelDisplay = PixelDisplayClass;
+            HatchFill = HatchFillClass;
+
+            // Calculate matrix dimensions
+            const matrixDims = calculateMatrixDimensions();
+            MATRIX_WIDTH = matrixDims.width;
+            MATRIX_HEIGHT = matrixDims.height;
+
+            // Calculate pixel scales
+            PIXEL_SCALE_X = config.width / MATRIX_WIDTH;
+            PIXEL_SCALE_Y = config.height / MATRIX_HEIGHT;
+            const avgPixelScale = (PIXEL_SCALE_X + PIXEL_SCALE_Y) / 2;
+            PIXEL_GAP = avgPixelScale - avgPixelScale / Math.pow(GR__, 0);
+
+            // Create PixelDisplay instance
+            dotDisplay = new PixelDisplay(
+              MATRIX_WIDTH,
+              MATRIX_HEIGHT,
+              avgPixelScale,
+              PIXEL_GAP,
+              p
+            );
+            updateColorTheme();
+          },
+
+          /**
+           * Draw function - called every frame by p5.js
+           * Updates noise values and renders the display
+           */
+          draw: () => {
+            if (config.isPaused || !dotDisplay) return;
+
+            // Skip clearing if webcam is active (to preserve webcam background)
+            if (!config.skipClear) {
+              p.clear();
+            }
+            p.push();
+            dotDisplay.clear();
+
+            // Update noise values for each pixel
+            for (let y = 0; y < dotDisplay.matrixHeight; y++) {
+              for (let x = 0; x < dotDisplay.matrixWidth; x++) {
+                const noiseVal = p.noise(
+                  x * config.noiseScale,
+                  y * config.noiseScale,
+                  zOffset
+                );
+                dotDisplay.setPixel(x, y, noiseVal);
+              }
+            }
+
+            // Advance animation
+            zOffset += config.animationSpeed || 0.002;
+
+            // Render based on mode
+            if (config.useHatchFill) {
+              // Render with hatch fill
+              renderHatchFill();
+            } else {
+              // Render with solid fill
+              dotDisplay.render(0, 0, config);
+            }
+            p.pop();
+          },
+
+          /**
+           * Resize the sketch canvas and recalculate matrix dimensions
+           * @param {number} newWidth - New canvas width
+           * @param {number} newHeight - New canvas height
+           */
+          resize: (newWidth, newHeight) => {
+            config.width = newWidth;
+            config.height = newHeight;
+            resetSketch();
+          },
+
+          /**
+           * Export the current sketch as SVG
+           * @param {string} [exportSize="current"] - Export size (currently unused, reserved for future use)
+           */
+          exportSvg: (exportSize = "current") => {
+            if (!dotDisplay) return;
+
+            const avgPixelScale = (PIXEL_SCALE_X + PIXEL_SCALE_Y) / 2;
+
+            const svgRenderer = (p) => {
+              p.setup = () => {
+                // Use config dimensions for export
+                let w = config.width;
+                let h = config.height;
+
+                p.createCanvas(w, h, p.SVG);
+                p.noLoop();
+
+                p.background(200, 0);
+
+                if (config.useHatchFill && typeof HatchFill !== "undefined") {
+                  // Export with hatch fill
+                  const hatchFill = new HatchFill({
+                    density: config.hatchDensity,
+                    angle: config.hatchAngle,
+                    crossHatch: config.hatchCrossHatch,
+                    useGlobalDensity: config.hatchUseGlobalDensity,
+                    globalSpacing: config.hatchGlobalSpacing,
+                  });
+
+                  p.stroke(dotDisplay.colorOn);
+                  p.strokeWeight(1);
+                  p.noFill();
+
+                  const avgPixelScale = (PIXEL_SCALE_X + PIXEL_SCALE_Y) / 2;
+
+                  for (let x = 0; x < dotDisplay.matrixWidth; x++) {
+                    for (let y = 0; y < dotDisplay.matrixHeight; y++) {
+                      const noiseVal = dotDisplay.pixelMatrix[x][y];
+                      if (noiseVal === 0) continue;
+
+                      // Calculate dot position and size
+                      const baseDotSize = avgPixelScale - dotDisplay.pixelGap;
+                      const maxDotSize = baseDotSize * config.dotScaleFactor;
+                      const minDotSize = p.lerp(
+                        maxDotSize,
+                        0,
+                        config.dotNoiseInfluence
+                      );
+                      const scaledDotSize = p.map(
+                        noiseVal,
+                        0,
+                        1,
+                        minDotSize,
+                        maxDotSize
+                      );
+                      const offset = (avgPixelScale - scaledDotSize) / 2;
+
+                      const cx = x * PIXEL_SCALE_X + offset + scaledDotSize / 2;
+                      const cy = y * PIXEL_SCALE_Y + offset + scaledDotSize / 2;
+                      const radius = scaledDotSize / 2;
+
+                      // Generate hatch lines for this circle
+                      const hatchLines = hatchFill.fillCircle(cx, cy, radius);
+
+                      // Draw hatch lines as SVG
+                      for (const lineSeg of hatchLines) {
+                        if (
+                          lineSeg &&
+                          lineSeg.x1 !== undefined &&
+                          lineSeg.y1 !== undefined &&
+                          lineSeg.x2 !== undefined &&
+                          lineSeg.y2 !== undefined
+                        ) {
+                          p.line(
+                            lineSeg.x1,
+                            lineSeg.y1,
+                            lineSeg.x2,
+                            lineSeg.y2
+                          );
+                        }
+                      }
+                    }
+                  }
+                } else {
+                  // Export with solid fill
+                  p.noStroke();
+
+                  for (let x = 0; x < dotDisplay.matrixWidth; x++) {
+                    for (let y = 0; y < dotDisplay.matrixHeight; y++) {
+                      const noiseVal = dotDisplay.pixelMatrix[x][y];
+                      if (noiseVal === 0) continue;
+
+                      let pixelColor;
+                      if (!config.useColorThemeShading) {
+                        pixelColor = dotDisplay.colorOn;
+                      } else {
+                        const shadeValue = p.floor(
+                          p.map(noiseVal, 0, 1, 0, config.shadeSteps)
+                        );
+                        if (shadeValue === 0) continue;
+                        const amount = shadeValue / (config.shadeSteps - 1);
+                        pixelColor = p.lerpColor(
+                          dotDisplay.colorOff,
+                          dotDisplay.colorOn,
+                          amount
+                        );
+                      }
+
+                      p.fill(pixelColor);
+
+                      const avgPixelScale = (PIXEL_SCALE_X + PIXEL_SCALE_Y) / 2;
+                      const baseDotSize = avgPixelScale - dotDisplay.pixelGap;
+                      const maxDotSize = baseDotSize * config.dotScaleFactor;
+                      const minDotSize = p.lerp(
+                        maxDotSize,
+                        0,
+                        config.dotNoiseInfluence
+                      );
+                      const scaledDotSize = p.map(
+                        noiseVal,
+                        0,
+                        1,
+                        minDotSize,
+                        maxDotSize
+                      );
+                      const offset = (avgPixelScale - scaledDotSize) / 2;
+
+                      p.ellipseMode(p.CORNER);
+                      p.ellipse(
+                        x * PIXEL_SCALE_X + offset,
+                        y * PIXEL_SCALE_Y + offset,
+                        scaledDotSize,
+                        scaledDotSize
+                      );
+                    }
+                  }
+                }
+                p.save(config.title + ".svg");
+              };
+            };
+            new p5(svgRenderer);
+          },
+
+          /**
+           * Get the PixelDisplay instance
+           * @returns {PixelDisplay|null} The PixelDisplay instance or null if not initialized
+           */
+          getDotDisplay: () => dotDisplay,
+
+          /**
+           * Update the color theme from config
+           * Call this when config.theme changes
+           */
+          updateColorTheme: () => updateColorTheme(),
+
+          /**
+           * Get current matrix dimensions
+           * @returns {{width: number, height: number}} Current matrix dimensions
+           */
+          getMatrixDimensions: () => ({
+            width: MATRIX_WIDTH,
+            height: MATRIX_HEIGHT,
+          }),
+        };
+
+        return sketch;
+      }
+
+      // --- CONFIGURATION ---
+      const CONFIG = {
+        debug: true,
+        title: filename,
+
+        // Dimensions
+        width: canvas_width,
+        height: canvas_height,
+
+        // Dot Matrix Params
+        // Matrix preset based on 128x64 OLED resolution (max 128x128)
+        // Options: "128x64", "64x64", "48x48", "32x32", "16x16", "8x8", "4x4", "2x2"
+        // Or use matrixWidth/matrixHeight for custom dimensions (max 128 each)
+        // Set matrixWidth/matrixHeight to 0 to use preset instead
+        matrixPreset: "8x8", // Legacy: matrixSize still works for square matrices
+        matrixWidth: 0, // Custom width (0 = use preset, 2-128 = custom width)
+        matrixHeight: 0, // Custom height (0 = use preset, 2-128 = custom height)
+        theme: "milk_transparent",
+
+        // Noise Params
+        noiseScale: 0.05,
+        animationSpeed: 0.002,
+        shadeSteps: 2,
+        dotScaleFactor: 2.0,
+        dotNoiseInfluence: 1.0,
+        useColorThemeShading: false,
+        isPaused: false,
+
+        // Hatch Fill Params
+        useHatchFill: false,
+        hatchUseGlobalDensity: true,
+        hatchDensity: 0.05,
+        hatchGlobalSpacing: 3,
+        hatchAngle: 45,
+        hatchCrossHatch: false,
+
+        // Webcam integration
+        skipClear: false, // Skip clearing canvas when webcam is active
+      };
+
+      // --- STATE ---
+      let sketch = null;
+      let webcamManager = null;
+
+      // --- DOM ELEMENTS ---
+      const els = {
+        frame: document.getElementById("sketch-frame"),
+      };
+
+      // --- LAYOUT CONTROL ---
+      function updateLayout() {
+        els.frame.style.width = `${CONFIG.width}px`;
+        els.frame.style.height = `${CONFIG.height}px`;
+
+        // Resize webcam
+        if (webcamManager) {
+          webcamManager.resize(CONFIG.width, CONFIG.height);
+        }
+
+        // Reset dot matrix
+        if (sketch && sketch.resize) {
+          sketch.resize(CONFIG.width, CONFIG.height);
+        }
+
+        sketchUpdateColorTheme();
+      }
+
+      function sketchUpdateColorTheme() {
+        if (sketch && sketch.updateColorTheme) {
+          sketch.updateColorTheme();
+        }
+      }
+
+      // --- P5 SKETCH (Instance Mode) ---
+      const p5Sketch = (p) => {
+        p.setup = async function () {
+          // Create canvas first (3:4 aspect ratio)
+          p.createCanvas(CONFIG.width, CONFIG.height);
+
+          // Initialize webcam manager
+          webcamManager = new P5WebcamManager(CONFIG.width, CONFIG.height, {
+            flipHorizontal: false, // Mirror for selfie mode
+            zoom: 1.5,
+          });
+
+          // Set canvas and graphics to use existing canvas
+          webcamManager.canvas = p.canvas; // Use the canvas we just created
+          webcamManager.graphics = p.createGraphics(
+            CONFIG.width,
+            CONFIG.height
+          );
+
+          // Initialize cache properties (needed for draw method)
+          webcamManager.lastProcessedFrame = null;
+          webcamManager.frameCacheTime = 0;
+          webcamManager.cacheTimeout = 16; // ~60fps cache refresh
+
+          // Create webcam capture with proper error handling
+          try {
+            const constraints = {
+              video: {
+                width: { ideal: 1280 },
+                height: { ideal: 720 },
+                frameRate: { ideal: 5 },
+              },
+            };
+
+            webcamManager.capture = p.createCapture(p.VIDEO, constraints);
+            webcamManager.capture.elt.setAttribute("crossorigin", "anonymous");
+            webcamManager.capture.hide();
+
+            // Handle successful load
+            webcamManager.capture.elt.addEventListener(
+              "loadedmetadata",
+              () => {
+                webcamManager.isReady = true;
+                webcamManager.isInitialized = true;
+                console.log("Webcam initialized successfully", {
+                  width: webcamManager.capture.width,
+                  height: webcamManager.capture.height,
+                  canvasWidth: CONFIG.width,
+                  canvasHeight: CONFIG.height,
+                });
+              },
+              { once: true }
+            );
+
+            // Handle errors
+            webcamManager.capture.elt.addEventListener("error", (e) => {
+              console.error("Webcam error:", e);
+              webcamManager.isReady = false;
+              webcamManager.isInitialized = false;
+            });
+
+            // Check if we're on HTTPS or localhost
+            const isSecure =
+              window.location.protocol === "https:" ||
+              window.location.hostname === "localhost" ||
+              window.location.hostname === "127.0.0.1";
+
+            if (!isSecure) {
+              console.warn(
+                "⚠️ Camera access requires HTTPS or localhost. Current protocol:",
+                window.location.protocol
+              );
+            }
+          } catch (error) {
+            console.error("Failed to initialize webcam:", error);
+            webcamManager.isReady = false;
+            webcamManager.isInitialized = false;
+          }
+
+          // Create sketch with p5 instance
+          sketch = createDotMatrixSketch(p, CONFIG);
+
+          // Initialize dependencies
+          sketch.init(PixelDisplay, HatchFill);
+        };
+
+        p.draw = function () {
+          // Check if webcam is ready and update skipClear flag
+          const webcamActive =
+            webcamManager &&
+            webcamManager.isReady &&
+            webcamManager.capture &&
+            webcamManager.capture.width > 0 &&
+            webcamManager.capture.height > 0;
+          CONFIG.skipClear = webcamActive;
+
+          // Draw webcam first (background layer) using WebcamManager's draw method
+          // This automatically applies all settings (zoom, flipHorizontal, etc.)
+          if (webcamActive) {
+            // Use WebcamManager's draw method which applies all settings from webcamManager.settings
+            // Settings like zoom, flipHorizontal, brightness, etc. are automatically applied
+            webcamManager.draw(p);
+          } else {
+            // Draw background if webcam not available
+            if (!CONFIG.skipClear) {
+              p.background(240);
+            }
+          }
+
+          // Draw dot matrix on top (won't clear if skipClear is true)
+          if (sketch && sketch.draw) {
+            sketch.draw();
+          }
+        };
+      };
+
+      // Create p5 instance with canvas-container as parent
+      new p5(p5Sketch, "canvas-container");
+
+      // --- INIT ---
+      async function init() {
+        // 1. Setup GUI
+        const gui = new GUI();
+        window.dailiesGUI = gui; // Store for LayoutDailies.astro template
+
+        // 2. Layout
+        const f0 = gui.addFolder("Layout");
+        f0.add(CONFIG, "width", 400, 2000).step(10).onChange(updateLayout);
+        f0.add(CONFIG, "height", 400, 2000).step(10).onChange(updateLayout);
+
+        // 3. Sketch
+        const f1 = gui.addFolder("Sketch");
+
+        // Dot Matrix Params
+        // Matrix preset based on 128x64 OLED resolution
+        f1.add(CONFIG, "matrixPreset", [
+          "128x64",
+          "64x64",
+          "48x48",
+          "32x32",
+          "16x16",
+          "8x8",
+          "4x4",
+          "2x2",
+        ])
+          .name("Matrix Preset [OLED-based]")
+          .onChange(updateLayout);
+
+        // Optional: Custom matrix dimensions (overrides preset)
+        // Set to 0 to use preset instead
+        f1.add(CONFIG, "matrixWidth", 0, 128, 1)
+          .name("Matrix Width [0=preset]")
+          .onChange(updateLayout);
+        f1.add(CONFIG, "matrixHeight", 0, 128, 1)
+          .name("Matrix Height [0=preset]")
+          .onChange(updateLayout);
+
+        f1.add(CONFIG, "theme", [
+          "2a",
+          "milk_transparent",
+          "green",
+          "amber",
+          "white",
+          "blue",
+        ])
+          .name("Theme")
+          .onChange(sketchUpdateColorTheme);
+
+        // Noise Params
+        f1.add(CONFIG, "noiseScale", 0.01, 0.8, 0.005).name("NoiseScale");
+        f1.add(CONFIG, "animationSpeed", 0.001, 0.1, 0.001).name(
+          "Animation Speed"
+        );
+        f1.add(CONFIG, "shadeSteps", 2, 16, 1).name("Shade Steps");
+        f1.add(CONFIG, "dotScaleFactor", 0.1, 5.0, 0.05).name(
+          "Dot Scale Factor"
+        );
+        f1.add(CONFIG, "dotNoiseInfluence", 0.0, 3.0, 0.05).name(
+          "Dot Noise Influence"
+        );
+        f1.add(CONFIG, "useColorThemeShading").name("Use Color Theme Shading");
+        f1.add(CONFIG, "isPaused").name("Pause Animation");
+
+        // 4. Hatch Fill
+        const f3 = gui.addFolder("Hatch Fill");
+        f3.add(CONFIG, "useHatchFill").name("Use Hatch Fill");
+        f3.add(CONFIG, "hatchUseGlobalDensity").name("Use Global Density");
+        f3.add(CONFIG, "hatchDensity", 0.01, 1.0, 0.01).name("Hatch Density");
+        f3.add(CONFIG, "hatchGlobalSpacing", 1, 20, 0.5).name(
+          "Global Spacing (px)"
+        );
+        f3.add(CONFIG, "hatchAngle", 0, 180, 1).name("Hatch Angle");
+        f3.add(CONFIG, "hatchCrossHatch").name("Cross Hatch");
+
+        // 5. Register export functions for LayoutDailies.astro template
+        window.sketchExports = {
+          exportSVG: function () {
+            if (sketch && sketch.exportSvg) {
+              sketch.exportSvg("current");
+            }
+          },
+          exportPNG: async function () {
+            try {
+              const canvas = await html2canvas(els.frame, {
+                scale: 1,
+                // useCORS: true,
+                // backgroundColor: null,
+                // y-offset:5
+              });
+
+              const link = document.createElement("a");
+              link.download = `${filename}.png`;
+              link.href = canvas.toDataURL("image/png");
+              link.click();
+            } catch (err) {
+              console.error("PNG Export failed", err);
+            }
+          },
+          captureSketch: async function () {
+            // Set flag in localStorage to trigger auto-start in new tab
+            localStorage.setItem("screenCapture_autoStart", "true");
+            localStorage.setItem("screenCapture_source", "dailies");
+
+            // Open new tab to screen_capture page
+            // (Cannot record own tab due to browser security limitations)
+            const screenCaptureUrl = "/screen_capture";
+            window.open(screenCaptureUrl, "_blank");
+          },
+        };
+      }
+
+      // Run
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init);
+      } else {
+        init();
+      }
+    </script>
+  </Fragment>
+</LayoutDailies>
