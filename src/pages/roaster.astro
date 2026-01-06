@@ -1,0 +1,169 @@
+---
+import Layout from "@/layouts/Layout.astro";
+---
+
+<Layout>
+<main class="p-8 max-w-7xl mx-auto font-sans bg-sky-50 min-h-screen">
+    <div class="bg-sky-100 p-6 rounded-[2rem] shadow-lg border-4 border-sky-200">
+        <h1 class="text-4xl font-bold text-center mb-6 tracking-wide">Time Table (2026)</h1>
+        
+        <div class="overflow-hidden rounded-xl border-2 border-black bg-white">
+            <table class="w-full border-collapse text-center">
+                <thead>
+                    <tr class="bg-sky-200 border-b-2 border-black">
+                        <th class="border-r-2 border-black p-3 w-32 bg-sky-100">TIME / 时间</th>
+                        <th class="border-r-2 border-black p-3 w-[16%]">Monday<br/><span class="text-sm font-normal">星期一</span></th>
+                        <th class="border-r-2 border-black p-3 w-[16%]">Tuesday<br/><span class="text-sm font-normal">星期二</span></th>
+                        <th class="border-r-2 border-black p-3 w-[16%]">Wednesday<br/><span class="text-sm font-normal">星期三</span></th>
+                        <th class="border-r-2 border-black p-3 w-[16%]">Thursday<br/><span class="text-sm font-normal">星期四</span></th>
+                        <th class="p-3 w-[16%]">Friday<br/><span class="text-sm font-normal">星期五</span></th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm md:text-base font-medium">
+                    <!-- 8:00am - 8:20am -->
+                    <tr class="border-b-2 border-black">
+                        <td class="border-r-2 border-black p-2 bg-sky-50">8:00am - 8:20am</td>
+                        <td class="border-r-2 border-black p-2">Assembly /<br/>Circle Time 晨会</td>
+                        <td class="border-r-2 border-black p-2">Circle Time<br/>晨会</td>
+                        <td class="border-r-2 border-black p-2">Circle Time<br/>晨会</td>
+                        <td class="border-r-2 border-black p-2">Circle Time<br/>晨会</td>
+                        <td class="p-2">Circle Time<br/>晨会</td>
+                    </tr>
+                    
+                    <!-- 8:20am - 8:50am -->
+                    <tr class="border-b-2 border-black">
+                        <td class="border-r-2 border-black p-2 bg-sky-50">8:20am - 8:50am</td>
+                        <td class="border-r-2 border-black p-2"><span class="text-xl">🎵</span><br/>Music<br/>音乐</td>
+                        <td class="border-r-2 border-black p-2">Bahasa Cina<br/>华文</td>
+                        <td class="border-r-2 border-black p-2"><span class="text-xl">📖</span><br/>Maths<br/>数学</td>
+                        <td class="border-r-2 border-black p-2"><span class="text-xl">📖</span><br/>English<br/>英文</td>
+                        <td class="p-2"><span class="text-xl">📚</span><br/>Reading<br/>阅读</td>
+                    </tr>
+                    
+                    <!-- 8:50am - 9:20am -->
+                    <tr class="border-b-2 border-black">
+                        <td class="border-r-2 border-black p-2 bg-sky-50">8:50am - 9:20am</td>
+                        <td class="border-r-2 border-black p-2"><span class="text-xl">❤️</span><br/>Moral<br/>道德教育</td>
+                        <td class="border-r-2 border-black p-2">Bahasa Cina<br/>华文</td>
+                        <td class="border-r-2 border-black p-2"><span class="text-blue-500 font-bold">1 6</span><br/><span class="text-yellow-500 font-bold">2 5</span> Maths<br/>数学</td>
+                        <td class="border-r-2 border-black p-2">English<br/>英文</td>
+                        <td class="p-2"><span class="text-xl">❤️</span><br/>Moral<br/>道德教育</td>
+                    </tr>
+
+                    <!-- 9:20am - 10:00am -->
+                    <tr class="border-b-2 border-black">
+                        <td class="border-r-2 border-black p-2 bg-sky-50">9:20am - 10:00am</td>
+                        <td colspan="5" class="bg-orange-100 text-center font-bold text-lg tracking-wider align-middle">
+                            BREAK / 休息
+                        </td>
+                    </tr>
+                    
+                    <!-- 10:00am - 10:30am -->
+                    <tr class="border-b-2 border-black">
+                        <td class="border-r-2 border-black p-2 bg-sky-50">10:00am - 10:30am</td>
+                        <td class="border-r-2 border-black p-2">Bahasa Cina<br/>华文</td>
+                        <td class="border-r-2 border-black p-2"><span class="text-xl">🔍</span><br/>Phonics<br/>英文法语</td>
+                        <td class="border-r-2 border-black p-2">Suku Kata<br/>国语法语</td>
+                        <td class="border-r-2 border-black p-2">Bahasa Cina<br/>华文</td>
+                        <td class="p-2">Bahasa Melayu<br/>国语</td>
+                    </tr>
+                    
+                    <!-- 10:30am - 11:00am -->
+                    <tr class="border-b-2 border-black">
+                        <td class="border-r-2 border-black p-2 bg-sky-50">10:30am - 11:00am</td>
+                        <td class="border-r-2 border-black p-2">Bahasa Cina<br/>华文</td>
+                        <td class="border-r-2 border-black p-2"><span class="text-blue-500 font-bold">1 6</span><br/><span class="text-yellow-500 font-bold">2 5</span> English<br/>英文</td>
+                        <td class="border-r-2 border-black p-2">Bahasa Melayu<br/>国语</td>
+                        <td class="border-r-2 border-black p-2">Bahasa Cina<br/>华文</td>
+                        <td class="p-2">Bahasa Melayu<br/>国语</td>
+                    </tr>
+                    
+                    <!-- 11:00am - 11:30am -->
+                    <tr class="border-b-2 border-black">
+                        <td class="border-r-2 border-black p-2 bg-sky-50">11:00am - 11:30am</td>
+                        <td class="border-r-2 border-black p-2"><span class="text-xl">📝</span><br/>English<br/>英文</td>
+                        <td class="border-r-2 border-black p-2"><span class="text-xl">📝</span><br/>English<br/>英文</td>
+                        <td class="border-r-2 border-black p-2">Bahasa Melayu<br/>国语</td>
+                        <td class="border-r-2 border-black p-2">Bahasa Melayu<br/>国语</td>
+                        <td class="p-2"><span class="text-xl">🖌️</span><br/>Art & Craft<br/>手工班</td>
+                    </tr>
+                    
+                    <!-- 11:30am - 12:00pm -->
+                    <tr class="border-b-2 border-black">
+                        <td class="border-r-2 border-black p-2 bg-sky-50">11:30am - 12:00pm</td>
+                        <td class="border-r-2 border-black p-2"><span class="text-xl">📝</span><br/>English<br/>英文</td>
+                        <td class="border-r-2 border-black p-2"><span class="text-xl">⚛️</span><br/>Science<br/>科学</td>
+                        <td class="border-r-2 border-black p-2">Bahasa Cina<br/>(Hanyu Pinyin)</td>
+                        <td class="border-r-2 border-black p-2">Bahasa Melayu<br/>国语</td>
+                        <td class="p-2"><span class="text-xl">🖌️</span><br/>Art & Craft<br/>手工班</td>
+                    </tr>
+                    
+                    <!-- Free Play -->
+                    <tr class="border-b-2 border-black">
+                        <td class="border-r-2 border-black p-2 bg-sky-50">12:00pm - 12:20pm</td>
+                        <td colspan="5" class="bg-green-200 text-center font-bold text-lg align-middle">
+                            Free Play 自由活动<br/>
+                            <span class="text-sm font-normal">(Physical Sports)</span>
+                        </td>
+                    </tr>
+                    
+                    <!-- Closing -->
+                    <tr>
+                        <td class="border-r-2 border-black p-2 bg-blue-200">12:20pm - 12:30pm</td>
+                        <td colspan="5" class="bg-blue-200 text-center font-bold text-lg align-middle">
+                            Closing 结束
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+</Layout>
+
+<style>
+    @media print {
+        @page {
+            size: A4 landscape;
+            margin: 0.5cm;
+        }
+        
+        body {
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
+            background: white;
+        }
+        
+        main {
+            padding: 0;
+            background: white;
+            min-height: auto;
+        }
+
+        /* Remove outer styling for print to save ink/space if preferred, 
+           or keep it to match the "card" look on paper */
+        main > div {
+            border: none;
+            box-shadow: none;
+            padding: 0;
+            background: white;
+        }
+        
+        table {
+            width: 100%;
+            border: 2px solid black;
+        }
+
+        th, td {
+            border: 1px solid black;
+        }
+        
+        /* Ensure background colors print */
+        .bg-sky-50 { background-color: #f0f9ff !important; }
+        .bg-sky-100 { background-color: #e0f2fe !important; }
+        .bg-sky-200 { background-color: #bae6fd !important; }
+        .bg-orange-100 { background-color: #ffedd5 !important; }
+        .bg-green-200 { background-color: #bbf7d0 !important; }
+        .bg-blue-200 { background-color: #bfdbfe !important; }
+    }
+</style>
